@@ -46,7 +46,7 @@ export const Images = {
    onboardingTwoIcon: require("../images/ic_OnboradTwo.png"),
    onboardingThreeIcon: require("../images/ic_OnboradThree.png"),
    onboardingFourIcon: require("../images/ic_OnboradFour.png"),
-   arrowRight: require("../images/ic_ArrowRight.png"),
+   arrowRight: require("../images/ic_ArrowRight.png"), // 
    mapLoginBackground: require("../images/ic_MapLogin.png"),
    locationIcon: require("../images/ic_location.png"),
    strokeIcon: require("../images/ic_stroke.png"),
@@ -219,6 +219,13 @@ export const Images = {
    flag95: require("../images/ic_1767.jpg"),
    flag96: require("../images/ic_1849.png"),
    flag97: require("../images/ic_67264.jpg"),
-   flag98: require("../images/ic_506.jpg")
+   flag98: require("../images/ic_506.jpg"),
+
+   // WHITE UI  :
+   strokeIconWhite: require("../images/ic_stroke_w.png"),
+   breakLineIconWhite: require("../images/ic_breakline_w.png"),
+   appIconWhite: require("../images/ic_AppIcon_w.png"),
+   mailIconWhite: require("../images/ic_mail_w.png"),
+   arrowRightWhite: require("../images/ic_ArrowRight_w.png"),
 
 }

@@ -5,7 +5,7 @@ import axios from "axios";
 import React, { useRef, useState } from 'react';
 import {
     FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity,
-    View, useColorScheme
+    View
 } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -16,6 +16,7 @@ import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import TextInputComponent from '../../../components/TextInput';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail } from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
@@ -31,7 +32,9 @@ const LoginWithMailScreen = (props: Props) => {
 
     const navigation = useNavigation();
 
-    const colorScheme = useColorScheme();
+    // const isDarkMode = useisDarkMode();
+
+    const { isDarkMode, toggleTheme } = useTheme();
 
 
     let user_register_id;
@@ -271,21 +274,21 @@ const LoginWithMailScreen = (props: Props) => {
                 backgroundColor={Colors.black} />
             <ScrollView style={{
                 flex: 1,
-                backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
             }}>
                 <View style={{
                     flex: 1,
-                    backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white
+                    backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
                 }}>
                     <HeaderComponent
                         margin={wp(3)}
-                        backgroundColorOpacity={colorScheme === 'dark' ? Colors.circleGray :
+                        backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
                             Colors.whiteGray}
                         borderRadiusOpacity={wp(10)}
                         paddingOpacity={wp(2)}
                         textAlign={"center"}
-                        transform={colorScheme === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
-                        source={colorScheme === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
+                        transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                        source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                         width={wp(7)}
                         height={wp(7)}
                         color={Colors.lightBlack}
@@ -300,7 +303,7 @@ const LoginWithMailScreen = (props: Props) => {
 
                         <View style={Styles.viewLoginWithMail}>
 
-                            {colorScheme === 'dark' ? <Image
+                            {isDarkMode === 'dark' ? <Image
                                 style={Styles.imageStrokeIcon}
                                 resizeMode="contain"
                                 source={Images.strokeIcon} /> : <Image
@@ -309,7 +312,7 @@ const LoginWithMailScreen = (props: Props) => {
                                 source={Images.strokeIconWhite} />}
 
                             <TextComponent
-                                color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 title={ScreenText.MyDriverPlus}
                                 textDecorationLine={'none'}
                                 fontWeight="700"
@@ -322,7 +325,7 @@ const LoginWithMailScreen = (props: Props) => {
 
                             <View style={CommonStyle.commonContent}>
                                 <TextComponent
-                                    color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                                    color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                     title={ScreenText.LoginWithMail}
                                     textDecorationLine={'none'}
                                     fontWeight="700"
@@ -333,7 +336,7 @@ const LoginWithMailScreen = (props: Props) => {
                                     marginVertical={hp(2)}
                                 />
                                 <TextComponent
-                                    color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                                    color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                     title={ScreenText.WelcomeInfo}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
@@ -350,13 +353,13 @@ const LoginWithMailScreen = (props: Props) => {
 
                     <View>
                         <TextInputComponent
-                            selectionColor={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
-                            isVisibleMail={colorScheme === 'dark' ? true : false}
-                            isVisibleMailGray={colorScheme === 'dark' ? false : true}
-                            isVisibleLockWhite={colorScheme === 'dark' ? false : false}
+                            isVisibleMail={isDarkMode === 'dark' ? true : false}
+                            isVisibleMailGray={isDarkMode === 'dark' ? false : true}
+                            isVisibleLockWhite={isDarkMode === 'dark' ? false : false}
                             selectedImage={selectedImage || Images1.downArrow}
                             selected={(!!selected && selected.label) || 'Select'}
                             toggleDropdown={toggleDropdown}
@@ -364,10 +367,10 @@ const LoginWithMailScreen = (props: Props) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(5)} // 3
                             width={wp(88)}
-                            borderWidth={colorScheme === 'dark' ? isFocused ? ConstValue.value1 : ConstValue.value0 :
+                            borderWidth={isDarkMode === 'dark' ? isFocused ? ConstValue.value1 : ConstValue.value0 :
                                 isFocused ? ConstValue.value1 : ConstValue.value0
                             }
-                            borderColor={colorScheme === 'dark' ? isFocused ? Colors.white : Colors.blue :
+                            borderColor={isDarkMode === 'dark' ? isFocused ? Colors.white : Colors.blue :
                                 isFocused ? Colors.blue : Colors.white}
                             height={hp(7)}
                             isUserHide={false}
@@ -384,8 +387,8 @@ const LoginWithMailScreen = (props: Props) => {
                             textAlign='left'
                             numberOfLines={null}
                             maxLength={null}
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
@@ -393,7 +396,7 @@ const LoginWithMailScreen = (props: Props) => {
                             onSubmitEditing={() => {
                                 refMobile?.current?.focus();
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.grayDark}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidEmail ?
                             <TextComponent
@@ -412,22 +415,22 @@ const LoginWithMailScreen = (props: Props) => {
 
                     <View>
                         <TextInputComponent
-                            selectionColor={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             onPressHide={handleHideShow1}
                             onPressShow={handleHideShow2}
                             isVisibleEye={!isHide}
                             isVisibleEye_={isShow}
                             isVisibleMail={false}
-                            isVisibleLockWhite={colorScheme === 'dark' ? true : false}
-                            isVisibleLock={colorScheme === 'dark' ? false : true}
+                            isVisibleLockWhite={isDarkMode === 'dark' ? true : false}
+                            isVisibleLock={isDarkMode === 'dark' ? false : true}
                             marginVertical={hp(1)}
                             marginHorizontal={wp(5)}
                             width={wp(88)}
-                            borderWidth={colorScheme === 'dark' ? isFocusedPassword ? ConstValue.value1 : ConstValue.value0 :
+                            borderWidth={isDarkMode === 'dark' ? isFocusedPassword ? ConstValue.value1 : ConstValue.value0 :
                                 isFocusedPassword ? ConstValue.value1 : ConstValue.value0
                             }
-                            borderColor={colorScheme === 'dark' ? isFocusedPassword ? Colors.white : Colors.blue :
+                            borderColor={isDarkMode === 'dark' ? isFocusedPassword ? Colors.white : Colors.blue :
                                 isFocusedPassword ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
@@ -445,15 +448,15 @@ const LoginWithMailScreen = (props: Props) => {
                             maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusPass}
                             onChangeText={handleAccountPassword}
                             onSubmitEditing={() => {
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.grayDark}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidPassword ?
                             <TextComponent
@@ -471,7 +474,7 @@ const LoginWithMailScreen = (props: Props) => {
 
                     <View style={CommonStyle.commonFlex}>
                         <View style={{
-                            backgroundColor: colorScheme === 'dark' ?
+                            backgroundColor: isDarkMode === 'dark' ?
                                 Colors.black : Colors.white,
                             flexDirection: 'row',
                             marginHorizontal: wp(2),
@@ -484,8 +487,8 @@ const LoginWithMailScreen = (props: Props) => {
                                     boxType="square"
                                     disabled={false}
                                     tintColors={{
-                                        true: colorScheme === 'dark' ? Colors.blue : Colors.blue,
-                                        false: colorScheme === 'dark' ? Colors.white : Colors.black
+                                        true: isDarkMode === 'dark' ? Colors.blue : Colors.blue,
+                                        false: isDarkMode === 'dark' ? Colors.white : Colors.black
                                     }}
                                     value={toggleCheckBox}
                                     onValueChange={(newValue) => {
@@ -498,7 +501,7 @@ const LoginWithMailScreen = (props: Props) => {
 
                             <View style={CommonStyle.justifyContent}>
                                 <TextComponent
-                                    color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                                    color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                     title={ScreenText.Rememberme}
                                     marginTop={wp(1)}
                                     textDecorationLine={'none'}
@@ -511,7 +514,7 @@ const LoginWithMailScreen = (props: Props) => {
 
                             <View style={CommonStyle.justifyContent}>
                                 <TextComponent
-                                    color={colorScheme === 'dark' ? Colors.forgotTextColor : Colors.blueDark}
+                                    color={isDarkMode === 'dark' ? Colors.forgotTextColor : Colors.blueDark}
                                     title={ScreenText.ForgotPassword}
                                     marginLeft={wp(25)}
                                     textDecorationLine={'none'}
@@ -550,7 +553,7 @@ const LoginWithMailScreen = (props: Props) => {
                         </View>
                         <View style={CommonStyle.commonJustifyContent}>
                             <TextComponent
-                                color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 title={ScreenText.DontHaveAnAccount}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -559,7 +562,7 @@ const LoginWithMailScreen = (props: Props) => {
                                 textAlign='left'
                             />
                             <TextComponent
-                                color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 title={ScreenText.CreateNewAccount}
                                 onPress={() => props.navigation.navigate("SignUp")}
                                 textDecorationLine={'none'}

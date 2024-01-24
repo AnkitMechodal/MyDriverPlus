@@ -9,6 +9,7 @@ import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import TextInputComponent from '../../../components/TextInput';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail } from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
@@ -20,7 +21,8 @@ type Props = {
 }
 
 const CreateNewPasswordScreen = ({ route, navigation }) => {
-    // const navigation = useNavigation();
+
+    const { isDarkMode, toggleTheme } = useTheme(); //TEST
 
     const refPassword = useRef<any>(null);
 

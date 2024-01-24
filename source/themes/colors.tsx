@@ -46,5 +46,9 @@ export const Colors = {
     discount: "#0C8900",
     transparent: "transparent",
     lightGreen: "rgba(12,137, 51, 0.2)",
-    forgotTextColor:"#E0E0E0",
+    forgotTextColor: "#E0E0E0",
+
+    whiteMail: "#F7F7F7",
+    whiteGray: "#F7F7F7", // 001F7D
+    blueDark: "#001F7D"
 }

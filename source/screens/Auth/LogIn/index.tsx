@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Image, Platform, SafeAreaView, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { Image, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import ButtonComponent from '../../../components/Button';
 import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import { Slides, SlidesWhite } from '../../../utils/dummyArray';
 import { ConstValue, ScreenText } from '../../../utils/index';
@@ -16,8 +17,11 @@ type Props = {
 
 const LoginScreen = (props: Props) => {
 
-  const colorScheme = useColorScheme();
-  // const colorScheme: 'light' | 'dark' = useColorScheme();
+  // const isDarkMode = useisDarkMode();
+  // const isDarkMode: 'light' | 'dark' = useisDarkMode();
+
+  const { isDarkMode, toggleTheme } = useTheme();
+
 
 
   const [showRealApp, setShowRealApp] = useState(false);
@@ -29,7 +33,7 @@ const LoginScreen = (props: Props) => {
         <View style={CommonStyle.commonContent}>
           <Text style={{
             fontSize: wp(4),
-            color: colorScheme === 'dark' ? Colors.white : Colors.black,
+            color: isDarkMode === 'dark' ? Colors.white : Colors.black,
             justifyContent: 'center',
             marginHorizontal: wp(4),
             marginTop: wp(3)
@@ -100,7 +104,7 @@ const LoginScreen = (props: Props) => {
         widthBtn={wp(90)}
         isRightArrow={false}
         onPress={() => props.navigation.navigate("LoginSignUp")}
-        color={colorScheme === 'dark' ? Colors.black : Colors.white}
+        color={isDarkMode === 'dark' ? Colors.black : Colors.white}
         title={ScreenText.GetStated}
         fontWeight="600"
         fontSize={wp(5)}
@@ -118,7 +122,7 @@ const LoginScreen = (props: Props) => {
       <View style={styles.nextButtonContainer}>
         <View style={CommonStyle.justifyContent}>
           <TextComponent
-            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
             title={ScreenText.Next}
             textDecorationLine={'none'}
             fontWeight="400"
@@ -162,13 +166,13 @@ const LoginScreen = (props: Props) => {
       <View style={{
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white,
+        backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white,
         flex: ConstValue.value1,
       }}>
         <StatusBarComponent
-          backgroundColor={colorScheme === 'dark' ? Colors.black : Colors.white} />
+          backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
         <View>
-          {colorScheme === 'dark' ? (
+          {isDarkMode === 'dark' ? (
             <Image
               source={Images.appIcon}
               resizeMode="contain"
@@ -198,15 +202,15 @@ const LoginScreen = (props: Props) => {
   return (
     <SafeAreaView style={CommonStyle.commonFlex}>
       <StatusBarComponent
-        backgroundColor={colorScheme === 'dark' ? Colors.black : Colors.white} />
+        backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
 
       <View style={{
         flex: 1,
-        backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white
+        backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
       }}>
         <AppIntroSlider
-          data={colorScheme === 'dark' ? Slides : SlidesWhite}
-          renderItem={colorScheme === 'dark' ? RenderItem : RenderItemWhite}
+          data={isDarkMode === 'dark' ? Slides : SlidesWhite}
+          renderItem={isDarkMode === 'dark' ? RenderItem : RenderItemWhite}
           onDone={onDone}
           showSkipButton={true}
           skipLabel={ScreenText.Skip}  // Make sure you have this line // styles.viewLoginSub1
@@ -214,8 +218,8 @@ const LoginScreen = (props: Props) => {
           renderDoneButton={RenderDoneButton}
           renderNextButton={RenderNextButton}
           renderSkipButton={(props: any) => <RenderSkipButton {...props} />}
-          dotStyle={colorScheme === 'dark' ? styles.dotStyleView : styles.dotStyleViewWhite}
-          activeDotStyle={colorScheme === 'dark' ? styles.activeDotStyle : styles.activeDotStyleWhite}
+          dotStyle={isDarkMode === 'dark' ? styles.dotStyleView : styles.dotStyleViewWhite}
+          activeDotStyle={isDarkMode === 'dark' ? styles.activeDotStyle : styles.activeDotStyleWhite}
         />
       </View>
       {visible === true && Platform.OS === 'android' ? Splash_Screen : null}
@@ -263,7 +267,7 @@ const styles = StyleSheet.create({
   // splashChildView: {
   //   justifyContent: 'center',
   //   alignItems: 'center',
-  //   backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white,
+  //   backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white,
   //   flex: ConstValue.value1, // Replace with an actual numeric value if ConstValue.value1 is not a number
   // },
 

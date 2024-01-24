@@ -65,6 +65,7 @@ import UpcomingScreen from '../../../pages/UpcomingScreen/index';
 import ViewRequestDetailsScreen from '../../../pages/ViewRequestDetailsScreen';
 import ViewRequestScreen from '../../../pages/ViewRequestScreen';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import { ScreenText } from '../../../utils/index';
 import PreferredDriverDrawer from '../PreferredDriverDrawer';
@@ -80,6 +81,9 @@ const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
 const MyComponent = ({ navigation }) => {
+
+    const { isDarkMode, toggleTheme } = useTheme();
+
     const [isModalVisible, setModalVisible] = useState(false);
 
     const toggleModal = () => {
@@ -119,8 +123,8 @@ const MyComponent = ({ navigation }) => {
                         <TouchableOpacity onPress={toggleModal}>
                             <View style={Styles.viewModalCenterConatiner}>
                                 <Text style={Styles.textCancel}
-
                                     onPress={() => SignInWithGoogle()}
+                                // onPress={toggleTheme}
                                 >Yes</Text>
                                 <Text style={Styles.textOk}
                                     onPress={() => setModalVisible(false)}
@@ -994,6 +998,9 @@ const MyTheme = {
 };
 
 function CustomDrawerContent(props) {
+
+    const { isDarkMode, toggleTheme } = useTheme();
+
     return (
         <DrawerContentScrollView {...props}>
             <View style={Styles.viewDrawerScrollView}>
@@ -1007,7 +1014,7 @@ function CustomDrawerContent(props) {
 
                     <View>
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.MyDriverPlus}
                             textDecorationLine={'none'}
                             fontWeight="600"
@@ -1064,6 +1071,9 @@ function CustomDrawerContent(props) {
 }
 
 const HomeOneScreen = (props: Props) => {
+
+    const { isDarkMode, toggleTheme } = useTheme();
+
 
     // Auto Check Permission
     useEffect(() => {
@@ -1130,6 +1140,8 @@ const HomeOneScreen = (props: Props) => {
 
 
     const [email, setEmail] = useState('')
+
+
 
     return (
         <NavigationContainer

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Image, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Colors, Images } from "../../themes/index";
+import { useTheme } from '../../utils/ThemeContext';
 import Styles from "./style";
 
 const CustomDropdown = ({
@@ -15,7 +16,10 @@ const CustomDropdown = ({
     isArrow,
     isArrowLeft
 }) => {
-    const colorScheme = useColorScheme();
+    // const isDarkMode = useisDarkMode();
+
+    const { isDarkMode, toggleTheme } = useTheme();
+
     return (
         <View style={{
             borderColor:
@@ -38,7 +42,7 @@ const CustomDropdown = ({
                                 height: wp(4),
                                 alignSelf: 'center',
                                 marginRight: wp(2),
-                                tintColor: colorScheme === 'dark' ? Colors.white : Colors.grayDark,
+                                tintColor: isDarkMode === 'dark' ? Colors.white : Colors.grayDark,
                             }}
                         />
                     </View>
@@ -50,7 +54,7 @@ const CustomDropdown = ({
                     style={Styles.imageSelected} //
                 />
                 <Text style={{
-                    color: colorScheme === 'dark' ? Colors.gray : Colors.grayDark,
+                    color: isDarkMode === 'dark' ? Colors.gray : Colors.grayDark,
                     marginTop: wp(1.5)
                 }}>
                     {selected || 'Select'}

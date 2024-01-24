@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useRef, useState } from 'react';
-import { SafeAreaView, View, useColorScheme } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../../components/Button';
@@ -9,11 +9,11 @@ import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import TextInputComponent from '../../../components/TextInput';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
-
 
 type Props = {
     navigation: any
@@ -22,7 +22,9 @@ type Props = {
 const OTPFromEmailScreen = ({ route, navigation }) => {
     // const navigation = useNavigation();
 
-    const colorScheme = useColorScheme();
+    // const isDarkMode = useisDarkMode();
+    const { isDarkMode, toggleTheme } = useTheme();
+
 
     const refPassword = useRef<any>(null);
     const refnumber2 = useRef<any>(null);
@@ -214,20 +216,20 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={colorScheme === 'dark' ? Colors.black : Colors.white} />
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
             <View style={{
                 flex: 1,
-                backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
             }}>
                 <HeaderComponent
                     margin={wp(3)}
-                    backgroundColorOpacity={colorScheme === 'dark' ? Colors.circleGray :
+                    backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
                         Colors.whiteGray}
                     borderRadiusOpacity={wp(10)} // arrowRightWhite
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    transform={colorScheme === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
-                    source={colorScheme === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
+                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}
                     color={Colors.lightBlack} // lightBlack
@@ -240,7 +242,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                 <View style={Styles.viewOtpFromMailContainer}>
                     <View>
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.ForgotPasswordText}
                             textDecorationLine={'none'}
                             fontWeight="700"
@@ -252,7 +254,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             marginTop={hp(5)}
                         />
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isTextEnd={true}
                             sizeEnd={wp(3.5)}
                             colorEnd={Colors.white}
@@ -300,7 +302,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             numberOfLines={null}
                             maxLength={1}
                             color={Colors.white}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
@@ -308,7 +310,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             onSubmitEditing={() => {
                                 refnumber2?.current?.focus();
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.black}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
                         <TextInputComponent
                             selectionColor={Colors.white}
@@ -340,7 +342,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             numberOfLines={null}
                             maxLength={1}
                             color={Colors.white}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus2}
@@ -348,7 +350,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             onSubmitEditing={() => {
                                 refnumber3?.current?.focus();
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.black}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
 
                         <TextInputComponent
@@ -381,7 +383,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             numberOfLines={null}
                             maxLength={1}
                             color={Colors.white}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus3}
@@ -389,7 +391,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             onSubmitEditing={() => {
                                 refnumber4?.current?.focus();
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.black}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
 
 
@@ -423,7 +425,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             numberOfLines={null}
                             maxLength={1}
                             color={Colors.white}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus4}
@@ -431,7 +433,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             onSubmitEditing={() => {
                                 refnumber5?.current?.focus();
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.black}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
 
                         <TextInputComponent
@@ -464,7 +466,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             numberOfLines={null}
                             maxLength={1}
                             color={Colors.white}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus5}
@@ -472,7 +474,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             onSubmitEditing={() => {
                                 refnumber6?.current?.focus();
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.black}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
 
                         <TextInputComponent
@@ -505,14 +507,14 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             numberOfLines={null}
                             maxLength={1}
                             color={Colors.white}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus6}
                             onChangeText={handleAccountSix}
                             onSubmitEditing={() => {
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.black}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
 
                         {/* {!isValidEmail ?
@@ -529,7 +531,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                     </View>
                     <View>
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isTextEnd={true}
                             sizeEnd={wp(3.5)}
                             colorEnd={Colors.blue}

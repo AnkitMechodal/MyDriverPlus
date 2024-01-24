@@ -4,7 +4,7 @@
 // } from '@react-native-community/google-signin';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React, { useEffect } from 'react';
-import { Alert, Image, ImageBackground, SafeAreaView, View, useColorScheme } from 'react-native';
+import { Alert, Image, ImageBackground, SafeAreaView, View } from 'react-native';
 // import { AccessToken, GraphRequest, GraphRequestManager, LoginButton } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
@@ -16,6 +16,7 @@ import ButtonComponent from '../../../components/Button';
 import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
 import { ScreenText } from '../../../utils/index';
@@ -26,7 +27,9 @@ type Props = {
 }
 
 const LoginSignUpScreen = (props: Props) => {
-    const colorScheme = useColorScheme();
+    // const isDarkMode = useisDarkMode();
+
+    const { isDarkMode, toggleTheme } = useTheme();
 
     useEffect(() => {
         const checkAutoLogin = async () => {
@@ -387,15 +390,15 @@ const LoginSignUpScreen = (props: Props) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={colorScheme === 'dark' ? Colors.black : Colors.white} />
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
             <View style={{
                 flex: 1,
-                backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
             }}>
                 <ImageBackground source={Images.mapLoginBackground}
                     style={CommonStyle.commonFlex}>
                     <TextComponent
-                        color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                        color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                         title={ScreenText.MyDriverPlus}
                         textDecorationLine={'none'}
                         fontWeight="700"
@@ -406,7 +409,7 @@ const LoginSignUpScreen = (props: Props) => {
                         marginVertical={hp(3)}
                     />
 
-                    {colorScheme === 'dark' ? <Image
+                    {isDarkMode === 'dark' ? <Image
                         style={Styles.imageStrokeIcon}
                         resizeMode="contain"
                         source={Images.strokeIcon} /> : <Image
@@ -423,13 +426,13 @@ const LoginSignUpScreen = (props: Props) => {
                 {/* Styles.bottamContainer */}
                 <View style={{
                     flex: 1,
-                    backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white,
+                    backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white,
                     margin: hp(2)
                 }}>
                     <View>
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
-                            title={ScreenText.Welcome}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            title={ScreenText.Welcome} //24...
                             textDecorationLine={'none'}
                             fontWeight="700"
                             fontSize={wp(4)}
@@ -438,8 +441,9 @@ const LoginSignUpScreen = (props: Props) => {
                             marginVertical={hp(2)}
                         />
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.WelcomeInfo}
+                            // onPress={toggleTheme} //apptest
                             textDecorationLine={'none'}
                             fontWeight="700"
                             fontSize={wp(4)}
@@ -467,7 +471,7 @@ const LoginSignUpScreen = (props: Props) => {
                             backgroundColor={Colors.blue}
                         />
 
-                        {colorScheme === 'dark' ?
+                        {isDarkMode === 'dark' ?
                             <ButtonComponent
                                 isVisibleMobile={false}
                                 borderColor={Colors.white}
@@ -515,13 +519,13 @@ const LoginSignUpScreen = (props: Props) => {
                             alignSelf='center'
                             textAlign='center'
                             borderRadius={wp(2)}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark : Colors.whiteMail}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark : Colors.whiteMail}
                         /> */}
                     </View>
 
                     <View style={CommonStyle.commonRow}>
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.DontHaveAnAccount}
                             textDecorationLine={'none'}
                             fontWeight="400"
@@ -530,7 +534,7 @@ const LoginSignUpScreen = (props: Props) => {
                             textAlign='left'
                         />
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.CreateNewAccount}
                             onPress={() => props.navigation.navigate("SignUp")}
                             textDecorationLine={'none'}
@@ -544,7 +548,7 @@ const LoginSignUpScreen = (props: Props) => {
 
                     <View>
 
-                        {colorScheme === 'dark' ? (
+                        {isDarkMode === 'dark' ? (
                             <Image
                                 style={Styles.imageBreakIcon}
                                 resizeMode="contain"
@@ -566,7 +570,7 @@ const LoginSignUpScreen = (props: Props) => {
                             widthBtn={wp(45)}
                             isRightArrow={false}
                             isVisibleGoogle={true}
-                            borderColor={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            borderColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             alignSelf='center'
                             textAlign='center'
                             borderRadius={wp(2)}

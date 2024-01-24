@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useRef, useState } from 'react';
 import {
     SafeAreaView, View,
-    useColorScheme
+    useisDarkMode
 } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -16,6 +16,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail } from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import Styles from './style';
 
 type Props = {
@@ -25,7 +26,11 @@ type Props = {
 const ForgotPasswordScreen = (props: Props) => {
     const navigation = useNavigation();
 
-    const colorScheme = useColorScheme();
+    // const isDarkMode = useisDarkMode();
+
+    const { isDarkMode, toggleTheme } = useTheme();
+
+
 
 
     const refPassword = useRef<any>(null);
@@ -115,20 +120,20 @@ const ForgotPasswordScreen = (props: Props) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={colorScheme === 'dark' ? Colors.black : Colors.white} />
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
             <View style={{
                 flex: 1,
-                backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
             }}>
                 <HeaderComponent
                     margin={wp(3)}
-                    backgroundColorOpacity={colorScheme === 'dark' ? Colors.circleGray :
+                    backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
                         Colors.whiteGray}
                     borderRadiusOpacity={wp(10)} // arrowRightWhite
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    transform={colorScheme === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
-                    source={colorScheme === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
+                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}
                     color={Colors.lightBlack} // lightBlack
@@ -141,7 +146,7 @@ const ForgotPasswordScreen = (props: Props) => {
                 <View style={Styles.viewForgotPasswordConatiner}>
                     <View>
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.ForgotPasswordText}
                             textDecorationLine={'none'}
                             fontWeight="700"
@@ -154,7 +159,7 @@ const ForgotPasswordScreen = (props: Props) => {
                             marginTop={hp(5)}
                         />
                         <TextComponent
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.EnterYourRegisterEmailId}
                             textDecorationLine={'none'}
                             fontWeight="400"
@@ -167,13 +172,13 @@ const ForgotPasswordScreen = (props: Props) => {
                     </View>
                     <View>
                         <TextInputComponent
-                            selectionColor={colorScheme === 'dark' ? Colors.white : Colors.black}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
                             isVisibleLockWhite={false}
-                            isVisibleMail={colorScheme === 'dark' ? true : false}
-                            isVisibleMailGray={colorScheme === 'dark' ? false : true}
+                            isVisibleMail={isDarkMode === 'dark' ? true : false}
+                            isVisibleMailGray={isDarkMode === 'dark' ? false : true}
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1)}
                             width={wp(88)}
@@ -195,15 +200,15 @@ const ForgotPasswordScreen = (props: Props) => {
                             textAlign='left'
                             numberOfLines={null}
                             maxLength={null}
-                            color={colorScheme === 'dark' ? Colors.white : Colors.black}
-                            backgroundColor={colorScheme === 'dark' ? Colors.grayDark :
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
                             onChangeText={handleAccountEmail}
                             onSubmitEditing={() => {
                             }}
-                            placeholderTextColor={colorScheme === 'dark' ? Colors.gray : Colors.grayDark} />
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark} />
                         {!isValidEmail ?
                             <TextComponent
                                 textDecorationLine={'none'}
