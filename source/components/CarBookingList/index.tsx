@@ -1,0 +1,219 @@
+import React, { useState } from "react";
+import { FlatList, Image, TouchableOpacity, View } from "react-native";
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import TextComponent from '../../components/Text/index';
+import { Colors, Fonts, Images } from "../../themes/index";
+import { ScreenText } from "../../utils/index";
+import ListEmptyComponent from "../ListEmptyComponent/index";
+import Styles from "./style";
+
+
+type CarBookingListProps = {
+    data: any
+    onPress: any
+}
+
+const CarBookingListComponent = (props: CarBookingListProps) => {
+
+    const [data, setData] = useState(props.data);
+
+    return (
+        <FlatList
+            data={data}
+            contentContainerStyle={Styles.viewContentContainerStyle}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item, index }) => {
+                return (
+                    <View>
+                        <View style={{ flex: 1, backgroundColor: 'black' }}>
+
+                            <TouchableOpacity onPress={props.onPress}>
+                                <View style={{
+                                    height: "auto",
+                                    backgroundColor: '#282931',
+                                    borderRadius: wp(3),
+                                    padding: wp(3),
+                                    margin: wp(3)
+                                }}>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                    }}>
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={item?.type}
+                                                textDecorationLine={'none'}
+                                                fontWeight="500"
+                                                fontSize={wp(3.5)}
+                                                marginVertical={wp(2)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                                            {item?.status == "Pending" ?
+                                                <TextComponent
+                                                    color={Colors.blue}
+                                                    title={item?.status}
+                                                    textDecorationLine={'none'}
+                                                    fontWeight="500"
+                                                    fontSize={wp(3.5)}
+                                                    marginVertical={wp(2)}
+                                                    fontFamily={Fonts.PoppinsRegular}
+                                                    textAlign='right' />
+                                                : <TextComponent
+                                                    color={Colors.darkGreen}
+                                                    title={item?.status}
+                                                    textDecorationLine={'none'}
+                                                    fontWeight="500"
+                                                    fontSize={wp(3.5)}
+                                                    marginVertical={wp(2)}
+                                                    fontFamily={Fonts.PoppinsRegular}
+                                                    textAlign='right' />}
+
+                                        </View>
+
+                                    </View>
+
+                                    <View style={{ flexDirection: 'row' }}>
+
+                                        <View>
+                                            <View style={{
+                                                height: wp(15),
+                                                backgroundColor: 'white',
+                                                width: wp(15),
+                                                borderRadius: wp(50),
+                                                justifyContent: 'center'
+                                            }}>
+                                                <TextComponent
+                                                    color={Colors.km}
+                                                    title={item?.distance}
+                                                    textDecorationLine={'none'}
+                                                    fontWeight="700"
+                                                    fontSize={wp(3.5)}
+                                                    fontFamily={Fonts.PoppinsRegular}
+                                                    textAlign='center'
+                                                />
+                                            </View>
+                                            <View>
+                                                <TextComponent
+                                                    color={Colors.white}
+                                                    title={item?.time}
+                                                    textDecorationLine={'none'}
+                                                    fontWeight="400"
+                                                    marginVertical={wp(1)}
+                                                    fontSize={wp(3)}
+                                                    fontFamily={Fonts.PoppinsRegular}
+                                                    textAlign='left'
+                                                />
+                                            </View>
+
+                                        </View>
+
+                                        <View>
+                                            <Image
+                                                style={Styles.whiteDot}
+                                                resizeMode="contain"
+                                                source={Images.whiteDot} />
+
+                                            <View style={Styles.lineVerticalLine1} />
+                                            <View style={Styles.lineVerticalLine1} />
+                                            <View style={Styles.lineVerticalLine1} />
+
+                                            <Image
+                                                style={Styles.orangeDot}
+                                                resizeMode="contain"
+                                                source={Images.orangeDot} />
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={item?.pickup_locations}
+                                                textDecorationLine={'none'}
+                                                fontWeight="500"
+                                                fontSize={wp(3.5)}
+                                                marginVertical={wp(1)}
+                                                marginHorizontal={wp(3)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                textAlign='left'
+                                            />
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={item?.drop_locations}
+                                                textDecorationLine={'none'}
+                                                fontWeight="500"
+                                                fontSize={wp(3.5)}
+                                                marginHorizontal={wp(3)}
+                                                marginVertical={wp(3)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={"$ " + item?.Price} // Symbol As Text Use it !
+                                                textDecorationLine={'none'}
+                                                fontWeight="700"
+                                                fontSize={wp(4)}
+                                                // marginRight={wp(3)}
+                                                // marginVertical={wp(3)}
+                                                fontFamily={Fonts.PoppinsSemiBold}
+                                                textAlign='right'
+                                            />
+                                        </View>
+
+                                    </View>
+
+                                    <View style={{ flexDirection: "row" }}>
+                                        <TextComponent
+                                            color={Colors.grayFull}
+                                            title={item?.date}
+                                            textDecorationLine={'none'}
+                                            fontWeight="500"
+                                            fontSize={wp(3.5)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                        />
+                                        {/* <TextComponent
+                                            color={Colors.grayFull}
+                                            title={item?.carTimeFormat}
+                                            textDecorationLine={'none'}
+                                            fontWeight="500"
+                                            fontSize={wp(3.5)}
+                                            marginVertical={wp(1)}
+                                            marginHorizontal={wp(3)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                        /> */}
+                                    </View>
+
+
+
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                );
+            }}
+            ListEmptyComponent={() => (
+                <ListEmptyComponent
+                    color={Colors.black}
+                    textDecorationLine={'none'}
+                    fontWeight="600"
+                    fontSize={wp(5)}
+                    fontFamily={Fonts.PoppinsRegular}
+                    alignSelf='center'
+                    textAlign='center'
+                    title={ScreenText.NoDataAvailable} />
+            )}
+        />
+    );
+}
+
+export default CarBookingListComponent;
