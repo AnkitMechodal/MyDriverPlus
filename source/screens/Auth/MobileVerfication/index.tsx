@@ -10,6 +10,7 @@ import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import TextInputComponent from '../../../components/TextInput';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
@@ -53,6 +54,9 @@ const MobileVerficationScreen = ({ route, navigation }) => {
 
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
     const [confirm, setConfirm] = useState<PhoneAuthState | null>(null);
+
+    const { isDarkMode, toggleTheme } = useTheme();
+
 
     useEffect(() => {
         // Send OTP 
@@ -183,15 +187,20 @@ const MobileVerficationScreen = ({ route, navigation }) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={Colors.black} />
-            <View style={Styles.container}>
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
+            <View style={{
+                flex: 1,
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
+            }}>
                 <HeaderComponent
                     margin={wp(3)}
-                    backgroundColorOpacity={Colors.circleGray}
+                    backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
+                        Colors.whiteGray}
                     borderRadiusOpacity={wp(10)}
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    source={Images.arrowRight}
+                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}
                     color={Colors.lightBlack}
@@ -204,7 +213,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                 <View style={Styles.viewMobileVerfictaion}>
                     <View>
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.OTPVerification}
                             textDecorationLine={'none'}
                             fontWeight="700"
@@ -216,10 +225,10 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             marginTop={hp(5)}
                         />
                         <TextComponent
-                            color={Colors.gray}
+                            color={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                             isTextEnd={true}
                             sizeEnd={wp(3.5)}
-                            colorEnd={Colors.white}
+                            colorEnd={isDarkMode === 'dark' ? Colors.white : Colors.grayDark}
                             title={ScreenText.OTPSend}
                             endtext={route?.params?.itemOTPNumber}
                             textDecorationLine={'none'}
@@ -232,7 +241,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                     </View>
                     <View style={CommonStyle.commonRow}>
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -242,8 +251,11 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused ? ConstValue.value1 : ConstValue.value0 :
+                                isFocused ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused ? Colors.white : Colors.blue :
+                                isFocused ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -260,18 +272,19 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
                             onChangeText={handleAccountOne}
                             onSubmitEditing={() => {
                                 refnumber2?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -281,8 +294,11 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused2 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused2 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused2 ? ConstValue.value1 : ConstValue.value0 :
+                                isFocused2 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused2 ? Colors.white : Colors.blue :
+                                isFocused2 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -299,19 +315,20 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus2}
                             onChangeText={handleAccountTwo}
                             onSubmitEditing={() => {
                                 refnumber3?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -321,8 +338,12 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused3 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused3 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused3 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused3 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused3 ? Colors.white : Colors.blue :
+                                isFocused3 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -339,20 +360,21 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus3}
                             onChangeText={handleAccountThree}
                             onSubmitEditing={() => {
                                 refnumber4?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
 
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -362,8 +384,12 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused4 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused4 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused4 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused4 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused4 ? Colors.white : Colors.blue :
+                                isFocused4 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -380,19 +406,20 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus4}
                             onChangeText={handleAccountFour}
                             onSubmitEditing={() => {
                                 refnumber5?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -402,8 +429,12 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused5 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused5 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused5 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused5 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused5 ? Colors.white : Colors.blue :
+                                isFocused5 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -420,19 +451,20 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus5}
                             onChangeText={handleAccountFive}
                             onSubmitEditing={() => {
                                 refnumber6?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -442,8 +474,12 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused6 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused6 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused6 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused6 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused6 ? Colors.white : Colors.blue :
+                                isFocused6 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -460,14 +496,15 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus6}
                             onChangeText={handleAccountSix}
                             onSubmitEditing={() => {
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
 
                         {/* {!isValidEmail ?
@@ -484,7 +521,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                     </View>
                     <View>
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isTextEnd={true}
                             sizeEnd={wp(3.5)}
                             colorEnd={Colors.blue}

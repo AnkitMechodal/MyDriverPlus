@@ -121,7 +121,7 @@ const Styles = StyleSheet.create({
     },
     viewPreferredDriver: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     textPreferedDriver: {
         color: 'white',
@@ -143,6 +143,13 @@ const Styles = StyleSheet.create({
         color: 'white',
         fontSize: wp(3.5),
         fontFamily: Fonts.PoppinsRegular
+    },
+    textSavedLocationMode: {
+        color: 'white',
+        fontSize: wp(3.5),
+        fontFamily: Fonts.PoppinsSemiBold,
+        marginTop: wp(3),
+        marginLeft: wp(5)
     },
     imageRightArrowPrivacyIcon: {
         width: wp(6),
@@ -190,6 +197,12 @@ const Styles = StyleSheet.create({
         height: wp(6),
         tintColor: Colors.white,
         marginLeft: wp(35) // 35
+    },
+    imageArrowRightMode: {
+        width: wp(6),
+        height: wp(6),
+        tintColor: Colors.white,
+        marginLeft: wp(20) // 35
     },
     imageFqaIcon: {
         width: wp(6),

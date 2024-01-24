@@ -257,7 +257,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isTextEnd={true}
                             sizeEnd={wp(3.5)}
-                            colorEnd={Colors.white}
+                            colorEnd={isDarkMode === 'dark' ? Colors.white : Colors.grayDark}
                             endtext={route?.params?.itemEmail}
                             title={ScreenText.EmailInfo}
                             textDecorationLine={'none'}
@@ -273,7 +273,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                         marginVertical: wp(5)
                     }}>
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -283,8 +283,12 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused ? Colors.white : Colors.blue :
+                                isFocused ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -301,7 +305,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
@@ -313,7 +317,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -323,8 +327,12 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused2 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused2 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused2 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused2 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused2 ? Colors.white : Colors.blue :
+                                isFocused2 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -341,7 +349,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
@@ -354,7 +362,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                         />
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -364,8 +372,12 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused3 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused3 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused3 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused3 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused3 ? Colors.white : Colors.blue :
+                                isFocused3 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -382,7 +394,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
@@ -396,7 +408,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
 
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -406,8 +418,12 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused4 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused4 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused4 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused4 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused4 ? Colors.white : Colors.blue :
+                                isFocused4 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -424,7 +440,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
@@ -437,7 +453,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                         />
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -447,8 +463,12 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused5 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused5 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused5 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused5 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused5 ? Colors.white : Colors.blue :
+                                isFocused5 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -465,7 +485,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
@@ -478,7 +498,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                         />
 
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -488,8 +508,12 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(1.5)}
                             width={wp(12)}
-                            borderWidth={isFocused6 ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused6 ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused6 ? ConstValue.value1 :
+                                ConstValue.value0 :
+                                isFocused6 ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused6 ? Colors.white : Colors.blue :
+                                isFocused6 ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -506,7 +530,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             textAlign='center'
                             numberOfLines={null}
                             maxLength={1}
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
@@ -534,7 +558,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isTextEnd={true}
                             sizeEnd={wp(3.5)}
-                            colorEnd={Colors.blue}
+                            colorEnd={isDarkMode === 'dark' ? Colors.blue : Colors.blue}
                             endtext={ScreenText.Resend}
                             onPress={onPressResend}
                             title={ScreenText.ReceiveNot}

@@ -12,6 +12,7 @@ import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import TextInputComponent from '../../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail, validateIsPhoneNumber } from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
@@ -26,6 +27,9 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
     // const navigation = useNavigation();
 
     let user_register_id;
+
+
+    const { isDarkMode, toggleTheme } = useTheme();
 
 
     const [isFocused, setIsFocused] = useState(false);
@@ -638,16 +642,24 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={Colors.black} />
-            <ScrollView style={Styles.container}>
-                <View style={Styles.container}>
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
+            <ScrollView style={{
+                flex: 1,
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
+            }}>
+                <View style={{
+                    flex: 1,
+                    backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
+                }}>
                     <HeaderComponent
                         margin={wp(3)}
-                        backgroundColorOpacity={Colors.circleGray}
+                        backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
+                            Colors.whiteGray}
                         borderRadiusOpacity={wp(10)}
                         paddingOpacity={wp(2)}
                         textAlign={"center"}
-                        source={Images.arrowRight}
+                        transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                        source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                         width={wp(7)}
                         height={wp(7)}
                         color={Colors.lightBlack}
@@ -659,7 +671,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                     />
                     <View style={Styles.textCreateANewAccount}>
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.CreateNewAccount}
                             textDecorationLine={'none'}
                             fontWeight="700"
@@ -669,7 +681,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             textAlign='left'
                         />
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.WelcomeInfo}
                             textDecorationLine={'none'}
                             marginHorizontal={wp(3)}
@@ -691,7 +703,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             value={text}
                         /> */}
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -701,8 +713,11 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             isVisibleUser={true}
                             width={wp(90)}
-                            borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocused ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocused ? ConstValue.value1 : ConstValue.value0 :
+                                isFocused ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocused ? Colors.white : Colors.blue :
+                                isFocused ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -719,8 +734,9 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             textAlign='left'
                             numberOfLines={null}
                             maxLength={null}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
                             onChangeText={handleAccountName}
@@ -728,7 +744,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             onSubmitEditing={() => {
                                 refUserMobile?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidName ?
                             <TextComponent
@@ -747,7 +763,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
 
                     <View>
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={true}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -760,8 +776,11 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             marginVertical={hp(0)}
                             marginHorizontal={wp(5)}
                             width={wp(90)}
-                            borderWidth={isFocusedMobile ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocusedMobile ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocusedMobile ? ConstValue.value1 : ConstValue.value0 :
+                                isFocusedMobile ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocusedMobile ? Colors.white : Colors.blue :
+                                isFocusedMobile ? Colors.blue : Colors.white}
                             height={hp(7)}
                             isUserHide={false}
                             textfontSize={ConstValue.value15}
@@ -777,15 +796,16 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             textAlign='left'
                             numberOfLines={null}
                             maxLength={10}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusMobile}
                             onChangeText={handleAccountNumber}
                             onSubmitEditing={() => {
                                 refUserEmail?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidNumber ?
                             <TextComponent
@@ -804,7 +824,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
 
                     <View>
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleEye={false}
                             isVisibleEye_={false}
@@ -814,8 +834,11 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             marginHorizontal={wp(5)}
                             marginVertical={hp(0)}
                             width={wp(90)}
-                            borderWidth={isFocusedEmail ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocusedEmail ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocusedEmail ? ConstValue.value1 : ConstValue.value0 :
+                                isFocusedEmail ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocusedEmail ? Colors.white : Colors.blue :
+                                isFocusedEmail ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -833,15 +856,16 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             textAlign='left'
                             numberOfLines={null}
                             maxLength={null}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusEmail}
                             onChangeText={handleAccountEmail}
                             onSubmitEditing={() => {
                                 refUserPassword?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidEmail ?
                             <TextComponent
@@ -860,7 +884,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
 
                     <View>
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             onPressHide={handleHideShow1}
                             onPressShow={handleHideShow2}
@@ -870,8 +894,11 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             marginVertical={hp(1)}
                             marginHorizontal={wp(5)}
                             width={wp(90)}
-                            borderWidth={isFocusedPassword ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocusedPassword ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocusedPassword ? ConstValue.value1 : ConstValue.value0 :
+                                isFocusedPassword ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocusedPassword ? Colors.white : Colors.blue :
+                                isFocusedPassword ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -888,15 +915,16 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusPass}
                             onChangeText={handleAccountPassword}
                             onSubmitEditing={() => {
                                 refUserConfirmPassword?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidPassword ?
                             <TextComponent
@@ -914,7 +942,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
 
                     <View>
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             onPressHide={handleHideShow1Confirm}
                             onPressShow={handleHideShow2Confirm}
@@ -924,8 +952,11 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             marginVertical={hp(1)}
                             marginHorizontal={wp(5)}
                             width={wp(90)}
-                            borderWidth={isFocusedPasswordConfirm ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocusedPasswordConfirm ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocusedPasswordConfirm ? ConstValue.value1 : ConstValue.value0 :
+                                isFocusedPasswordConfirm ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocusedPasswordConfirm ? Colors.white : Colors.blue :
+                                isFocusedPasswordConfirm ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -942,15 +973,16 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusPassConfirm}
                             onChangeText={handleAccountPasswordConfirm}
                             onSubmitEditing={() => {
                                 refUserReferCode?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidPasswordConfirm ?
                             <TextComponent
@@ -968,15 +1000,18 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
 
                     <View>
                         <TextInputComponent
-                            selectionColor={Colors.white}
+                            selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             isVisibleDropDown={false}
                             isVisibleLock={false}
                             isVisibleRef={true}
                             marginVertical={hp(1)}
                             marginHorizontal={wp(5)}
                             width={wp(90)}
-                            borderWidth={isFocusedPasswordRef ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocusedPasswordRef ? Colors.white : Colors.blue}
+                            borderWidth={isDarkMode === 'dark' ? isFocusedPasswordRef ? ConstValue.value1 : ConstValue.value0 :
+                                isFocusedPasswordRef ? ConstValue.value1 : ConstValue.value0
+                            }
+                            borderColor={isDarkMode === 'dark' ? isFocusedPasswordRef ? Colors.white : Colors.blue :
+                                isFocusedPasswordRef ? Colors.blue : Colors.white}
                             height={hp(7)}
                             marginTop={hp(2)}
                             isUserHide={false}
@@ -992,14 +1027,15 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusPassRefCode}
                             onChangeText={handleAccountRefCode}
                             onSubmitEditing={() => {
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidRefCode ?
                             <TextComponent
@@ -1020,15 +1056,18 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                                 onFillColor={'blue'}
                                 boxType="square"
                                 disabled={false}
-                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                tintColors={{
+                                    true: isDarkMode === 'dark' ? Colors.blue : Colors.blue,
+                                    false: isDarkMode === 'dark' ? Colors.white : Colors.black
+                                }}
                                 value={toggleCheckBox}
                                 onValueChange={(newValue) => setToggleCheckBox(newValue)}
                             />
                             <TextComponent
-                                color={Colors.white}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 isTextEnd={true}
                                 sizeEnd={wp(3.5)}
-                                colorEnd={Colors.blue}
+                                colorEnd={isDarkMode === 'dark' ? Colors.blue : Colors.black}
                                 endtext={ScreenText.TermsAndConditions}
                                 title={ScreenText.IAgreeTermsAndCondition}
                                 textDecorationLine={'none'}

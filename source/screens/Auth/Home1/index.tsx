@@ -9,7 +9,7 @@ import {
 import { DefaultTheme, NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, BackHandler, Image, PermissionsAndroid, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, BackHandler, Image, PermissionsAndroid, Platform, Switch, Text, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CustomHeaderComponent from '../../../components/CustomHeader';
@@ -137,6 +137,7 @@ const MyComponent = ({ navigation }) => {
         </View >
     );
 }
+
 
 
 const EditProfileStack = () => {
@@ -985,7 +986,7 @@ const BottomTabStack = ({ route }) => {
         </Tab.Navigator>
     );
 };
-
+// const { isDarkMode, toggleTheme } = useTheme();
 
 const MyTheme = {
     ...DefaultTheme,
@@ -994,6 +995,10 @@ const MyTheme = {
         primary: Colors.black,
         background: Colors.black,
         text: Colors.black,
+
+        // primary: isDarkMode === 'dark' ? Colors.black : Colors.white,
+        // background: isDarkMode === 'dark' ? Colors.black : Colors.white,
+        // text: isDarkMode === 'dark' ? Colors.black : Colors.white,
     },
 };
 
@@ -1014,7 +1019,7 @@ function CustomDrawerContent(props) {
 
                     <View>
                         <TextComponent
-                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.white}
                             title={ScreenText.MyDriverPlus}
                             textDecorationLine={'none'}
                             fontWeight="600"
@@ -1141,7 +1146,11 @@ const HomeOneScreen = (props: Props) => {
 
     const [email, setEmail] = useState('')
 
+    const [isEnabled, setIsEnabled] = useState(false);
 
+    const toggleSwitch = () => {
+        setIsEnabled((previousState) => !previousState);
+    };
 
     return (
         <NavigationContainer
@@ -1157,7 +1166,6 @@ const HomeOneScreen = (props: Props) => {
                     header: ({ navigation, route }) => (
                         <CustomHeaderComponent
                             ref={ref}
-                            onPress={() => Alert.alert('Click')}
                             handleUserLocation={handleUserLocation}
                             navigation={navigation} />
                     ),
@@ -1167,7 +1175,11 @@ const HomeOneScreen = (props: Props) => {
                     options={({ route }) => ({
                         drawerLabel: ({ color }) => (
                             <View style={Styles.viewEditProfile}>
-                                <Text style={Styles.textEditProfile}> Home</Text>
+                                <Text style={{
+                                    color: isDarkMode === 'dark' ? 'white' : 'white', // textEditProfile
+                                    fontSize: wp(3.5),
+                                    fontFamily: Fonts.PoppinsRegular
+                                }}> Home</Text>
                                 <Image
                                     style={Styles.imageRightArrowProfileIcon1}
                                     resizeMode="contain"
@@ -1385,6 +1397,8 @@ const HomeOneScreen = (props: Props) => {
                     }}
                     component={EditFAQStack}
                 />
+
+
                 <Drawer.Screen
                     name="LogoutScreenStack"
                     options={{
@@ -1409,6 +1423,8 @@ const HomeOneScreen = (props: Props) => {
                     }}
                     component={EditProfileStack}
                 />
+
+
                 <Drawer.Screen
                     name="Help & Support"
                     options={{
@@ -1428,6 +1444,41 @@ const HomeOneScreen = (props: Props) => {
                         ),
                     }}
                     component={EditHelpStack}
+                />
+                <Drawer.Screen
+                    name="Theme"
+                    options={{
+                        drawerLabel: ({ color }) => (
+                            <View style={Styles.viewPreferredDriver}>
+                                <Text style={Styles.textSavedLocationMode}>Dark Mode</Text>
+                                <View style={Styles.imageArrowRightMode}>
+                                    <Switch
+                                        trackColor={{ false: '#767577', true: '#f4f3f4' }}
+                                        thumbColor={isDarkMode ? '#008000' : '#f4f3f4'}
+                                        ios_backgroundColor="#3e3e3e"
+                                        onValueChange={toggleTheme}
+                                        value={isDarkMode === 'dark'}
+                                    />
+                                </View>
+
+                            </View>
+                        ),
+                        header: () => null,
+                        title: 'Theme',
+                        drawerLabelStyle: Styles.drawerLabelLogout,
+                        drawerIcon: ({ focused, size }) => (
+                            isDarkMode === 'dark' ?
+                                <Image
+                                    style={Styles.imageExitIcon}
+                                    resizeMode="contain"
+                                    source={Images.accountEmailWhite_} />
+                                : <Image
+                                    style={Styles.imageExitIcon}
+                                    resizeMode="contain"
+                                    source={Images.accountEmailBlack_} />
+                        ),
+                    }}
+                    component={EditProfileStack}
                 />
             </Drawer.Navigator>
         </NavigationContainer>

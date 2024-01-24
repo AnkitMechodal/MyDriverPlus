@@ -194,15 +194,20 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={Colors.black} />
-            <View style={Styles.container}>
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
+            <View style={{
+                flex: 1,
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
+            }}>
                 <HeaderComponent
                     margin={wp(3)}
-                    backgroundColorOpacity={Colors.circleGray}
+                    backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
+                        Colors.whiteGray}
                     borderRadiusOpacity={wp(10)}
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    source={Images.arrowRight}
+                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}
                     color={Colors.lightBlack}
@@ -212,10 +217,11 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
                     fontSize={wp(4)}
                     onPress={() => navigation.goBack()}
                 />
+
                 <View style={Styles.forgorConatiner}>
                     <View>
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.ForgotPassword}
                             textDecorationLine={'none'}
                             fontWeight="700"
@@ -227,7 +233,7 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
                             marginTop={hp(5)}
                         />
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.EnterYourRegisterEmailId}
                             textDecorationLine={'none'}
                             fontWeight="400"
@@ -267,14 +273,15 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
                             numberOfLines={null}
                             maxLength={null}
                             color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusPass}
                             onChangeText={handleAccountPassword}
                             onSubmitEditing={() => {
                                 refMobileConfirm?.current?.focus();
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidPassword ?
                             <TextComponent
@@ -320,13 +327,14 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
                             textAlign='left'
                             numberOfLines={null}
                             color={Colors.white}
-                            backgroundColor={Colors.grayDark}
+                            backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
+                                Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocusPassConfirm}
                             onChangeText={handleAccountPasswordConfirm}
                             onSubmitEditing={() => {
                             }}
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.grayDark}
                         />
                         {!isValidPasswordConfirm ?
                             <TextComponent

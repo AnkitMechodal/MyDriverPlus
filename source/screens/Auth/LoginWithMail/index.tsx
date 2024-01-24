@@ -271,7 +271,7 @@ const LoginWithMailScreen = (props: Props) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={Colors.black} />
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
             <ScrollView style={{
                 flex: 1,
                 backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white

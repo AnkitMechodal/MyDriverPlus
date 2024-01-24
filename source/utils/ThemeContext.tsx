@@ -11,6 +11,8 @@ export const useTheme = () => {
   return useContext(ThemeContext);
 };
 
+// export const ThemeProvider = ({ children, themeMode, setThemeMode }) => {
+
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState('light'); // Default Theme Set
@@ -23,6 +25,9 @@ export const ThemeProvider = ({ children }) => {
     isDarkMode,
     toggleTheme
   }
+
+  // const currentTheme = isDarkMode[themeMode]; // theme
+
 
   return (
     <ThemeContext.Provider value={theme}>

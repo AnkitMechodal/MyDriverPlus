@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../../components/Button/index';
@@ -9,6 +9,7 @@ import HeaderComponent from '../../../components/Header';
 import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
 import { ScreenText } from '../../../utils/index';
@@ -23,6 +24,9 @@ type Props = {
 const VerifyYourScreenMobile = ({ route, navigation }) => {
 
     // const navigation = useNavigation();
+
+    const { isDarkMode, toggleTheme } = useTheme();
+
 
     const [isClick, setIsClick] = useState(true);
     const [isDisabled, setIsDisabled] = useState(true);
@@ -189,16 +193,20 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={Colors.black} />
-
-            <View style={Styles.container}>
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
+            <View style={{
+                flex: 1,
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
+            }}>
                 <HeaderComponent
                     margin={wp(3)}
-                    backgroundColorOpacity={Colors.circleGray}
+                    backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
+                        Colors.whiteGray}
                     borderRadiusOpacity={wp(10)}
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    source={Images.arrowRight}
+                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}
                     color={Colors.lightBlack}
@@ -214,7 +222,7 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                 <View style={Styles.viewFirstConatiner}>
 
                     <TextComponent
-                        color={Colors.white}
+                        color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                         title={ScreenText.VerifyYourAccount}
                         textDecorationLine={'none'}
                         fontWeight="700"
@@ -224,7 +232,7 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                         textAlign='left'
                     />
                     <TextComponent
-                        color={Colors.white}
+                        color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                         title={ScreenText.WelcomeInfo}
                         textDecorationLine={'none'}
                         fontWeight="400"
@@ -236,16 +244,19 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
 
                     <View style={CommonStyle.commonRow}>
                         <TouchableOpacity
-                            onPress={() => Alert.alert('test')}
                             activeOpacity={0}>
-                            <Image
-                                source={Images.accountMobile}
-                                style={Styles.imageSearchIcon}
-                                resizeMode="contain" />
+                            {isDarkMode === 'dark' ?
+                                <Image
+                                    source={Images.accountMobile}
+                                    style={Styles.imageSearchIcon}
+                                    resizeMode="contain" /> : <Image
+                                    source={Images.accountMobileWhite}
+                                    style={Styles.imageSearchIcon}
+                                    resizeMode="contain" />}
                         </TouchableOpacity>
                         <View>
                             <TextComponent
-                                color={Colors.white}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 title={ScreenText.MobileVerification}
                                 textDecorationLine={'none'}
                                 fontWeight="600"
@@ -256,10 +267,10 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                                 textAlign='left'
                             />
                             <TextComponent
-                                color={Colors.white}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 isTextEnd={true}
                                 sizeEnd={wp(3.5)}
-                                colorEnd={Colors.white}
+                                colorEnd={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 // endtext={route?.params?.itemAccountMobile}
                                 // title={route?.params?.itemAccountMobile}
                                 title={isGetMobile}
@@ -291,16 +302,18 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                     </View>
                     <View style={Styles.accountEmail}>
                         <TouchableOpacity
-                            onPress={() => Alert.alert('test')}
                             activeOpacity={0}>
-                            <Image
+                            {isDarkMode === 'dark' ? <Image
                                 source={Images.accountEmail}
                                 style={Styles.imageSearchIcon}
-                                resizeMode="contain" />
+                                resizeMode="contain" /> : <Image
+                                source={Images.accountEmailWhite}
+                                style={Styles.imageSearchIcon}
+                                resizeMode="contain" />}
                         </TouchableOpacity>
                         <View>
                             <TextComponent
-                                color={Colors.white}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 title={ScreenText.EmailVerification}
                                 textDecorationLine={'none'}
                                 fontWeight="600"
@@ -311,10 +324,10 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                                 textAlign='left'
                             />
                             <TextComponent
-                                color={Colors.white}
+                                color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 isTextEnd={true}
                                 sizeEnd={wp(2)}
-                                colorEnd={Colors.white}
+                                colorEnd={isDarkMode === 'dark' ? Colors.white : Colors.black}
                                 // title={route?.params?.itemAccountEmail}
                                 title={isGetEmail}
                                 textDecorationLine={'none'}

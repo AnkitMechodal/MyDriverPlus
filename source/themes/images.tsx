@@ -227,5 +227,14 @@ export const Images = {
    appIconWhite: require("../images/ic_AppIcon_w.png"),
    mailIconWhite: require("../images/ic_mail_w.png"),
    arrowRightWhite: require("../images/ic_ArrowRight_w.png"),
+   accountMobileWhite: require("../images/ic_round_mobile_w.png"),
+   accountEmailWhite: require("../images/ic_round_mail_w.png"),
+
+   accountEmailBlack_: require("../images/ic_b.png"),
+   accountEmailWhite_: require("../images/ic_w.png"),
+   openIconWhite: require("../images/ic_lines_w.png"),
+
+
+
 
 }

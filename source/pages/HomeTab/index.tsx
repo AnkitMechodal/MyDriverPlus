@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 import React, { useEffect, useRef, useState } from 'react';
-import { BackHandler, Image, PermissionsAndroid, Platform, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { SliderBox } from "react-native-image-slider-box";
 import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -10,6 +10,7 @@ import StatusBarComponent from '../../components/StatusBar';
 import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes';
 import { ConstValue, ScreenText } from '../../utils';
+import { useTheme } from '../../utils/ThemeContext';
 import CommonStyle from '../../utils/commonStyle';
 import Styles from './style';
 
@@ -51,9 +52,6 @@ const HomeTabScreen = (props: Props) => {
     let user_longitude;
 
     const mapViewRef = useRef<any>(null);
-
-
-
 
     useEffect(() => {
         const backAction = async () => {
@@ -137,6 +135,9 @@ const HomeTabScreen = (props: Props) => {
         };
     }, []);
 
+    const { isDarkMode, toggleTheme } = useTheme();
+
+
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
@@ -168,14 +169,31 @@ const HomeTabScreen = (props: Props) => {
                     />
                 </MapView>
 
-                <View style={Styles.overlay}>
+                <View style={{
+                    position: 'absolute',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    borderRadius: wp(2),
+                    backgroundColor: isDarkMode === 'dark' ? "rgba(0, 0, 0, 0.6)" : "#FFFFFF", //QUICK
+                    height: wp(14),
+                    padding: wp(2),
+                    marginTop: wp(10),
+                    alignSelf: 'center',
+                }}>
                     <TouchableOpacity onPress={
                         () => props.navigation.toggleDrawer()}
                         style={Styles.viewBlackBackground}>
-                        <Image
-                            style={Styles.imageOpenIcon}
-                            resizeMode="contain"
-                            source={Images.openIcon} />
+
+                        {isDarkMode === 'dark' ?
+                            <Image
+                                style={Styles.imageOpenIcon}
+                                resizeMode="contain"
+                                source={Images.openIcon} /> :
+                            <Image
+                                style={Styles.imageOpenIcon}
+                                resizeMode="contain"
+                                source={Images.openIconWhite} />}
+
                     </TouchableOpacity>
 
                     <TextInputComponent
@@ -203,7 +221,7 @@ const HomeTabScreen = (props: Props) => {
                         backgroundColor={'transparent'}
                         borderRadius={wp(2)}
                         onChangeText={handleUserLocation}
-                        placeholderTextColor={Colors.white}
+                        placeholderTextColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
                     />
 
                     <View style={Styles.viewMargin}>

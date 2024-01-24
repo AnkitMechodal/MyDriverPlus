@@ -8,6 +8,7 @@ import HeaderComponent from '../../../components/Header';
 import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
 import { ScreenText } from '../../../utils/index';
@@ -20,6 +21,9 @@ type Props = {
 
 const EmailVerficationScreen = ({ route, navigation }) => {
     // const navigation = useNavigation();
+
+
+    const { isDarkMode, toggleTheme } = useTheme();
 
 
     const refPassword = useRef<any>(null);
@@ -253,15 +257,20 @@ const EmailVerficationScreen = ({ route, navigation }) => {
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
-                backgroundColor={Colors.black} />
-            <View style={Styles.container}>
+                backgroundColor={isDarkMode === 'dark' ? Colors.black : Colors.white} />
+            <View style={{
+                flex: 1,
+                backgroundColor: isDarkMode === 'dark' ? Colors.black : Colors.white
+            }}>
                 <HeaderComponent
                     margin={wp(3)}
-                    backgroundColorOpacity={Colors.circleGray}
+                    backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
+                        Colors.whiteGray}
                     borderRadiusOpacity={wp(10)}
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    source={Images.arrowRight}
+                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}
                     color={Colors.lightBlack}
@@ -274,7 +283,7 @@ const EmailVerficationScreen = ({ route, navigation }) => {
                 <View style={Styles.verficationContainer}>
                     <View>
                         <TextComponent
-                            color={Colors.white}
+                            color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             title={ScreenText.Verification}
                             textDecorationLine={'none'}
                             fontWeight="700"
@@ -286,10 +295,10 @@ const EmailVerficationScreen = ({ route, navigation }) => {
                             marginTop={hp(5)}
                         />
                         <TextComponent
-                            color={Colors.gray}
+                            color={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                             isTextEnd={true}
                             sizeEnd={wp(3.5)}
-                            colorEnd={Colors.white}
+                            colorEnd={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             endtext={route?.params?.itemSentEmail}
                             title={ScreenText.GoToMail}
                             textDecorationLine={'none'}
