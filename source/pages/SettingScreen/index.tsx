@@ -25,6 +25,11 @@ type Props = {
 const SettingScreen = (props: Props) => {
   // const navigation = useNavigation();
 
+
+
+  const [RatedPerson, setRatedPerson] = useState('20');
+
+
   const [defaultRating, setDefaultRating] = useState(0);
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
 
@@ -43,6 +48,8 @@ const SettingScreen = (props: Props) => {
   let user_email;
   let user_name;
   let user_img;
+
+  let user_total;
 
   let user_averageRating;
 
@@ -137,12 +144,17 @@ const SettingScreen = (props: Props) => {
             user_mobilenumber = response?.data?.matchingUsers[0]?.mobilenumber;
             user_email = response?.data?.matchingUsers[0]?.email;
             user_name = response?.data?.matchingUsers[0]?.username;
-            user_img = response?.data?.matchingUsers[0]?.profile_image; // 
+            user_img = response?.data?.matchingUsers[0]?.profile_image;
+
+            // Example 
+            user_total = response?.data?.matchingUsers[0]?.username;
 
             setProfileName(user_name);
             setProfileEmail(user_email);
             setProfileNumber(user_mobilenumber);
             setProfileImage(user_img);
+
+            setRatedPerson("(" + user_name + ")");
 
             // Handle API response here
             // Toast.show("User Information Get Successfully!", Toast.SHORT);
@@ -325,7 +337,7 @@ const SettingScreen = (props: Props) => {
             <View>
               <TextComponent
                 color={Colors.gray}
-                title={"(20)"}
+                title={RatedPerson}
                 textDecorationLine={'none'}
                 fontWeight="400"
                 fontSize={wp(4)}

@@ -43,7 +43,7 @@ const LoginSignUpScreen = (props: Props) => {
             if (storedLinkedId === null || storedLinkedId === '' || storedLinkedId === undefined) {
                 // Auto-login is not possible, handle the logic accordingly
                 console.log('Auto-login is not possible');
-                props.navigation.navigate('Home1');
+                // props.navigation.navigate('Home1');
             } else {
                 // Auto-login is possible, you can proceed with the login logic
                 console.log('Auto-login is possible');

@@ -8,10 +8,12 @@ import {
 } from '@react-navigation/drawer';
 import { DefaultTheme, NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, BackHandler, Image, PermissionsAndroid, Platform, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, Image, PermissionsAndroid, Platform, Switch, Text, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Toast from "react-native-simple-toast";
 import CustomHeaderComponent from '../../../components/CustomHeader';
 import TextComponent from '../../../components/Text';
 import CancelCourierDetailsMap from '../../../courier/CancelCourierDetailsMap';
@@ -67,6 +69,7 @@ import ViewRequestScreen from '../../../pages/ViewRequestScreen';
 import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
+import NetworkUtils from '../../../utils/commonfunction';
 import { ScreenText } from '../../../utils/index';
 import PreferredDriverDrawer from '../PreferredDriverDrawer';
 import Styles from './style';
@@ -406,8 +409,6 @@ const InnerHomeStack = () => {
                 component={DropUpLocationScreen}
             />
 
-
-
             <Stack.Screen
                 name="CourierDropupScreen"
                 options={{
@@ -703,7 +704,6 @@ const BottomTabStack = ({ route }) => {
                     header: ({ navigation, route }) => (
                         <CustomHeaderComponent
                             ref={ref}
-                            onPress={() => Alert.alert('Click')}
                             handleUserLocation={handleUserLocation}
                             navigation={navigation} />
                     ),
@@ -1004,6 +1004,95 @@ const MyTheme = {
 
 function CustomDrawerContent(props) {
 
+
+    const [isProfileName, setProfileName] = useState(ScreenText.GuyHawkins);
+    const [isProfileEmail, setProfileEmail] = useState(ScreenText.emailDummy);
+    const [isProfileImage, setProfileImage] = useState("https://fastly.picsum.photos/id/26/536/354.jpg?hmac=mH-83ynI3fGS9Ok782H46YSrWd9SV8D5v-77RfTdI0I");
+
+    let user_email;
+    let user_name;
+    let user_img;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Get Profile Data
+                await axiosPostProfilDataGetInfo();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+
+        // Set interval to refresh every 10 seconds
+        const intervalId = setInterval(fetchData, 10 * 1000);
+
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
+    }, []);
+
+    const axiosPostProfilDataGetInfo = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostSetProfileData();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosPostSetProfileData = async () => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        if (storedLinkedId !== null) {
+            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+            // Prepare data in JSON format
+            const data = {
+                id: JSON.parse(storedLinkedId),
+            };
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'User Information') {
+
+                        user_email = response?.data?.matchingUsers[0]?.email;
+                        user_name = response?.data?.matchingUsers[0]?.username;
+                        user_img = response?.data?.matchingUsers[0]?.profile_image;
+
+
+                        setProfileName(user_name);
+                        setProfileEmail(user_email);
+                        setProfileImage(user_img);
+
+
+                        // Handle API response here
+                        // Toast.show("User Information Get Successfully!", Toast.SHORT);
+                    } else {
+                        // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                });
+        } else {
+
+        }
+    }
+
     const { isDarkMode, toggleTheme } = useTheme();
 
     return (
@@ -1037,12 +1126,12 @@ function CustomDrawerContent(props) {
                         <Image
                             style={Styles.imageProfieIcon}
                             resizeMode="contain"
-                            source={Images.profileIcon} />
+                            source={{ uri: isProfileImage }} />
                     </View>
                     <View>
                         <TextComponent
                             color={Colors.white}
-                            title={ScreenText.GuyHawkins}
+                            title={isProfileName}
                             textDecorationLine={'none'}
                             fontWeight="700"
                             fontSize={wp(3)}
@@ -1054,7 +1143,7 @@ function CustomDrawerContent(props) {
                         />
                         <TextComponent
                             color={Colors.white}
-                            title={ScreenText.emailDummy}
+                            title={isProfileEmail}
                             textDecorationLine={'none'}
                             fontWeight="600"
                             fontSize={wp(3)}
@@ -1079,6 +1168,32 @@ const HomeOneScreen = (props: Props) => {
 
     const { isDarkMode, toggleTheme } = useTheme();
 
+
+
+    // Check User Theme & Store In Local Storage
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            // Your refresh logic here
+            console.log("toggleTheme==>" + isDarkMode);
+            storeToggleTheme(isDarkMode);
+        }, 5000);
+
+        // Clear the interval when the component is unmounted or when isDarkMode changes
+        return () => clearInterval(intervalId);
+
+        // Add isDarkMode to the dependency array if you want the effect to re-run when it changes
+    }, [isDarkMode]);
+
+
+    const storeToggleTheme = async (isDarkMode: any) => {
+        try {
+            await AsyncStorage.setItem('user_theme', JSON.stringify(isDarkMode));
+            console.log('user_theme===>', JSON.stringify(isDarkMode));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_theme :', error);
+        }
+    }
 
     // Auto Check Permission
     useEffect(() => {
@@ -1148,8 +1263,10 @@ const HomeOneScreen = (props: Props) => {
 
     const [isEnabled, setIsEnabled] = useState(false);
 
-    const toggleSwitch = () => {
-        setIsEnabled((previousState) => !previousState);
+    const onValueChange = () => {
+        toggleTheme
+        console.log("onValueChange===>", isDarkMode)
+        // setIsEnabled((previousState) => !previousState);
     };
 
     return (
@@ -1445,7 +1562,7 @@ const HomeOneScreen = (props: Props) => {
                     }}
                     component={EditHelpStack}
                 />
-                <Drawer.Screen
+                {/* <Drawer.Screen
                     name="Theme"
                     options={{
                         drawerLabel: ({ color }) => (
@@ -1479,7 +1596,7 @@ const HomeOneScreen = (props: Props) => {
                         ),
                     }}
                     component={EditProfileStack}
-                />
+                /> */}
             </Drawer.Navigator>
         </NavigationContainer>
 
