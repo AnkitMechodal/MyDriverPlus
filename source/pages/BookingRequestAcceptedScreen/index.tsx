@@ -144,6 +144,8 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
 
         if (timerValue === 0) {
             console.log('Timer reached zero!');
+            // Call To CustomerCare
+            Linking.openURL(`tel:${+9100000000000}`);
         }
 
         return () => {

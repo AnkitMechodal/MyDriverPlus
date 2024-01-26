@@ -147,6 +147,7 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
 
         if (timerValue === 0) {
             console.log('Timer reached zero!');
+            Linking.openURL(`tel:${+9100000000000}`);
         }
 
         return () => {

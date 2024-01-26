@@ -374,6 +374,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         if (rideStatus === "Completed") {
                             setToggleRideCompleted(true);
                             setDRIVERSTATUS("Ride Complete");
+
                             // setToggleFeedBack(true);
                         } else {
                             setToggleRideCompleted(false);

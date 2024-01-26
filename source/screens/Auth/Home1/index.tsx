@@ -383,8 +383,6 @@ const InnerHomeStack = () => {
                 component={PickUpLocationScreen}
             />
 
-
-
             <Stack.Screen
                 name="CourierPickupScreen"
                 options={{
