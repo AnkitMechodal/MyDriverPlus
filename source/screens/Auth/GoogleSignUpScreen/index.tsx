@@ -113,27 +113,45 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
 
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
+
     useEffect(() => {
-        // This function will be executed after the component renders
-        itemGoogleEmail_ = route?.params?.itemGoogleEmail;
-        itemGoogleName_ = route?.params?.itemGoogleName;
+        // This will run whenever textInput1 or textInput2 changes
 
-        // Check if not null before using
-        if (itemGoogleEmail_ !== null) {
-            // Do something with itemGoogleEmail_
-            setEmail(itemGoogleEmail_);
-        } else {
-            setEmail('');
-        }
+        setEmail(route?.params?.itemGoogleEmail);
+        setName(route?.params?.itemGoogleName);
 
-        if (itemGoogleName_ !== null) {
-            // Do something with itemGoogleName_
-            setName(itemGoogleName_);
-        } else {
-            setName('');
-        }
+        // setName(route?.params?.itemProfileName);
+        // setNameMail(route?.params?.itemProfileEmail);
+        // setNumber(route?.params?.itemProfileNumber);
+        // setIMG(route?.params?.itemProfileImage);
 
-    }); // The empty dependency array means it will only run once (on mount)
+        // You can perform additional side effects or logic here if needed
+        return () => {
+            // Cleanup logic here (if needed)
+        };
+    }, []);
+
+    // useEffect(() => {
+    //     // This function will be executed after the component renders
+    //     itemGoogleEmail_ = route?.params?.itemGoogleEmail;
+    //     itemGoogleName_ = route?.params?.itemGoogleName;
+
+    //     // Check if not null before using
+    //     if (itemGoogleEmail_ !== null) {
+    //         // Do something with itemGoogleEmail_
+    //         setEmail(itemGoogleEmail_);
+    //     } else {
+    //         setEmail('');
+    //     }
+
+    //     if (itemGoogleName_ !== null) {
+    //         // Do something with itemGoogleName_
+    //         setName(itemGoogleName_);
+    //     } else {
+    //         setName('');
+    //     }
+
+    // }); // The empty dependency array means it will only run once (on mount)
 
 
     const Images1 = {
@@ -656,9 +674,10 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                         backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
                             Colors.whiteGray}
                         borderRadiusOpacity={wp(10)}
+                        transform={[{ rotate: '180deg' }]}
                         paddingOpacity={wp(2)}
                         textAlign={"center"}
-                        transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                        // transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
                         source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                         width={wp(7)}
                         height={wp(7)}
@@ -794,6 +813,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             isPadding={true}
                             keyboardType='numeric'
                             textAlign='left'
+                            value={num}
                             numberOfLines={null}
                             maxLength={10}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}

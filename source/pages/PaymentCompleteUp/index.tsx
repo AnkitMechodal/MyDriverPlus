@@ -342,6 +342,7 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 paddingOpacity={wp(2.5)}
                                 textAlign={"left"}
                                 source={Images.arrowRight}
+                                transform={[{ rotate: '180deg' }]}
                                 marginTop={wp(2)}
                                 width={wp(7)}
                                 height={wp(7)} // 7

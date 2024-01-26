@@ -1254,6 +1254,7 @@ const CourierBookingScreen = ({ route, navigation }) => {
                         backgroundColorOpacity={Colors.circleGray}
                         borderRadiusOpacity={wp(10)}
                         paddingOpacity={wp(2)}
+                        transform={[{ rotate: '180deg' }]}
                         textAlign={"center"}
                         source={Images.arrowRight}
                         width={wp(7)}

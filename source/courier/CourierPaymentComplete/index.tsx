@@ -328,6 +328,7 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
                             backgroundColorOpacity={Colors.circleGray}
                             borderRadiusOpacity={hp(8)}
                             paddingOpacity={wp(2.5)}
+                            transform={[{ rotate: '180deg' }]}
                             textAlign={"left"}
                             source={Images.arrowRight}
                             marginTop={wp(2)}

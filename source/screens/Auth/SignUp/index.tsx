@@ -52,7 +52,7 @@ const SignUpScreen = ({ route, navigation }) => {
     const refUserReferCode = useRef<any>(null);
 
     const [email, setEmail] = useState('')
-    const [num, setNumber] = useState('')
+    const [num, setNumber] = useState('') // 
 
     const [isValidEmail, setValidEmail] = useState(true);
     const [isValidNumber, setValidNumber] = useState(true);
@@ -543,7 +543,7 @@ const SignUpScreen = ({ route, navigation }) => {
             email: email,
             emailStatus: "Deactive",
             emailOTP: "000000",
-            mobilenumber: selected.label + num,
+            mobilenumber: selected.label + num, // +91 + num
             mobilenumberStatus: "Deactive",
             mobilenumberOTP: "000000",
             password: pass,
@@ -658,7 +658,8 @@ const SignUpScreen = ({ route, navigation }) => {
                         borderRadiusOpacity={wp(10)}
                         paddingOpacity={wp(2)}
                         textAlign={"center"}
-                        transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                        transform={[{ rotate: '180deg' }]}
+                        // transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
                         source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                         width={wp(7)}
                         height={wp(7)}

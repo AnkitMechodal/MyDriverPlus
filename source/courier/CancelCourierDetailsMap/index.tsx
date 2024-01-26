@@ -318,6 +318,7 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                 width={wp(7)}
                                 height={wp(7)} // 7
                                 marginHorizontal={wp(5)}
+                                transform={[{ rotate: '180deg' }]}
                                 color={Colors.white}
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"

@@ -203,10 +203,11 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
                     margin={wp(3)}
                     backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
                         Colors.whiteGray}
+                    transform={[{ rotate: '180deg' }]}
                     borderRadiusOpacity={wp(10)}
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    // transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
                     source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}

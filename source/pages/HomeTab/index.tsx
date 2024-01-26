@@ -62,13 +62,13 @@ const HomeTabScreen = (props: Props) => {
             // For example, navigate to a different screen or show an alert
             console.log('Back button pressed!');
 
-            // Add your custom logic for clearing AsyncStorage data
-            try {
-                await AsyncStorage.clear();
-                console.log('AsyncStorage data cleared!');
-            } catch (error) {
-                console.error('Error clearing AsyncStorage data:', error);
-            }
+            // // Add your custom logic for clearing AsyncStorage data
+            // try {
+            //     await AsyncStorage.clear();
+            //     console.log('AsyncStorage data cleared!');
+            // } catch (error) {
+            //     console.error('Error clearing AsyncStorage data:', error);
+            // }
 
 
             BackHandler.exitApp();

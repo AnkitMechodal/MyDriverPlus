@@ -614,6 +614,7 @@ const RiseHelpScreen = (props: Props) => {
                     <View style={Styles.viewRiseHeader}>
                         <HeaderComponent
                             margin={wp(3)}
+                            transform={[{ rotate: '180deg' }]}
                             backgroundColorOpacity={Colors.circleGray}
                             borderRadiusOpacity={wp(10)}
                             paddingOpacity={wp(2)}

@@ -339,6 +339,7 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                                 textAlign={"left"}
                                 source={Images.arrowRight}
                                 marginTop={wp(2)}
+                                transform={[{ rotate: '180deg' }]}
                                 width={wp(7)}
                                 height={wp(7)} // 7
                                 marginHorizontal={wp(5)}

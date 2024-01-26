@@ -653,6 +653,7 @@ const PaymentScreen = (props: Props) => {
                             height={wp(7)}
                             color={Colors.white}
                             fontFamily={Fonts.InterSemiBold}
+                            transform={[{ rotate: '180deg' }]}
                             fontWeight="500"
                             title={"Payment Support"}
                             fontSize={wp(4)}

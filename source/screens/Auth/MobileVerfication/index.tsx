@@ -197,9 +197,10 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                     backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
                         Colors.whiteGray}
                     borderRadiusOpacity={wp(10)}
+                    transform={[{ rotate: '180deg' }]}
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    // transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
                     source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}

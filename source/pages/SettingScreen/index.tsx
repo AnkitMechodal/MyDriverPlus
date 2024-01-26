@@ -25,8 +25,6 @@ type Props = {
 const SettingScreen = (props: Props) => {
   // const navigation = useNavigation();
 
-
-
   const [RatedPerson, setRatedPerson] = useState('20');
 
 
@@ -80,16 +78,6 @@ const SettingScreen = (props: Props) => {
       // Clear the interval when the component unmounts
       clearInterval(intervalId);
     };
-  }, []);
-
-  useEffect(() => {
-
-    // Get Profile Data
-    axiosPostProfilDataGetInfo();
-
-    // Get Profile Ratting 
-    axiosPostProfilDataGetRatting();
-
   }, []);
 
   const axiosPostProfilDataGetInfo = async () => {
@@ -147,14 +135,14 @@ const SettingScreen = (props: Props) => {
             user_img = response?.data?.matchingUsers[0]?.profile_image;
 
             // Example 
-            user_total = response?.data?.matchingUsers[0]?.username;
+            // user_total = response?.data?.matchingUsers[0]?.username;
 
             setProfileName(user_name);
             setProfileEmail(user_email);
             setProfileNumber(user_mobilenumber);
             setProfileImage(user_img);
 
-            setRatedPerson("(" + user_name + ")");
+            // setRatedPerson("(" + user_name + ")");
 
             // Handle API response here
             // Toast.show("User Information Get Successfully!", Toast.SHORT);
@@ -174,7 +162,11 @@ const SettingScreen = (props: Props) => {
   const axiosPostSetProfileRattingData = async () => {
 
     const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+    console.log('storedLinkedId----->', storedLinkedId);
+
     if (storedLinkedId !== null) {
+
 
       const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculate/calculateRating/${JSON.parse(storedLinkedId)}`;
 
@@ -188,8 +180,12 @@ const SettingScreen = (props: Props) => {
             response?.data?.message === 'Ratings calculated successfully') {
 
             user_averageRating = response?.data?.ratings?.averageRating;
-            //console.log('user_numberOfRatings', user_averageRating);
+            user_total = response?.data?.ratings?.numberOfRatings;
+
+
             setDefaultRating(user_averageRating);
+            setRatedPerson("(" + user_total + ")");
+
 
             // user_mobilenumber = response?.data?.matchingUsers[0]?.mobilenumber;
             // user_email = response?.data?.matchingUsers[0]?.email;
@@ -273,6 +269,7 @@ const SettingScreen = (props: Props) => {
             <HeaderComponent
               margin={wp(3)}
               backgroundColorOpacity={Colors.circleGray}
+              transform={[{ rotate: '180deg' }]}
               textAlign={"left"}
               color={Colors.white}
               fontFamily={Fonts.PoppinsRegular}
@@ -287,7 +284,14 @@ const SettingScreen = (props: Props) => {
               textAlignRight={"right"}
               fontFamilyRight={Fonts.PoppinsRegular}
               fontSizeRight={wp(4)}
-              onPressRightEnd={() => props.navigation.navigate("ProfileUpdateScreen")}
+              onPressRightEnd={() =>
+                props.navigation.navigate('ProfileUpdateScreen', {
+                  itemProfileName: isProfileName,
+                  itemProfileEmail: isProfileEmail,
+                  itemProfileNumber: isProfileNumber,
+                  itemProfileImage: isProfileImage,
+                })
+              }
               onPress={() => props.navigation.goBack()}
             />
           </View>

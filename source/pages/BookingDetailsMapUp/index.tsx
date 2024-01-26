@@ -415,6 +415,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                                     backgroundColorOpacity={Colors.circleGray}
                                     borderRadiusOpacity={wp(10)}
                                     paddingOpacity={wp(2)}
+                                    transform={[{ rotate: '180deg' }]}
                                     textAlign={"left"}
                                     source={Images.arrowRight}
                                     marginTop={wp(2)}

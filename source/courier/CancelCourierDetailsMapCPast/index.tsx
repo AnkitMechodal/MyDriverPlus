@@ -310,6 +310,7 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                                     margin={wp(3)}
                                     backgroundColorOpacity={Colors.circleGray}
                                     borderRadiusOpacity={hp(8)}
+                                    transform={[{ rotate: '180deg' }]}
                                     paddingOpacity={wp(2.5)}
                                     textAlign={"left"}
                                     source={Images.arrowRight}

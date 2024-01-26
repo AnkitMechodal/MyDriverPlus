@@ -25,6 +25,7 @@ const FAQScreen = (props: Props) => {
                 <View style={Styles.container}>
                     <View style={Styles.viewHeader}>
                         <HeaderComponent
+                            transform={[{ rotate: '180deg' }]}
                             margin={wp(3)}
                             backgroundColorOpacity={Colors.circleGray}
                             borderRadiusOpacity={wp(10)}

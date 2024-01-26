@@ -2,8 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import React, { useRef, useState } from 'react';
 import {
-    SafeAreaView, View,
-    useisDarkMode
+    SafeAreaView, View
 } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -13,10 +12,10 @@ import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import TextInputComponent from '../../../components/TextInput';
 import { Colors, Fonts, Images } from '../../../themes/index';
+import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail } from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
-import { useTheme } from '../../../utils/ThemeContext';
 import Styles from './style';
 
 type Props = {
@@ -129,10 +128,11 @@ const ForgotPasswordScreen = (props: Props) => {
                     margin={wp(3)}
                     backgroundColorOpacity={isDarkMode === 'dark' ? Colors.circleGray :
                         Colors.whiteGray}
+                    transform={[{ rotate: '180deg' }]}
                     borderRadiusOpacity={wp(10)} // arrowRightWhite
                     paddingOpacity={wp(2)}
                     textAlign={"center"}
-                    transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
+                    // transform={isDarkMode === 'dark' ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }]}
                     source={isDarkMode === 'dark' ? Images.arrowRight : Images.arrowRightWhite}
                     width={wp(7)}
                     height={wp(7)}

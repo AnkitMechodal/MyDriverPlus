@@ -25,6 +25,7 @@ const PrivacyScreen = (props: Props) => {
                             margin={wp(3)}
                             backgroundColorOpacity={Colors.circleGray}
                             borderRadiusOpacity={wp(10)}
+                            transform={[{ rotate: '180deg' }]}
                             paddingOpacity={wp(2)}
                             textAlign={"left"}
                             source={Images.arrowRight}

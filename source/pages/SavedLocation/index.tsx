@@ -166,6 +166,7 @@ const SavedLocationScreen = (props: Props) => {
                     <HeaderComponent
                         margin={wp(3)}
                         backgroundColorOpacity={Colors.circleGray}
+                        transform={[{ rotate: '180deg' }]}
                         borderRadiusOpacity={wp(10)}
                         paddingOpacity={wp(2)}
                         textAlign={"left"}

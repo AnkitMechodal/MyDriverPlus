@@ -31,6 +31,7 @@ const TermsAndConditionScreen = (props: Props) => {
                             marginTop={wp(2)}
                             width={wp(7)}
                             marginHorizontal={wp(5)}
+                            transform={[{ rotate: '180deg' }]}
                             height={wp(7)}
                             color={Colors.white}
                             fontFamily={Fonts.InterSemiBold}

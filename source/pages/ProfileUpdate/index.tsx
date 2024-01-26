@@ -21,12 +21,16 @@ type Props = {
     navigation: any
 }
 
-const ProfileUpdateScreen = (props: Props) => {
+const ProfileUpdateScreen = ({ route, navigation }) => {
 
     const [isFocused, setIsFocused] = useState(false);
     const [isFocusedNumber, setIsFocusedNumber] = useState(false);
 
     const [isFocusedMail, setIsFocusedMail] = useState(false);
+
+
+    const [textInput1, setTextInput1] = useState('1');
+    const [textInput2, setTextInput2] = useState('2');
 
     // TODO :
     const refUserName = useRef<any>(null);
@@ -52,6 +56,10 @@ const ProfileUpdateScreen = (props: Props) => {
     const [selectedImagePick, setSelectedImagePick] = useState(false);
     const [selectedIMG, setSelectedSetIMG] = useState<any>(null);
 
+
+    const [IMG, setIMG] = useState<any>("https://fastly.picsum.photos/id/1075/536/354.jpg?hmac=gMKEqTXzPwcIage2Ru8ynrrgTUj9gpSQRgpGf176ccs");
+
+
     const [isValidEmail, setValidEmail] = useState(true);
 
     const [isValidNumber, setValidNumber] = useState(true);
@@ -59,21 +67,300 @@ const ProfileUpdateScreen = (props: Props) => {
     const [selected, setSelected] = useState('Select');
     const [visible, setVisible] = useState(false);
 
-    // const Images1 = {
-    //     flagIcon: Images.flagIcon,
-    //     appIcon: Images.appIcon,
-    //     downArrow: Images.flagIcon,
-    //     // Add more options as needed
-    // };
+    const [selectedIS, setSelectedIS] = useState('Select');
+
 
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
     const [number, setNumber] = useState('')
 
     useEffect(() => {
-        setName("aaa88888");
-        console.log("setName====>", name);
+
+        // This will run whenever textInput1 or textInput2 changes
+        setName(route?.params?.itemProfileName);
+        setNameMail(route?.params?.itemProfileEmail);
+        setIMG(route?.params?.itemProfileImage);
+        // setNumber(route?.params?.itemProfileNumber);
+
+        console.log("NUMBER====>", route?.params?.itemProfileNumber);
+
+        // Use regular expression to extract the country code and the remaining phone number
+        const countryCode = route?.params?.itemProfileNumber.match(/^\+(\d{1,3})\s?(\d+)$/);
+
+        // Log the extracted country code and phone number
+        if (countryCode && countryCode[1] && countryCode[2]) {
+            setNumber(countryCode[2]);
+
+            // Previous Data
+            if ("+" + countryCode[1] + "" === '+91' + "") {
+                setSelectedIS("+91")
+                setSelectedImage(Images1.flagIcon);
+            } else if ("+" + countryCode[1] + "" === '+93' + "") {
+                setSelectedIS("+93")
+                setSelectedImage(Images1.flag19);
+            } else if ("+" + countryCode[1] + "" === '+1' + "") {
+                setSelectedIS("+93")
+                setSelectedImage(Images1.flag1);
+            } else if ("+" + countryCode[1] + "" === '+20' + "") {
+                setSelectedIS("+20")
+                setSelectedImage(Images1.flag2);
+            } else if ("+" + countryCode[1] + "" === '+30' + "") {
+                setSelectedIS("+30")
+                setSelectedImage(Images1.flag3);
+            } else if ("+" + countryCode[1] + "" === '+32' + "") {
+                setSelectedIS("+32")
+                setSelectedImage(Images1.flag4);
+            } else if ("+" + countryCode[1] + "" === '+33' + "") {
+                setSelectedIS("+33")
+                setSelectedImage(Images1.flag5);
+            } else if ("+" + countryCode[1] + "" === '+36' + "") {
+                setSelectedIS("+36")
+                setSelectedImage(Images1.flag6);
+            } else if ("+" + countryCode[1] + "" === '+39' + "") {
+                setSelectedIS("+39")
+                setSelectedImage(Images1.flag7);
+            } else if ("+" + countryCode[1] + "" === '+43' + "") {
+                setSelectedIS("+43")
+                setSelectedImage(Images1.flag8);
+            } else if ("+" + countryCode[1] + "" === '+44' + "") {
+                setSelectedIS("+44")
+                setSelectedImage(Images1.flag9);
+            } else if ("+" + countryCode[1] + "" === '+45' + "") {
+                setSelectedIS("+45")
+                setSelectedImage(Images1.flag10);
+            } else if ("+" + countryCode[1] + "" === '+49' + "") {
+                setSelectedIS("+49")
+                setSelectedImage(Images1.flag11);
+            } else if ("+" + countryCode[1] + "" === '+53' + "") {
+                setSelectedIS("+53")
+                setSelectedImage(Images1.flag12);
+            } else if ("+" + countryCode[1] + "" === '+54' + "") {
+                setSelectedIS("+54")
+                setSelectedImage(Images1.flag13);
+            } else if ("+" + countryCode[1] + "" === '+56' + "") {
+                setSelectedIS("+56")
+                setSelectedImage(Images1.flag14);
+            } else if ("+" + countryCode[1] + "" === '+57' + "") {
+                setSelectedIS("+57")
+                setSelectedImage(Images1.flag15);
+            } else if ("+" + countryCode[1] + "" === '+61' + "") {
+                setSelectedIS("+61")
+                setSelectedImage(Images1.flag16);
+            } else if ("+" + countryCode[1] + "" === '+62' + "") {
+                setSelectedIS("+62")
+                setSelectedImage(Images1.flag17);
+            } else if ("+" + countryCode[1] + "" === '+86' + "") {
+                setSelectedIS("+86")
+                setSelectedImage(Images1.flag18);
+            } else if ("+" + countryCode[1] + "" === '+95' + "") {
+                setSelectedIS("+95")
+                setSelectedImage(Images1.flag19);
+            } else if ("+" + countryCode[1] + "" === '+98' + "") {
+                setSelectedIS("+98")
+                setSelectedImage(Images1.flag20);
+            } else if ("+" + countryCode[1] + "" === '+213' + "") {
+                setSelectedIS("+213")
+                setSelectedImage(Images1.flag21);
+            } else if ("+" + countryCode[1] + "" === '+220' + "") {
+                setSelectedIS("+220")
+                setSelectedImage(Images1.flag23);
+            } else if ("+" + countryCode[1] + "" === '+224' + "") {
+                setSelectedIS("+224")
+                setSelectedImage(Images1.flag24);
+            } else if ("+" + countryCode[1] + "" === '+225' + "") {
+                setSelectedIS("+225")
+                setSelectedImage(Images1.flag25);
+            } else if ("+" + countryCode[1] + "" === '+226' + "") {
+                setSelectedIS("+226")
+                setSelectedImage(Images1.flag26);
+            } else if ("+" + countryCode[1] + "" === '+233' + "") {
+                setSelectedIS("+233")
+                setSelectedImage(Images1.flag27);
+            } else if ("+" + countryCode[1] + "" === '+235' + "") {
+                setSelectedIS("+235")
+                setSelectedImage(Images1.flag28);
+            } else if ("+" + countryCode[1] + "" === '+236' + "") {
+                setSelectedIS("+236")
+                setSelectedImage(Images1.flag29);
+            } else if ("+" + countryCode[1] + "" === '+237' + "") {
+                setSelectedIS("+237")
+                setSelectedImage(Images1.flag30);
+            } else if ("+" + countryCode[1] + "" === '+238' + "") {
+                setSelectedIS("+238")
+                setSelectedImage(Images1.flag31);
+            } else if ("+" + countryCode[1] + "" === '+240' + "") {
+                setSelectedIS("+240")
+                setSelectedImage(Images1.flag32);
+            } else if ("+" + countryCode[1] + "" === '+241' + "") {
+                setSelectedIS("+241")
+                setSelectedImage(Images1.flag33);
+            } else if ("+" + countryCode[1] + "" === '+243' + "") {
+                setSelectedIS("+243")
+                setSelectedImage(Images1.flag34);
+            } else if ("+" + countryCode[1] + "" === '+244' + "") {
+                setSelectedIS("+244")
+                setSelectedImage(Images1.flag35);
+            } else if ("+" + countryCode[1] + "" === '+245' + "") {
+                setSelectedIS("+245")
+                setSelectedImage(Images1.flag36);
+            } else if ("+" + countryCode[1] + "" === '+246' + "") {
+                setSelectedIS("+246")
+                setSelectedImage(Images1.flag37);
+            } else if ("+" + countryCode[1] + "" === '+247' + "") {
+                setSelectedIS("+247")
+                setSelectedImage(Images1.flag38);
+            } else if ("+" + countryCode[1] + "" === '+251' + "") {
+                setSelectedIS("+251")
+                setSelectedImage(Images1.flag39);
+            } else if ("+" + countryCode[1] + "" === '+253' + "") {
+                setSelectedIS("+253")
+                setSelectedImage(Images1.flag40);
+            } else if ("+" + countryCode[1] + "" === '+257' + "") {
+                setSelectedIS("+257")
+                setSelectedImage(Images1.flag41);
+            } else if ("+" + countryCode[1] + "" === '+267' + "") {
+                setSelectedIS("+267")
+                setSelectedImage(Images1.flag42);
+            } else if ("+" + countryCode[1] + "" === '+269' + "") {
+                setSelectedIS("+269")
+                setSelectedImage(Images1.flag43);
+            } else if ("+" + countryCode[1] + "" === '+291' + "") {
+                setSelectedIS("+291")
+                setSelectedImage(Images1.flag44);
+            } else if ("+" + countryCode[1] + "" === '+297' + "") {
+                setSelectedIS("+297")
+                setSelectedImage(Images1.flag45);
+            } else if ("+" + countryCode[1] + "" === '+298' + "") {
+                setSelectedIS("+298")
+                setSelectedImage(Images1.flag46);
+            } else if ("+" + countryCode[1] + "" === '+299' + "") {
+                setSelectedIS("+299")
+                setSelectedImage(Images1.flag47);
+            } else if ("+" + countryCode[1] + "" === '+350' + "") {
+                setSelectedIS("+350")
+                setSelectedImage(Images1.flag48);
+            } else if ("+" + countryCode[1] + "" === '+353' + "") {
+                setSelectedIS("+353")
+                setSelectedImage(Images1.flag49);
+            } else if ("+" + countryCode[1] + "" === '+354' + "") {
+                setSelectedIS("+354")
+                setSelectedImage(Images1.flag50);
+            } else if ("+" + countryCode[1] + "" === '+355' + "") {
+                setSelectedIS("+355")
+                setSelectedImage(Images1.flag51);
+            } else if ("+" + countryCode[1] + "" === '+357' + "") {
+                setSelectedIS("+357")
+                setSelectedImage(Images1.flag52);
+            } else if ("+" + countryCode[1] + "" === '+358' + "") {
+                setSelectedIS("+358")
+                setSelectedImage(Images1.flag53);
+            } else if ("+" + countryCode[1] + "" === '+359' + "") {
+                setSelectedIS("+359")
+                setSelectedImage(Images1.flag54);
+            } else if ("+" + countryCode[1] + "" === '+372' + "") {
+                setSelectedIS("+372")
+                setSelectedImage(Images1.flag55);
+            } else if ("+" + countryCode[1] + "" === '+374' + "") {
+                setSelectedIS("+374")
+                setSelectedImage(Images1.flag56);
+            } else if ("+" + countryCode[1] + "" === '+375' + "") {
+                setSelectedIS("+375")
+                setSelectedImage(Images1.flag57);
+            } else if ("+" + countryCode[1] + "" === '+376' + "") {
+                setSelectedIS("+376")
+                setSelectedImage(Images1.flag58);
+            } else if ("+" + countryCode[1] + "" === '+385' + "") {
+                setSelectedIS("+385")
+                setSelectedImage(Images1.flag59);
+            } else if ("+" + countryCode[1] + "" === '+387' + "") {
+                setSelectedIS("+387")
+                setSelectedImage(Images1.flag60);
+            } else if ("+" + countryCode[1] + "" === '+420' + "") {
+                setSelectedIS("+420")
+                setSelectedImage(Images1.flag61);
+            } else if ("+" + countryCode[1] + "" === '+500' + "") {
+                setSelectedIS("+500")
+                setSelectedImage(Images1.flag62);
+            } else if ("+" + countryCode[1] + "" === '+501' + "") {
+                setSelectedIS("+501")
+                setSelectedImage(Images1.flag63);
+            } else if ("+" + countryCode[1] + "" === '+502' + "") {
+                setSelectedIS("+502")
+                setSelectedImage(Images1.flag64);
+            } else if ("+" + countryCode[1] + "" === '+503' + "") {
+                setSelectedIS("+503")
+                setSelectedImage(Images1.flag65);
+            } else if ("+" + countryCode[1] + "" === '+504' + "") {
+                setSelectedIS("+504")
+                setSelectedImage(Images1.flag66);
+            } else if ("+" + countryCode[1] + "" === '+509' + "") {
+                setSelectedIS("+509")
+                setSelectedImage(Images1.flag67);
+            } else if ("+" + countryCode[1] + "" === '+590' + "") {
+                setSelectedIS("+590")
+                setSelectedImage(Images1.flag68);
+            } else if ("+" + countryCode[1] + "" === '+591' + "") {
+                setSelectedIS("+591")
+                setSelectedImage(Images1.flag69);
+            } else if ("+" + countryCode[1] + "" === '+592' + "") {
+                setSelectedIS("+592")
+                setSelectedImage(Images1.flag70);
+            } else if ("+" + countryCode[1] + "" === '+593' + "") {
+                setSelectedIS("+593")
+                setSelectedImage(Images1.flag71);
+            } else if ("+" + countryCode[1] + "" === '+594' + "") {
+                setSelectedIS("+594")
+                setSelectedImage(Images1.flag72);
+            } else if ("+" + countryCode[1] + "" === '+673' + "") {
+                setSelectedIS("+673")
+                setSelectedImage(Images1.flag73);
+            } else if ("+" + countryCode[1] + "" === '+679' + "") {
+                setSelectedIS("+679")
+                setSelectedImage(Images1.flag74);
+            } else if ("+" + countryCode[1] + "" === '+682' + "") {
+                setSelectedIS("+682")
+                setSelectedImage(Images1.flag75);
+            } else if ("+" + countryCode[1] + "" === '+689' + "") {
+                setSelectedIS("+689")
+                setSelectedImage(Images1.flag76);
+            } else if ("+" + countryCode[1] + "" === '+852' + "") {
+                setSelectedIS("+852")
+                setSelectedImage(Images1.flag77);
+            } else if ("+" + countryCode[1] + "" === '+855' + "") {
+                setSelectedIS("+855")
+                setSelectedImage(Images1.flag78);
+            } else if ("+" + countryCode[1] + "" === '+880' + "") {
+                setSelectedIS("+880")
+                setSelectedImage(Images1.flag79);
+            } else if ("+" + countryCode[1] + "" === '+964' + "") {
+                setSelectedIS("+964")
+                setSelectedImage(Images1.flag80);
+            } else if ("+" + countryCode[1] + "" === '+972' + "") {
+                setSelectedIS("+972")
+                setSelectedImage(Images1.flag81);
+            } else if ("+" + countryCode[1] + "" === '+973' + "") {
+                setSelectedIS("+973")
+                setSelectedImage(Images1.flag82);
+            } else if ("+" + countryCode[1] + "" === '+975' + "") {
+                setSelectedIS("+975")
+                setSelectedImage(Images1.flag83);
+            } else if ("+" + countryCode[1] + "" === '+994' + "") {
+                setSelectedIS("+994")
+                setSelectedImage(Images1.flag84);
+            } else {
+                console.log('ERROR===>ERROR');
+            }
+
+        } else {
+            console.log('Country Code not found');
+        }
+
+        // You can perform additional side effects or logic here if needed
+        return () => {
+            // Cleanup logic here (if needed)
+        };
     }, []);
+
 
     let imagePATH;
 
@@ -191,10 +478,7 @@ const ProfileUpdateScreen = (props: Props) => {
 
     const data = [
         { label: '+91', value: '1', img: Images1.flagIcon },
-        // { label: '+92', value: '2', img: Images1.appIcon },
         { label: '+93', value: '3', img: Images1.flag19 },
-
-        // Add more options as needed
         { label: '+1', value: '4', img: Images1.flag1 },
         { label: '+20', value: '5', img: Images1.flag2 },
         { label: '+30', value: '6', img: Images1.flag3 },
@@ -470,7 +754,7 @@ const ProfileUpdateScreen = (props: Props) => {
                         console.log("response==>", JSON.stringify(response, null, 2));
                         if (response.status === 200 && response?.data?.message === 'Profile updated successfully') {
                             Toast.show('Success! Your profile has been updated successfully', Toast.SHORT);
-                            props.navigation.goBack();
+                            navigation.goBack();
                         } else {
                             Toast.show('Profile Credentials Invalid!', Toast.SHORT);
                         }
@@ -527,6 +811,7 @@ const ProfileUpdateScreen = (props: Props) => {
                 <HeaderComponent
                     margin={wp(3)}
                     backgroundColorOpacity={Colors.circleGray}
+                    transform={[{ rotate: '180deg' }]}
                     borderRadiusOpacity={wp(10)}
                     paddingOpacity={wp(2)}
                     textAlign={"left"}
@@ -540,7 +825,7 @@ const ProfileUpdateScreen = (props: Props) => {
                     title={"Edit Profile"}
                     marginTop={wp(2)}
                     fontSize={wp(4)}
-                    onPress={() => props.navigation.goBack()}
+                    onPress={() => navigation.goBack()}
                 />
                 <View style={CommonStyle.commonFlex}>
                     <View>
@@ -550,7 +835,7 @@ const ProfileUpdateScreen = (props: Props) => {
                                     resizeMode="contain" source={selectedIMG} />
                             ) : (
                                 <Image style={Styles.imageUser}
-                                    resizeMode="contain" source={Images.userTabIcon} />
+                                    resizeMode="contain" source={{ uri: IMG }} />
                             )}
                         </TouchableOpacity>
 
@@ -610,6 +895,7 @@ const ProfileUpdateScreen = (props: Props) => {
                             backgroundColor={Colors.grayDark}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
+                            value={name}
                             onChangeText={handleAccountName}
                             onSubmitEditing={() => {
                                 refUserMobile?.current?.focus();
@@ -636,7 +922,7 @@ const ProfileUpdateScreen = (props: Props) => {
                             isArrowLeft={true}
                             isVisibleEye_={false}
                             selectedImage={selectedImage || Images1.downArrow}
-                            selected={(!!selected && selected.label) || 'Select'}
+                            selected={(!!selected && selected.label) || selectedIS}
                             toggleDropdown={toggleDropdown}
                             renderDropdown={renderDropdown}
                             marginVertical={hp(2)}
@@ -660,6 +946,7 @@ const ProfileUpdateScreen = (props: Props) => {
                             numberOfLines={null}
                             maxLength={10}
                             color={Colors.white}
+                            value={number}
                             backgroundColor={Colors.grayDark}
                             borderRadius={wp(2)}
                             onFocus={handleFocusNumber}
@@ -710,6 +997,7 @@ const ProfileUpdateScreen = (props: Props) => {
                             keyboardType='default'
                             textAlign='left'
                             numberOfLines={null}
+                            value={nameMail}
                             maxLength={null}
                             color={Colors.white}
                             backgroundColor={Colors.grayDark}

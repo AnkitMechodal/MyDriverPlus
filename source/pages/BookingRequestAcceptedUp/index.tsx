@@ -607,6 +607,7 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
                                 borderRadiusOpacity={wp(10)}
                                 paddingOpacity={wp(2)}
                                 textAlign={"left"}
+                                transform={[{ rotate: '180deg' }]}
                                 source={Images.arrowRight}
                                 marginTop={wp(2)}
                                 width={wp(7)}

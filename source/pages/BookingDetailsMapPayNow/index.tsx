@@ -410,6 +410,7 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
                             <View style={Styles.viewHeader}>
                                 <HeaderComponent
                                     margin={wp(3)}
+                                    transform={[{ rotate: '180deg' }]}
                                     backgroundColorOpacity={Colors.circleGray}
                                     borderRadiusOpacity={wp(10)}
                                     paddingOpacity={wp(2)}
