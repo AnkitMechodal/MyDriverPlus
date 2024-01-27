@@ -94,13 +94,25 @@ const Styles = StyleSheet.create({
     overlayFixedView: {
         position: "absolute",
         alignItems: 'center',
+        borderTopLeftRadius: wp(8),
+        borderTopRightRadius: wp(8),
+        backgroundColor: Colors.header,
+        height: '100%', //  height: "auto",
+        // padding: wp(2),
+        alignSelf: 'center',
+        marginVertical: wp(83),
+        width: '100%',
+    },
+    overlayFixedView_Bottam: {
+        position: "absolute",
+        alignItems: 'center',
         borderTopLeftRadius: wp(5),
         borderTopRightRadius: wp(5),
         backgroundColor: Colors.black,
+        marginTop: wp(15),
         height: "auto",
         padding: wp(2),
         alignSelf: 'center',
-        marginVertical: wp(95),
         width: '100%',
     },
     viewBlackBackground: {
@@ -121,6 +133,17 @@ const Styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         marginTop: wp(15)
+    },
+    viewWhiteDot: {
+        width: wp(3),
+        height: wp(3),
+        backgroundColor: Colors.white,
+        borderRadius: wp(5),
+        marginTop: wp(2)
+    },
+    viewBookingStatus: {
+        flexDirection: 'row',
+        padding: wp(4),
     }
 });
 

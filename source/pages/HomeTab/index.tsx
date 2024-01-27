@@ -1,18 +1,22 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { BackHandler, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { SliderBox } from "react-native-image-slider-box";
 import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../components/Button/index';
 import StatusBarComponent from '../../components/StatusBar';
+import TextComponent from '../../components/Text';
 import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes';
 import { ConstValue, ScreenText } from '../../utils';
 import { useTheme } from '../../utils/ThemeContext';
 import CommonStyle from '../../utils/commonStyle';
+import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
+
 
 type Props = {
     navigation: any
@@ -21,6 +25,13 @@ type Props = {
 const HomeTabScreen = (props: Props) => {
 
     const [isModalVisible, setModalVisible] = useState(true);
+
+
+    const [isRideStatus, setRideStatus] = useState(false);
+
+
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Booking Request Sent');
+
 
     const [markerCoordinate, setMarkerCoordinate] =
         useState({ latitude: 37.78825, longitude: -122.4324 });
@@ -51,7 +62,37 @@ const HomeTabScreen = (props: Props) => {
     let user_latitude;
     let user_longitude;
 
+    let statusCheack;
+    let dateCheack;
+
+    let paymentStatus;
+    let rideStatus;
+
     const mapViewRef = useRef<any>(null);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Get Profile RideId From UserInfo
+
+                await axiosPostBookingStatus();
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 5 * 1000);
+
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
+    }, []);
+
 
     useEffect(() => {
         const backAction = async () => {
@@ -136,6 +177,91 @@ const HomeTabScreen = (props: Props) => {
     }, []);
 
     const { isDarkMode, toggleTheme } = useTheme();
+
+
+    const axiosPostBookingStatus = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosCheckGetRideStatusRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const axiosCheckGetRideStatusRequest = async () => {
+        try {
+
+            // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
+
+            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/NKFHDE0FWNF3`
+
+            console.log("axiosCheckGetRideStatusRequest===>", url);
+
+            await axios.get(url, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Ride Status Derived Successful') {
+                        // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+
+                        statusCheack = response?.data?.matchingUsers?.Status;
+                        dateCheack = response?.data?.matchingUsers?.date;
+
+                        paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
+                        rideStatus = response?.data?.matchingUsers?.RideStatus;
+
+                        console.log("Status", paymentStatus);
+
+                        // 1
+                        if (statusCheack === "Accept") {
+                            console.log("GetStatus===>", statusCheack);
+
+                            setRideStatus(true);
+
+                            setDRIVERSTATUS("Booking Request Accepted");
+                            setDRIVERSTATUS("Enjoy your ride , Ride Started");
+                            setDRIVERSTATUS("Driver arrived your location");
+
+                        } else {
+                            // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                        }
+
+                        // 2
+                        if (paymentStatus === "Done") {
+
+                        } else {
+
+                        }
+                        // 3
+                        if (rideStatus === "Completed") {
+                            setDRIVERSTATUS("Driver arrived your location");
+                            setDRIVERSTATUS("Ride Complete");
+                            // setRideStatus(false)
+                        } else {
+                        }
+
+
+
+                    } else {
+                        // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    };
 
 
     return (
@@ -251,87 +377,145 @@ const HomeTabScreen = (props: Props) => {
                 </View>
 
 
-                <View style={Styles.overlayFixedView}>
+                <View style={{
+                    position: "absolute",
+                    alignItems: 'center',
+                    borderTopLeftRadius: wp(8),
+                    borderTopRightRadius: wp(8),
+                    backgroundColor: isRideStatus ? Colors.header : Colors.transparent,
+                    height: '100%', //  height: "auto",
+                    // padding: wp(2),
+                    alignSelf: 'center',
+                    marginVertical: wp(83),
+                    width: '100%',
+                }}>
 
-                    <View style={Styles.modalConainer}>
+                    {isRideStatus ?
+                        <View style={Styles.viewBookingStatus}>
 
-                        <View style={Styles.viewModalFixed}>
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        props.navigation.navigate('BookingScreen', {
-                                            itemType: 'Taxi Booking'
-                                        })
-                                    }
-                                >
-                                    <View style={Styles.viewItem1}>
-                                        <Image
-                                            source={Images.whiteCardIcon}
-                                            resizeMode="contain"
-                                            style={Styles.viewItemImage1}
-                                        />
-                                    </View>
-                                    <Text style={Styles.textTexiBooking}>Taxi Booking</Text>
-                                </TouchableOpacity>
+                            <View style={Styles.viewWhiteDot} />
+
+                            <View style={{
+                                flex: 1,
+                                justifyContent: 'center'
+                            }}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={isDRIVERSTATUS}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    numberOfLines={2}
+                                    marginHorizontal={wp(2)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    textAlign='left'
+                                />
                             </View>
 
-                            <TouchableOpacity
-                                onPress={() =>
-                                    props.navigation.navigate('CourierBooking', {
-                                        itemType: 'Courier Delivery'
-                                    })
-                                }>
-
-                                <View>
-                                    <View style={Styles.viewItem1}>
-                                        <Image
-                                            source={Images.whiteCourierIcon}
-                                            resizeMode="contain"
-                                            style={Styles.imageCouierIcon}
-                                        />
-                                    </View>
-                                    <Text style={Styles.textTexiBooking}>Courier Delivery</Text>
-                                </View>
-                            </TouchableOpacity>
-
-
-                            <TouchableOpacity
-                                activeOpacity={0.2}
-                                onPress={() => props.navigation.navigate("HelpScreen")}>
-                                <View>
-                                    <View style={Styles.viewItem1}>
-                                        <Image
-                                            source={Images.whiteSupportIcon}
-                                            resizeMode="contain"
-                                            style={Styles.imageCouierIcon}
-                                        />
-                                    </View>
-                                    <Text style={Styles.textTexiBooking}>Support</Text>
-                                </View>
-                            </TouchableOpacity>
+                            <View style={CommonStyle.commonFlex}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={isDRIVERSTATUS == "Ride Complete" ? "View Booking" : "View Booking"}
+                                    textDecorationLine={'underline'}
+                                    onPress={() =>
+                                        props.navigation.navigate('BookingScreen', {
+                                            itemType: 'Select Service'
+                                        })
+                                    }
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    marginHorizontal={wp(2)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='right'
+                                />
+                            </View>
 
                         </View>
+                        :
+                        <></>
+                    }
 
-                        <View style={Styles.sliderBox}>
-                            <SliderBox
-                                images={images}
-                                sliderBoxHeight={wp(50)}
-                                parentWidth={wp(90)}
-                                autoPlay={true}
-                                dotColor={Colors.blue}
-                                inactiveDotColor={Colors.white}
-                                dotStyle={Styles.dotStyle}
-                                resizeMethod={'resize'}
-                                resizeMode={'contain'}
-                                autoplayInterval={1000}
-                            />
+
+                    <View style={Styles.overlayFixedView_Bottam}>
+
+                        <View style={Styles.modalConainer}>
+
+                            <View style={Styles.viewModalFixed}>
+                                <View>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            props.navigation.navigate('BookingScreen', {
+                                                itemType: 'Taxi Booking'
+                                            })
+                                        }
+                                    >
+                                        <View style={Styles.viewItem1}>
+                                            <Image
+                                                source={Images.whiteCardIcon}
+                                                resizeMode="contain"
+                                                style={Styles.viewItemImage1}
+                                            />
+                                        </View>
+                                        <Text style={Styles.textTexiBooking}>Taxi Booking</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        props.navigation.navigate('CourierBooking', {
+                                            itemType: 'Courier Delivery'
+                                        })
+                                    }>
+
+                                    <View>
+                                        <View style={Styles.viewItem1}>
+                                            <Image
+                                                source={Images.whiteCourierIcon}
+                                                resizeMode="contain"
+                                                style={Styles.imageCouierIcon}
+                                            />
+                                        </View>
+                                        <Text style={Styles.textTexiBooking}>Courier Delivery</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+
+                                <TouchableOpacity
+                                    activeOpacity={0.2}
+                                    onPress={() => props.navigation.navigate("HelpScreen")}>
+                                    <View>
+                                        <View style={Styles.viewItem1}>
+                                            <Image
+                                                source={Images.whiteSupportIcon}
+                                                resizeMode="contain"
+                                                style={Styles.imageCouierIcon}
+                                            />
+                                        </View>
+                                        <Text style={Styles.textTexiBooking}>Support</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                            </View>
+
+                            <View style={Styles.sliderBox}>
+                                <SliderBox
+                                    images={images}
+                                    sliderBoxHeight={wp(50)}
+                                    parentWidth={wp(90)}
+                                    autoPlay={true}
+                                    dotColor={Colors.blue}
+                                    inactiveDotColor={Colors.white}
+                                    dotStyle={Styles.dotStyle}
+                                    resizeMethod={'resize'}
+                                    resizeMode={'contain'}
+                                    autoplayInterval={1000}
+                                />
+                            </View>
                         </View>
+
                     </View>
 
-
                 </View>
-
-
 
 
             </View >

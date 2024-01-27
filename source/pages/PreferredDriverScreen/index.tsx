@@ -92,8 +92,7 @@ const PreferredDriverScreen = ({ route, navigation }) => {
 
     const [isDriverVIN, setDriverVIN] = useState("583245");
 
-    const [isRated, setRated] = useState("2K");
-
+    const [isRated, setRated] = useState("0");
 
     let USER_RIDEID;
 
@@ -201,6 +200,7 @@ const PreferredDriverScreen = ({ route, navigation }) => {
         }
     }
 
+
     const axiosCheckUserGetRideRattingRequest = async () => {
         try {
             const storedLinkedId = await AsyncStorage.getItem('store_star_id');
@@ -209,7 +209,8 @@ const PreferredDriverScreen = ({ route, navigation }) => {
                 const userId = JSON.parse(storedLinkedId);
                 const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
 
-                console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+
+                console.log("URL_RATTING_ERROR===>", JSON.stringify(url, null, 2));
 
                 await axios.get(url, {
                     headers: {
@@ -223,7 +224,6 @@ const PreferredDriverScreen = ({ route, navigation }) => {
                             averageRating = response?.data?.ratings?.averageRating;
                             avg_username = response?.data?.ratings?.username;
 
-                            // numberOfRatings
                             no_rate = response?.data?.ratings?.numberOfRatings;
                             setRated(no_rate);
 
@@ -253,6 +253,8 @@ const PreferredDriverScreen = ({ route, navigation }) => {
 
         }
     }
+
+
 
     const axiosPostDriverInfoRequest = async () => {
         try {

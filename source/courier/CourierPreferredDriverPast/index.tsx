@@ -55,6 +55,7 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
 
     let averageRating;
     let numberOfRatings;
+    let no_rate;
 
 
     let USER_RIDEID;
@@ -90,7 +91,7 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
     const [isDriverVIN, setDriverVIN] = useState("583245");
     const [isDriverVehicleColor, setDriverVehicleColor] = useState("yellow");
 
-    const [isRated, setRated] = useState("2K");
+    const [isRated, setRated] = useState("0");
 
     useEffect(() => {
 
@@ -231,6 +232,9 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
 
                             averageRating = response?.data?.ratings?.averageRating;
                             // avg_username = response?.data?.ratings?.username;
+
+                            no_rate = response?.data?.ratings?.numberOfRatings;
+                            setRated(no_rate);
 
                             console.log("AVG_username*****===>", response?.data);
 

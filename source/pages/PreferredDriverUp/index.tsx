@@ -56,6 +56,7 @@ const PreferredDriverUp = ({ route, navigation }) => {
 
 
     let avg_username;
+    let no_rate;
 
 
     let DriverProfileImage;
@@ -89,7 +90,7 @@ const PreferredDriverUp = ({ route, navigation }) => {
 
     const [isDriverVIN, setDriverVIN] = useState("583245");
 
-    const [isRated, setRated] = useState("2K");
+    const [isRated, setRated] = useState("0");
 
 
     const [isModalVisible, setModalVisible] = useState(true);
@@ -225,6 +226,9 @@ const PreferredDriverUp = ({ route, navigation }) => {
                             avg_username = response?.data?.ratings?.username;
 
                             console.log("AVG_username*****===>", response?.data);
+
+                            no_rate = response?.data?.ratings?.numberOfRatings;
+                            setRated(no_rate);
 
                             setDefaultRating(averageRating);
 

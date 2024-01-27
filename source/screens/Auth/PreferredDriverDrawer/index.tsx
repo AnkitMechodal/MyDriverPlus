@@ -56,6 +56,7 @@ const PreferredDriverDrawer = ({ route, navigation }) => {
 
 
     let avg_username;
+    let no_rate;
 
 
     let DriverProfileImage;
@@ -89,7 +90,7 @@ const PreferredDriverDrawer = ({ route, navigation }) => {
 
     const [isDriverVIN, setDriverVIN] = useState("583245");
 
-    const [isRated, setRated] = useState("2K");
+    const [isRated, setRated] = useState("0");
 
 
     let USER_RIDEID;
@@ -222,6 +223,9 @@ const PreferredDriverDrawer = ({ route, navigation }) => {
 
                             averageRating = response?.data?.ratings?.averageRating;
                             avg_username = response?.data?.ratings?.username;
+
+                            no_rate = response?.data?.ratings?.numberOfRatings;
+                            setRated(no_rate);
 
                             console.log("AVG_username*****===>", response?.data);
 
