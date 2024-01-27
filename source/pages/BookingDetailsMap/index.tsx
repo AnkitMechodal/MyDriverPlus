@@ -53,6 +53,8 @@ const BookingDetailsMap = ({ route, navigation }) => {
     let USER_DISCOUNT;
     let USER_FARE_VALUE;
 
+    let USER_TOTAL;
+
 
     let USER_BOOKINGSTATUS;
     let USER_CANCELLATION;   // cancellation 
@@ -332,7 +334,6 @@ const BookingDetailsMap = ({ route, navigation }) => {
                     USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
                     USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
 
-
                     // BookingCurrentStatus 
                     USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
                     USER_CANCELLATION = response?.data?.matchingVehicle?.cancelationsAmount;
@@ -364,7 +365,21 @@ const BookingDetailsMap = ({ route, navigation }) => {
                     setPICK_UP_LOCATION(USER_PICK_UP_LOCATION);
                     setDROP_UP_LOCATION(USER_DROP_UP_LOCATION);
                     setWATTING_CHARGES(USER_WATTING_CHARGES);
-                    setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
+
+                    // GET TOTAL :
+                    USER_TOTAL = parseInt(USER_RIDE_CHARGE) + parseInt(USER_CON_CHARGE) +
+                        parseInt(USER_WATTING_CHARGES);
+
+                    console.log("USER_TOTAL1==>", parseInt(USER_RIDE_CHARGE));
+                    console.log("USER_TOTAL2==>", parseInt(USER_CON_CHARGE));
+                    console.log("USER_TOTAL3==>", parseInt(USER_WATTING_CHARGES));
+
+                    console.log("USER_TOTAL==>", USER_TOTAL);
+
+                    // USER_DISCOUNT - NO USE
+                    setTOTAL_AMOUNT(USER_TOTAL);
+
+
                     setFARE(USER_FARE_VALUE); // ADDED 
                     // Discount  // ADDED
                     // Ride Charge
@@ -423,7 +438,6 @@ const BookingDetailsMap = ({ route, navigation }) => {
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
                             />
-
 
                         </View>
                         <View style={Styles.viewRowContent}>

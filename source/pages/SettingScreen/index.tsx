@@ -25,7 +25,7 @@ type Props = {
 const SettingScreen = (props: Props) => {
   // const navigation = useNavigation();
 
-  const [RatedPerson, setRatedPerson] = useState('20');
+  const [RatedPerson, setRatedPerson] = useState('');
 
 
   const [defaultRating, setDefaultRating] = useState(0);
@@ -70,8 +70,8 @@ const SettingScreen = (props: Props) => {
 
     fetchData();
 
-    // Set interval to refresh every 10 seconds
-    const intervalId = setInterval(fetchData, 10 * 1000);
+    // Set interval to refresh every 1 seconds
+    const intervalId = setInterval(fetchData, 1 * 1000);
 
     // Cleanup function
     return () => {

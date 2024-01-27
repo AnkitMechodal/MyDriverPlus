@@ -58,6 +58,8 @@ const PreferredDriverScreen = ({ route, navigation }) => {
 
     let avg_username;
 
+    let no_rate;
+
 
     let DriverProfileImage;
 
@@ -134,7 +136,7 @@ const PreferredDriverScreen = ({ route, navigation }) => {
             id: route?.params?.itemRider_ID_
         };
 
-        console.log("RideDetails===>", data);
+        console.log("RideDetails.....===>", data);
 
         await axios.post(url, data, {
             headers: {
@@ -221,7 +223,11 @@ const PreferredDriverScreen = ({ route, navigation }) => {
                             averageRating = response?.data?.ratings?.averageRating;
                             avg_username = response?.data?.ratings?.username;
 
-                            console.log("AVG_username*****===>", response?.data);
+                            // numberOfRatings
+                            no_rate = response?.data?.ratings?.numberOfRatings;
+                            setRated(no_rate);
+
+                            console.log("RATEDRATED===>", no_rate);
 
                             setDefaultRating(averageRating);
 
@@ -478,7 +484,7 @@ const PreferredDriverScreen = ({ route, navigation }) => {
                             color={Colors.white}
                             fontFamily={Fonts.InterSemiBold}
                             fontWeight="500"
-                            title={"Driver Details"} // Booking Flow
+                            title={"Driver Details"} // Booking Flow-
                             fontSize={wp(4)}
                             onPress={() => navigation.goBack()}
                         />

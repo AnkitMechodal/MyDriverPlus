@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
 import { Image, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -19,6 +20,41 @@ const LoginScreen = (props: Props) => {
 
   // const isDarkMode = useisDarkMode();
   // const isDarkMode: 'light' | 'dark' = useisDarkMode();
+
+
+  useEffect(() => {
+    const checkAutoLogin = async () => {
+      // Initialize GoogleSignin when the component mounts
+
+      // Check Autologin
+      const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+      console.log('storedLinkedId' + storedLinkedId);
+
+      // Check if storedLinkedId is null, empty, or undefined
+      if (storedLinkedId === null || storedLinkedId === '' || storedLinkedId === undefined) {
+        // Auto-login is not possible, handle the logic accordingly
+        console.log('Auto-login is not possible');
+        // props.navigation.navigate('Home1');
+      } else {
+        // Auto-login is possible, you can proceed with the login logic
+        console.log('Auto-login is possible');
+        props.navigation.navigate('Home1');
+      }
+    };
+    checkAutoLogin();
+
+    // Set interval to refresh every 10 seconds
+    const intervalId = setInterval(checkAutoLogin, 5 * 1000);
+
+    // Cleanup function
+    return () => {
+      // Clear the interval when the component unmounts
+      clearInterval(intervalId);
+    };
+
+  }, []);
+
+
 
   const { isDarkMode, toggleTheme } = useTheme();
 

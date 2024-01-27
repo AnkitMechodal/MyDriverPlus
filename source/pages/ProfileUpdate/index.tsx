@@ -726,6 +726,9 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
     }
 
     const onPressUpdate = () => {
+
+
+
         axiosPostProfileUpdate();
 
         // if (name === '') {
@@ -775,16 +778,15 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                 data.append('email', nameMail || '');
                 data.append('mobilenumber', selected.label + number || '');
 
-                // Append the image file to the FormData
-                if (selectedIMG.uri) {
+                // Check if selectedIMG exists and has a truthy uri property
+                if (selectedIMG && selectedIMG.uri) {
+                    // If it exists, append the image file to FormData
                     data.append('profile_image', {
                         uri: selectedIMG.uri,
-                        type: 'image/jpeg', // Adjust the content type based on your image type
-                        name: 'profile_image.jpg', // Adjust the file name as needed
+                        type: 'image/jpeg',
+                        name: 'profile_image.jpg',
                     });
                 }
-
-                console.log("axiosPostProfileUpdateSubmit==>", JSON.stringify(data, null, 2));
 
                 await axios.post(url, data, {
                     headers: {
@@ -793,6 +795,7 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                     },
                 })
                     .then(response => {
+                        console.log("axiosPostProfileUpdateSubmit==>", JSON.stringify(data, null, 2));
                         console.log("response==>", JSON.stringify(response, null, 2));
                         if (response.status === 200 && response?.data?.message === 'Profile updated successfully') {
                             Toast.show('Success! Your profile has been updated successfully', Toast.SHORT);
@@ -809,8 +812,67 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
             }
         } catch (error) {
             // Handle any errors that occur during AsyncStorage operations
+            console.log("error==>", error);
         }
     };
+
+
+    // const axiosPostProfileUpdateSubmit = async () => {
+    //     try {
+    //         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+    //         if (storedLinkedId !== null) {
+    //             const userId = JSON.parse(storedLinkedId);
+    //             const url = `https://rideshareandcourier.graphiglow.in/api/updateProfile/updateProfile/${userId}`;
+
+
+    //             const data = new FormData();
+    //             data.append('username', name || '');
+    //             data.append('email', nameMail || '');
+    //             data.append('mobilenumber', selected.label + number || '');
+
+
+    //             // Check if selectedIMG.uri exists or is null
+    //             if (selectedIMG.uri) {
+    //                 // If it exists, append the image file to FormData
+    //                 data.append('profile_image', {
+    //                     uri: selectedIMG.uri, // Use selectedIMG.uri if available, otherwise fallback to IMG
+    //                     type: 'image/jpeg', // Adjust the content type based on your image type
+    //                     name: 'profile_image.jpg', // Adjust the file name as needed
+    //                 });
+    //             }
+
+    //             // console.log("axiosPostProfileUpdateSubmit==>", JSON.stringify(data, null, 2));
+
+    //             await axios.post(url, data, {
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data',
+    //                     'Accept': 'application/json',
+    //                 },
+    //             })
+    //                 .then(response => {
+
+    //                     console.log("axiosPostProfileUpdateSubmit==>", JSON.stringify(data, null, 2));
+
+    //                     console.log("response==>", JSON.stringify(response, null, 2));
+    //                     if (response.status === 200 && response?.data?.message === 'Profile updated successfully') {
+    //                         Toast.show('Success! Your profile has been updated successfully', Toast.SHORT);
+    //                         navigation.goBack();
+    //                     } else {
+    //                         Toast.show('Profile Credentials Invalid!', Toast.SHORT);
+    //                     }
+    //                 })
+    //                 .catch(error => {
+    //                     Toast.show('Profile Credentials Invalid!', Toast.SHORT);
+    //                 });
+    //         } else {
+    //             // Handle the case where storedLinkedId is null
+    //         }
+    //     } catch (error) {
+    //         // Handle any errors that occur during AsyncStorage operations
+    //         console.log("error==>", error);
+    //     }
+    // };
 
 
 

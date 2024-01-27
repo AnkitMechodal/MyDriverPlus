@@ -10,7 +10,7 @@ import { DefaultTheme, NavigationContainer, getFocusedRouteNameFromRoute } from 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { BackHandler, Image, PermissionsAndroid, Platform, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { BackHandler, Image, PermissionsAndroid, Platform, Text, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -1165,8 +1165,6 @@ function CustomDrawerContent(props) {
 const HomeOneScreen = (props: Props) => {
 
     const { isDarkMode, toggleTheme } = useTheme();
-
-
 
     // Check User Theme & Store In Local Storage
     useEffect(() => {

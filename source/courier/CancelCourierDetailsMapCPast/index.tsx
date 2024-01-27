@@ -46,6 +46,7 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
     let USER_CON_CHARGE;
     let USER_DISCOUNT;
     let USER_FARE_VALUE;
+    let USER_TOTAL;
 
 
     let averageRating;
@@ -246,8 +247,6 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
 
                     setCHARGE(CAN)
 
-
-
                     // RideCharge
                     USER_RIDE_CHARGE = response?.data?.matchingVehicle?.RideCharge;
                     USER_CON_CHARGE = response?.data?.matchingVehicle?.BookingFeesConvenience;
@@ -258,6 +257,20 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
 
                     console.log("USER_VEHICAL==>", USER_VEHICAL);
 
+                    // GET TOTAL :
+                    USER_TOTAL = parseInt(USER_RIDE_CHARGE) + parseInt(USER_CON_CHARGE) +
+                        parseInt(USER_WATTING_CHARGES);
+
+                    console.log("USER_TOTAL1==>", parseInt(USER_RIDE_CHARGE));
+                    console.log("USER_TOTAL2==>", parseInt(USER_CON_CHARGE));
+                    console.log("USER_TOTAL3==>", parseInt(USER_WATTING_CHARGES));
+
+                    console.log("USER_TOTAL==>", USER_TOTAL);
+
+                    // USER_DISCOUNT - NO USE
+                    setTOTAL_AMOUNT(USER_TOTAL);
+
+
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
                     setSERVICE_TYPE(USER_SERVICE_TYPE);
@@ -266,7 +279,7 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                     setPICK_UP_LOCATION(USER_PICK_UP_LOCATION);
                     setDROP_UP_LOCATION(USER_DROP_UP_LOCATION);
                     setWATTING_CHARGES(USER_WATTING_CHARGES);
-                    setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
+                    // setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
                     setFARE(USER_FARE_VALUE); // ADDED 
                     // Discount  // ADDED
                     // Ride Charge
