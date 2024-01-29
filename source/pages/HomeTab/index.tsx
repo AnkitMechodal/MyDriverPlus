@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
@@ -22,7 +23,7 @@ type Props = {
     navigation: any
 }
 
-const HomeTabScreen = (props: Props) => {
+const HomeTabScreen = ({ route, navigation }) => {
 
     const [isModalVisible, setModalVisible] = useState(true);
 
@@ -30,7 +31,7 @@ const HomeTabScreen = (props: Props) => {
     const [isRideStatus, setRideStatus] = useState(false);
 
 
-    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Booking Request Sent');
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
 
 
     const [markerCoordinate, setMarkerCoordinate] =
@@ -67,6 +68,9 @@ const HomeTabScreen = (props: Props) => {
 
     let paymentStatus;
     let rideStatus;
+
+    let OTPStatus;
+    let OTPStatusVerfiy;
 
     const mapViewRef = useRef<any>(null);
 
@@ -195,68 +199,104 @@ const HomeTabScreen = (props: Props) => {
 
     const axiosCheckGetRideStatusRequest = async () => {
         try {
+            let storedRideId = await AsyncStorage.getItem('store_get_id');
+            let storedRideType = await AsyncStorage.getItem('store_get_type');
 
-            // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
+            console.log("storedRideId===>", storedRideId);
+            console.log("storedRideType===>", storedRideType);
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/NKFHDE0FWNF3`
+            if (storedRideId !== null) {
 
-            console.log("axiosCheckGetRideStatusRequest===>", url);
+                const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${JSON.parse(storedRideId)}`;
 
-            await axios.get(url, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (response.status === 200
-                        && response?.data?.message === 'Ride Status Derived Successful') {
-                        // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+                console.log("axiosCheckGetRideStatusRequest===>", url);
 
-                        statusCheack = response?.data?.matchingUsers?.Status;
-                        dateCheack = response?.data?.matchingUsers?.date;
+                await axios.get(url, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200
+                            && response?.data?.message === 'Ride Status Derived Successful') {
+                            // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
 
-                        paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
-                        rideStatus = response?.data?.matchingUsers?.RideStatus;
+                            statusCheack = response?.data?.matchingUsers?.Status;
+                            dateCheack = response?.data?.matchingUsers?.date;
 
-                        console.log("Status", paymentStatus);
+                            paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
+                            rideStatus = response?.data?.matchingUsers?.RideStatus;
 
-                        // 1
-                        if (statusCheack === "Accept") {
-                            console.log("GetStatus===>", statusCheack);
+                            OTPStatus = response?.data?.matchingUsers?.OTP;
+                            OTPStatusVerfiy = response?.data?.matchingUsers?.OTPStatus;
 
-                            setRideStatus(true);
+                            console.log("OTPStatus===>", OTPStatus);
+                            console.log("OTPStatusVerfiy===>", OTPStatusVerfiy);
 
-                            setDRIVERSTATUS("Booking Request Accepted");
-                            setDRIVERSTATUS("Enjoy your ride , Ride Started");
-                            setDRIVERSTATUS("Driver arrived your location");
+
+                            console.log("Status", paymentStatus);
+
+                            // 1
+                            if (statusCheack === "Accept") {
+
+                                if (storedRideType === "Taxi Booking") {
+                                    console.log("GetStatus===>", statusCheack);
+
+                                    setRideStatus(true);
+                                    setDRIVERSTATUS("Booking Request Accepted");
+                                } else {
+                                    console.log("GetStatus===>", statusCheack);
+
+                                    setRideStatus(true);
+                                    setDRIVERSTATUS("Courier Request Accepted");
+                                }
+
+                            } else {
+                                // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                            }
+
+
+                            // OTP 
+                            if (OTPStatus !== null) {
+                                setDRIVERSTATUS("Enjoy your ride , Ride Started");
+                            } else {
+                                setDRIVERSTATUS("Enjoy your ride , Ride Started");
+                            }
+
+                            // OTPStatusVerfiy 
+                            if (OTPStatusVerfiy === "Verify") {
+                                setDRIVERSTATUS("Driver arrived your location");
+                            } else {
+                                setDRIVERSTATUS("Driver Started Waiting Timer");
+                            }
+
+                            // 2
+                            if (paymentStatus === "Done") {
+                                // null
+                            } else {
+                                // null
+                            }
+
+                            // 3
+                            if (rideStatus === "Completed") {
+                                setDRIVERSTATUS("Ride Complete");
+                                // setRideStatus(false) //2901
+                            } else {
+                            }
+
 
                         } else {
                             // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                         }
-
-                        // 2
-                        if (paymentStatus === "Done") {
-
-                        } else {
-
-                        }
-                        // 3
-                        if (rideStatus === "Completed") {
-                            setDRIVERSTATUS("Driver arrived your location");
-                            setDRIVERSTATUS("Ride Complete");
-                            // setRideStatus(false)
-                        } else {
-                        }
-
-
-
-                    } else {
+                    })
+                    .catch(error => {
                         // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
-                    }
-                })
-                .catch(error => {
-                    // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
-                });
+                    });
+            } else {
+
+            }
+
+
 
         } catch (error) {
             // Handle any errors that occur during AsyncStorage operations
@@ -307,7 +347,7 @@ const HomeTabScreen = (props: Props) => {
                     alignSelf: 'center',
                 }}>
                     <TouchableOpacity onPress={
-                        () => props.navigation.toggleDrawer()}
+                        () => navigation.toggleDrawer()}
                         style={Styles.viewBlackBackground}>
 
                         {isDarkMode === 'dark' ?
@@ -362,7 +402,7 @@ const HomeTabScreen = (props: Props) => {
                             fontWeight="600"
                             fontSize={wp(3)}
                             onPress={() =>
-                                props.navigation.navigate('BookingScreen', {
+                                navigation.navigate('BookingScreen', {
                                     itemType: 'Select Service'
                                 })
                             }
@@ -382,7 +422,9 @@ const HomeTabScreen = (props: Props) => {
                     alignItems: 'center',
                     borderTopLeftRadius: wp(8),
                     borderTopRightRadius: wp(8),
-                    backgroundColor: isRideStatus ? Colors.header : Colors.transparent,
+                    backgroundColor: isRideStatus && isDRIVERSTATUS ===
+                        "Driver Started Waiting Timer" ? Colors.orange :
+                        (isRideStatus ? Colors.header : Colors.transparent),
                     height: '100%', //  height: "auto",
                     // padding: wp(2),
                     alignSelf: 'center',
@@ -416,10 +458,20 @@ const HomeTabScreen = (props: Props) => {
                                 <TextComponent
                                     color={Colors.white}
                                     title={isDRIVERSTATUS == "Ride Complete" ? "View Booking" : "View Booking"}
-                                    textDecorationLine={'underline'}
+                                    textDecorationLine={'underline'} //USER
                                     onPress={() =>
-                                        props.navigation.navigate('BookingScreen', {
-                                            itemType: 'Select Service'
+                                        navigation.navigate('BookingRequest', {
+                                            itemRIDEID_SENT: route?.params?.itemRIDEID,
+                                            itemRIDER_ID_SENT: route?.params?.itemRider_ID,
+                                            itemRIDER_DISTANCE_SENT: route?.params?.itemRiderDistance,
+                                            itemRIDER_DURATUION_SENT: route?.params?.itemRiderDuration,
+                                            itemRIDER_PICKSTATION: route?.params?.itemRidePickStation,
+                                            itemRIDER_DROPSTATION: route?.params?.itemRideDropStation,
+                                            itemRIDER_RIDE_CHARGE: route?.params?.itemPaymentRideCharge,
+                                            itemRIDER_RIDE_FEES_CON: route?.params?.itemPaymentFeesConvenience,
+                                            itemRIDER_RIDE_WAITING_CHARGES: route?.params?.itemPaymentWaitingCharge,
+                                            itemRIDER_RIDE_DICOUNT: route?.params?.itemPaymentDiscount,
+                                            itemRIDER_RIDE_TOTALAMOUNT: route?.params?.itemPaymentTotalAmount,
                                         })
                                     }
                                     fontWeight="400"
@@ -444,7 +496,7 @@ const HomeTabScreen = (props: Props) => {
                                 <View>
                                     <TouchableOpacity
                                         onPress={() =>
-                                            props.navigation.navigate('BookingScreen', {
+                                            navigation.navigate('BookingScreen', {
                                                 itemType: 'Taxi Booking'
                                             })
                                         }
@@ -462,7 +514,7 @@ const HomeTabScreen = (props: Props) => {
 
                                 <TouchableOpacity
                                     onPress={() =>
-                                        props.navigation.navigate('CourierBooking', {
+                                        navigation.navigate('CourierBooking', {
                                             itemType: 'Courier Delivery'
                                         })
                                     }>
@@ -482,7 +534,7 @@ const HomeTabScreen = (props: Props) => {
 
                                 <TouchableOpacity
                                     activeOpacity={0.2}
-                                    onPress={() => props.navigation.navigate("HelpScreen")}>
+                                    onPress={() => navigation.navigate("HelpScreen")}>
                                     <View>
                                         <View style={Styles.viewItem1}>
                                             <Image

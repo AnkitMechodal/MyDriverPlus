@@ -392,7 +392,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
     };
 
 
-
     const onPressPoolRide = () => {
         setIsBackground2(true)
         setIsBackground1(false)

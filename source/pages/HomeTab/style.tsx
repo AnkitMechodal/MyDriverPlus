@@ -109,7 +109,7 @@ const Styles = StyleSheet.create({
         borderTopLeftRadius: wp(5),
         borderTopRightRadius: wp(5),
         backgroundColor: Colors.black,
-        marginTop: wp(15),
+        marginTop: wp(18), //15
         height: "auto",
         padding: wp(2),
         alignSelf: 'center',
@@ -143,7 +143,7 @@ const Styles = StyleSheet.create({
     },
     viewBookingStatus: {
         flexDirection: 'row',
-        padding: wp(4),
+        padding: wp(4.5),
     }
 });
 

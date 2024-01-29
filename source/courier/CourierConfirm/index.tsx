@@ -194,13 +194,14 @@ const CourierConfirmScreen = ({ route, navigation }) => {
         // This function will run when the component mounts
         requestRideNowData();
         axiosPostSetVehicalDataBooking();
-
     }, []);
 
 
     let RideIdGet;
     let distanceGet;
     let timeGet;
+
+    let type;
 
     let _idRider;
     let RidePickStation;
@@ -335,7 +336,7 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                 && route?.params?.itemPickLocationConfrim !== "Select Drop off Location"
             ) {
                 console.log("true===>", "Book Now");
-                axiosUserBookNowConfirmRequest();
+                axiosUserBookNowConfirmRequest(); //01
             } else {
                 console.log("false===>", "Book Now");
                 Toast.show("Oops! There Was An Error Submitting Your Booking!", Toast.SHORT);
@@ -347,7 +348,7 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                 && route?.params?.itemPickLocationConfrim !== "Select Drop off Location"
             ) {
                 console.log("true===>", "Schedule Booking");
-                axiosUserScheduleBookingConfirmRequest();
+                axiosUserScheduleBookingConfirmRequest();//02
             } else {
                 console.log("false===>", "Schedule Booking");
                 Toast.show("Oops! There Was An Error Submitting Your Booking!", Toast.SHORT);
@@ -369,6 +370,25 @@ const CourierConfirmScreen = ({ route, navigation }) => {
             }
         } catch (error) {
             Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const StoreRIDEID = async (RideIdGet: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_id', JSON.stringify(RideIdGet));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_id:', error);
+        }
+    }
+
+    const StoreRIDETYPE = async (type: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_type', JSON.stringify(type));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_type:', error);
         }
     }
 
@@ -425,10 +445,16 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                         if (response.status === 201
                             && response?.data?.message === 'Booking Added Successfully') {
 
-                        // Get Ride Id
-                            // QuickRideNow
+                            // TODO :
                             RideIdGet = response?.data?.data?.RideId;
                             console.log("RideIdGet===>", RideIdGet);
+
+                            type = response?.data?.data?.type;
+                            console.log("RideType===>", RideIdGet);
+
+                            StoreRIDEID(RideIdGet);
+                            StoreRIDETYPE(type);
+                            // TODO :
 
                             distanceGet = route?.params?.itemLocationDistanceConfrim;
                             console.log("DIStanceGet===>", distanceGet);
@@ -513,6 +539,92 @@ const CourierConfirmScreen = ({ route, navigation }) => {
     }
 
 
+    const StoreRIDEDISTANCE = async (distanceGet: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_distance', JSON.stringify(distanceGet));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_distance:', error);
+        }
+    }
+
+    const StoreRIDEDURATION = async (timeGet: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_time', JSON.stringify(timeGet));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_time:', error);
+        }
+    }
+
+    const StoreRIDEPICK = async (RidePickStation: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_pickstation', JSON.stringify(RidePickStation));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_pickstation:', error);
+        }
+    }
+
+    const StoreRIDEDROP = async (RideDropStation: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_dropstation', JSON.stringify(RideDropStation));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_dropstation:', error);
+        }
+    }
+
+    const StoreRIDECHARGE = async (ConfirmRideCharge: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_ridecharge', JSON.stringify(ConfirmRideCharge));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_ridecharge:', error);
+        }
+    }
+
+    const StoreRIDECON = async (ConfirmBookingFeesConvenience: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_feescon', JSON.stringify(ConfirmBookingFeesConvenience));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_feescon:', error);
+        }
+    }
+
+    const StoreRIDEWAITCHARGE = async (ConfirmWaiting_Charge: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_waittingcharge',
+                JSON.stringify(ConfirmWaiting_Charge));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_waittingcharge:', error);
+        }
+    }
+
+    const StoreRIDEDICOUNT = async (ConfirmDiscount: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_dicount',
+                JSON.stringify(ConfirmDiscount));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_dicount:', error);
+        }
+    }
+
+
+    const StoreRIDETOTALAMOUNT = async (ConfirmTotalAmount: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_totalamount',
+                JSON.stringify(ConfirmTotalAmount));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_totalamount:', error);
+        }
+    }
+
+
     const axiosBookNowConfirmRequestToStatus = async () => {
         try {
             const get_last_price = await AsyncStorage.getItem('store_last_price');
@@ -564,10 +676,17 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                         if (response.status === 201
                             && response?.data?.message === 'Booking Added Successfully') {
 
-                            // Get Ride Id
-                            // QuickRideNow
+                            // TODO :
                             RideIdGet = response?.data?.data?.RideId;
                             console.log("RideIdGet===>", RideIdGet);
+
+                            type = response?.data?.data?.type;
+                            console.log("RideType===>", RideIdGet);
+
+                            StoreRIDEID(RideIdGet);
+                            StoreRIDETYPE(type);
+                            // TODO :
+
 
                             distanceGet = route?.params?.itemLocationDistanceConfrim;
                             console.log("DIStanceGet===>", distanceGet);
@@ -597,6 +716,23 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                             console.log("PAY3====>", ConfirmWaiting_Charge);
                             console.log("PAY4====>", ConfirmDiscount);
                             console.log("PAY5====>", ConfirmTotalAmount);
+
+
+                            // TODO : REAMING STORE AS LOCAL
+                            StoreRIDEDISTANCE(distanceGet);
+                            StoreRIDEDURATION(timeGet);
+
+                            StoreRIDEPICK(RidePickStation);
+                            StoreRIDEDROP(RideDropStation);
+
+                            StoreRIDECHARGE(ConfirmRideCharge);
+                            StoreRIDECON(ConfirmBookingFeesConvenience);
+
+                            StoreRIDEWAITCHARGE(ConfirmWaiting_Charge);
+
+                            StoreRIDEDICOUNT(ConfirmDiscount);
+                            StoreRIDETOTALAMOUNT(ConfirmTotalAmount);
+                            // TODO : REAMING STORE AS LOCAL
 
 
                             navigation.navigate('CourierStatus', {
