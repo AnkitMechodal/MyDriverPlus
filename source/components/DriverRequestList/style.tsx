@@ -53,11 +53,19 @@ const Styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    rowCenter:{
+    rowCenter: {
         flexDirection: "row",
         justifyContent: "center"
-    }
+    },
+    // viewGrayLineHorizontal: {
+    //     height: wp(0.1),
+    //     backgroundColor: Colors.grayFull,
+    //     width: wp(80),
+    //     marginVertical: wp(5),
+    //     marginHorizontal: wp(3)
+    // },
 
+   
 });
 
 export default Styles

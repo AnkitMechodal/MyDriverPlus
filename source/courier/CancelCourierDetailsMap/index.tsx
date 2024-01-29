@@ -339,7 +339,7 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"
                                 title={"Payment"}
-                                isVisiblePayout={true}
+                                isVisiblePayout={false}
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
                             />

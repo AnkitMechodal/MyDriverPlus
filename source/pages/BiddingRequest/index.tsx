@@ -613,7 +613,11 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 color={Colors.orange}
                                 title={ScreenText.ViewRequest}
                                 textDecorationLine={'underline'}
-                                onPress={() => navigation.navigate("ViewRequest")}
+                                onPress={() =>
+                                    navigation.navigate("ViewRequest", {
+                                        itemRIDE: route.params.itemRIDEID_SENT
+                                    })
+                                }
                                 fontWeight="400"
                                 fontSize={wp(3.5)}
                                 marginVertical={wp(0)}

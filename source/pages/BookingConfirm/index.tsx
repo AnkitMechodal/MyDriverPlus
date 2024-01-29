@@ -417,6 +417,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                             console.log("PAY5====>", ConfirmTotalAmount);
 
                             // TODO : REAMING STORE AS LOCAL
+                            StoreRIDE_ID(_idRider);
+
                             StoreRIDEDISTANCE(distanceGet);
                             StoreRIDEDURATION(timeGet);
 
@@ -476,6 +478,15 @@ const BookingConfirmScreen = ({ route, navigation }) => {
         } catch (error) {
             // Handle any errors that might occur during the storage operation
             console.error('Error store_get_id:', error);
+        }
+    }
+
+    const StoreRIDE_ID = async (_idRider: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_id_', JSON.stringify(_idRider));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_id_:', error);
         }
     }
 
@@ -565,7 +576,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
     }
 
 
-    
+
     const StoreRIDETYPE = async (type: any) => {
         try {
             await AsyncStorage.setItem('store_get_type', JSON.stringify(type));
@@ -683,6 +694,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                             console.log("PAY5====>", ConfirmTotalAmount);
 
                             // TODO : REAMING STORE AS LOCAL
+                            StoreRIDE_ID(_idRider);
+
                             StoreRIDEDISTANCE(distanceGet);
                             StoreRIDEDURATION(timeGet);
 
@@ -844,6 +857,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
 
                             // TODO : REAMING STORE AS LOCAL
+                            StoreRIDE_ID(_idRider);
+
                             StoreRIDEDISTANCE(distanceGet);
                             StoreRIDEDURATION(timeGet);
 

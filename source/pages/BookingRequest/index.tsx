@@ -181,7 +181,6 @@ const BookingRequestScreen = ({ route, navigation }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-
                 console.log("RIDE_ID_REQUEST===>", route.params.itemRIDEID_SENT);
 
                 // itemRIDER_ID_SENT - route?.params?.itemRIDER_ID_SENT

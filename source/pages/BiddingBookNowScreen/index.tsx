@@ -42,6 +42,8 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
     var UserSelctedVehicalPrice;
     var beforeHyphenValue;
 
+    let BidService;
+
     let type;
 
 
@@ -114,6 +116,15 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
         }
     }
 
+    const StoreBIDTYPE = async (BidService: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_bid_type', JSON.stringify(BidService));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_bid_type:', error);
+        }
+    }
+
 
     const StoreRIDEID = async (RideIdGet: any) => {
         try {
@@ -133,6 +144,14 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
         }
     }
 
+    const StoreRIDE_ID = async (_idRider: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_id_', JSON.stringify(_idRider));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_id_:', error);
+        }
+    }
 
     const StoreRIDEDISTANCE = async (distanceGet: any) => {
         try {
@@ -275,6 +294,20 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                         if (response.status === 201
                             && response?.data?.message === 'Booking Added Successfully') {
 
+                            // TODO : BID
+
+                            BidService = route?.params?.itemServiceConfrim;
+
+                            console.log("BidService===>", BidService);
+                            console.log("BidService===>", BidService);
+                            console.log("BidService===>", BidService);
+                            console.log("BidService===>", BidService);
+
+
+                            StoreBIDTYPE(BidService);
+
+                            // TODO : BID
+
                             // TODO :
                             RideIdGet = response?.data?.data?.RideId;
                             console.log("RideIdGet===>", RideIdGet);
@@ -318,6 +351,9 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                             console.log("PAY5====>", ConfirmTotalAmount);
 
                             // TODO : REAMING STORE AS LOCAL
+
+                            StoreRIDE_ID(_idRider);
+
                             StoreRIDEDISTANCE(distanceGet);
                             StoreRIDEDURATION(timeGet);
 

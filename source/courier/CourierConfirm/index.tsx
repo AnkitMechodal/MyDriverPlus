@@ -486,6 +486,25 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                             console.log("PAY5====>", ConfirmTotalAmount);
 
 
+                            // TODO : REAMING STORE AS LOCAL
+                            StoreRIDE_ID(_idRider);
+
+                            StoreRIDEDISTANCE(distanceGet);
+                            StoreRIDEDURATION(timeGet);
+
+                            StoreRIDEPICK(RidePickStation);
+                            StoreRIDEDROP(RideDropStation);
+
+                            StoreRIDECHARGE(ConfirmRideCharge);
+                            StoreRIDECON(ConfirmBookingFeesConvenience);
+
+                            StoreRIDEWAITCHARGE(ConfirmWaiting_Charge);
+
+                            StoreRIDEDICOUNT(ConfirmDiscount);
+                            StoreRIDETOTALAMOUNT(ConfirmTotalAmount);
+                            // TODO : REAMING STORE AS LOCAL
+
+
                             navigation.navigate('CourierStatus', {
                                 itemRIDEID: RideIdGet,
                                 itemRider_ID: _idRider,
@@ -535,6 +554,15 @@ const CourierConfirmScreen = ({ route, navigation }) => {
             }
         } catch (error) {
             Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const StoreRIDE_ID = async (_idRider: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_id_', JSON.stringify(_idRider));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_id_:', error);
         }
     }
 
@@ -719,6 +747,8 @@ const CourierConfirmScreen = ({ route, navigation }) => {
 
 
                             // TODO : REAMING STORE AS LOCAL
+                            StoreRIDE_ID(_idRider);
+
                             StoreRIDEDISTANCE(distanceGet);
                             StoreRIDEDURATION(timeGet);
 

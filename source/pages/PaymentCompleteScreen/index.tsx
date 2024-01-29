@@ -344,13 +344,14 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 source={Images.arrowRight}
                                 marginTop={wp(2)}
                                 width={wp(7)}
+                                transform={[{ rotate: '180deg' }]}
                                 height={wp(7)} // 7
                                 marginHorizontal={wp(5)}
                                 color={Colors.white}
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"
                                 title={"Payment"}
-                                isVisiblePayout={true}
+                                isVisiblePayout={false}
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
                             />
