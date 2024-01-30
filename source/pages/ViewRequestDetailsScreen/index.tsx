@@ -1,26 +1,30 @@
-import React, { useState } from 'react';
-import { Alert, Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, Linking, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../components/Button';
 import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
-import VehiclePhotosListDetails from '../../components/VehiclePhotosList';
 import { Colors, Fonts, Images } from '../../themes/index';
 import { ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
-import { CarData } from '../../utils/dummyArray';
+import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
+
 
 
 type Props = {
     navigation: any
 }
 
-const ViewRequestDetailsScreen = (props: Props) => {
+const ViewRequestDetailsScreen = ({ route, navigation }) => {
 
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+    
     const [defaultRating, setDefaultRating] = useState(4);
 
     const starImageFilled1 =
@@ -32,6 +36,259 @@ const ViewRequestDetailsScreen = (props: Props) => {
         Images.fillStarIcon;
     const starImageCorner =
         Images.unfillStarIcon;
+
+    let DriverBookingName;
+    let DriverBookingImage1;
+    let DriverBookingImage2;
+    let DriverBookingImage3;
+    let DriverBookingImage4;
+    let DriverVehicleNumber;
+    let DriverVehicleType;
+    let DriverVehicleName;
+    let DriverProfileImage;
+    let DriverVehicleDecription;
+    let DriverVehiclePhone;
+    let DriverVehicleColor;
+    let DriverBooking_ID;
+
+
+    let averageRating;
+    let numberOfRatings;
+
+
+    let avg_username;
+    let no_rate;
+
+
+    // Driver Info :
+    const [isDriverName, setDriverName] = useState(ScreenText.UserName);
+    const [isDriverPlateNumber, setDriverPlateNumber] = useState("GJ 06 MA 2500");
+    const [isDriverPlateName, setDriverPlateName] = useState("Crash Test Dummy");
+    const [isDriverVehicleType, setDriverVehicleType] = useState("Car");
+
+    const [isDriverVehicleColor, setDriverVehicleColor] = useState("yellow");
+
+    const [isDriverVehicleDesc, setDriverVehicleDesc] = useState(ScreenText.Loreum);
+    const [isPhoneNumber, setPhoneNumber] = useState("");
+
+    const [isDriverVIN, setDriverVIN] = useState("583245");
+
+    const [isRated, setRated] = useState("0");
+
+    // 4 Photos
+    const [isURL1, setURL1] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL2, setURL2] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL3, setURL3] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL4, setURL4] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+
+    // ProfileImage
+    const [isURL5, setURL5] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+
+
+    // ADDED
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                console.log("itemMapId==>", route.params.itemHours);
+                console.log("itemMapPickStation**==>", route.params.itemAmount);
+                console.log("itemMapDropStation**==>", route.params.itemDriverID);
+                console.log("itemMapKmStation**", route?.params?.itemRideId);
+
+                // Get User In User Info
+                await axiosPostDriverInfoRequest();
+                await axiosGetRideRattingRequest();
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+
+        // Set interval to refresh every 5 seconds
+        const intervalId = setInterval(fetchData, 5 * 1000);
+
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
+    }, [
+        route.params?.itemHours,
+        route.params?.itemAmount,
+        route?.params?.itemDriverID,
+        route?.params?.itemRideId,
+    ]);
+
+
+    const axiosGetRideRattingRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosCheckUserGetRideRattingRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosCheckUserGetRideRattingRequest = async () => {
+        try {
+            const storedLinkedId = await AsyncStorage.getItem('store_star_id');
+
+            if (storedLinkedId !== null) {
+                const userId = JSON.parse(storedLinkedId);
+                const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+
+                console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+
+                await axios.get(url, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200
+                            && response?.data?.message === 'Ratings calculated successfully') {
+
+                            averageRating = response?.data?.ratings?.averageRating;
+                            no_rate = response?.data?.ratings?.numberOfRatings;
+
+                            setRated(no_rate);
+                            setDefaultRating(averageRating);
+
+                            // Toast.show('Driver Ratings Get Success!', Toast.SHORT);
+
+                        } else {
+                            // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                        }
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                    });
+
+            } else {
+
+            }
+        } catch (error) {
+
+        }
+    }
+
+
+    const axiosPostDriverInfoRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosUserPostDriverInfoRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosUserPostDriverInfoRequest = async () => {
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+
+        // GET DRIVER ID 
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemDriverID // Booking - 
+        };
+
+        console.log("DriverInfoData==>", JSON.stringify(data, null, 2));
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'User Information') {
+                    // Handle API response here
+
+                    console.log("DriverInfoData==>",
+                        JSON.stringify(response?.data?.matchingUsers, null, 2));
+
+                    DriverBooking_ID = response?.data?.matchingUsers[0]?._id;
+
+                    DriverBookingName = response?.data?.matchingUsers[0]?.username;
+                    DriverBookingImage1 = response?.data?.matchingUsers[0]?.vehicle_pictures1_Url;
+                    DriverBookingImage2 = response?.data?.matchingUsers[0]?.vehicle_pictures2_Url;
+                    DriverBookingImage3 = response?.data?.matchingUsers[0]?.vehicle_pictures3_Url;
+                    DriverBookingImage4 = response?.data?.matchingUsers[0]?.vehicle_pictures4_Url;
+                    DriverVehicleNumber = response?.data?.matchingUsers[0]?.Plate_number;
+                    DriverVehicleType = response?.data?.matchingUsers[0]?.Vehicle_type;
+                    DriverVehicleName = response?.data?.matchingUsers[0]?.Company_name;
+                    DriverProfileImage = response?.data?.matchingUsers[0]?.ProfileImage;
+                    DriverVehicleDecription = response?.data?.matchingUsers[0]?.Vehicle_Details;
+                    DriverVehicleColor = response?.data?.matchingUsers[0]?.Vehicle_Color;
+                    DriverVehiclePhone = response?.data?.matchingUsers[0]?.mobilenumber;
+
+                    // // DriverVehicleDecription = response?.data?.matchingUsers[0]?.Vehicle_Details;
+                    // DriverVehiclePhone = response?.data?.matchingUsers[0]?.mobilenumber;
+
+                    setDriverName(DriverBookingName);
+                    setDriverPlateName(DriverVehicleName);
+                    setDriverVehicleType(DriverVehicleType);
+                    setDriverVehicleDesc(DriverVehicleDecription);
+                    setPhoneNumber(DriverVehiclePhone);
+                    setDriverPlateNumber(DriverVehicleNumber);
+                    setDriverVehicleColor(DriverVehicleColor);
+
+                    // Store for star : todo
+                    StoredDriverID(DriverBooking_ID);
+
+                    setURL1(DriverBookingImage1);
+                    setURL2(DriverBookingImage2);
+                    setURL3(DriverBookingImage3);
+                    setURL4(DriverBookingImage4);
+                    setURL5(DriverProfileImage);
+
+                    // setPhoneNumber(DriverVehiclePhone);
+
+
+                    // setDRIVERPROFILE(DriverProfileImage);
+
+                    // Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);
+
+                } else {
+                    // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+            });
+
+    };
+
+    const StoredDriverID = async (DriverBooking_ID: any) => {
+        try {
+            await AsyncStorage.setItem('store_star_id', JSON.stringify(DriverBooking_ID));
+            console.log('store_star_id===>', JSON.parse(DriverBooking_ID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_star_id :', error);
+        }
+    }
+
+    const onPressCallUser = () => {
+        const phoneNumberWithPrefix = `tel:${isPhoneNumber}`;
+        Linking.openURL(phoneNumberWithPrefix);
+    }
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -59,7 +316,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                             fontWeight="500"
                             title={"Driver Details"}
                             fontSize={wp(4)}
-                            onPress={() => props.navigation.goBack()}
+                            onPress={() => navigation.goBack()}
                         />
                     </View>
 
@@ -71,7 +328,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                                 <Image
                                     style={Styles.imageStop}
                                     resizeMode="contain"
-                                    source={Images.driverDeatilsIcon} />
+                                    source={{ uri: isURL5 }} />
                             </View>
 
                             <View style={{
@@ -79,7 +336,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                             }}>
                                 <TextComponent
                                     color={Colors.white}
-                                    title={ScreenText.UserName}
+                                    title={isDriverName}
                                     textDecorationLine={'none'}
                                     fontWeight="500"
                                     fontSize={wp(3.5)}
@@ -93,7 +350,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                                     <View style={CommonStyle.justifyContent}>
                                         <TextComponent
                                             color={Colors.gray}
-                                            title={ScreenText.TopRated2K}
+                                            title={ScreenText.TopRated2K + " (" + isRated + ")"}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
@@ -136,10 +393,12 @@ const ViewRequestDetailsScreen = (props: Props) => {
                             <View style={{
                                 // flex: 1
                             }}>
-                                <Image
-                                    style={Styles.imageCall}
-                                    resizeMode="contain"
-                                    source={Images.callIcon} />
+                                <TouchableOpacity onPress={onPressCallUser}>
+                                    <Image
+                                        style={Styles.imageCall}
+                                        resizeMode="contain"
+                                        source={Images.callIcon} />
+                                </TouchableOpacity>
                             </View>
 
                         </View>
@@ -159,10 +418,42 @@ const ViewRequestDetailsScreen = (props: Props) => {
                         />
                     </View>
 
-                    <View>
+                    {/* <View>
                         <VehiclePhotosListDetails
                             data={CarData} />
+                    </View> */}
+
+                    <View style={{ flexDirection: 'row' }}>
+                        <ScrollView horizontal
+                            showsHorizontalScrollIndicator={false}>
+                            <View>
+                                <Image
+                                    style={Styles.carImageIcon}
+                                    resizeMode="cover"
+                                    source={{ uri: isURL1 }} />
+                            </View>
+                            <View>
+                                <Image
+                                    style={Styles.carImageIcon}
+                                    resizeMode="cover"
+                                    source={{ uri: isURL2 }} />
+                            </View>
+                            <View>
+                                <Image
+                                    style={Styles.carImageIcon}
+                                    resizeMode="cover"
+                                    source={{ uri: isURL3 }} />
+                            </View>
+                            <View>
+                                <Image
+                                    style={Styles.carImageIcon}
+                                    resizeMode="cover"
+                                    source={{ uri: isURL4 }} />
+                            </View>
+                        </ScrollView>
+
                     </View>
+
 
                     <View style={Styles.viewGrayLineHorizontal}>
                     </View>
@@ -195,7 +486,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                             />
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"Crash Test Dummy"}
+                                title={isDriverPlateName}
                                 marginVertical={wp(1)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -218,7 +509,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                             />
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"yellow"}
+                                title={isDriverVehicleColor}
                                 marginVertical={wp(1)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -263,7 +554,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                             />
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"GJ 03 5245"}
+                                title={isDriverPlateNumber} // qqq
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3.5)}
@@ -298,7 +589,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                     <View style={Styles.viewLoreumText}>
                         <TextComponent
                             color={Colors.white}
-                            title={ScreenText.Loreum}
+                            title={isDriverVehicleDesc}
                             textDecorationLine={'none'}
                             fontWeight="400"
                             fontSize={wp(3.5)}
@@ -325,7 +616,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
 
                             <TextComponent
                                 color={Colors.discount}
-                                title={ScreenText.RS100}
+                                title={route?.params?.itemAmount}
                                 textDecorationLine={'none'}
                                 marginLeft={wp(2)}
                                 fontWeight="400"
@@ -348,7 +639,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
 
                             <TextComponent
                                 color={Colors.discount}
-                                title={ScreenText.Mins30}
+                                title={route?.params?.itemHours}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3.5)}
@@ -392,7 +683,7 @@ const ViewRequestDetailsScreen = (props: Props) => {
                             marginHorizontal={wp(2)}
                             fontWeight="500"
                             fontSize={wp(4)}
-                            onPress={() => props.navigation.goBack()}
+                            onPress={() => Alert.alert("Decline")}
                             fontFamily={Fonts.PoppinsRegular}
                             alignSelf='center'
                             textAlign='center'

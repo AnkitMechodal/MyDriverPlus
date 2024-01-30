@@ -427,7 +427,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'OTP generated successfully') {
+                        && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
 
                         // GET OTP FROM API 
                         OTPGenerated = response?.data?.OTP;

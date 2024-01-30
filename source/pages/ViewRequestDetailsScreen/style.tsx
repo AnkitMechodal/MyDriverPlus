@@ -12,6 +12,12 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: "center"
     },
+    carImageIcon: {
+        width: wp(25),
+        height: wp(20),
+        borderRadius: wp(3),
+        marginHorizontal: wp(2)
+    },
     viewPayImage: {
         width: wp(35),
         height: wp(35),

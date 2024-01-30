@@ -59,6 +59,11 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
     const [currentTime, setCurrentTime] = useState(moment().format('HH:mm:ss'));
 
+
+    //QUICK
+    const [viewRequest, setViewRequest] = useState(ScreenText.ViewRequest);
+
+
     // isDriverOnTheWay
 
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
@@ -304,7 +309,6 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     // };
 
 
-
     let statusCheack;
     let dateCheack;
 
@@ -313,6 +317,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
     let OTPGenerated;
 
+    //ScreenText.ViewRequest
+    const [isVIEWREQ, setIsVIEWREQ] = useState('');
 
     // is ArrivedOTP
     const [isPICKOTP, setPICKOTP] = useState('');
@@ -415,6 +421,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             setRequestSentDate(dateCheack.concat(" " + currentTime))
                             setDriverOnTheWay(true);
 
+                            // setViewRequest(""); //QC
+
                             //  generateOTP 
                             axiosGetOTPPostRequest();
 
@@ -487,7 +495,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'OTP generated successfully') {
+                        && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
 
                         // GET OTP FROM API 
                         OTPGenerated = response?.data?.OTP;
@@ -558,7 +566,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         colorRight={Colors.blue}
                         fontSizeRight={wp(3.5)}
                         marginTopRight={wp(3)}
-                        onPressRightEnd={toggleModalCancel}
+                        onPressRightEnd={toggleModalCancel} // Bidding Ride
                         titleWithRightContent={"Adjust Bidding Amount ?"}
                         title={"Booking Status"}
                         fontSize={wp(4)}
@@ -611,7 +619,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.ViewRequest}
+                                title={viewRequest} //QUICK
                                 textDecorationLine={'underline'}
                                 onPress={() =>
                                     navigation.navigate("ViewRequest", {

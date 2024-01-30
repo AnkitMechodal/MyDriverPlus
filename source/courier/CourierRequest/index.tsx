@@ -450,7 +450,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'OTP generated successfully') {
+                        && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
 
                         // GET OTP FROM API 
                         OTPGenerated = response?.data?.OTP;
@@ -511,7 +511,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'OTP generated successfully') {
+                        && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
 
                         // GET OTP FROM API99
                         OTPGenerated_ = response?.data?.OTP;
@@ -537,85 +537,85 @@ const CourierRequestScreen = ({ route, navigation }) => {
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
                 backgroundColor={Colors.black} />
-{/* 
+            {/* 
             <Modal
                 isVisible={isModalVisible}
                 swipeDirection={[]} // Disables swiping
                 style={Styles.viewModalMargin}> */}
 
-                <View style={Styles.container}>
+            <View style={Styles.container}>
 
-                    <View>
-                        <HeaderComponent
-                            margin={wp(3)}
-                            backgroundColorOpacity={Colors.circleGray}
-                            borderRadiusOpacity={wp(10)}
-                            transform={[{ rotate: '180deg' }]}
-                            paddingOpacity={wp(2)}
-                            textAlign={"left"}
-                            source={Images.arrowRight}
-                            marginTop={wp(2)}
-                            width={wp(7)}
-                            marginHorizontal={wp(5)}
-                            height={wp(7)}
-                            color={Colors.white}
-                            fontFamily={Fonts.InterSemiBold}
-                            fontWeight="500"
-                            textAlignRight={"right"}
-                            colorRight={Colors.blue}
-                            fontSizeRight={wp(3.5)}
-                            marginTopRight={wp(3)}
-                            onPressRightEnd={toggleModalCancel}
-                            titleWithRightContent={"Cancel Courier?"}
-                            title={"Courier Status"}
-                            fontSize={wp(4)}
-                            onPress={() => navigation.goBack()}
-                        />
-                    </View>
+                <View>
+                    <HeaderComponent
+                        margin={wp(3)}
+                        backgroundColorOpacity={Colors.circleGray}
+                        borderRadiusOpacity={wp(10)}
+                        transform={[{ rotate: '180deg' }]}
+                        paddingOpacity={wp(2)}
+                        textAlign={"left"}
+                        source={Images.arrowRight}
+                        marginTop={wp(2)}
+                        width={wp(7)}
+                        marginHorizontal={wp(5)}
+                        height={wp(7)}
+                        color={Colors.white}
+                        fontFamily={Fonts.InterSemiBold}
+                        fontWeight="500"
+                        textAlignRight={"right"}
+                        colorRight={Colors.blue}
+                        fontSizeRight={wp(3.5)}
+                        marginTopRight={wp(3)}
+                        onPressRightEnd={toggleModalCancel}
+                        titleWithRightContent={"Cancel Courier?"}
+                        title={"Courier Status"}
+                        fontSize={wp(4)}
+                        onPress={() => navigation.goBack()}
+                    />
+                </View>
 
-                    <View style={{ margin: wp(5) }}>
+                <View style={{ margin: wp(5) }}>
 
-                        <View style={{
-                            flexDirection: "row",
-                        }}>
+                    <View style={{
+                        flexDirection: "row",
+                    }}>
 
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={toggleRequestSent}
-                                    onValueChange={(newValue) => setToggleRequestSent(newValue)}
-                                />
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleRequestSent}
+                                onValueChange={(newValue) => setToggleRequestSent(newValue)}
+                            />
 
-                            </View>
+                        </View>
 
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.BookingRequestSent}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.BookingRequestSent}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
 
-                            {/* <View style={{ flex: 1 }}>
+                        {/* <View style={{ flex: 1 }}>
             <TextComponent
                 color={Colors.orange}
                 title={ScreenText.ViewRequest}
@@ -629,280 +629,280 @@ const CourierRequestScreen = ({ route, navigation }) => {
             />
         </View> */}
 
+                    </View>
+
+                    <View style={{
+                        flexDirection: "row",
+                        marginVertical: wp(1)
+                    }}>
+
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleAccepted}
+                                onValueChange={(newValue) => setToggleAccepted(newValue)}
+                            />
                         </View>
 
-                        <View style={{
-                            flexDirection: "row",
-                            marginVertical: wp(1)
-                        }}>
-
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={toggleAccepted}
-                                    onValueChange={(newValue) => setToggleAccepted(newValue)}
-                                />
-                            </View>
-
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.RequestAccepted}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
-
-                            <View style={{ flex: 1 }}>
-                                <TextComponent
-                                    color={Colors.orange}
-                                    title={ScreenText.ViewCourierboy} // View courier boy
-                                    textDecorationLine={'underline'}
-                                    onPress={() => navigation.navigate("CourierPreferredDriver")}
-                                    fontWeight="400"
-                                    fontSize={wp(3.5)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='right'
-                                />
-                            </View>
-
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.RequestAccepted}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
                         </View>
 
-                        <View style={{ flexDirection: "row" }}>
-
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={toggleArrived}
-                                    onValueChange={(newValue) => setToggleArrived(newValue)}
-                                />
-                            </View>
-
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.DriverArrivedPickuplocation}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
-
-                            <View style={{ justifyContent: 'center', flex: 1 }}>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={isPICKOTP}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4.5)}
-                                    marginVertical={wp(0)}
-                                    marginLeft={wp(2)}
-                                    textAlign='right'
-                                    fontFamily={Fonts.PoppinsRegular}
-                                />
-
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.OTPShareWithCourierBoy}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='right'
-                                />
-
-
-                            </View>
-
+                        <View style={{ flex: 1 }}>
+                            <TextComponent
+                                color={Colors.orange}
+                                title={ScreenText.ViewCourierboy} // View courier boy
+                                textDecorationLine={'underline'}
+                                onPress={() => navigation.navigate("CourierPreferredDriver")}
+                                fontWeight="400"
+                                fontSize={wp(3.5)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='right'
+                            />
                         </View>
 
-                        <View style={{
-                            flexDirection: "row",
-                            marginVertical: wp(1)
-                        }}>
+                    </View>
 
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={toggleOTP}
-                                    onValueChange={(newValue) => setToggleOTP(newValue)}
-                                />
-                            </View>
+                    <View style={{ flexDirection: "row" }}>
 
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.OTPVerification}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleArrived}
+                                onValueChange={(newValue) => setToggleArrived(newValue)}
+                            />
+                        </View>
+
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.DriverArrivedPickuplocation}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
+
+                        <View style={{ justifyContent: 'center', flex: 1 }}>
+                            <TextComponent
+                                color={Colors.white}
+                                title={isPICKOTP}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4.5)}
+                                marginVertical={wp(0)}
+                                marginLeft={wp(2)}
+                                textAlign='right'
+                                fontFamily={Fonts.PoppinsRegular}
+                            />
+
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.OTPShareWithCourierBoy}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='right'
+                            />
+
 
                         </View>
 
-                        <View style={{ flexDirection: "row" }}>
+                    </View>
 
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={toggleArrivedDrop}
-                                    onValueChange={(newValue) => setToggleArrivedDrop(newValue)}
-                                />
-                            </View>
+                    <View style={{
+                        flexDirection: "row",
+                        marginVertical: wp(1)
+                    }}>
 
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.DriverArrivedDropOfflocation}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleOTP}
+                                onValueChange={(newValue) => setToggleOTP(newValue)}
+                            />
+                        </View>
 
-                            <View style={{ justifyContent: 'center', flex: 1 }}>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={isDROPOTP}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4.5)}
-                                    marginVertical={wp(0)}
-                                    marginLeft={wp(2)}
-                                    textAlign='right'
-                                    fontFamily={Fonts.PoppinsRegular}
-                                />
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.OTPVerification}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
 
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.OTPShareWithCourierBoy}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='right'
-                                />
+                    </View>
 
+                    <View style={{ flexDirection: "row" }}>
 
-                            </View>
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleArrivedDrop}
+                                onValueChange={(newValue) => setToggleArrivedDrop(newValue)}
+                            />
+                        </View>
+
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.DriverArrivedDropOfflocation}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
+
+                        <View style={{ justifyContent: 'center', flex: 1 }}>
+                            <TextComponent
+                                color={Colors.white}
+                                title={isDROPOTP}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4.5)}
+                                marginVertical={wp(0)}
+                                marginLeft={wp(2)}
+                                textAlign='right'
+                                fontFamily={Fonts.PoppinsRegular}
+                            />
+
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.OTPShareWithCourierBoy}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='right'
+                            />
+
 
                         </View>
 
-                        <View style={{
-                            flexDirection: "row",
-                            marginVertical: wp(1)
-                        }}>
+                    </View>
 
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={togglePaymentCompleted}
-                                    onValueChange={(newValue) => setTogglePaymentCompleted(newValue)}
-                                />
-                            </View>
+                    <View style={{
+                        flexDirection: "row",
+                        marginVertical: wp(1)
+                    }}>
 
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.PaymentCompleted}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={togglePaymentCompleted}
+                                onValueChange={(newValue) => setTogglePaymentCompleted(newValue)}
+                            />
+                        </View>
+
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.PaymentCompleted}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
 
 
-                            {/* <View style={{ flex: 1 }}>
+                        {/* <View style={{ flex: 1 }}>
             <TextComponent
                 color={Colors.orange}
                 title={ScreenText.PayNow}
@@ -915,48 +915,48 @@ const CourierRequestScreen = ({ route, navigation }) => {
             />
         </View> */}
 
+                    </View>
+
+                    <View style={{
+                        flexDirection: "row",
+                    }}>
+
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleDelivered}
+                                onValueChange={(newValue) => setToggleDelivered(newValue)}
+                            />
                         </View>
 
-                        <View style={{
-                            flexDirection: "row",
-                        }}>
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.CourierDelivered}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
 
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={toggleDelivered}
-                                    onValueChange={(newValue) => setToggleDelivered(newValue)}
-                                />
-                            </View>
-
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.CourierDelivered}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
-
-                            {/* <View style={{ flex: 1 }}>
+                        {/* <View style={{ flex: 1 }}>
             <TextComponent
                 color={Colors.orange}
                 title={ScreenText.Feedback}
@@ -970,356 +970,356 @@ const CourierRequestScreen = ({ route, navigation }) => {
             />
         </View> */}
 
-                        </View>
-
-                        <View style={{
-                            flexDirection: "row",
-                        }}>
-
-                            <View style={{ justifyContent: 'center' }}>
-                                <CheckBox
-                                    onCheckColor={'white'}
-                                    onFillColor={'blue'}
-                                    boxType="square"
-                                    disabled={true}
-                                    tintColors={{ true: Colors.blue, false: Colors.white }}
-                                    value={toggleFeedBack}
-                                    onValueChange={(newValue) => setToggleFeedBack(newValue)}
-                                />
-                            </View>
-
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.Feedback}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.Date}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                />
-                            </View>
-
-                            <View style={{ flex: 1 }}>
-                                <TextComponent
-                                    color={Colors.orange}
-                                    title={ScreenText.Feedback}
-                                    textDecorationLine={'underline'}
-                                    onPress={toggleModalFeedback}
-                                    fontWeight="400"
-                                    fontSize={wp(3.5)}
-                                    marginVertical={wp(0)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='right'
-                                />
-                            </View>
-
-                        </View>
-
                     </View>
 
-                    <Modal isVisible={isModalCancel}>
-                        <View
-                            style={Styles.modalCancelConatiner}>
-                            <View>
-                                <TextComponent
-                                    color={Colors.orange}
-                                    title={ScreenText.AreYouSure}
-                                    textDecorationLine={'none'}
-                                    fontWeight="700"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                    marginVertical={wp(5)}
-                                    marginHorizontal={wp(2)}
-                                />
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.FeedbackRequest_}
-                                    textDecorationLine={'none'}
-                                    fontWeight="500"
-                                    fontSize={wp(3.5)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                    marginHorizontal={wp(2)}
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.IfYesAnotherdriver}
-                                    textDecorationLine={'none'}
-                                    fontWeight="500"
-                                    fontSize={wp(2.5)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                    marginVertical={wp(2)}
-                                    marginHorizontal={wp(2)}
-                                />
-                            </View>
-                            <View style={Styles.ButtonYesNoConatiner}>
-                                <ButtonComponent
-                                    isVisibleMobile={false}
-                                    isVisibleFaceBook={false}
-                                    marginVertical={hp(1)}
-                                    heightBtn={hp(6)}
-                                    widthBtn={wp(30)}
-                                    isRightArrow={false}
-                                    onPress={onPressCancelCourier}
-                                    color={Colors.white}
-                                    title={ScreenText.Yes}
-                                    marginHorizontal={wp(6)}
-                                    fontWeight="600"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsSemiBold}
-                                    alignSelf='center'
-                                    textAlign='center'
-                                    borderRadius={wp(2)}
-                                    backgroundColor={Colors.blue}
-                                />
-                                <ButtonComponent
-                                    isVisibleMobile={false}
-                                    isVisibleFaceBook={false}
-                                    marginVertical={hp(1)}
-                                    heightBtn={hp(6)}
-                                    widthBtn={wp(30)}
-                                    isRightArrow={false}
-                                    onPress={() => setModalCancel(false)}
-                                    color={Colors.black}
-                                    title={ScreenText.No}
-                                    marginHorizontal={wp(6)}
-                                    fontWeight="600"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsSemiBold}
-                                    alignSelf='center'
-                                    textAlign='center'
-                                    borderRadius={wp(2)}
-                                    backgroundColor={Colors.grayDark}
-                                />
-                            </View>
+                    <View style={{
+                        flexDirection: "row",
+                    }}>
 
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleFeedBack}
+                                onValueChange={(newValue) => setToggleFeedBack(newValue)}
+                            />
                         </View>
-
-                    </Modal>
-
-                    <Modal isVisible={isModalFeedBack}>
-                        <View
-                            style={Styles.modalCancelConatiner}>
-
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.Feedback}
-                                    textDecorationLine={'none'}
-                                    fontWeight="700"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                    marginVertical={wp(5)}
-                                    marginHorizontal={wp(2)}
-                                />
-                                <TextComponent
-                                    color={Colors.gray}
-                                    title={ScreenText.FeedBackService}
-                                    textDecorationLine={'none'}
-                                    fontWeight="500"
-                                    fontSize={wp(3)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
-                                    marginHorizontal={wp(2)}
-                                />
-
-                            </View>
-
-                            <View>
-                                <TextInputComponent
-                                    selectionColor={Colors.white}
-                                    isVisibleDropDown={false}
-                                    marginVertical={hp(1)}
-                                    width={wp(85)}
-                                    borderWidth={isFocusedFeedBack ? ConstValue.value1 : ConstValue.value0}
-                                    borderColor={isFocusedFeedBack ? Colors.white : Colors.blue}
-                                    height={hp(20)}
-                                    marginTop={hp(2)}
-                                    isUserHide={false}
-                                    textfontSize={ConstValue.value15}
-                                    textfontFamily={Fonts.PoppinsRegular}
-                                    textlineHeight={ConstValue.value0}
-                                    ref={refFeedBack}
-                                    placeholder={ScreenText.ShareYourFeedBack}
-                                    editable={true}
-                                    multiline={false}
-                                    isPadding={true}
-                                    keyboardType='default'
-                                    textAlignVertical={"top"}
-                                    textAlign='left'
-                                    numberOfLines={null}
-                                    maxLength={null}
-                                    color={Colors.white}
-                                    backgroundColor={Colors.grayDark}
-                                    borderRadius={wp(2)}
-                                    onFocus={handleFocusFeed}
-                                    onChangeText={handleAccountFeed}
-                                    onSubmitEditing={() => {
-                                    }}
-                                    placeholderTextColor={Colors.gray}
-                                />
-                                {!isValidFeed ?
-                                    <TextComponent
-                                        textDecorationLine={'none'}
-                                        color={Colors.red}
-                                        title={ScreenText.ValidFeedback}
-                                        fontWeight="400"
-                                        fontSize={wp(4)}
-                                        fontFamily={Fonts.PoppinsRegular}
-                                    />
-                                    : null}
-                            </View>
-
-                            <View style={Styles.ButtonYesNoConatiner}>
-                                <ButtonComponent
-                                    isVisibleMobile={false}
-                                    isVisibleFaceBook={false}
-                                    marginVertical={hp(1)}
-                                    heightBtn={hp(6)}
-                                    widthBtn={wp(50)}
-                                    isRightArrow={false}
-                                    onPress={onPressSendFeeback}
-                                    color={Colors.white}
-                                    title={ScreenText.SendFeedback}
-                                    marginHorizontal={wp(6)}
-                                    fontWeight="500"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    alignSelf='center'
-                                    textAlign='center'
-                                    borderRadius={wp(2)}
-                                    backgroundColor={Colors.blue}
-                                />
-                            </View>
-
-                        </View>
-
-                    </Modal>
-
-                    <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
                         <View>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("HelpScreen")}
-                                style={Styles.viewItemFour}>
-                                <Image
-                                    style={Styles.imageHelpIcon}
-                                    resizeMode="contain"
-                                    source={Images.helpAndSupportIcon} />
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={ScreenText.HelpAndSupport}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                    marginHorizontal={wp(2)}
-                                />
-                                <View style={Styles.imageRightArrow}>
-                                    <Image
-                                        style={Styles.textTermsAndCondition}
-                                        resizeMode="contain"
-                                        source={Images.rightArrowIcon} />
-                                </View>
-                            </TouchableOpacity>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.Feedback}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.Date}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
                         </View>
 
-                        {isDriverOnTheWay
-                            ? <View>
-                                <View style={Styles.viewBlueBottamConatiner}>
-
-                                    <View style={Styles.viewWhiteDot} />
-
-                                    <View style={CommonStyle.commonFlex}>
-                                        <TextComponent
-                                            color={Colors.white}
-                                            title={isDRIVERSTATUS}
-                                            textDecorationLine={'none'}
-                                            fontWeight="400"
-                                            fontSize={wp(3.5)}
-                                            marginHorizontal={wp(2)}
-                                            fontFamily={Fonts.PoppinsSemiBold}
-                                            textAlign='left'
-                                        />
-                                    </View>
-
-                                    <View style={CommonStyle.commonFlex}>
-                                        <TextComponent
-                                            color={Colors.white}
-                                            title={isDRIVERSTATUS == "Courier Delivered" ? "Pay Now" : "View On Map"}
-                                            textDecorationLine={'underline'}
-                                            onPress={() =>
-
-                                                isDRIVERSTATUS ==
-
-                                                    "Courier Delivered" ?
-                                                    navigation.navigate('CourierRequestDriver', {
-                                                        itemCompleteMapId: route.params.itemRIDER_ID_SENT,
-
-                                                        itemCompleteDistance: route?.params?.itemRIDER_DISTANCE_SENT,
-                                                        itemCompleteDuration: route?.params?.itemRIDER_DURATUION_SENT,
-
-                                                        itemCompletePickStation: route.params.itemRIDER_PICKSTATION,
-                                                        itemCompleteDropStation: route.params.itemRIDER_DROPSTATION,
-
-                                                        itemCompleteRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                                                        itemCompleteRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                                                        itemCompleteRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                                                        itemCompleteRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                                                        itemCompleteTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-                                                    })
-                                                    : navigation.navigate('CourierRequestAccepted', {
-
-                                                        itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-                                                        // itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
-                                                        // itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
-
-                                                        itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                                        itemMapDropStation: route.params.itemRIDER_DROPSTATION,
-
-                                                        itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                                                        itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
-
-                                                        itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                                                        itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                                                        itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                                                        itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                                                        itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-
-                                                    })
-                                            }
-                                            fontWeight="400"
-                                            fontSize={wp(3.5)}
-                                            marginHorizontal={wp(2)}
-                                            fontFamily={Fonts.PoppinsRegular}
-                                            textAlign='right'
-                                        />
-                                    </View>
-
-
-                                </View>
-                            </View> :
-                            <></>}
+                        <View style={{ flex: 1 }}>
+                            <TextComponent
+                                color={Colors.orange}
+                                title={ScreenText.Feedback}
+                                textDecorationLine={'underline'}
+                                onPress={toggleModalFeedback}
+                                fontWeight="400"
+                                fontSize={wp(3.5)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='right'
+                            />
+                        </View>
 
                     </View>
 
                 </View>
+
+                <Modal isVisible={isModalCancel}>
+                    <View
+                        style={Styles.modalCancelConatiner}>
+                        <View>
+                            <TextComponent
+                                color={Colors.orange}
+                                title={ScreenText.AreYouSure}
+                                textDecorationLine={'none'}
+                                fontWeight="700"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                                marginVertical={wp(5)}
+                                marginHorizontal={wp(2)}
+                            />
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.FeedbackRequest_}
+                                textDecorationLine={'none'}
+                                fontWeight="500"
+                                fontSize={wp(3.5)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                                marginHorizontal={wp(2)}
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.IfYesAnotherdriver}
+                                textDecorationLine={'none'}
+                                fontWeight="500"
+                                fontSize={wp(2.5)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                                marginVertical={wp(2)}
+                                marginHorizontal={wp(2)}
+                            />
+                        </View>
+                        <View style={Styles.ButtonYesNoConatiner}>
+                            <ButtonComponent
+                                isVisibleMobile={false}
+                                isVisibleFaceBook={false}
+                                marginVertical={hp(1)}
+                                heightBtn={hp(6)}
+                                widthBtn={wp(30)}
+                                isRightArrow={false}
+                                onPress={onPressCancelCourier}
+                                color={Colors.white}
+                                title={ScreenText.Yes}
+                                marginHorizontal={wp(6)}
+                                fontWeight="600"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsSemiBold}
+                                alignSelf='center'
+                                textAlign='center'
+                                borderRadius={wp(2)}
+                                backgroundColor={Colors.blue}
+                            />
+                            <ButtonComponent
+                                isVisibleMobile={false}
+                                isVisibleFaceBook={false}
+                                marginVertical={hp(1)}
+                                heightBtn={hp(6)}
+                                widthBtn={wp(30)}
+                                isRightArrow={false}
+                                onPress={() => setModalCancel(false)}
+                                color={Colors.black}
+                                title={ScreenText.No}
+                                marginHorizontal={wp(6)}
+                                fontWeight="600"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsSemiBold}
+                                alignSelf='center'
+                                textAlign='center'
+                                borderRadius={wp(2)}
+                                backgroundColor={Colors.grayDark}
+                            />
+                        </View>
+
+                    </View>
+
+                </Modal>
+
+                <Modal isVisible={isModalFeedBack}>
+                    <View
+                        style={Styles.modalCancelConatiner}>
+
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.Feedback}
+                                textDecorationLine={'none'}
+                                fontWeight="700"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                                marginVertical={wp(5)}
+                                marginHorizontal={wp(2)}
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.FeedBackService}
+                                textDecorationLine={'none'}
+                                fontWeight="500"
+                                fontSize={wp(3)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                                marginHorizontal={wp(2)}
+                            />
+
+                        </View>
+
+                        <View>
+                            <TextInputComponent
+                                selectionColor={Colors.white}
+                                isVisibleDropDown={false}
+                                marginVertical={hp(1)}
+                                width={wp(85)}
+                                borderWidth={isFocusedFeedBack ? ConstValue.value1 : ConstValue.value0}
+                                borderColor={isFocusedFeedBack ? Colors.white : Colors.blue}
+                                height={hp(20)}
+                                marginTop={hp(2)}
+                                isUserHide={false}
+                                textfontSize={ConstValue.value15}
+                                textfontFamily={Fonts.PoppinsRegular}
+                                textlineHeight={ConstValue.value0}
+                                ref={refFeedBack}
+                                placeholder={ScreenText.ShareYourFeedBack}
+                                editable={true}
+                                multiline={false}
+                                isPadding={true}
+                                keyboardType='default'
+                                textAlignVertical={"top"}
+                                textAlign='left'
+                                numberOfLines={null}
+                                maxLength={null}
+                                color={Colors.white}
+                                backgroundColor={Colors.grayDark}
+                                borderRadius={wp(2)}
+                                onFocus={handleFocusFeed}
+                                onChangeText={handleAccountFeed}
+                                onSubmitEditing={() => {
+                                }}
+                                placeholderTextColor={Colors.gray}
+                            />
+                            {!isValidFeed ?
+                                <TextComponent
+                                    textDecorationLine={'none'}
+                                    color={Colors.red}
+                                    title={ScreenText.ValidFeedback}
+                                    fontWeight="400"
+                                    fontSize={wp(4)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                />
+                                : null}
+                        </View>
+
+                        <View style={Styles.ButtonYesNoConatiner}>
+                            <ButtonComponent
+                                isVisibleMobile={false}
+                                isVisibleFaceBook={false}
+                                marginVertical={hp(1)}
+                                heightBtn={hp(6)}
+                                widthBtn={wp(50)}
+                                isRightArrow={false}
+                                onPress={onPressSendFeeback}
+                                color={Colors.white}
+                                title={ScreenText.SendFeedback}
+                                marginHorizontal={wp(6)}
+                                fontWeight="500"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                alignSelf='center'
+                                textAlign='center'
+                                borderRadius={wp(2)}
+                                backgroundColor={Colors.blue}
+                            />
+                        </View>
+
+                    </View>
+
+                </Modal>
+
+                <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("HelpScreen")}
+                            style={Styles.viewItemFour}>
+                            <Image
+                                style={Styles.imageHelpIcon}
+                                resizeMode="contain"
+                                source={Images.helpAndSupportIcon} />
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.HelpAndSupport}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                                marginHorizontal={wp(2)}
+                            />
+                            <View style={Styles.imageRightArrow}>
+                                <Image
+                                    style={Styles.textTermsAndCondition}
+                                    resizeMode="contain"
+                                    source={Images.rightArrowIcon} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
+                    {isDriverOnTheWay
+                        ? <View>
+                            <View style={Styles.viewBlueBottamConatiner}>
+
+                                <View style={Styles.viewWhiteDot} />
+
+                                <View style={CommonStyle.commonFlex}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={isDRIVERSTATUS}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        marginHorizontal={wp(2)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={CommonStyle.commonFlex}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={isDRIVERSTATUS == "Courier Delivered" ? "Pay Now" : "View On Map"}
+                                        textDecorationLine={'underline'}
+                                        onPress={() =>
+
+                                            isDRIVERSTATUS ==
+
+                                                "Courier Delivered" ?
+                                                navigation.navigate('CourierRequestDriver', {
+                                                    itemCompleteMapId: route.params.itemRIDER_ID_SENT,
+
+                                                    itemCompleteDistance: route?.params?.itemRIDER_DISTANCE_SENT,
+                                                    itemCompleteDuration: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                                    itemCompletePickStation: route.params.itemRIDER_PICKSTATION,
+                                                    itemCompleteDropStation: route.params.itemRIDER_DROPSTATION,
+
+                                                    itemCompleteRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                    itemCompleteRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                    itemCompleteRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                    itemCompleteRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                    itemCompleteTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                                                })
+                                                : navigation.navigate('CourierRequestAccepted', {
+
+                                                    itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                                    // itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                                    // itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+
+                                                    itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                                    itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+
+                                                    itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                                    itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                                    itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                    itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                    itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                    itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                    itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+
+                                                })
+                                        }
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        marginHorizontal={wp(2)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='right'
+                                    />
+                                </View>
+
+
+                            </View>
+                        </View> :
+                        <></>}
+
+                </View>
+
+            </View>
 
             {/* </Modal> */}
 

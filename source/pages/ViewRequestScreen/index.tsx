@@ -26,13 +26,19 @@ const ViewRequestScreen = ({ route, navigation }) => {
     const [RequestDataREQ, setRequestDataREQ] = useState([]);
 
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
-
+    const [defaultRating, setDefaultRating] = useState(0);
 
     // TODO :
     const [AcceptUI, setAcceptUI] = useState('Accept');
     const [DeclineUI, setDeclineUI] = useState('Accept');
     const [PendingUI, setPendingUI] = useState('Accept');
     const [DefaultUI, setDefaultUI] = useState('Decline');
+
+    let username_;
+    let ProfileImage_;
+    let averageRating_;
+
+    const [isDriverName, setDriverName] = useState(ScreenText.UserName);
 
 
     const starImageFilled =
@@ -89,9 +95,10 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // Prepare data in JSON format
             const data = {
-                // rideId: route.params.itemRIDE
+                rideId: route.params.itemRIDE
+
                 // "rideId": "J64PQ4F3QQKK" //test !
-                "rideId": "ZXQ2AI466FJP"
+                // "rideId": "ZXQ2AI466FJP"
             };
 
             console.log("MatchingList==>", JSON.stringify(data, null, 2));
@@ -107,6 +114,14 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
                         console.log("Matching----==>",
                             JSON.stringify(response?.data?.data, null, 2));
+
+                        // username_ == response?.data?.data?.username;
+                        // console.log("username_====>" + username_);
+
+                        // ProfileImage_ = "";
+                        // averageRating_ = "";
+
+                        // setDriverName(username_);
 
                         setRequestDataREQ(response?.data?.data);
 
@@ -209,8 +224,14 @@ const ViewRequestScreen = ({ route, navigation }) => {
                 // // id: "65b87cdfff5893ae763e4b8f",
                 // BinddStatus: "Accepted" // Accept
 
-                id: "65b87cdfff5893ae763e4b8f",
-                BinddStatus: "Declined"
+                // id: "65b87cdfff5893ae763e4b8f",
+                // BinddStatus: "Declined"
+
+                id: item?._id,
+                BinddStatus: "Declined" // Accepted
+
+                // id: "65b87ce0ff5893ae763e4b91",
+                // BinddStatus: "Accepted" // test!
             };
 
             console.log("MatchingList==>", JSON.stringify(data, null, 2));
@@ -242,7 +263,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
                         // console.log("BinddStatus====>", BinddStatus);
                         // console.log("BinddStatus====>", BinddStatus);
 
-                        Toast.show('Success! Bidding Request Decline!', Toast.SHORT);
+                        // Toast.show('Success! Bidding Request Decline!', Toast.SHORT);
                         // navigation.goBack();
                         // setAcceptUI("Accepted");
 
@@ -271,12 +292,12 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
-                // id: item?._id,
-                // // id: "65b87cdfff5893ae763e4b8f",
-                // BinddStatus: "Accepted" // Accept
 
-                id: "65b87cdfff5893ae763e4b8f",
-                BinddStatus: "Accepted"
+                id: item?._id,
+                BinddStatus: "Accepted" // test!
+
+                // id: "65b87cdfff5893ae763e4b8f",
+                // BinddStatus: "Accepted" // test!
             };
 
             console.log("MatchingList==>", JSON.stringify(data, null, 2));
@@ -308,7 +329,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
                         // console.log("BinddStatus====>", BinddStatus);
                         // console.log("BinddStatus====>", BinddStatus);
 
-                        Toast.show('Success! Bidding Request Accepted!', Toast.SHORT);
+                        // Toast.show('Success! Bidding Request Accepted!', Toast.SHORT);
                         // navigation.goBack();
                         // setAcceptUI("Accepted");
 
@@ -337,12 +358,12 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
-                // id: item?._id,
-                // // id: "65b87cdfff5893ae763e4b8f",
-                // BinddStatus: "Accepted" // Accept
 
-                id: "65b87cdfff5893ae763e4b8f",
-                BinddStatus: "Accepted"
+                id: item?._id,
+                BinddStatus: "Accepted" // Accepted
+
+                // id: "65b87ce0ff5893ae763e4b91",
+                // BinddStatus: "Accepted" // test!
             };
 
             console.log("MatchingList==>", JSON.stringify(data, null, 2));
@@ -374,7 +395,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
                         // console.log("BinddStatus====>", BinddStatus);
                         // console.log("BinddStatus====>", BinddStatus);
 
-                        Toast.show('Success! Bidding Request Pending!', Toast.SHORT);
+                        // Toast.show('Success! Bidding Request Pending!', Toast.SHORT);
 
                         // navigation.goBack();
                         // setAcceptUI("Accepted");
@@ -443,7 +464,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                             navigation.navigate("ViewRequestDetails", {
                                                 itemHours: item?.hourse,
                                                 itemAmount: item?.Amount,
-                                                itemDriverID: item?.driverId
+                                                itemDriverID: item?.driverId,
+                                                itemRideId: item?.rideId,
                                             })
                                         }>
 
@@ -454,13 +476,13 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                                         <Image
                                                             style={Styles.imageUser}
                                                             resizeMode="contain"
-                                                            source={Images.edUserIcon} />
+                                                            source={{ uri: item?.ProfileImage }} />
                                                     </View>
 
                                                     <View>
                                                         <TextComponent
                                                             color={Colors.white}
-                                                            title={"Avinash Naidu"}
+                                                            title={item?.username}
                                                             marginHorizontal={wp(5)}
                                                             textDecorationLine={'none'}
                                                             fontWeight="700"
@@ -493,14 +515,18 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                                                                 <TouchableOpacity
                                                                                     activeOpacity={0.2}
                                                                                     key={item}
-                                                                                // onPress={() => handleRatingChange(item, rating)}
-                                                                                // Pass the item and rating to handleRatingChange
-
+                                                                                //onPress={() => setDefaultRating(item)}
                                                                                 >
+
+                                                                                    {/* // onPress={() => handleRatingChange(item, rating)}
+                                                                                // Pass the item and rating to handleRatingChange */}
+
+                                                                                    {/* > */}
+
                                                                                     <Image
                                                                                         style={Styles.starImageStyle}
                                                                                         source={
-                                                                                            rating <= item.userRattingNo
+                                                                                            rating <= item?.averageRating
                                                                                                 ? starImageFilled
                                                                                                 : starImageCorner
                                                                                         }
@@ -602,7 +628,6 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                                     }
 
 
-
                                                     {item?.BinddStatus == "Decline" ?
                                                         <TextComponent
                                                             color={Colors.orange}
@@ -670,7 +695,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
                                                     {item?.BinddStatus == "Declined" ?
                                                         <TextComponent
-                                                            color={Colors.blue}
+                                                            color={Colors.orange}
                                                             title={"Declined"}
                                                             textDecorationLine={'none'}
                                                             marginHorizontal={wp(2)}

@@ -85,7 +85,7 @@ export const ScreenText = {
    Accept: "Accept",
    Decline: "Decline",
    Amount: "Amount :",
-   TopRated2K: "Top Rated (2K)",
+   TopRated2K: "Top Rated",
    VehiclePhotos: "Vehicle Photos",
 
    RS25: "$ 25",
