@@ -167,14 +167,14 @@ const LocationScreen = (props: Props) => {
 
         try {
 
-            fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + user_latitude + ',' + user_longitude + '&key=' + 'AIzaSyDKUUDXcTOD6xSv4GSIUpttcG7TVf0NeL0')
+            fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + user_latitude + ',' + user_longitude + '&key=' + 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE')
                 .then((response) => response.json())
                 .then((responseJson) => {
                     console.log('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
                 })
 
             // const response = await fetch(
-            //     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${user_latitude},${user_longitude}&key=AIzaSyDKUUDXcTOD6xSv4GSIUpttcG7TVf0NeL0`
+            //     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${user_latitude},${user_longitude}&key=AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE`
             // );
 
             // if (!response.ok) {

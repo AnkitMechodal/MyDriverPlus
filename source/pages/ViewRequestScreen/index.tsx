@@ -25,7 +25,15 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
     const [RequestDataREQ, setRequestDataREQ] = useState([]);
 
-    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+
+
+    // TODO :
+    const [AcceptUI, setAcceptUI] = useState('Accept');
+    const [DeclineUI, setDeclineUI] = useState('Accept');
+    const [PendingUI, setPendingUI] = useState('Accept');
+    const [DefaultUI, setDefaultUI] = useState('Decline');
+
 
     const starImageFilled =
         Images.fillStarIcon;
@@ -47,7 +55,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
         fetchData();
 
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
         // Cleanup function
         return () => {
             // Clear the interval when the component unmounts
@@ -81,8 +89,9 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // Prepare data in JSON format
             const data = {
-                rideId: route.params.itemRIDE
-                // "rideId": "J64PQ4F3QQKK" // test !
+                // rideId: route.params.itemRIDE
+                // "rideId": "J64PQ4F3QQKK" //test !
+                "rideId": "ZXQ2AI466FJP"
             };
 
             console.log("MatchingList==>", JSON.stringify(data, null, 2));
@@ -118,24 +127,75 @@ const ViewRequestScreen = ({ route, navigation }) => {
         }
     };
 
+    const onPressDecline = async (item) => {
+
+        if (item?.BinddStatus == "Pendding") {
+            try {
+                const isConnected = await NetworkUtils.isNetworkAvailable()
+                if (isConnected) {
+                    axiosPostGetRequestDeclineStatus(item);
+                } else {
+                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+                }
+            } catch (error) {
+                Toast.show("axios error", Toast.SHORT);
+            }
+        } else {
+
+        }
+
+    }
+
     const onPressAccept = async (item) => {
 
         console.log("AcceptStatus====>===>", item?._id);
 
-        // Call AcceptStatus 
-        try {
-            const isConnected = await NetworkUtils.isNetworkAvailable()
-            if (isConnected) {
-                axiosPostGetRequestAcceptStatus(item);
-            } else {
-                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+        // Check BidndStatus :
+        if (item?.BinddStatus == "Accept") {
+            // Call AcceptStatus 
+            try {
+                const isConnected = await NetworkUtils.isNetworkAvailable()
+                if (isConnected) {
+                    axiosPostGetRequestAcceptStatus(item);
+                } else {
+                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+                }
+            } catch (error) {
+                Toast.show("axios error", Toast.SHORT);
             }
-        } catch (error) {
-            Toast.show("axios error", Toast.SHORT);
+        } else if (item?.BinddStatus == "Pendding") {
+            console.log("Pending==>", "Pendding");
+            // Call AcceptStatus 
+            try {
+                const isConnected = await NetworkUtils.isNetworkAvailable()
+                if (isConnected) {
+                    axiosPostGetRequestPendingStatus(item);
+                } else {
+                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+                }
+            } catch (error) {
+                Toast.show("axios error", Toast.SHORT);
+            }
+        } else {
+            // console.log("Decline==>", "Decline");
+            // // Call AcceptStatus 
+            // try {
+            //     const isConnected = await NetworkUtils.isNetworkAvailable()
+            //     if (isConnected) {
+            //         axiosPostGetRequestDeclineStatus(item);
+            //     } else {
+            //         Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            //     }
+            // } catch (error) {
+            //     Toast.show("axios error", Toast.SHORT);
+            // }
         }
+
+
     }
 
-    const axiosPostGetRequestAcceptStatus = async (item) => {
+
+    const axiosPostGetRequestDeclineStatus = async (item) => {
         try {
             // const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
@@ -143,10 +203,14 @@ const ViewRequestScreen = ({ route, navigation }) => {
             // const userId = JSON.parse(storedLinkedId);
             const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
 
-            // Prepare data in JSON format
+            // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
-                id: item?._id,
-                BinddStatus: item?.BinddStatus
+                // id: item?._id,
+                // // id: "65b87cdfff5893ae763e4b8f",
+                // BinddStatus: "Accepted" // Accept
+
+                id: "65b87cdfff5893ae763e4b8f",
+                BinddStatus: "Declined"
             };
 
             console.log("MatchingList==>", JSON.stringify(data, null, 2));
@@ -160,8 +224,93 @@ const ViewRequestScreen = ({ route, navigation }) => {
                     if (response.status === 200 &&
                         response?.data?.message === 'Bidding ride BinddStatus updated successfully') {
 
+                        // Get Status & Set To button:
+
+                        // let BinddStatus = response?.data?.data?.BinddStatus;
+                        // setDefaultUI(BinddStatus);
+
+
+                        // // Check BidndStatus :
+                        // if (BinddStatus === "Pending") {
+                        //     setPendingUI(BinddStatus);
+                        // } else if (BinddStatus === "Accepted") {
+                        //     setAcceptUI(BinddStatus);
+                        // } else {
+                        //     setDeclineUI(BinddStatus);
+                        // }
+
+                        // console.log("BinddStatus====>", BinddStatus);
+                        // console.log("BinddStatus====>", BinddStatus);
+
+                        Toast.show('Success! Bidding Request Decline!', Toast.SHORT);
+                        // navigation.goBack();
+                        // setAcceptUI("Accepted");
+
+                    } else {
+                        // Toast.show('Unable To Retrieved!-2', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Toast.show('Unable To Retrieved!-1', Toast.SHORT);
+                });
+            // } else {
+            //     // Handle the case where storedLinkedId is null
+            // }
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    }
+
+    const axiosPostGetRequestAcceptStatus = async (item) => {
+        try {
+            // const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            // if (storedLinkedId !== null) {
+            // const userId = JSON.parse(storedLinkedId);
+            const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+
+            // Prepare data in JSON format // J64PQ4F3QQKK
+            const data = {
+                // id: item?._id,
+                // // id: "65b87cdfff5893ae763e4b8f",
+                // BinddStatus: "Accepted" // Accept
+
+                id: "65b87cdfff5893ae763e4b8f",
+                BinddStatus: "Accepted"
+            };
+
+            console.log("MatchingList==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'Bidding ride BinddStatus updated successfully') {
+
+                        // Get Status & Set To button:
+
+                        let BinddStatus = response?.data?.data?.BinddStatus;
+                        setAcceptUI(BinddStatus);
+
+
+                        // // Check BidndStatus :
+                        // if (BinddStatus === "Pending") {
+                        //     setPendingUI(BinddStatus);
+                        // } else if (BinddStatus === "Accepted") {
+                        //     setAcceptUI(BinddStatus);
+                        // } else {
+                        //     setDeclineUI(BinddStatus);
+                        // }
+
+                        // console.log("BinddStatus====>", BinddStatus);
+                        // console.log("BinddStatus====>", BinddStatus);
+
                         Toast.show('Success! Bidding Request Accepted!', Toast.SHORT);
-                        navigation.goBack();
+                        // navigation.goBack();
+                        // setAcceptUI("Accepted");
 
                     } else {
                         // Toast.show('Unable To Retrieved!-2', Toast.SHORT);
@@ -178,6 +327,72 @@ const ViewRequestScreen = ({ route, navigation }) => {
         }
     };
 
+    const axiosPostGetRequestPendingStatus = async (item) => {
+        try {
+            // const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            // if (storedLinkedId !== null) {
+            // const userId = JSON.parse(storedLinkedId);
+            const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+
+            // Prepare data in JSON format // J64PQ4F3QQKK
+            const data = {
+                // id: item?._id,
+                // // id: "65b87cdfff5893ae763e4b8f",
+                // BinddStatus: "Accepted" // Accept
+
+                id: "65b87cdfff5893ae763e4b8f",
+                BinddStatus: "Accepted"
+            };
+
+            console.log("MatchingList==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'Bidding ride BinddStatus updated successfully') {
+
+                        // Get Status & Set To button:
+
+                        let BinddStatus = response?.data?.data?.BinddStatus;
+                        setPendingUI(BinddStatus);
+
+
+                        // // Check BidndStatus :
+                        // if (BinddStatus === "Pending") {
+                        //     setPendingUI(BinddStatus);
+                        // } else if (BinddStatus === "Accepted") {
+                        //     setAcceptUI(BinddStatus);
+                        // } else {
+                        //     setDeclineUI(BinddStatus);
+                        // }
+
+                        // console.log("BinddStatus====>", BinddStatus);
+                        // console.log("BinddStatus====>", BinddStatus);
+
+                        Toast.show('Success! Bidding Request Pending!', Toast.SHORT);
+
+                        // navigation.goBack();
+                        // setAcceptUI("Accepted");
+
+                    } else {
+                        // Toast.show('Unable To Retrieved!-2', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Toast.show('Unable To Retrieved!-1', Toast.SHORT);
+                });
+            // } else {
+            //     // Handle the case where storedLinkedId is null
+            // }
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    }
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -368,30 +583,138 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                                 </View>
 
                                                 <View style={Styles.rowCenter}>
-                                                    <View>
-                                                        <ButtonComponent
-                                                            isVisibleMobile={false}
-                                                            isVisibleFaceBook={false}
-                                                            marginVertical={hp(1)}
-                                                            heightBtn={hp(6)}
-                                                            widthBtn={wp(40)}
-                                                            isRightArrow={false}
-                                                            color={Colors.white}
-                                                            title={item?.BinddStatus}
-                                                            marginHorizontal={wp(2)}
-                                                            fontWeight="500"
-                                                            fontSize={wp(4)}
-                                                            onPress={() => onPressAccept(item)}
-                                                            // onPress={(item: any) => Alert.alert("onPressAccept" + item?._id)}
-                                                            fontFamily={Fonts.PoppinsRegular}
-                                                            alignSelf='center'
-                                                            textAlign='center'
-                                                            borderRadius={wp(2)}
-                                                            backgroundColor={Colors.blue}
-                                                        />
-                                                    </View>
 
-                                                    <View>
+                                                    {item?.BinddStatus == "Accepted" ?
+                                                        <TextComponent
+                                                            color={Colors.blue}
+                                                            title={"Accepted"}
+                                                            textDecorationLine={'none'}
+                                                            marginHorizontal={wp(2)}
+                                                            fontWeight="400"
+                                                            fontSize={wp(3.5)}
+                                                            marginVertical={wp(2)}
+                                                            fontFamily={Fonts.PoppinsRegular}
+                                                            textAlign='left'
+                                                        />
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
+
+
+
+                                                    {item?.BinddStatus == "Decline" ?
+                                                        <TextComponent
+                                                            color={Colors.orange}
+                                                            title={"Declined"}
+                                                            textDecorationLine={'none'}
+                                                            marginHorizontal={wp(2)}
+                                                            fontWeight="400"
+                                                            fontSize={wp(3.5)}
+                                                            marginVertical={wp(2)}
+                                                            fontFamily={Fonts.PoppinsRegular}
+                                                            textAlign='left'
+                                                        />
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
+
+                                                    {item?.BinddStatus == "Pendding" ?
+                                                        <View>
+                                                            <ButtonComponent
+                                                                isVisibleMobile={false}
+                                                                isVisibleFaceBook={false}
+                                                                marginVertical={hp(1)}
+                                                                heightBtn={hp(6)}
+                                                                widthBtn={wp(40)}
+                                                                isRightArrow={false}
+                                                                color={Colors.white}
+                                                                title={item?.BinddStatus == "Accept" ? AcceptUI :
+                                                                    item?.BinddStatus == "Pendding" ? PendingUI :
+                                                                        item?.BinddStatus == "Decline" ? DeclineUI : "Accept"}
+                                                                marginHorizontal={wp(2)}
+                                                                fontWeight="500"
+                                                                fontSize={wp(4)}
+                                                                onPress={() => onPressAccept(item)}
+                                                                fontFamily={Fonts.PoppinsRegular}
+                                                                alignSelf='center'
+                                                                textAlign='center'
+                                                                borderRadius={wp(2)}
+                                                                backgroundColor={Colors.blue}
+                                                            />
+                                                        </View>
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
+
+
+
+
+                                                    {item?.BinddStatus == "Accepted" ?
+                                                        <>
+                                                        </>
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
+
+                                                    {/* {item?.BinddStatus == "Declined" ?
+                                                        <>
+                                                        </>
+                                                        :
+                                                        <>
+                                                        </>
+                                                    } */}
+
+                                                    {item?.BinddStatus == "Declined" ?
+                                                        <TextComponent
+                                                            color={Colors.blue}
+                                                            title={"Declined"}
+                                                            textDecorationLine={'none'}
+                                                            marginHorizontal={wp(2)}
+                                                            fontWeight="400"
+                                                            fontSize={wp(3.5)}
+                                                            marginVertical={wp(2)}
+                                                            fontFamily={Fonts.PoppinsRegular}
+                                                            textAlign='left'
+                                                        />
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
+
+
+                                                    {item?.BinddStatus == "Pendding" ?
+                                                        <View>
+                                                            <ButtonComponent
+                                                                isVisibleMobile={false}
+                                                                isVisibleFaceBook={false}
+                                                                marginVertical={hp(1)}
+                                                                heightBtn={hp(6)}
+                                                                widthBtn={wp(40)}
+                                                                isRightArrow={false}
+                                                                color={Colors.white}
+                                                                // onPress={() => navigation.goBack()}
+                                                                onPress={() => onPressDecline(item)}
+                                                                title={DefaultUI}
+                                                                marginHorizontal={wp(2)}
+                                                                fontWeight="500"
+                                                                fontSize={wp(4)}
+                                                                fontFamily={Fonts.PoppinsRegular}
+                                                                alignSelf='center'
+                                                                textAlign='center'
+                                                                borderRadius={wp(2)}
+                                                                backgroundColor={Colors.orange}
+                                                            />
+                                                        </View>
+                                                        :
+                                                        <>
+                                                        </>
+                                                    }
+
+                                                    {/* <View>
                                                         <ButtonComponent
                                                             isVisibleMobile={false}
                                                             isVisibleFaceBook={false}
@@ -401,7 +724,9 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                                             isRightArrow={false}
                                                             color={Colors.white}
                                                             onPress={() => navigation.goBack()}
-                                                            title={ScreenText.Decline}
+                                                            title={item?.BinddStatus == "Accept" ? AcceptUI :
+                                                                item?.BinddStatus == "Pending" ? PendingUI :
+                                                                    item?.BinddStatus == "Decline" ? DeclineUI : "Accepted"}
                                                             marginHorizontal={wp(2)}
                                                             fontWeight="500"
                                                             fontSize={wp(4)}
@@ -411,7 +736,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                                             borderRadius={wp(2)}
                                                             backgroundColor={Colors.orange}
                                                         />
-                                                    </View>
+                                                    </View> */}
 
                                                 </View>
 

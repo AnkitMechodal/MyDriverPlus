@@ -49,7 +49,7 @@ const Styles = StyleSheet.create({
     },
     rowCenter: {
         flexDirection: "row",
-        justifyContent: "center"
+        // justifyContent: "center"
     },
     rowContent: {
         flexDirection: 'row',

@@ -168,14 +168,15 @@ const PickUpLocationScreen = ({ route, navigation }) => {
 
         try {
 
-            fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + user_latitude + ',' + user_longitude + '&key=' + 'AIzaSyDKUUDXcTOD6xSv4GSIUpttcG7TVf0NeL0')
+            fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + user_latitude + ',' + user_longitude + '&key=' + 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE')
                 .then((response) => response.json())
                 .then((responseJson) => {
-                    console.log('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
+                    console.log('ADDRESS GEOCODE is BACK!! => '
+                        + JSON.stringify(responseJson, null, 2));
                 })
 
             // const response = await fetch(
-            //     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${user_latitude},${user_longitude}&key=AIzaSyDKUUDXcTOD6xSv4GSIUpttcG7TVf0NeL0`
+            //     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${user_latitude},${user_longitude}&key=AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE`
             // );
 
             // if (!response.ok) {
@@ -313,7 +314,7 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     // "type": "Pick"
                 };
 
-                console.log("axiosUpdateSubmit==>", JSON.stringify(data, null, 2));
+                // console.log("axiosUpdateSubmit==>", JSON.stringify(data, null, 2));
 
                 await axios.post(url, data, {
                     headers: {
@@ -324,9 +325,9 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                         if (response.status === 200 &&
                             response?.data?.message === 'Saved Locations') {
 
-                            console.log("PICK_LOCATION_TEST==>",
-                                JSON.stringify(
-                                    response?.data?.matchingLocations, null, 2));
+                            // console.log("PICK_LOCATION_TEST==>",
+                            //     JSON.stringify(
+                            //         response?.data?.matchingLocations, null, 2));
 
                             SetSavedLocationdModal_(response?.data?.matchingLocations);
 
@@ -465,8 +466,8 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     // "mobilenumber_picku": "6356526597"
                 };
 
-                console.log("axiosPostSaveFullLocationUpdate==>",
-                    JSON.stringify(data, null, 2));
+                // console.log("axiosPostSaveFullLocationUpdate==>",
+                //     JSON.stringify(data, null, 2));
 
                 await axios.post(url, data, {
                     headers: {

@@ -36,10 +36,11 @@
       <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
     
     <!-- AIzaSyDKUUDXcTOD6xSv4GSIUpttcG7TVf0NeL0 -->
+    <!-- AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE -->
     
     <meta-data
       android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyDKUUDXcTOD6xSv4GSIUpttcG7TVf0NeL0"/>
+      android:value="AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE"/>
 
       <activity
         android:name=".MainActivity"

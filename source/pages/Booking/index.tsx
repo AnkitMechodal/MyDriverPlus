@@ -157,7 +157,6 @@ const BookingScreen = ({ route, navigation }) => {
     const [selectedSheduleDate, setSelectedSheduleDate] = useState(new Date());
 
 
-
     const handleDateChange = (event, date) => {
         hideDatePicker();
         changeSelectedDate(event, date);
@@ -476,7 +475,7 @@ const BookingScreen = ({ route, navigation }) => {
                     storedPreviousDropName(itemDropNameGet);
 
                     // PickName ReStored
-                     restoredPreviousPickName();
+                    restoredPreviousPickName();
 
                 }
 
