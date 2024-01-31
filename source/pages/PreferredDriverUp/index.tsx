@@ -63,7 +63,7 @@ const PreferredDriverUp = ({ route, navigation }) => {
 
     let DriverVehicleColor;
     let DriverUserVIN;
-
+    let DriverNumberOfSeat;
 
     let Driver_id;
 
@@ -94,6 +94,8 @@ const PreferredDriverUp = ({ route, navigation }) => {
 
 
     const [isModalVisible, setModalVisible] = useState(true);
+    const [isSeats, setSeats] = useState("0");
+
 
 
 
@@ -315,6 +317,10 @@ const PreferredDriverUp = ({ route, navigation }) => {
 
 
                         DriverUserVIN = response?.data?.matchingUsers[0]?.VINumber;
+
+
+                        DriverNumberOfSeat = response?.data?.matchingUsers[0]?.NumberOfSeat;
+                        setSeats(DriverNumberOfSeat);
 
 
                         // _id99
@@ -752,7 +758,7 @@ const PreferredDriverUp = ({ route, navigation }) => {
                                 />
                                 <TextComponent
                                     color={Colors.grayFull}
-                                    title={"4"}
+                                    title={isSeats}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}

@@ -24,6 +24,9 @@ const PreferredDriverScreen = ({ route, navigation }) => {
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
     const [defaultRating, setDefaultRating] = useState(0);
 
+    const [isSeats, setSeats] = useState("0");
+
+
     const starImageFilled1 =
         Images.fillstarIcon; // fillStarIcon
     const starImageCorner1 =
@@ -65,6 +68,7 @@ const PreferredDriverScreen = ({ route, navigation }) => {
 
     let DriverVehicleColor;
     let DriverUserVIN;
+    let DriverNumberOfSeat;
 
 
     let Driver_id;
@@ -316,6 +320,10 @@ const PreferredDriverScreen = ({ route, navigation }) => {
 
 
                         DriverUserVIN = response?.data?.matchingUsers[0]?.VINumber;
+
+
+                        DriverNumberOfSeat = response?.data?.matchingUsers[0]?.NumberOfSeat;
+                        setSeats(DriverNumberOfSeat);
 
 
                         // _id99
@@ -749,7 +757,7 @@ const PreferredDriverScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"4"}
+                                title={isSeats}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3.5)}

@@ -101,7 +101,30 @@ const HomeTabScreen = ({ route, navigation }) => {
     let storedRideType;
     let storedBidType;
 
-    // 
+    //Status
+    //RideStatus
+    //LastRideId
+
+    let StatusUser;
+    let RideStatusUser;
+    let LastRideIdIUser;
+    let RideObjectIDUser;
+    let RidetypeUser;
+    let service_stypeUser;
+
+
+    // Driver Status :
+    let USER_RIDEID;
+    let USER_RIDEDURATION;
+    let USER_RIDEDISTANCE;
+    let USER_PICK_UP_LOCATION;
+    let USER_DROP_UP_LOCATION;
+    let USER_RIDE_CHARGE;
+    let USER_CON_FEES;
+    let USER_WATTING_CHARGES;
+    let USER_DISCOUNT;
+    let USER_TOTAL_AMOUNT;
+
 
     const mapViewRef = useRef<any>(null);
 
@@ -111,7 +134,10 @@ const HomeTabScreen = ({ route, navigation }) => {
             try {
                 // Get Profile RideId From UserInfo
 
-                await axiosPostBookingStatus();
+                // TODO :
+                await axiosPostLastRideStatus();
+
+                // await axiosPostBookingStatus();
 
                 // // Check Status Local Data Fetch 
                 // storedRideID = await AsyncStorage.getItem('store_get_id');
@@ -132,7 +158,7 @@ const HomeTabScreen = ({ route, navigation }) => {
         };
         fetchData();
         // Set interval to refresh every 1 seconds
-        const intervalId = setInterval(fetchData, 5 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Cleanup function
         return () => {
@@ -227,11 +253,13 @@ const HomeTabScreen = ({ route, navigation }) => {
     const { isDarkMode, toggleTheme } = useTheme();
 
 
-    const axiosPostBookingStatus = async () => {
+    // GetRideStatusCheck
+    const axiosPostLastRideStatus = async () => {
+
         try {
             const isConnected = await NetworkUtils.isNetworkAvailable()
             if (isConnected) {
-                axiosCheckGetRideStatusRequest();
+                axiosPostLastRideStatusRequest();
             } else {
                 Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
             }
@@ -241,20 +269,19 @@ const HomeTabScreen = ({ route, navigation }) => {
     }
 
 
-    const axiosCheckGetRideStatusRequest = async () => {
+    const axiosPostLastRideStatusRequest = async () => {
         try {
-            let storedRideId = await AsyncStorage.getItem('store_get_id');
-            let storedRideType = await AsyncStorage.getItem('store_get_type');
+            const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
+            if (storedLinkedId !== null) {
+                const userId = JSON.parse(storedLinkedId);
+                const url = `https://rideshareandcourier.graphiglow.in/api/HomeScreenStatus/checkRide/${userId}`;
 
-            console.log("storedRideId===>", storedRideId);
-            console.log("storedRideType===>", storedRideType);
+                console.log("urlurlurlurl", url);
 
-            if (storedRideId !== null && storedRideType !== null) {
+                //  const url = `https://rideshareandcourier.graphiglow.in/api/HomeScreenStatus/checkRide/65b1df2e398f6beb9542e992`;
 
-                const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${JSON.parse(storedRideId)}`;
-
-                console.log("axiosCheckGetRideStatusRequest===>", url);
+                console.log("HomeScreenStatus==>", JSON.stringify(url, null, 2));
 
                 await axios.get(url, {
                     headers: {
@@ -263,226 +290,332 @@ const HomeTabScreen = ({ route, navigation }) => {
                 })
                     .then(response => {
                         if (response.status === 200
-                            && response?.data?.message === 'Ride Status Derived Successful') {
-                            // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+                            && response?.data?.message === 'Ride Status Derived Successfully') {
 
-                            statusCheack = response?.data?.matchingUsers?.Status;
-                            dateCheack = response?.data?.matchingUsers?.date;
+                            // Status
+                            // RideStatus
+                            // LastRideId
+                            // RideObjectID
+                            // Ridetype
 
-                            paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
-                            rideStatus = response?.data?.matchingUsers?.RideStatus;
+                            StatusUser = response?.data?.matchingUsers?.Status
+                            RideStatusUser = response?.data?.matchingUsers?.RideStatus
+                            LastRideIdIUser = response?.data?.matchingUsers?.LastRideId
 
-                            OTPStatus = response?.data?.matchingUsers?.OTP;
-                            OTPStatusVerfiy = response?.data?.matchingUsers?.OTPStatus;
+                            RideObjectIDUser = response?.data?.matchingUsers?.RideObjectID
+                            RidetypeUser = response?.data?.matchingUsers?.Ridetype
 
-                            console.log("OTPStatus===>", OTPStatus);
-                            console.log("OTPStatusVerfiy===>", OTPStatusVerfiy);
+                            service_stypeUser = response?.data?.matchingUsers?.service_stype
+
+                            console.log("RideObjectIDUser===>", RidetypeUser);
+                            console.log("RidetypeUser===>", RideObjectIDUser);
 
 
-                            console.log("Status", paymentStatus);
+                            if (StatusUser == "Arrived") {
+                                setRideStatus(true);
+                                setDRIVERSTATUS(RideStatusUser);
+                                console.log("YES");
 
-                            // 1
-                            if (statusCheack === "Accept") {
-
-                                if (storedRideType === "Taxi Booking") {
-                                    console.log("GetStatus===>", statusCheack);
-
-                                    setRideStatus(true);
-                                    setDRIVERSTATUS("Booking Request Accepted");
-                                } else {
-                                    console.log("GetStatus===>", statusCheack);
-
-                                    setRideStatus(true);
-                                    setDRIVERSTATUS("Courier Request Accepted");
-                                }
+                                // TODO :
+                                axiosPostNavigationStatus(RideObjectIDUser);
 
                             } else {
-                                // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                                console.log("NO");
+                                setDRIVERSTATUS("Booking Request Sent");
                             }
 
-
-                            // OTP 
-                            if (OTPStatus !== null) {
-                                setDRIVERSTATUS("Enjoy your ride , Ride Started");
-                            } else {
-                                setDRIVERSTATUS("Enjoy your ride , Ride Started");
-                            }
-
-                            // OTPStatusVerfiy 
-                            if (OTPStatusVerfiy === "Verify") {
-                                setDRIVERSTATUS("Driver arrived your location");
-                            } else {
-                                setDRIVERSTATUS("Driver Started Waiting Timer");
-                            }
-
-                            // 2
-                            if (paymentStatus === "Done") {
-                                // null
-                            } else {
-                                // null
-                            }
-
-                            // 3
-                            if (rideStatus === "Completed") {
-                                setDRIVERSTATUS("Ride Complete");
-                                // setRideStatus(false) //2901
-                            } else {
-                            }
-
+                            // Toast.show('Ride Status Get Success!', Toast.SHORT);
 
                         } else {
-                            // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                            // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
                         }
                     })
                     .catch(error => {
-                        // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                        // Handle errors
+                        // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
                     });
+
             } else {
 
             }
-
-
-
         } catch (error) {
-            // Handle any errors that occur during AsyncStorage operations
+
         }
+    }
+
+
+    const axiosPostNavigationStatus = async (RideObjectIDUser) => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostNavigationStatusRequest(RideObjectIDUser);
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const axiosPostNavigationStatusRequest = async (RideObjectIDUser: any) => {
+
+        // const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
+        // if (storedLinkedId !== null) {
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+
+        // Prepare data in JSON format
+        const data = {
+            id: RideObjectIDUser
+        };
+
+        console.log("RIDE_OBJECT==>", JSON.stringify(data, null, 2));
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Ride Details') {
+
+                    console.log("axiosPostNavigationStatusRequest===>"
+                        , JSON.stringify(response?.data?.matchingVehicle, null, 2));
+
+                    // Handle API response here
+                    USER_RIDEID = response?.data?.matchingVehicle?.RideId;
+                    USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
+                    USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
+                    USER_PICK_UP_LOCATION = response?.data?.matchingVehicle?.pickup_locations;
+                    USER_DROP_UP_LOCATION = response?.data?.matchingVehicle?.drop_locations;
+                    USER_RIDE_CHARGE = response?.data?.matchingVehicle?.RideCharge;
+                    USER_CON_FEES = response?.data?.matchingVehicle?.BookingFeesConvenience;
+                    USER_WATTING_CHARGES = response?.data?.matchingVehicle?.Waiting_Charge;
+                    USER_DISCOUNT = response?.data?.matchingVehicle?.Discount;
+                    USER_TOTAL_AMOUNT = response?.data?.matchingVehicle?.TotalAmount;
+
+                    Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);
+
+                } else {
+                    // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+            });
+
+        // } else {
+
+        // }
+
     };
 
-    const onPressViewBooking = async () => {
-        try {
-            // Check Status Local Data Fetch 
-            if (storedRideID !== null) {
-                storedRideID = await AsyncStorage.getItem('store_get_id');
-                storedRideIDValue = JSON.parse(storedRideID);
-            }
 
-            if (storedRideID_ !== null) {
-                storedRideID_ = await AsyncStorage.getItem('store_get_id_');
-                storedRideID_Value = JSON.parse(storedRideID_);
-            }
 
-            if (storedRideDISTANCE_ !== null) {
-                storedRideDISTANCE_ = await AsyncStorage.getItem('store_get_distance');
-                storedRideDISTANCE_Value = JSON.parse(storedRideDISTANCE_);
-            }
+    // const onPressViewBooking = async () => {
+    //     try {
+    //         // Check Status Local Data Fetch 
+    //         if (storedRideID !== null) {
+    //             storedRideID = await AsyncStorage.getItem('store_get_id');
+    //             storedRideIDValue = JSON.parse(storedRideID);
+    //         }
 
-            if (storedRideTIME_ !== null) {
-                storedRideTIME_ = await AsyncStorage.getItem('store_get_time');
-                storedRideTIME_Value = JSON.parse(storedRideTIME_);
-            }
+    //         if (storedRideID_ !== null) {
+    //             storedRideID_ = await AsyncStorage.getItem('store_get_id_');
+    //             storedRideID_Value = JSON.parse(storedRideID_);
+    //         }
 
-            if (storedRidePICK_ !== null) {
-                storedRidePICK_ = await AsyncStorage.getItem('store_get_pickstation');
-                storedRidePICK_Value = JSON.parse(storedRidePICK_);
-            }
+    //         if (storedRideDISTANCE_ !== null) {
+    //             storedRideDISTANCE_ = await AsyncStorage.getItem('store_get_distance');
+    //             storedRideDISTANCE_Value = JSON.parse(storedRideDISTANCE_);
+    //         }
 
-            if (storedRideDROP_ !== null) {
-                storedRideDROP_ = await AsyncStorage.getItem('store_get_dropstation');
-                storedRideDROP_Value = JSON.parse(storedRideDROP_);
-            }
+    //         if (storedRideTIME_ !== null) {
+    //             storedRideTIME_ = await AsyncStorage.getItem('store_get_time');
+    //             storedRideTIME_Value = JSON.parse(storedRideTIME_);
+    //         }
 
-            if (storedRideCHARGE_ !== null) {
-                storedRideCHARGE_ = await AsyncStorage.getItem('store_get_ridecharge');
-                storedRideCHARGE_Value = JSON.parse(storedRideCHARGE_);
-            }
+    //         if (storedRidePICK_ !== null) {
+    //             storedRidePICK_ = await AsyncStorage.getItem('store_get_pickstation');
+    //             storedRidePICK_Value = JSON.parse(storedRidePICK_);
+    //         }
 
-            if (storedRideFEESCON_ !== null) {
-                storedRideFEESCON_ = await AsyncStorage.getItem('store_get_feescon');
-                storedRideFEESCON_Value = JSON.parse(storedRideFEESCON_);
-            }
+    //         if (storedRideDROP_ !== null) {
+    //             storedRideDROP_ = await AsyncStorage.getItem('store_get_dropstation');
+    //             storedRideDROP_Value = JSON.parse(storedRideDROP_);
+    //         }
 
-            if (storedRideWATTINGCHARGE_ !== null) {
-                storedRideWATTINGCHARGE_ = await AsyncStorage.getItem('store_get_waittingcharge');
-                storedRideWATTINGCHARGE_Value = JSON.parse(storedRideWATTINGCHARGE_);
-            }
+    //         if (storedRideCHARGE_ !== null) {
+    //             storedRideCHARGE_ = await AsyncStorage.getItem('store_get_ridecharge');
+    //             storedRideCHARGE_Value = JSON.parse(storedRideCHARGE_);
+    //         }
 
-            if (storedRideGETDISCOUNT_ !== null) {
-                storedRideGETDISCOUNT_ = await AsyncStorage.getItem('store_get_dicount');
-                storedRideGETDISCOUNT_Value = JSON.parse(storedRideGETDISCOUNT_);
-            }
+    //         if (storedRideFEESCON_ !== null) {
+    //             storedRideFEESCON_ = await AsyncStorage.getItem('store_get_feescon');
+    //             storedRideFEESCON_Value = JSON.parse(storedRideFEESCON_);
+    //         }
 
-            if (storedRideGETOTALAMOUNT_ !== null) {
-                storedRideGETOTALAMOUNT_ = await AsyncStorage.getItem('store_get_totalamount');
-                storedRideGETOTALAMOUNT_Value = JSON.parse(storedRideGETOTALAMOUNT_);
-            }
+    //         if (storedRideWATTINGCHARGE_ !== null) {
+    //             storedRideWATTINGCHARGE_ = await AsyncStorage.getItem('store_get_waittingcharge');
+    //             storedRideWATTINGCHARGE_Value = JSON.parse(storedRideWATTINGCHARGE_);
+    //         }
 
-            if (storedRideType !== null) {
-                storedRideType = await AsyncStorage.getItem('store_get_type');
-            }
+    //         if (storedRideGETDISCOUNT_ !== null) {
+    //             storedRideGETDISCOUNT_ = await AsyncStorage.getItem('store_get_dicount');
+    //             storedRideGETDISCOUNT_Value = JSON.parse(storedRideGETDISCOUNT_);
+    //         }
 
-            if (storedBidType !== null) {
-                storedBidType = await AsyncStorage.getItem('store_get_bid_type');
-            }
-            //  Bidding Ride
-            // storedRideType === "Taxi Booking"
-            if (storedRideType === "Taxi Booking") {
-                navigation.navigate('BookingRequest', {
-                    itemRIDEID_SENT: storedRideIDValue,
-                    itemRIDER_ID_SENT: storedRideID_Value,
-                    itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
-                    itemRIDER_DURATUION_SENT: storedRideTIME_Value,
-                    itemRIDER_PICKSTATION: storedRidePICK_Value,
-                    itemRIDER_DROPSTATION: storedRideDROP_Value,
-                    itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
-                    itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
-                    itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
-                    itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
-                    itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
-                })
+    //         if (storedRideGETOTALAMOUNT_ !== null) {
+    //             storedRideGETOTALAMOUNT_ = await AsyncStorage.getItem('store_get_totalamount');
+    //             storedRideGETOTALAMOUNT_Value = JSON.parse(storedRideGETOTALAMOUNT_);
+    //         }
 
-            } else if (storedBidType == "Bidding Ride") {
-                navigation.navigate('BookingBiddingRequest', {
-                    itemRIDEID_SENT: storedRideIDValue,
-                    itemRIDER_ID_SENT: storedRideID_Value,
-                    itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
-                    itemRIDER_DURATUION_SENT: storedRideTIME_Value,
-                    itemRIDER_PICKSTATION: storedRidePICK_Value,
-                    itemRIDER_DROPSTATION: storedRideDROP_Value,
-                    itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
-                    itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
-                    itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
-                    itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
-                    itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
-                })
+    //         if (storedRideType !== null) {
+    //             storedRideType = await AsyncStorage.getItem('store_get_type');
+    //         }
+
+    //         if (storedBidType !== null) {
+    //             storedBidType = await AsyncStorage.getItem('store_get_bid_type');
+    //         }
+    //         //  Bidding Ride
+    //         // storedRideType === "Taxi Booking"
+    //         if (storedRideType === "Taxi Booking") {
+    //             navigation.navigate('BookingRequest', {
+    //                 itemRIDEID_SENT: storedRideIDValue,
+    //                 itemRIDER_ID_SENT: storedRideID_Value,
+    //                 itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
+    //                 itemRIDER_DURATUION_SENT: storedRideTIME_Value,
+    //                 itemRIDER_PICKSTATION: storedRidePICK_Value,
+    //                 itemRIDER_DROPSTATION: storedRideDROP_Value,
+    //                 itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
+    //                 itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
+    //                 itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
+    //                 itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
+    //                 itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
+    //             })
+
+    //         } else if (storedBidType == "Bidding Ride") {
+    //             navigation.navigate('BookingBiddingRequest', {
+    //                 itemRIDEID_SENT: storedRideIDValue,
+    //                 itemRIDER_ID_SENT: storedRideID_Value,
+    //                 itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
+    //                 itemRIDER_DURATUION_SENT: storedRideTIME_Value,
+    //                 itemRIDER_PICKSTATION: storedRidePICK_Value,
+    //                 itemRIDER_DROPSTATION: storedRideDROP_Value,
+    //                 itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
+    //                 itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
+    //                 itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
+    //                 itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
+    //                 itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
+    //             })
+    //         } else {
+
+    //             if (storedBidType == "Bidding Ride") {
+    //                 navigation.navigate('BookingBiddingRequest', {
+    //                     itemRIDEID_SENT: storedRideIDValue,
+    //                     itemRIDER_ID_SENT: storedRideID_Value,
+    //                     itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
+    //                     itemRIDER_DURATUION_SENT: storedRideTIME_Value,
+    //                     itemRIDER_PICKSTATION: storedRidePICK_Value,
+    //                     itemRIDER_DROPSTATION: storedRideDROP_Value,
+    //                     itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
+    //                     itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
+    //                     itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
+    //                     itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
+    //                     itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
+    //                 })
+    //             } else {
+    //                 navigation.navigate('CourierRequest', {
+    //                     itemRIDEID_SENT: storedRideIDValue,
+    //                     itemRIDER_ID_SENT: storedRideID_Value,
+    //                     itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
+    //                     itemRIDER_DURATUION_SENT: storedRideTIME_Value,
+    //                     itemRIDER_PICKSTATION: storedRidePICK_Value,
+    //                     itemRIDER_DROPSTATION: storedRideDROP_Value,
+    //                     itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
+    //                     itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
+    //                     itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
+    //                     itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
+    //                     itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
+    //                 })
+    //             }
+
+
+    //         }
+
+    //     } catch (error) {
+
+    //     }
+
+    // }
+
+    const onPressViewBookingLast = () => {
+        if (RidetypeUser = "Taxi Booking") {
+            if (service_stypeUser = "Bidding Ride") {
+                console.log("itemRIDEID_SENT---------->", LastRideIdIUser)
+                console.log("itemRIDEID_SENT---------->", LastRideIdIUser)
+                console.log("itemRIDEID_SENT---------->", LastRideIdIUser)
+
+                console.log("1", "Taxi Booking")
+                console.log("3", "Bidding Ride")
+                console.log("1", "Taxi Booking")
+                console.log("3", "Bidding Ride")
+                // navigation.navigate('BookingBiddingRequest', {
+                //     itemRIDEID_SENT: LastRideIdIUser,
+                //     itemRIDER_ID_SENT: RideObjectIDUser,
+                //     itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
+                //     itemRIDER_DURATUION_SENT: storedRideTIME_Value,
+                //     itemRIDER_PICKSTATION: storedRidePICK_Value,
+                //     itemRIDER_DROPSTATION: storedRideDROP_Value,
+                //     itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
+                //     itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
+                //     itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
+                //     itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
+                //     itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
+                // })
+
             } else {
-
-                if (storedBidType == "Bidding Ride") {
-                    navigation.navigate('BookingBiddingRequest', {
-                        itemRIDEID_SENT: storedRideIDValue,
-                        itemRIDER_ID_SENT: storedRideID_Value,
-                        itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
-                        itemRIDER_DURATUION_SENT: storedRideTIME_Value,
-                        itemRIDER_PICKSTATION: storedRidePICK_Value,
-                        itemRIDER_DROPSTATION: storedRideDROP_Value,
-                        itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
-                        itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
-                        itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
-                        itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
-                        itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
-                    })
-                } else {
-                    navigation.navigate('CourierRequest', {
-                        itemRIDEID_SENT: storedRideIDValue,
-                        itemRIDER_ID_SENT: storedRideID_Value,
-                        itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
-                        itemRIDER_DURATUION_SENT: storedRideTIME_Value,
-                        itemRIDER_PICKSTATION: storedRidePICK_Value,
-                        itemRIDER_DROPSTATION: storedRideDROP_Value,
-                        itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
-                        itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
-                        itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
-                        itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
-                        itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
-                    })
-                }
-
-
+                console.log("1", "Taxi Booking")
+                console.log("1", "Taxi Booking")
+                // navigation.navigate('BookingRequest', {
+                //     itemRIDEID_SENT: storedRideIDValue,
+                //     itemRIDER_ID_SENT: storedRideID_Value,
+                //     itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
+                //     itemRIDER_DURATUION_SENT: storedRideTIME_Value,
+                //     itemRIDER_PICKSTATION: storedRidePICK_Value,
+                //     itemRIDER_DROPSTATION: storedRideDROP_Value,
+                //     itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
+                //     itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
+                //     itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
+                //     itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
+                //     itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
+                // })
             }
-
-        } catch (error) {
-
+        } else if (RidetypeUser = "Courier Delivery") {
+            console.log("2", "Courier Delivery")
+            console.log("2", "Courier Delivery")
+            // navigation.navigate('CourierRequest', {
+            //     itemRIDEID_SENT: storedRideIDValue,
+            //     itemRIDER_ID_SENT: storedRideID_Value,
+            //     itemRIDER_DISTANCE_SENT: storedRideDISTANCE_Value,
+            //     itemRIDER_DURATUION_SENT: storedRideTIME_Value,
+            //     itemRIDER_PICKSTATION: storedRidePICK_Value,
+            //     itemRIDER_DROPSTATION: storedRideDROP_Value,
+            //     itemRIDER_RIDE_CHARGE: storedRideCHARGE_Value,
+            //     itemRIDER_RIDE_FEES_CON: storedRideFEESCON_Value,
+            //     itemRIDER_RIDE_WAITING_CHARGES: storedRideWATTINGCHARGE_Value,
+            //     itemRIDER_RIDE_DICOUNT: storedRideGETDISCOUNT_Value,
+            //     itemRIDER_RIDE_TOTALAMOUNT: storedRideGETOTALAMOUNT_Value,
+            // })
+        } else {
+            console.log("0", "ERROR");
+            console.log("0", "ERROR");
         }
-
     }
 
     return (
@@ -640,7 +773,9 @@ const HomeTabScreen = ({ route, navigation }) => {
                                     color={Colors.white}
                                     title={isDRIVERSTATUS == "Ride Complete" ? "View Booking" : "View Booking"}
                                     textDecorationLine={'underline'} //USER
-                                    onPress={onPressViewBooking}
+                                    // onPress={onPressViewBooking}
+                                    onPress={() => onPressViewBookingLast()}
+                                    // onPress={() => Alert.alert("Booking Status")}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
                                     marginHorizontal={wp(2)}

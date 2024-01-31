@@ -68,6 +68,7 @@ const CourierPreferredDriverScreen = ({ route, navigation }) => {
     let DriverVehicleColor;
 
     let Driver_id;
+    let DriverNumberOfSeat;
 
 
 
@@ -92,6 +93,8 @@ const CourierPreferredDriverScreen = ({ route, navigation }) => {
     const [isDriverVehicleColor, setDriverVehicleColor] = useState("yellow");
 
     const [isRated, setRated] = useState("0");
+
+    const [isSeats, setSeats] = useState("0");
 
     useEffect(() => {
 
@@ -324,6 +327,9 @@ const CourierPreferredDriverScreen = ({ route, navigation }) => {
 
                         DriverUserVIN = response?.data?.matchingUsers[0]?.VINumber;
 
+
+                        DriverNumberOfSeat = response?.data?.matchingUsers[0]?.NumberOfSeat;
+                        setSeats(DriverNumberOfSeat);
 
                         // _id99
                         Driver_id = response?.data?.matchingUsers[0]?._id;
@@ -757,7 +763,7 @@ const CourierPreferredDriverScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"4"}
+                                title={isSeats}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3.5)}

@@ -221,35 +221,35 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     };
 
     // Define your custom map style
-    const customMapStyle = !isDarkMode
-        ? [
-            {
-                elementType: 'geometry',
-                stylers: [
-                    {
-                        "color": "#212121"
-                    },
-                ],
-            },
-            {
-                elementType: 'labels.text.stroke',
-                stylers: [
-                    {
-                        color: '#242f3e',
-                    },
-                ],
-            },
-            {
-                elementType: 'labels.text.fill',
-                stylers: [
-                    {
-                        color: '#746855',
-                    },
-                ],
-            },
-            // Add more style configurations as needed for dark mode
-        ]
-        : [];
+    // const customMapStyle = !isDarkMode
+    //     ? [
+    //         {
+    //             elementType: 'geometry',
+    //             stylers: [
+    //                 {
+    //                     "color": "#212121"
+    //                 },
+    //             ],
+    //         },
+    //         {
+    //             elementType: 'labels.text.stroke',
+    //             stylers: [
+    //                 {
+    //                     color: '#242f3e',
+    //                 },
+    //             ],
+    //         },
+    //         {
+    //             elementType: 'labels.text.fill',
+    //             stylers: [
+    //                 {
+    //                     color: '#746855',
+    //                 },
+    //             ],
+    //         },
+    //         // Add more style configurations as needed for dark mode
+    //     ]
+    //     : [];
 
 
     const onPressSaveFullLocation = async () => {
@@ -603,7 +603,7 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     style={Styles.viewMapview}
                     provider={PROVIDER_GOOGLE}
                     showsUserLocation={true}
-                    customMapStyle={customMapStyle}
+                    // customMapStyle={customMapStyle}
                     showsMyLocationButton={false}
                     onPress={handleMapPress}
                     initialRegion={{

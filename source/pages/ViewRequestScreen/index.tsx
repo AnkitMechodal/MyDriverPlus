@@ -60,7 +60,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
         };
         fetchData();
 
-        // Set interval to refresh every 10 seconds
+        // Set interval to refresh every 1 seconds
         const intervalId = setInterval(fetchData, 1 * 1000);
         // Cleanup function
         return () => {
@@ -165,21 +165,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
         console.log("AcceptStatus====>===>", item?._id);
 
-        // Check BidndStatus :
-        if (item?.BinddStatus == "Accept") {
-            // Call AcceptStatus 
-            try {
-                const isConnected = await NetworkUtils.isNetworkAvailable()
-                if (isConnected) {
-                    axiosPostGetRequestAcceptStatus(item);
-                } else {
-                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-                }
-            } catch (error) {
-                Toast.show("axios error", Toast.SHORT);
-            }
-        } else if (item?.BinddStatus == "Pendding") {
-            console.log("Pending==>", "Pendding");
+
+        if (item?.BinddStatus == "Pendding") {
             // Call AcceptStatus 
             try {
                 const isConnected = await NetworkUtils.isNetworkAvailable()
@@ -192,19 +179,49 @@ const ViewRequestScreen = ({ route, navigation }) => {
                 Toast.show("axios error", Toast.SHORT);
             }
         } else {
-            // console.log("Decline==>", "Decline");
-            // // Call AcceptStatus 
-            // try {
-            //     const isConnected = await NetworkUtils.isNetworkAvailable()
-            //     if (isConnected) {
-            //         axiosPostGetRequestDeclineStatus(item);
-            //     } else {
-            //         Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-            //     }
-            // } catch (error) {
-            //     Toast.show("axios error", Toast.SHORT);
-            // }
+
         }
+
+        // // Check BidndStatus :
+        // if (item?.BinddStatus == "Accept") {
+        //     // Call AcceptStatus 
+        //     try {
+        //         const isConnected = await NetworkUtils.isNetworkAvailable()
+        //         if (isConnected) {
+        //             axiosPostGetRequestAcceptStatus(item);
+        //         } else {
+        //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+        //         }
+        //     } catch (error) {
+        //         Toast.show("axios error", Toast.SHORT);
+        //     }
+        // } else if (item?.BinddStatus == "Pendding") {
+        //     console.log("Pending==>", "Pendding");
+        //     // Call AcceptStatus 
+        //     try {
+        //         const isConnected = await NetworkUtils.isNetworkAvailable()
+        //         if (isConnected) {
+        //             axiosPostGetRequestPendingStatus(item);
+        //         } else {
+        //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+        //         }
+        //     } catch (error) {
+        //         Toast.show("axios error", Toast.SHORT);
+        //     }
+        // } else {
+        //     // console.log("Decline==>", "Decline");
+        //     // // Call AcceptStatus 
+        //     // try {
+        //     //     const isConnected = await NetworkUtils.isNetworkAvailable()
+        //     //     if (isConnected) {
+        //     //         axiosPostGetRequestDeclineStatus(item);
+        //     //     } else {
+        //     //         Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+        //     //     }
+        //     // } catch (error) {
+        //     //     Toast.show("axios error", Toast.SHORT);
+        //     // }
+        // }
 
 
     }
@@ -379,8 +396,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
                         // Get Status & Set To button:
 
-                        let BinddStatus = response?.data?.data?.BinddStatus;
-                        setPendingUI(BinddStatus);
+                        // let BinddStatus = response?.data?.data?.BinddStatus;
+                        // setPendingUI(BinddStatus);
 
 
                         // // Check BidndStatus :
@@ -466,6 +483,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
                                                 itemAmount: item?.Amount,
                                                 itemDriverID: item?.driverId,
                                                 itemRideId: item?.rideId,
+                                                itemBinddStatus: item?.BinddStatus,
+                                                item_ID: item?._id
                                             })
                                         }>
 

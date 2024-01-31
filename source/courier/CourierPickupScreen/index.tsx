@@ -600,7 +600,7 @@ const CourierPickupScreen = (props: Props) => {
                     style={Styles.viewMapview}
                     provider={PROVIDER_GOOGLE}
                     showsUserLocation={true}
-                    customMapStyle={customMapStyle}
+                    // customMapStyle={customMapStyle}
                     showsMyLocationButton={false}
                     onPress={handleMapPress}
                     initialRegion={{
