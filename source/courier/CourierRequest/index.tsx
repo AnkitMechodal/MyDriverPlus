@@ -67,12 +67,14 @@ const CourierRequestScreen = ({ route, navigation }) => {
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
 
-    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Courier Boy is On the Way');
+    // const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Courier Boy is On the Way');
+
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Courier Request Sent");
+    // Courier Request Sent
 
 
     let statusCheack;
     let dateCheack;
-
 
 
     let OTPGenerated;
@@ -82,6 +84,72 @@ const CourierRequestScreen = ({ route, navigation }) => {
     let paymentStatus;
     let rideStatus;
     let OTPStatus;
+    let OTPVerify;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                // itemDateBookingSent
+                console.log("RIDE_DATE==DATE==DATE==>", route.params.itemDateBookingSent);
+
+                console.log("RIDE_ID_REQUEST===>", route.params.itemRIDEID_SENT);
+
+                // itemRIDER_ID_SENT
+
+                console.log("RIDER_USER_ID_REQUEST===>", route.params.itemRIDER_ID_SENT);
+
+                // Pay Now
+                console.log("itemRIDER_DISTANCE_SENT===>", route.params.itemRIDER_DISTANCE_SENT);
+                console.log("itemRIDER_DURATUION_SENT===>", route.params.itemRIDER_DURATUION_SENT);
+
+                // Added MapData
+                console.log("itemPICK_STATION_SENT===>", route.params.itemRIDER_PICKSTATION);
+                console.log("itemDROP_STATION_SENT===>", route.params.itemRIDER_DROPSTATION);
+
+                // Payment
+                console.log("itemRIDER_RIDE_CHARGE_SENT===>", route.params.itemRIDER_RIDE_CHARGE);
+                console.log("itemRIDER_RIDE_FEES_CON_SENT===>",
+                    route.params.itemRIDER_RIDE_FEES_CON);
+                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENT===>",
+                    route.params.itemRIDER_RIDE_WAITING_CHARGES);
+                console.log("itemRIDER_RIDE_DICOUNT_SENT===>",
+                    route.params.itemRIDER_RIDE_DICOUNT);
+                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT===>",
+                    route.params.itemRIDER_RIDE_TOTALAMOUNT);
+
+
+                // Get User In User Info
+                await axiosGetRideStatusRequest();
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchData, 10 * 1000);
+
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+
+    }, [route.params.itemRIDEID_SENT,
+    route.params.itemRIDER_ID_SENT,
+    route.params.itemRIDER_DISTANCE_SENT,
+    route.params.itemRIDER_DURATUION_SENT,
+    route.params.itemRIDER_PICKSTATION,
+    route.params.itemRIDER_DROPSTATION,
+    route.params.itemRIDER_RIDE_CHARGE,
+    route.params.itemRIDER_RIDE_FEES_CON,
+    route.params.itemRIDER_RIDE_WAITING_CHARGES,
+    route.params.itemRIDER_RIDE_DICOUNT,
+    route.params.itemRIDER_RIDE_TOTALAMOUNT
+    ]);
 
 
     const toggleModalCancel = () => {
@@ -183,67 +251,6 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
 
     };
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-
-                console.log("RIDE_ID_REQUEST===>", route.params.itemRIDEID_SENT);
-
-                // itemRIDER_ID_SENT
-
-                console.log("RIDER_USER_ID_REQUEST===>", route.params.itemRIDER_ID_SENT);
-
-                // Pay Now
-                console.log("itemRIDER_DISTANCE_SENT===>", route.params.itemRIDER_DISTANCE_SENT);
-                console.log("itemRIDER_DURATUION_SENT===>", route.params.itemRIDER_DURATUION_SENT);
-
-                // Added MapData
-                console.log("itemPICK_STATION_SENT===>", route.params.itemRIDER_PICKSTATION);
-                console.log("itemDROP_STATION_SENT===>", route.params.itemRIDER_DROPSTATION);
-
-                // Payment
-                console.log("itemRIDER_RIDE_CHARGE_SENT===>", route.params.itemRIDER_RIDE_CHARGE);
-                console.log("itemRIDER_RIDE_FEES_CON_SENT===>",
-                    route.params.itemRIDER_RIDE_FEES_CON);
-                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENT===>",
-                    route.params.itemRIDER_RIDE_WAITING_CHARGES);
-                console.log("itemRIDER_RIDE_DICOUNT_SENT===>",
-                    route.params.itemRIDER_RIDE_DICOUNT);
-                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT===>",
-                    route.params.itemRIDER_RIDE_TOTALAMOUNT);
-
-
-                // Get User In User Info
-                await axiosGetRideStatusRequest();
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-
-        // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(fetchData, 10 * 1000);
-
-        // // Cleanup function
-        // return () => {
-        //     // Clear the interval when the component unmounts
-        //     clearInterval(intervalId);
-        // };
-
-    }, [route.params.itemRIDEID_SENT,
-    route.params.itemRIDER_ID_SENT,
-    route.params.itemRIDER_DISTANCE_SENT,
-    route.params.itemRIDER_DURATUION_SENT,
-    route.params.itemRIDER_PICKSTATION,
-    route.params.itemRIDER_DROPSTATION,
-    route.params.itemRIDER_RIDE_CHARGE,
-    route.params.itemRIDER_RIDE_FEES_CON,
-    route.params.itemRIDER_RIDE_WAITING_CHARGES,
-    route.params.itemRIDER_RIDE_DICOUNT,
-    route.params.itemRIDER_RIDE_TOTALAMOUNT
-    ]);
 
     const onPressCancelCourier = () => {
         // Cancel Courier 
@@ -362,14 +369,29 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         OTPStatus = response?.data?.matchingUsers?.OTP;
                         setPICKOTP(OTPStatus);
 
+                        OTPVerify = response?.data?.matchingUsers?.OTPStatus;
+                        console.log("OTPVerify===>", OTPVerify);
+
                         setToggleArrived(true);
                         setToggleOTP(true);
+
+                        // setToggleArrived
+
+                        // TODO :
+                        if (OTPVerify === "Verify") {
+                            setToggleOTP(true);
+                        } else {
+                            setToggleOTP(false);
+                            setDRIVERSTATUS("Driver Started Waiting Timer")
+                        }
 
 
                         if (toggleOTP === true) {
                             setToggleOTP(true); // auto true
+
                             setToggleArrivedDrop(true)
                             setDROPOTP("000000"); // DROP OTP Set
+
                             // setDROPOTP(OTPGenerated_); // DROP OTP Set
                         } else {
                             console.log("ERROR!", "ERROR!");
@@ -385,18 +407,25 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         if (statusCheack === "Accept") {
                             console.log("GetStatus===>", statusCheack);
                             setToggleAccepted(true);
-                            setRequestSentDate(dateCheack.concat(" " + currentTime))
+
+                            // Booking Request Accepted
+                            setDRIVERSTATUS("Booking Request Accepted");
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            setDRIVERSTATUS("Driver is On the Way");
+
+                            // setRequestSentDate(dateCheack.concat(" " + currentTime))
                             setDriverOnTheWay(true);
 
                             //  generateOTP 
                             // axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
-                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            // Booking Request Accepted
+                            // setDRIVERSTATUS("Ride Started , Enjoy your ride");**
 
                         } else {
                             setToggleAccepted(false);
-                            Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                            // Toast.show('Unable to Get Ride Status!', Toast.SHORT); **
                         }
 
                         // 2
@@ -622,7 +651,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -678,7 +707,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -731,7 +760,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -800,7 +829,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -839,7 +868,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -908,7 +937,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -963,7 +992,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1018,7 +1047,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.Date}
+                                title={route?.params?.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1259,7 +1288,18 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                     {isDriverOnTheWay
                         ? <View>
-                            <View style={Styles.viewBlueBottamConatiner}>
+                            <View style={{
+                                width: "100%",
+                                height: "auto",
+                                padding: wp(3),
+                                borderTopLeftRadius: wp(5),
+                                borderTopRightRadius: wp(5),
+                                backgroundColor: isDRIVERSTATUS ==
+                                    "Driver Started Waiting Timer" ? Colors.orange : Colors.blue,
+                                // (isRideStatus ? Colors.header : Colors.transparent),
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end'
+                            }}>
 
                                 <View style={Styles.viewWhiteDot} />
 

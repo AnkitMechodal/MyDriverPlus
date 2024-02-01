@@ -112,6 +112,7 @@ const HomeTabScreen = ({ route, navigation }) => {
     let RidetypeUser;
     let service_stypeUser;
 
+    // let USER_DATE;
 
     // Driver Status :
     let USER_RIDEID;
@@ -124,6 +125,8 @@ const HomeTabScreen = ({ route, navigation }) => {
     let USER_WATTING_CHARGES;
     let USER_DISCOUNT;
     let USER_TOTAL_AMOUNT;
+
+    let USER_DATE;
 
 
     const mapViewRef = useRef<any>(null);
@@ -307,6 +310,11 @@ const HomeTabScreen = ({ route, navigation }) => {
 
                             service_stypeUser = response?.data?.matchingUsers?.service_stype
 
+                            console.log("LastRideIdIUser===>", RideObjectIDUser);
+                            console.log("LastRideIdIUser===>", RideObjectIDUser);
+                            console.log("LastRideIdIUser===>", RideObjectIDUser);
+                            console.log("LastRideIdIUser===>", RideObjectIDUser);
+
                             console.log("RideObjectIDUser===>", RidetypeUser);
                             console.log("RidetypeUser===>", RideObjectIDUser);
 
@@ -426,6 +434,15 @@ const HomeTabScreen = ({ route, navigation }) => {
                     USER_DISCOUNT = response?.data?.matchingVehicle?.Discount;
                     USER_TOTAL_AMOUNT = response?.data?.matchingVehicle?.TotalAmount;
 
+                    USER_DATE = response?.data?.matchingVehicle?.date;
+
+                    console.log("USER_DATE", USER_DATE);
+                    console.log("USER_DATE", USER_DATE);
+                    console.log("USER_DATE", USER_DATE);
+                    console.log("USER_DATE", USER_DATE);
+
+                    // date
+
                     // USER_PICK_UP_LOCATION
                     StoreRidePickUp(USER_PICK_UP_LOCATION);
                     StoreRideDropUp(USER_DROP_UP_LOCATION);
@@ -437,6 +454,8 @@ const HomeTabScreen = ({ route, navigation }) => {
 
                     StoreRideDuration(USER_RIDEDURATION);
                     StoreRideDistnace(USER_RIDEDISTANCE);
+                    StoreRideUserDate(USER_DATE);
+
 
                     // Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);
 
@@ -537,6 +556,15 @@ const HomeTabScreen = ({ route, navigation }) => {
         }
     }
 
+    const StoreRideUserDate = async (USER_DATEA: any) => {
+        try {
+            await AsyncStorage.setItem('store_get_last_date', JSON.stringify(USER_DATEA));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.error('Error store_get_last_date:', error);
+        }
+    }
+
 
     const onPressViewBookingLast = async () => {
 
@@ -557,6 +585,8 @@ const HomeTabScreen = ({ route, navigation }) => {
                 let USER_DISTANCE_ = await AsyncStorage.getItem('store_get_last_id_distance');
                 let USER_DURATION_ = await AsyncStorage.getItem('store_get_last_id_duration');
 
+                let USER_DATE_ = await AsyncStorage.getItem('store_get_last_date');
+
                 console.log(`
                     Last Ride ID: ${LastRideIdIUser_}
                     Ride Object ID: ${RideObjectIDUser_}
@@ -568,6 +598,7 @@ const HomeTabScreen = ({ route, navigation }) => {
                     Discount: ${USER_DISCOUNT_}
                     USER_DISTANCE_: ${USER_DISTANCE_}
                     USER_DURATION_: ${USER_DURATION_}
+                    USER_DATE_: ${USER_DATE_}
                 `);
 
 
@@ -587,7 +618,8 @@ const HomeTabScreen = ({ route, navigation }) => {
                     USER_DISCOUNT_ != null && USER_DISCOUNT_ !== '' &&
                     USER_TOTAL_AMOUNT_ != null && USER_TOTAL_AMOUNT_ !== '' &&
                     USER_DISTANCE_ != null && USER_DISTANCE_ !== '' &&
-                    USER_DURATION_ != null && USER_DURATION_ !== ''
+                    USER_DURATION_ != null && USER_DURATION_ !== '' &&
+                    USER_DATE_ != null && USER_DATE_ !== ''
                 ) {
 
 
@@ -595,7 +627,7 @@ const HomeTabScreen = ({ route, navigation }) => {
                     console.log("TRUE", "TRUE");
                     console.log("TRUE", "TRUE");
 
-                    navigation.navigate('BookingBiddingRequest', {
+                    navigation.navigate('BookingBiddingRequestUser', {
                         itemRIDEID_SENT: LastRideIdIUser_,
                         itemRIDER_ID_SENT: RideObjectIDUser,
                         itemRIDER_DISTANCE_SENT: USER_DISTANCE_, //
@@ -607,6 +639,7 @@ const HomeTabScreen = ({ route, navigation }) => {
                         itemRIDER_RIDE_WAITING_CHARGES: USER_WATTING_CHARGES_,
                         itemRIDER_RIDE_DICOUNT: USER_DISCOUNT_,
                         itemRIDER_RIDE_TOTALAMOUNT: USER_TOTAL_AMOUNT_,
+                        itemRIDER_RIDE_DATE: USER_DATE_
                     })
 
                 } else {
@@ -648,7 +681,7 @@ const HomeTabScreen = ({ route, navigation }) => {
                     USER_DISTANCE_ != null && USER_DISTANCE_ !== '' &&
                     USER_DURATION_ != null && USER_DURATION_ !== ''
                 ) {
-                    navigation.navigate('BookingRequest', {
+                    navigation.navigate('BookingRequestUser', {
                         itemRIDEID_SENT: LastRideIdIUser_,
                         itemRIDER_ID_SENT: RideObjectIDUser,
                         itemRIDER_DISTANCE_SENT: USER_DISTANCE_, //
@@ -701,7 +734,7 @@ const HomeTabScreen = ({ route, navigation }) => {
                 USER_DISTANCE_ != null && USER_DISTANCE_ !== '' &&
                 USER_DURATION_ != null && USER_DURATION_ !== ''
             ) {
-                navigation.navigate('CourierRequest', {
+                navigation.navigate('CourierRequestUser', {
                     itemRIDEID_SENT: LastRideIdIUser_,
                     itemRIDER_ID_SENT: RideObjectIDUser,
                     itemRIDER_DISTANCE_SENT: USER_DISTANCE_, //

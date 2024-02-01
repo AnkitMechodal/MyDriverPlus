@@ -66,6 +66,9 @@ import TermsAndConditionScreen from '../../../pages/TermsAndConditions/index';
 import UpcomingScreen from '../../../pages/UpcomingScreen/index';
 import ViewRequestDetailsScreen from '../../../pages/ViewRequestDetailsScreen';
 import ViewRequestScreen from '../../../pages/ViewRequestScreen';
+import BiddingRequestScreenUser from '../../../status/Bid';
+import BookingRequestScreenUser from '../../../status/Booking';
+import CourierRequestScreenUser from '../../../status/Courier';
 import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
@@ -463,6 +466,34 @@ const InnerHomeStack = () => {
                 component={BookingRequestScreen}
             />
 
+            {/* USER */}
+
+            <Stack.Screen
+                name="BookingRequestUser"
+                options={{
+                    animation: 'slide_from_right'
+                }}
+                component={BookingRequestScreenUser}
+            />
+
+            <Stack.Screen
+                name="BookingBiddingRequestUser" // user bid
+                options={{
+                    animation: 'slide_from_right'
+                }}
+                component={BiddingRequestScreenUser}
+            />
+
+            <Stack.Screen
+                name="CourierRequestUser" // CourierRequest
+                options={{
+                    animation: 'slide_from_right'
+                }}
+                component={CourierRequestScreenUser}
+            />
+
+            {/* USER */}
+
             <Stack.Screen
                 name="BookingBiddingRequest" // BookingBiddingRequest
                 options={{
@@ -727,7 +758,26 @@ const BottomTabStack = ({ route }) => {
                             return {
                                 display: "none",
                             }
-                        } else if (routeName === "BookingConfirmScreen") {
+                        }
+
+
+                        else if (routeName === "BookingRequestUser") {
+                            return {
+                                display: "none",
+                            }
+                        } else if (routeName === "BookingBiddingRequestUser") {
+                            return {
+                                display: "none",
+                            }
+                        } else if (routeName === "CourierRequestUser") {
+                            return {
+                                display: "none",
+                            }
+                        }
+
+
+
+                        else if (routeName === "BookingConfirmScreen") {
                             return {
                                 display: "none", // CourierConfirmScreen
                             }

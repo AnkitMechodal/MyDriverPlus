@@ -22,7 +22,7 @@ type Props = {
     navigation: any
 }
 
-const BiddingRequestScreen = ({ route, navigation }) => {
+const BookingRequestScreenUser = ({ route, navigation }) => {
 
     const [toggleRequestSent, setToggleRequestSent] = useState(true);
     const [toggleAccepted, setToggleAccepted] = useState(false);
@@ -34,11 +34,6 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const [toggleFeedBack, setToggleFeedBack] = useState(false);
 
 
-    const [isModalFocuedBidAdjust, setModalFcouedBidAdjust] = useState(false);
-    const refAdjust = useRef<any>(null);
-
-    const [isValidAdjut, setValidAdjust] = useState(true);
-
     // All Date Status Date
 
     // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
@@ -46,7 +41,6 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
     // TODO : Modal 
     const [isModalFeedBack, setModalFeedBack] = useState(false);
-
     const [isModalCancel, setModalCancel] = useState(false);
 
     // TODO :
@@ -55,13 +49,20 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const [isSecure, setSecure] = useState(true);
     const [feed, setFeed] = useState('')
     const [isValidFeed, setValidFeed] = useState(true);
-
-
     const [currentTime, setCurrentTime] = useState(moment().format('HH:mm:ss'));
 
 
-    //QUICK
-    const [viewRequest, setViewRequest] = useState(ScreenText.ViewRequest);
+    // itemDateBookingSent
+
+
+    // is ArrivedOTP
+    const [isPICKOTP, setPICKOTP] = useState('');
+    const [isDROPOTP, setDROPOTP] = useState('');
+
+    // Driver Started Waiting Timer
+    // Booking Request Sent
+
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
 
 
     // isDriverOnTheWay
@@ -69,10 +70,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
 
 
-    const [isModalBid, setModalBid] = useState(false);
-
-    const [adjust, setAdjust] = useState('');
-
+    let OTPGenerated;
 
     const toggleModalCancel = () => {
         setModalCancel(!isModalCancel);
@@ -155,6 +153,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         // setVehicles(response.data.matchingVehicles);
 
                         Toast.show('Feedback Sent Successfully!', Toast.SHORT);
+                        setToggleFeedBack(true);
+
                         setModalFeedBack(false);
 
                     } else {
@@ -188,15 +188,15 @@ const BiddingRequestScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
 
-                // TODO : itemRIDER_RIDE_DATE
-                console.log("itemRIDER_RIDE_DATE----00BID--===>", route.params.itemRIDER_RIDE_DATE);
+                // itemDateBookingSent
+                console.log("SENT==DATE====>", route.params.itemDateBookingSent);
 
 
-                console.log("RIDE_ID_REQUEST-BID-------===>", route.params.itemRIDEID_SENT);
+                console.log("RIDE_ID_REQUEST===>", route.params.itemRIDEID_SENT);
 
-                // itemRIDER_ID_SENT
-
+                // itemRIDER_ID_SENT - route?.params?.itemRIDER_ID_SENT
                 console.log("RIDER_USER_ID_REQUEST===>", route.params.itemRIDER_ID_SENT);
+
 
                 // Pay Now
                 console.log("itemRIDER_DISTANCE_SENT===>", route.params.itemRIDER_DISTANCE_SENT);
@@ -208,10 +208,14 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
                 // Payment
                 console.log("itemRIDER_RIDE_CHARGE_SENT===>", route.params.itemRIDER_RIDE_CHARGE);
-                console.log("itemRIDER_RIDE_FEES_CON_SENT===>", route.params.itemRIDER_RIDE_FEES_CON);
-                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENT===>", route.params.itemRIDER_RIDE_WAITING_CHARGES);
-                console.log("itemRIDER_RIDE_DICOUNT_SENT===>", route.params.itemRIDER_RIDE_DICOUNT);
-                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT===>", route.params.itemRIDER_RIDE_TOTALAMOUNT);
+                console.log("itemRIDER_RIDE_FEES_CON_SENT===>",
+                    route.params.itemRIDER_RIDE_FEES_CON);
+                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENT===>",
+                    route.params.itemRIDER_RIDE_WAITING_CHARGES);
+                console.log("itemRIDER_RIDE_DICOUNT_SENT===>",
+                    route.params.itemRIDER_RIDE_DICOUNT);
+                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT===>",
+                    route.params.itemRIDER_RIDE_TOTALAMOUNT);
 
 
                 // Get User In User Info
@@ -225,7 +229,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
         fetchData();
 
         // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(fetchData, 10 * 1000);
+        // const intervalId = setInterval(fetchData, 5 * 1000); // 888
 
         // // Cleanup function
         // return () => {
@@ -238,7 +242,12 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     route.params.itemRIDER_DISTANCE_SENT,
     route.params.itemRIDER_DURATUION_SENT,
     route.params.itemRIDER_PICKSTATION,
-    route.params.itemRIDER_DROPSTATION
+    route.params.itemRIDER_DROPSTATION,
+    route.params.itemRIDER_RIDE_CHARGE,
+    route.params.itemRIDER_RIDE_FEES_CON,
+    route.params.itemRIDER_RIDE_WAITING_CHARGES,
+    route.params.itemRIDER_RIDE_DICOUNT,
+    route.params.itemRIDER_RIDE_TOTALAMOUNT
     ]);
 
 
@@ -318,93 +327,20 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
     let paymentStatus;
     let rideStatus;
-
     let OTPVerify;
 
 
+    // TODO :
     let OTPStatus;
-    let OTPGenerated;
-
-    //ScreenText.ViewRequest
-    const [isVIEWREQ, setIsVIEWREQ] = useState('');
-
-    // is ArrivedOTP
-    const [isPICKOTP, setPICKOTP] = useState('');
-    const [isDROPOTP, setDROPOTP] = useState('');
-
-    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
-
-
-    const onPressSubmitAmount = () => {
-        // Cancel Bidding 
-        axiosCancelBiddingPostRequest();
-    }
-
-
-    const axiosCancelBiddingPostRequest = async () => {
-        try {
-            const isConnected = await NetworkUtils.isNetworkAvailable()
-            if (isConnected) {
-                axiosCancelBiddingSurePostRequest();
-            } else {
-                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-            }
-        } catch (error) {
-            Toast.show("axios error", Toast.SHORT);
-        }
-    }
-
-    const axiosCancelBiddingSurePostRequest = async () => {
-        try {
-
-            const url = `https://rideshareandcourier.graphiglow.in/api/AdjustBidAmount/AdjustAmount`
-
-            console.log("axiosCancelBiddingSurePostRequest===>", url);
-
-            // Prepare data in JSON format
-            const data = {
-                RideId: route?.params?.itemRIDEID_SENT,
-                AdjustBidAmount: adjust // get by box
-            };
-
-            console.log("CancelBiddingData==>", JSON.stringify(data, null, 2));
-
-
-            await axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (response.status === 200
-                        && response?.data?.message === 'Adjust Bid Amount Successfully') {
-
-                        Toast.show('Your Bidding Amount Submitted!', Toast.SHORT);
-                        setModalCancel(false);
-
-                    } else {
-                        Toast.show('Unable to Bidding Amount Submitted!', Toast.SHORT);
-                    }
-                })
-                .catch(error => {
-                    Toast.show('Unable to Bidding Amount Submitted!', Toast.SHORT);
-                });
-
-        } catch (error) {
-            // Handle any errors that occur during AsyncStorage operations
-        }
-    };
-
 
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${JSON.parse(route.params.itemRIDEID_SENT)}`
 
-            console.log("axiosCheckGetRideStatusRequest-1===>", url);
-            console.log("axiosCheckGetRideStatusRequest-2===>", url);
-            console.log("axiosCheckGetRideStatusRequest-3===>", url);
-            console.log("axiosCheckGetRideStatusRequest-4===>", url);
+            // JSON.parse(route.params.itemRIDEID_SENT)
+
+            console.log("axiosCheckGetRideStatusRequest===>", url);
 
             await axios.get(url, {
                 headers: {
@@ -447,8 +383,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
                         // TODO :
 
-                        console.log("BID_STATUS111111===>", statusCheack);
-                        console.log("BID_STATUS222222===>", dateCheack);
+                        console.log("paymentStatus****===>", paymentStatus);
 
                         // 1
                         if (statusCheack === "Accept") {
@@ -472,7 +407,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             // axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
-                            // setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
 
                         } else {
@@ -490,11 +425,15 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         // 3
                         if (rideStatus === "Completed") {
                             setToggleRideCompleted(true);
-                            // setToggleFeedBack(true);
                             setDRIVERSTATUS("Ride Complete");
+
+                            // setToggleFeedBack(true);
                         } else {
                             setToggleRideCompleted(false);
                         }
+
+
+
                     } else {
                         setToggleAccepted(false);
                         Toast.show('Unable to Get Ride Status!', Toast.SHORT);
@@ -509,6 +448,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
             // Handle any errors that occur during AsyncStorage operations
         }
     };
+
 
     // const axiosGetOTPPostRequest = async () => {
     //     try {
@@ -569,20 +509,138 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     //     }
     // }
 
-    const handleFocusAdjust = () => {
-        setModalFcouedBidAdjust(true)
+
+    // const axiosGetOTPVerifyPostRequest = async (OTPGenerated: any) => {
+    //     try {
+    //         const isConnected = await NetworkUtils.isNetworkAvailable()
+    //         if (isConnected) {
+    //             axiosGetOTPVerifyTruePostRequest(OTPGenerated);
+    //         } else {
+    //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+    //         }
+    //     } catch (error) {
+    //         Toast.show("axios error", Toast.SHORT);
+    //     }
+    // }
+
+    // const axiosGetOTPVerifyTruePostRequest = async (OTPGenerated: any) => {
+    //     try {
+
+    //         const url = `https://rideshareandcourier.graphiglow.in/api/verifyOTP/verifyOTP`
+
+    //         console.log("TruePostRequestOTP===>", url);
+
+    //         // Prepare data in JSON format
+    //         const data = {
+    //             id: route?.params?.itemRIDER_ID_SENT,
+    //             otp: OTPGenerated
+    //         };
+
+    //         console.log("TruePostRequestOTPData==>", JSON.stringify(data, null, 2));
+
+
+    //         await axios.post(url, data, {
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         })
+    //             .then(response => {
+    //                 if (response.status === 200
+    //                     && response?.data?.message === 'Driver Arrived') {
+
+    //                     console.log("RES_TRUE==>", JSON.stringify(response?.data, null, 2));
+
+    //                     // Toast.show('Driver Arrived Successfully!', Toast.SHORT);
+    //                     // setToggleOTP(true);
+
+    //                 } else {
+    //                     Toast.show('Unable to Driver Arrived!', Toast.SHORT);
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 Toast.show('Unable to Driver Arrived!', Toast.SHORT);
+    //             });
+
+    //     } catch (error) {
+    //         // Handle any errors that occur during AsyncStorage operations
+    //     }
+    // };
+
+    const onPressCancelBooking = () => {
+        // Cancel Booking 
+        axiosCancelBookingPostRequest();
     }
 
-    const handleAccountAdjust = (userad: any) => {
-        setAdjust(userad);
-        if (userad.length < 3) {
-            setModalFcouedBidAdjust(true);
-            setValidAdjust(false)
-        } else {
-            setValidAdjust(true);
-            setModalFcouedBidAdjust(false)
+    const axiosCancelBookingPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosCancelBookingSurePostRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
         }
     }
+
+    const axiosCancelBookingSurePostRequest = async () => {
+        try {
+
+            const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+
+            console.log("axiosCancelBookingSurePostRequest===>", url);
+
+            // Prepare data in JSON format
+            const data = {
+                RideId: route?.params?.itemRIDEID_SENT
+            };
+
+            console.log("CancelBookingData==>", JSON.stringify(data, null, 2));
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Booking Successfully Cancelled') {
+
+                        Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                        navigation.navigate("CancelBookingDetailsMap", {
+                            itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                            itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                            itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                            itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                            itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                            // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                            // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                            itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                            itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                            itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                            itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                            itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                        })
+
+                    } else {
+                        Toast.show('Unable to Cancelled!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    Toast.show('Unable to Cancelled!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    };
+
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -596,8 +654,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         margin={wp(3)}
                         backgroundColorOpacity={Colors.circleGray}
                         borderRadiusOpacity={wp(10)}
-                        paddingOpacity={wp(2.8)}
                         transform={[{ rotate: '180deg' }]}
+                        paddingOpacity={wp(2)}
                         textAlign={"left"}
                         source={Images.arrowRight}
                         marginTop={wp(2)}
@@ -611,8 +669,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         colorRight={Colors.blue}
                         fontSizeRight={wp(3.5)}
                         marginTopRight={wp(3)}
-                        onPressRightEnd={toggleModalCancel} // Bidding Ride
-                        titleWithRightContent={"Adjust Bidding Amount ?"}
+                        onPressRightEnd={toggleModalCancel}
+                        titleWithRightContent={"Cancel Booking?"}
                         title={"Booking Status"}
                         fontSize={wp(4)}
                         onPress={() => navigation.goBack()}
@@ -641,7 +699,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         <View>
                             <TextComponent
                                 color={Colors.white}
-                                title={"Create Bidding Ride"}
+                                title={ScreenText.BookingRequestSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(4)}
@@ -651,7 +709,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemDateBookingSent)} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -661,23 +719,19 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                         </View>
 
-                        <View style={{ flex: 1 }}>
+                        {/* <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={viewRequest} //QUICK
+                                title={ScreenText.ViewRequest}
                                 textDecorationLine={'underline'}
-                                onPress={() =>
-                                    navigation.navigate("ViewRequest", {
-                                        itemRIDE: route.params.itemRIDEID_SENT
-                                    })
-                                }
+                                onPress={() => navigation.navigate("ViewRequest")}
                                 fontWeight="400"
                                 fontSize={wp(3.5)}
                                 marginVertical={wp(0)}
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='right'
                             />
-                        </View>
+                        </View> */}
 
                     </View>
 
@@ -707,11 +761,11 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 fontSize={wp(4)}
                                 marginVertical={wp(0)}
                                 fontFamily={Fonts.PoppinsRegular}
-                                textAlign='center'
+                                textAlign='left'
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemDateBookingSent)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -728,7 +782,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 textDecorationLine={'underline'}
                                 onPress={() =>
                                     navigation.navigate('PreferredDriver', {
-                                        itemRider_ID_: route.params.itemRIDER_ID_SENT,
+                                        itemRider_ID_: JSON.parse(route.params.itemRIDER_ID_SENT),
                                     })
                                 }
                                 fontWeight="400"
@@ -768,7 +822,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemDateBookingSent)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -835,7 +889,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemDateBookingSent)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -873,11 +927,11 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 fontSize={wp(4)}
                                 marginVertical={wp(0)}
                                 fontFamily={Fonts.PoppinsRegular}
-                                textAlign='center'
+                                textAlign='left'
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemDateBookingSent)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -895,21 +949,22 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("BookingDetailsMap", {
-                                        itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-                                        itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
-                                        itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+                                        itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                        itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                        itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
 
-                                        itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                        itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                                        itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                        itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
 
                                         // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
                                         // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                                        itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                                        itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                                        itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                                        itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                                        itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                                        itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                        itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                        itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                        itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                        itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+
                                     })
                                 }
                                 fontWeight="400"
@@ -951,7 +1006,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemDateBookingSent)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -977,24 +1032,23 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
                     </View>
 
-
                     <View style={{
                         flexDirection: "row",
                     }}>
 
-                        {/* <View style={{ justifyContent: 'center' }}>
+                        <View style={{ justifyContent: 'center' }}>
                             <CheckBox
                                 onCheckColor={'white'}
                                 onFillColor={'blue'}
                                 boxType="square"
-                                disabled={false}
+                                disabled={true}
                                 tintColors={{ true: Colors.blue, false: Colors.white }}
                                 value={toggleFeedBack}
                                 onValueChange={(newValue) => setToggleFeedBack(newValue)}
                             />
-                        </View> */}
+                        </View>
 
-                        {/* <View>
+                        <View>
                             <TextComponent
                                 color={Colors.white}
                                 title={ScreenText.Feedback}
@@ -1007,7 +1061,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={JSON.parse(route.params.itemDateBookingSent)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1029,7 +1083,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='right'
                             />
-                        </View> */}
+                        </View>
 
                     </View>
 
@@ -1038,85 +1092,78 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                 <Modal isVisible={isModalCancel}>
                     <View
                         style={Styles.modalCancelConatiner}>
-
                         <View>
                             <TextComponent
-                                color={Colors.white}
-                                title={ScreenText.AdjustBiddingAmount}
+                                color={Colors.orange}
+                                title={ScreenText.AreYouSure}
                                 textDecorationLine={'none'}
                                 fontWeight="700"
                                 fontSize={wp(4)}
                                 fontFamily={Fonts.PoppinsRegular}
-                                textAlign='left'
+                                textAlign='center'
                                 marginVertical={wp(5)}
                                 marginHorizontal={wp(2)}
                             />
-
-                        </View>
-
-                        <View>
-                            <TextInputComponent
-                                selectionColor={Colors.white}
-                                isVisibleDropDown={false}
-                                marginVertical={hp(1)}
-                                width={wp(80)}
-                                borderWidth={isModalFocuedBidAdjust ? ConstValue.value1 : ConstValue.value0}
-                                borderColor={isModalFocuedBidAdjust ? Colors.white : Colors.blue}
-                                height={hp(7)}
-                                isUserHide={false}
-                                textfontSize={ConstValue.value15}
-                                textfontFamily={Fonts.PoppinsRegular}
-                                textlineHeight={ConstValue.value0}
-                                ref={refAdjust}
-                                placeholder={ScreenText.EnterAdjustBiddingAmount}
-                                editable={true}
-                                multiline={false}
-                                isPadding={true}
-                                isVisiblePayBookNow={true}
-                                keyboardType='numeric'
-                                textAlign='left'
-                                numberOfLines={null}
-                                maxLength={null}
+                            <TextComponent
                                 color={Colors.white}
-                                backgroundColor={Colors.grayDark}
-                                borderRadius={wp(2)}
-                                onFocus={handleFocusAdjust}
-                                onChangeText={handleAccountAdjust}
-                                onSubmitEditing={() => {
-                                }}
-                                placeholderTextColor={Colors.gray}
+                                title={ScreenText.FeedbackRequest}
+                                textDecorationLine={'none'}
+                                fontWeight="500"
+                                fontSize={wp(3.5)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                                marginHorizontal={wp(2)}
                             />
-                            {!isValidAdjut ?
-                                <TextComponent
-                                    textDecorationLine={'none'}
-                                    color={Colors.red}
-                                    title={ScreenText.ValidBidding}
-                                    fontWeight="400"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                />
-                                : null}
+                            <TextComponent
+                                color={Colors.gray}
+                                title={ScreenText.IfYesAnotherdriver}
+                                textDecorationLine={'none'}
+                                fontWeight="500"
+                                fontSize={wp(2.5)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='center'
+                                marginVertical={wp(2)}
+                                marginHorizontal={wp(2)}
+                            />
                         </View>
-
                         <View style={Styles.ButtonYesNoConatiner}>
                             <ButtonComponent
                                 isVisibleMobile={false}
                                 isVisibleFaceBook={false}
                                 marginVertical={hp(1)}
                                 heightBtn={hp(6)}
-                                widthBtn={wp(50)}
-                                isRightArrow={false}
-                                onPress={onPressSubmitAmount} // onPressSubmitAmount
+                                widthBtn={wp(30)}
+                                isRightArrow={false} // 99
+                                onPress={onPressCancelBooking}
                                 color={Colors.white}
-                                title={ScreenText.Submit}
+                                title={ScreenText.Yes}
                                 marginHorizontal={wp(6)}
-                                fontWeight="500"
+                                fontWeight="600"
                                 fontSize={wp(4)}
-                                fontFamily={Fonts.PoppinsRegular}
+                                fontFamily={Fonts.PoppinsSemiBold}
                                 alignSelf='center'
                                 textAlign='center'
                                 borderRadius={wp(2)}
                                 backgroundColor={Colors.blue}
+                            />
+                            <ButtonComponent
+                                isVisibleMobile={false}
+                                isVisibleFaceBook={false}
+                                marginVertical={hp(1)}
+                                heightBtn={hp(6)}
+                                widthBtn={wp(30)}
+                                isRightArrow={false}
+                                onPress={() => setModalCancel(false)}
+                                color={Colors.black}
+                                title={ScreenText.No}
+                                marginHorizontal={wp(6)}
+                                fontWeight="600"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsSemiBold}
+                                alignSelf='center'
+                                textAlign='center'
+                                borderRadius={wp(2)}
+                                backgroundColor={Colors.grayDark}
                             />
                         </View>
 
@@ -1253,6 +1300,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
 
+                    {/* <View style={Styles.viewBlueBottamConatiner}> */}
 
                     {isDriverOnTheWay
                         ? <View>
@@ -1294,42 +1342,47 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
                                             isDRIVERSTATUS ==
 
-                                                "Ride Complete" ?
-                                                navigation.navigate("BookingDetailsMap", {
-                                                    itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-                                                    itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
-                                                    itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+                                                "Ride Complete"
 
-                                                    itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                                    itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                                                ? navigation.navigate("BookingDetailsMap", {
+                                                    itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                                    itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                                    itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
 
-                                                    // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                                                    // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
-
-                                                    itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                                                    itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                                                    itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                                                    itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                                                    itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-
-                                                }) : navigation.navigate('BookingRequestAccepted', {
-
-                                                    itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-                                                    itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
-                                                    itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
-
-                                                    itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                                    itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                                                    itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                                    itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
 
                                                     // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
                                                     // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                                                    itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                                                    itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                                                    itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                                                    itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                                                    itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                                                    itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                                    itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                                    itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                                    itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                                    itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+
+                                                }) :
+
+                                                navigation.navigate('BookingRequestAccepted', {
+
+                                                    itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                                    itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                                    itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                                                    itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                                    itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                                    // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                                    // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                                    itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                                    itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                                    itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                                    itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                                    itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+
                                                 })
+
                                         }
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -1353,4 +1406,4 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     )
 }
 
-export default BiddingRequestScreen;
+export default BookingRequestScreenUser;

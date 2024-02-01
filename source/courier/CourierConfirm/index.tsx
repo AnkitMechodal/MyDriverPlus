@@ -520,6 +520,9 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                                 itemPaymentDiscount: ConfirmDiscount,
                                 itemPaymentTotalAmount: ConfirmTotalAmount,
 
+                                  // TODO :
+                                  itemDateBooking: route?.params?.itemLocationCurrentDateConfrim
+
                             });
 
                             // Handle API response here
@@ -779,6 +782,9 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                                 itemPaymentWaitingCharge: ConfirmWaiting_Charge,
                                 itemPaymentDiscount: ConfirmDiscount,
                                 itemPaymentTotalAmount: ConfirmTotalAmount,
+
+                                // TODO :
+                                itemDateBooking: route?.params?.itemLocationCurrentDateConfrim
 
                             });
 

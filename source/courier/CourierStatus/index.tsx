@@ -16,6 +16,11 @@ type Props = {
 const CourierStatusScreen = ({ route, navigation }) => {
 
     useEffect(() => {
+
+        // itemDateBooking
+        console.log("RIDE_DATE==>DATE===>", route?.params?.itemDateBooking);
+
+
         // This function will run when the component mounts
         console.log("RIDE_ID_PROPS===>", route?.params?.itemRIDEID);
 
@@ -116,6 +121,9 @@ const CourierStatusScreen = ({ route, navigation }) => {
                             itemRIDER_RIDE_WAITING_CHARGES: route?.params?.itemPaymentWaitingCharge,
                             itemRIDER_RIDE_DICOUNT: route?.params?.itemPaymentDiscount,
                             itemRIDER_RIDE_TOTALAMOUNT: route?.params?.itemPaymentTotalAmount,
+
+                            // TODO :
+                            itemDateBookingSent: route?.params?.itemDateBooking
                         })}
                         fontWeight="400"
                         fontSize={wp(3.5)}

@@ -59,7 +59,10 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
 
-    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Booking Request Sent');
+    // Driver Started Waiting Timer
+    // Booking Request Sent
+
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
 
 
     // isDriverOnTheWay
@@ -335,6 +338,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
             const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
 
+            // JSON.parse(route.params.itemRIDEID_SENT)
+
             console.log("axiosCheckGetRideStatusRequest===>", url);
 
             await axios.get(url, {
@@ -402,7 +407,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             // axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
-                            // setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
 
                         } else {
@@ -1294,10 +1299,23 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
 
+                    {/* <View style={Styles.viewBlueBottamConatiner}> */}
 
                     {isDriverOnTheWay
                         ? <View>
-                            <View style={Styles.viewBlueBottamConatiner}>
+                            <View style={{
+                                width: "100%",
+                                height: "auto",
+                                padding: wp(3),
+                                borderTopLeftRadius: wp(5),
+                                borderTopRightRadius: wp(5),
+                                // backgroundColor: isDRIVERSTATUS ? "" : Colors.blue,
+                                backgroundColor: isDRIVERSTATUS ==
+                                    "Driver Started Waiting Timer" ? Colors.orange : Colors.blue,
+                                // (isRideStatus ? Colors.header : Colors.transparent),
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end'
+                            }}>
 
                                 <View style={Styles.viewWhiteDot} />
 

@@ -22,7 +22,7 @@ type Props = {
     navigation: any
 }
 
-const BiddingRequestScreen = ({ route, navigation }) => {
+const BiddingRequestScreenUser = ({ route, navigation }) => {
 
     const [toggleRequestSent, setToggleRequestSent] = useState(true);
     const [toggleAccepted, setToggleAccepted] = useState(false);
@@ -189,29 +189,29 @@ const BiddingRequestScreen = ({ route, navigation }) => {
             try {
 
                 // TODO : itemRIDER_RIDE_DATE
-                console.log("itemRIDER_RIDE_DATE----00BID--===>", route.params.itemRIDER_RIDE_DATE);
+                console.log("itemRIDER_RIDE_DATE----00BIDEEE--===>", route.params.itemRIDER_RIDE_DATE); //// USED
 
 
-                console.log("RIDE_ID_REQUEST-BID-------===>", route.params.itemRIDEID_SENT);
+                console.log("RIDE_ID_REQUEST-BIDEEE-------===>", route.params.itemRIDEID_SENT); //// USED
 
                 // itemRIDER_ID_SENT
 
-                console.log("RIDER_USER_ID_REQUEST===>", route.params.itemRIDER_ID_SENT);
+                console.log("RIDER_USER_ID_REQUESTEEEEE===>", route.params.itemRIDER_ID_SENT);
 
                 // Pay Now
-                console.log("itemRIDER_DISTANCE_SENT===>", route.params.itemRIDER_DISTANCE_SENT);
-                console.log("itemRIDER_DURATUION_SENT===>", route.params.itemRIDER_DURATUION_SENT);
+                console.log("itemRIDER_DISTANCE_SENTEEE===>", route.params.itemRIDER_DISTANCE_SENT);
+                console.log("itemRIDER_DURATUION_SENTEEEE===>", route.params.itemRIDER_DURATUION_SENT);
 
                 // Added MapData
-                console.log("itemPICK_STATION_SENT===>", route.params.itemRIDER_PICKSTATION);
-                console.log("itemDROP_STATION_SENT===>", route.params.itemRIDER_DROPSTATION);
+                console.log("itemPICK_STATION_SENTEEE===>", route.params.itemRIDER_PICKSTATION);
+                console.log("itemDROP_STATION_SENTEEEE===>", route.params.itemRIDER_DROPSTATION);
 
                 // Payment
-                console.log("itemRIDER_RIDE_CHARGE_SENT===>", route.params.itemRIDER_RIDE_CHARGE);
-                console.log("itemRIDER_RIDE_FEES_CON_SENT===>", route.params.itemRIDER_RIDE_FEES_CON);
-                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENT===>", route.params.itemRIDER_RIDE_WAITING_CHARGES);
-                console.log("itemRIDER_RIDE_DICOUNT_SENT===>", route.params.itemRIDER_RIDE_DICOUNT);
-                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT===>", route.params.itemRIDER_RIDE_TOTALAMOUNT);
+                console.log("itemRIDER_RIDE_CHARGE_SENTEEEE===>", route.params.itemRIDER_RIDE_CHARGE);
+                console.log("itemRIDER_RIDE_FEES_CON_SENTEEE===>", route.params.itemRIDER_RIDE_FEES_CON);
+                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENTEEEE===>", route.params.itemRIDER_RIDE_WAITING_CHARGES);
+                console.log("itemRIDER_RIDE_DICOUNT_SENTEEE===>", route.params.itemRIDER_RIDE_DICOUNT);
+                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENTEEE===>", route.params.itemRIDER_RIDE_TOTALAMOUNT);
 
 
                 // Get User In User Info
@@ -363,7 +363,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
             // Prepare data in JSON format
             const data = {
-                RideId: route?.params?.itemRIDEID_SENT,
+                RideId: JSON.parse(route?.params?.itemRIDEID_SENT),
                 AdjustBidAmount: adjust // get by box
             };
 
@@ -399,7 +399,9 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${JSON.parse(route.params.itemRIDEID_SENT)}`
+
+            // https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/01BJIW3ILDGS
 
             console.log("axiosCheckGetRideStatusRequest-1===>", url);
             console.log("axiosCheckGetRideStatusRequest-2===>", url);
@@ -651,7 +653,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemRIDER_RIDE_DATE)} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -668,7 +670,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 textDecorationLine={'underline'}
                                 onPress={() =>
                                     navigation.navigate("ViewRequest", {
-                                        itemRIDE: route.params.itemRIDEID_SENT
+                                        itemRIDE: JSON.parse(route.params.itemRIDEID_SENT)
                                     })
                                 }
                                 fontWeight="400"
@@ -711,7 +713,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemRIDER_RIDE_DATE)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -768,7 +770,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemRIDER_RIDE_DATE)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -835,7 +837,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemRIDER_RIDE_DATE)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -877,7 +879,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemRIDER_RIDE_DATE)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -895,6 +897,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("BookingDetailsMap", {
+
                                         itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
                                         itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
                                         itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
@@ -910,6 +913,22 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                         itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
                                         itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
                                         itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+
+                                        // itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                        // itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                        // itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                                        // itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                        // itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                        // // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                        // // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                        // itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                        // itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                        // itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                        // itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                        // itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
                                     })
                                 }
                                 fontWeight="400"
@@ -951,7 +970,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
+                                title={JSON.parse(route.params.itemRIDER_RIDE_DATE)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1329,6 +1348,22 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                                     itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
                                                     itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
                                                     itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+
+                                                    // itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                                    // itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                                    // itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                                                    // itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                                    // itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                                    // // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                                    // // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                                    // itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                                    // itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                                    // itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                                    // itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                                    // itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
                                                 })
                                         }
                                         fontWeight="400"
@@ -1353,4 +1388,4 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     )
 }
 
-export default BiddingRequestScreen;
+export default BiddingRequestScreenUser;
