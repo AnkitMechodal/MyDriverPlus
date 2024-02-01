@@ -16,6 +16,10 @@ type Props = {
 const BiddingCheckStatusScreen = ({ route, navigation }) => {
 
     useEffect(() => {
+
+        // TODO : Date
+        console.log("RIDE_DATE===>", route?.params?.itemDateBid);
+
         // This function will run when the component mounts
         console.log("RIDE_ID_PROPS===>", route?.params?.itemRIDEID);
 
@@ -116,6 +120,9 @@ const BiddingCheckStatusScreen = ({ route, navigation }) => {
                             itemRIDER_RIDE_WAITING_CHARGES: route?.params?.itemPaymentWaitingCharge,
                             itemRIDER_RIDE_DICOUNT: route?.params?.itemPaymentDiscount,
                             itemRIDER_RIDE_TOTALAMOUNT: route?.params?.itemPaymentTotalAmount,
+
+                            // TODO : 
+                            itemRIDER_RIDE_DATE: route?.params?.itemDateBid
                         })}
                         fontWeight="400"
                         fontSize={wp(3.5)}

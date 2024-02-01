@@ -16,6 +16,10 @@ type Props = {
 const BookingStatusScreen = ({ route, navigation }) => {
 
     useEffect(() => {
+
+        // itemDateBooking
+        console.log("RIDE_DATE==DATE=>", route?.params?.itemDateBooking);
+
         // This function will run when the component mounts
         console.log("RIDE_ID_PROPS===>", route?.params?.itemRIDEID);
 
@@ -105,22 +109,25 @@ const BookingStatusScreen = ({ route, navigation }) => {
                         title={ScreenText.CheckStatus}
                         textDecorationLine={'none'}
                         onPress={() =>
-                            
-                             navigation.navigate('BookingRequest', {
-                            itemRIDEID_SENT: route?.params?.itemRIDEID,
-                            itemRIDER_ID_SENT: route?.params?.itemRider_ID,
-                            itemRIDER_DISTANCE_SENT: route?.params?.itemRiderDistance,
-                            itemRIDER_DURATUION_SENT: route?.params?.itemRiderDuration,
-                            itemRIDER_PICKSTATION: route?.params?.itemRidePickStation,
-                            itemRIDER_DROPSTATION: route?.params?.itemRideDropStation,
-                            itemRIDER_RIDE_CHARGE: route?.params?.itemPaymentRideCharge,//
-                            itemRIDER_RIDE_FEES_CON: route?.params?.itemPaymentFeesConvenience,
-                            itemRIDER_RIDE_WAITING_CHARGES: route?.params?.itemPaymentWaitingCharge,
-                            itemRIDER_RIDE_DICOUNT: route?.params?.itemPaymentDiscount,
-                            itemRIDER_RIDE_TOTALAMOUNT: route?.params?.itemPaymentTotalAmount,
-                        }
-                        
-                        )}
+
+                            navigation.navigate('BookingRequest', {
+                                itemRIDEID_SENT: route?.params?.itemRIDEID,
+                                itemRIDER_ID_SENT: route?.params?.itemRider_ID,
+                                itemRIDER_DISTANCE_SENT: route?.params?.itemRiderDistance,
+                                itemRIDER_DURATUION_SENT: route?.params?.itemRiderDuration,
+                                itemRIDER_PICKSTATION: route?.params?.itemRidePickStation,
+                                itemRIDER_DROPSTATION: route?.params?.itemRideDropStation,
+                                itemRIDER_RIDE_CHARGE: route?.params?.itemPaymentRideCharge,//
+                                itemRIDER_RIDE_FEES_CON: route?.params?.itemPaymentFeesConvenience,
+                                itemRIDER_RIDE_WAITING_CHARGES: route?.params?.itemPaymentWaitingCharge,
+                                itemRIDER_RIDE_DICOUNT: route?.params?.itemPaymentDiscount,
+                                itemRIDER_RIDE_TOTALAMOUNT: route?.params?.itemPaymentTotalAmount,
+
+                                // TODO :
+                                itemDateBookingSent: route?.params?.itemDateBooking
+                            }
+
+                            )}
                         fontWeight="400"
                         fontSize={wp(3.5)}
                         marginVertical={wp(2)}

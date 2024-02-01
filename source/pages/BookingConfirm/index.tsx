@@ -447,6 +447,9 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                                 itemPaymentWaitingCharge: ConfirmWaiting_Charge,
                                 itemPaymentDiscount: ConfirmDiscount,
                                 itemPaymentTotalAmount: ConfirmTotalAmount,
+
+                                // TODO :
+                                itemDateBooking: route?.params?.itemLocationCurrentDateConfrim
                             });
 
                             // Handle API response here
@@ -723,6 +726,10 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                                 itemPaymentWaitingCharge: ConfirmWaiting_Charge,
                                 itemPaymentDiscount: ConfirmDiscount,
                                 itemPaymentTotalAmount: ConfirmTotalAmount,
+
+                                // TODO :
+                                itemDateBooking: route?.params?.itemLocationCurrentDateConfrim
+
                             });
 
                             // Handle API response here
@@ -887,6 +894,9 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                                 itemPaymentWaitingCharge: ConfirmWaiting_Charge,
                                 itemPaymentDiscount: ConfirmDiscount,
                                 itemPaymentTotalAmount: ConfirmTotalAmount,
+
+                                // TODO :
+                                itemDateBooking: route?.params?.itemLocationCurrentDateConfrim
 
                             });
 

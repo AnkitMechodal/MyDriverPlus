@@ -142,8 +142,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     // Driver Get Booking 
     let DriverBookingName;
     let DriverProfileImage;
-
     let Driver_id;
+
+
+    let OTPStatus;
 
 
     useEffect(() => {
@@ -255,6 +257,14 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
                         rideStatus = response?.data?.matchingUsers?.RideStatus;
 
+                        // TODO :
+                        OTPStatus = response?.data?.matchingUsers?.OTP;
+                        setPICKOTP(OTPStatus);
+
+                        setToggleArrived(true);
+                        setToggleOTP(true);
+                        // TODO :
+
                         console.log("paymentStatus****===>", paymentStatus);
 
                         // 1
@@ -265,7 +275,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             setDriverOnTheWay(true);
 
                             //  generateOTP 
-                            axiosGetOTPPostRequest();
+                            //  axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
@@ -308,64 +318,64 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         }
     };
 
-    const axiosGetOTPPostRequest = async () => {
-        try {
-            const isConnected = await NetworkUtils.isNetworkAvailable()
-            if (isConnected) {
-                axiosGetOTPPostRequestSend();
-            } else {
-                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-            }
-        } catch (error) {
-            Toast.show("axios error", Toast.SHORT);
-        }
-    }
+    // const axiosGetOTPPostRequest = async () => {
+    //     try {
+    //         const isConnected = await NetworkUtils.isNetworkAvailable()
+    //         if (isConnected) {
+    //             axiosGetOTPPostRequestSend();
+    //         } else {
+    //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+    //         }
+    //     } catch (error) {
+    //         Toast.show("axios error", Toast.SHORT);
+    //     }
+    // }
 
-    const axiosGetOTPPostRequestSend = async () => {
-        try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+    // const axiosGetOTPPostRequestSend = async () => {
+    //     try {
+    //         const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
 
-            console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+    //         console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 
-            const data = {
-                id: route?.params?.itemRIDER_ID_SENT
-            }
+    //         const data = {
+    //             id: route?.params?.itemRIDER_ID_SENT
+    //         }
 
-            await axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (response.status === 200
-                        && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
+    //         await axios.post(url, data, {
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         })
+    //             .then(response => {
+    //                 if (response.status === 200
+    //                     && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
 
-                        // GET OTP FROM API 
-                        OTPGenerated = response?.data?.OTP;
-                        console.log("OTPGenerated==>", OTPGenerated);
+    //                     // GET OTP FROM API 
+    //                     OTPGenerated = response?.data?.OTP;
+    //                     console.log("OTPGenerated==>", OTPGenerated);
 
-                        Toast.show('Generat OTP Successfully!', Toast.SHORT);
+    //                     Toast.show('Generat OTP Successfully!', Toast.SHORT);
 
-                        setPICKOTP(OTPGenerated);
-                        setToggleArrived(true);
+    //                     setPICKOTP(OTPGenerated);
+    //                     setToggleArrived(true);
 
-                        setToggleOTP(true); // auto true
+    //                     setToggleOTP(true); // auto true
 
-                        // VERIFY OTP API
-                        // axiosGetOTPVerifyPostRequest(OTPGenerated);
+    //                     // VERIFY OTP API
+    //                     // axiosGetOTPVerifyPostRequest(OTPGenerated);
 
-                    } else {
-                        Toast.show('Enabel To Generat OTP!', Toast.SHORT);
-                    }
-                })
-                .catch(error => {
-                    // Handle errors
-                    Toast.show('Enabel To Generat OTP!', Toast.SHORT);
-                });
-        } catch (error) {
+    //                 } else {
+    //                     Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 // Handle errors
+    //                 Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+    //             });
+    //     } catch (error) {
 
-        }
-    }
+    //     }
+    // }
 
 
     // useEffect(() => {

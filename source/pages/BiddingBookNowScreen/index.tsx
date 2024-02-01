@@ -382,6 +382,9 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                                 itemPaymentWaitingCharge: ConfirmWaiting_Charge,
                                 itemPaymentDiscount: ConfirmDiscount,
                                 itemPaymentTotalAmount: ConfirmTotalAmount,
+
+                                // TODO :
+                                itemDateBid: route?.params?.itemLocationCurrentDateConfrim
                             });
 
                             // Handle API response here

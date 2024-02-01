@@ -36,7 +36,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
     // All Date Status Date
 
-    const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
+    // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
 
 
     // TODO : Modal 
@@ -52,11 +52,14 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const [currentTime, setCurrentTime] = useState(moment().format('HH:mm:ss'));
 
 
+    // itemDateBookingSent
+
+
     // is ArrivedOTP
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
 
-    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Driver is On the Way');
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Booking Request Sent');
 
 
     // isDriverOnTheWay
@@ -181,6 +184,11 @@ const BookingRequestScreen = ({ route, navigation }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+
+                // itemDateBookingSent
+                console.log("SENT==DATE====>", route.params.itemDateBookingSent);
+
+
                 console.log("RIDE_ID_REQUEST===>", route.params.itemRIDEID_SENT);
 
                 // itemRIDER_ID_SENT - route?.params?.itemRIDER_ID_SENT
@@ -316,8 +324,11 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
     let paymentStatus;
     let rideStatus;
+    let OTPVerify;
 
 
+    // TODO :
+    let OTPStatus;
 
     const axiosCheckGetRideStatusRequest = async () => {
         try {
@@ -342,20 +353,57 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
                         rideStatus = response?.data?.matchingUsers?.RideStatus;
 
+                        // TODO :
+                        OTPVerify = response?.data?.matchingUsers?.OTPStatus;
+                        console.log("OTPVerify===>", OTPVerify);
+
+                        OTPStatus = response?.data?.matchingUsers?.OTP;
+
+                        if (OTPStatus !== null) {
+                            setPICKOTP(OTPStatus);
+                            setToggleArrived(true);
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver arrived your location")
+                        } else {
+                            setPICKOTP("");
+                            setToggleArrived(false);
+                        }
+
+                        if (OTPVerify === "Verify") {
+                            setToggleOTP(true);
+                        } else {
+                            setToggleOTP(false);
+                            setDRIVERSTATUS("Driver Started Waiting Timer")
+                        }
+
+                        // TODO :
+
                         console.log("paymentStatus****===>", paymentStatus);
 
                         // 1
                         if (statusCheack === "Accept") {
                             console.log("GetStatus===>", statusCheack);
                             setToggleAccepted(true);
-                            setRequestSentDate(dateCheack.concat(" " + currentTime))
+
+                            // Booking Request Accepted
+                            setDRIVERSTATUS("Booking Request Accepted");
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            setDRIVERSTATUS("Driver is On the Way");
+
+                            // Driver is On the Way
+
+                            // setRequestSentDate(dateCheack.concat(" " + currentTime))
+
                             setDriverOnTheWay(true);
 
+                            // setViewRequest(""); //QC
+
                             //  generateOTP 
-                            axiosGetOTPPostRequest();
+                            // axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
-                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            // setDRIVERSTATUS("Ride Started , Enjoy your ride");
+
 
                         } else {
                             setToggleAccepted(false);
@@ -397,64 +445,64 @@ const BookingRequestScreen = ({ route, navigation }) => {
     };
 
 
-    const axiosGetOTPPostRequest = async () => {
-        try {
-            const isConnected = await NetworkUtils.isNetworkAvailable()
-            if (isConnected) {
-                axiosGetOTPPostRequestSend();
-            } else {
-                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-            }
-        } catch (error) {
-            Toast.show("axios error", Toast.SHORT);
-        }
-    }
+    // const axiosGetOTPPostRequest = async () => {
+    //     try {
+    //         const isConnected = await NetworkUtils.isNetworkAvailable()
+    //         if (isConnected) {
+    //             axiosGetOTPPostRequestSend();
+    //         } else {
+    //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+    //         }
+    //     } catch (error) {
+    //         Toast.show("axios error", Toast.SHORT);
+    //     }
+    // }
 
-    const axiosGetOTPPostRequestSend = async () => {
-        try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+    // const axiosGetOTPPostRequestSend = async () => {
+    //     try {
+    //         const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
 
-            console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+    //         console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 
-            const data = {
-                id: route?.params?.itemRIDER_ID_SENT
-            }
+    //         const data = {
+    //             id: route?.params?.itemRIDER_ID_SENT
+    //         }
 
-            await axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (response.status === 200
-                        && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
+    //         await axios.post(url, data, {
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         })
+    //             .then(response => {
+    //                 if (response.status === 200
+    //                     && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
 
-                        // GET OTP FROM API 
-                        OTPGenerated = response?.data?.OTP;
-                        console.log("OTPGenerated==>", OTPGenerated);
+    //                     // GET OTP FROM API 
+    //                     OTPGenerated = response?.data?.OTP;
+    //                     console.log("OTPGenerated==>", OTPGenerated);
 
-                        Toast.show('Generat OTP Successfully!', Toast.SHORT);
+    //                     Toast.show('Generat OTP Successfully!', Toast.SHORT);
 
-                        setPICKOTP(OTPGenerated);
-                        setToggleArrived(true);
+    //                     setPICKOTP(OTPGenerated);
+    //                     setToggleArrived(true);
 
-                        setToggleOTP(true); // auto true
+    //                     setToggleOTP(true); // auto true
 
-                        // VERIFY OTP API
-                        // axiosGetOTPVerifyPostRequest(OTPGenerated);
+    //                     // VERIFY OTP API
+    //                     // axiosGetOTPVerifyPostRequest(OTPGenerated);
 
-                    } else {
-                        Toast.show('Enabel To Generat OTP!', Toast.SHORT);
-                    }
-                })
-                .catch(error => {
-                    // Handle errors
-                    Toast.show('Enabel To Generat OTP!', Toast.SHORT);
-                });
-        } catch (error) {
+    //                 } else {
+    //                     Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 // Handle errors
+    //                 Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+    //             });
+    //     } catch (error) {
 
-        }
-    }
+    //     }
+    // }
 
 
     // const axiosGetOTPVerifyPostRequest = async (OTPGenerated: any) => {
@@ -656,7 +704,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate} // title={ScreenText.Date}
+                                title={route.params.itemDateBookingSent} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -712,7 +760,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -769,7 +817,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -795,10 +843,12 @@ const BookingRequestScreen = ({ route, navigation }) => {
                                 title={ScreenText.OTPShareWithDriver}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
-                                fontSize={wp(3)}
+                                fontSize={wp(2)}
+                                marginRight={wp(5)}
+                                numberOfLines={2}
                                 marginVertical={wp(0)}
                                 fontFamily={Fonts.PoppinsRegular}
-                                textAlign='left'
+                                textAlign='center'
                             />
                         </View>
 
@@ -834,7 +884,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -876,7 +926,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -950,7 +1000,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1005,7 +1055,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemDateBookingSent}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}

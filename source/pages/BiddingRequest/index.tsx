@@ -41,7 +41,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
     // All Date Status Date
 
-    const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
+    // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
 
 
     // TODO : Modal 
@@ -188,6 +188,10 @@ const BiddingRequestScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
 
+                // TODO : itemRIDER_RIDE_DATE
+                console.log("itemRIDER_RIDE_DATE----00--===>", route.params.itemRIDER_RIDE_DATE);
+
+
                 console.log("RIDE_ID_REQUEST-------===>", route.params.itemRIDEID_SENT);
 
                 // itemRIDER_ID_SENT
@@ -315,8 +319,10 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     let paymentStatus;
     let rideStatus;
 
-    let OTPStatus;
+    let OTPVerify;
 
+
+    let OTPStatus;
     let OTPGenerated;
 
     //ScreenText.ViewRequest
@@ -326,7 +332,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
 
-    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Driver is On the Way');
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Booking Request Sent');
 
 
     const onPressSubmitAmount = () => {
@@ -413,8 +419,30 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
                         rideStatus = response?.data?.matchingUsers?.RideStatus;
 
+                        // TODO :
+                        OTPVerify = response?.data?.matchingUsers?.OTPStatus;
+                        console.log("OTPVerify===>", OTPVerify);
+
                         OTPStatus = response?.data?.matchingUsers?.OTP;
-                        setPICKOTP(OTPStatus);
+
+                        if (OTPStatus !== null) {
+                            setPICKOTP(OTPStatus);
+                            setToggleArrived(true);
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver arrived your location")
+                        } else {
+                            setPICKOTP("");
+                            setToggleArrived(false);
+                        }
+
+                        if (OTPVerify === "Verify") {
+                            setToggleOTP(true);
+                        } else {
+                            setToggleOTP(false);
+                            setDRIVERSTATUS("Driver Started Waiting Timer")
+                        }
+
+                        // TODO :
 
                         console.log("BID_STATUS111111===>", statusCheack);
                         console.log("BID_STATUS222222===>", dateCheack);
@@ -423,7 +451,16 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         if (statusCheack === "Accept") {
                             console.log("GetStatus===>", statusCheack);
                             setToggleAccepted(true);
-                            setRequestSentDate(dateCheack.concat(" " + currentTime))
+
+                            // Booking Request Accepted
+                            setDRIVERSTATUS("Booking Request Accepted");
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            setDRIVERSTATUS("Driver is On the Way");
+
+                            // Driver is On the Way
+
+                            // setRequestSentDate(dateCheack.concat(" " + currentTime))
+
                             setDriverOnTheWay(true);
 
                             // setViewRequest(""); //QC
@@ -432,7 +469,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             // axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
-                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            // setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
 
                         } else {
@@ -611,7 +648,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate} // title={ScreenText.Date}
+                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -671,7 +708,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -728,7 +765,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -754,10 +791,12 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 title={ScreenText.OTPShareWithDriver}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
-                                fontSize={wp(3)}
+                                fontSize={wp(2)}
+                                marginRight={wp(5)}
+                                numberOfLines={2}
                                 marginVertical={wp(0)}
                                 fontFamily={Fonts.PoppinsRegular}
-                                textAlign='left'
+                                textAlign='center'
                             />
                         </View>
 
@@ -793,7 +832,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -835,7 +874,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -909,7 +948,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={requestSentDate}
+                                title={route.params.itemRIDER_RIDE_DATE} // title={ScreenText.Date}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
