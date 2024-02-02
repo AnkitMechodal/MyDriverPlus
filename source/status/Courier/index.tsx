@@ -297,21 +297,38 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         Toast.show('Your Courier has been Successfully Cancelled!', Toast.SHORT);
 
                         navigation.navigate("CancelCourierDetailsMap", {
-                            itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
-                            itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
-                            itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
 
-                            itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
-                            itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+                            itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                            itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                            itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+
+                            itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                            itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
                             // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
                             // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                            itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
-                            itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
-                            itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
-                            itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
-                            itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                            itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                            itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                            itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                            itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                            itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+
+                            // itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                            // itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                            // itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                            // itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                            // itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                            // // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                            // // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                            // itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                            // itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                            // itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                            // itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                            // itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
                         })
 
                     } else {
@@ -1325,41 +1342,78 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
 
                                             isDRIVERSTATUS ==
 
+
                                                 "Courier Delivered" ?
                                                 navigation.navigate('CourierRequestDriver', {
-                                                    itemCompleteMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                                    itemCompleteMapId: route.params.itemRIDER_ID_SENT,
 
-                                                    itemCompleteDistance: JSON.parse(route?.params?.itemRIDER_DISTANCE_SENT),
-                                                    itemCompleteDuration: JSON.parse(route?.params?.itemRIDER_DURATUION_SENT),
+                                                    itemCompleteDistance: route?.params?.itemRIDER_DISTANCE_SENT,
+                                                    itemCompleteDuration: route?.params?.itemRIDER_DURATUION_SENT,
 
-                                                    itemCompletePickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
-                                                    itemCompleteDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+                                                    itemCompletePickStation: route.params.itemRIDER_PICKSTATION,
+                                                    itemCompleteDropStation: route.params.itemRIDER_DROPSTATION,
 
-                                                    itemCompleteRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
-                                                    itemCompleteRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
-                                                    itemCompleteRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
-                                                    itemCompleteRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
-                                                    itemCompleteTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                                                    itemCompleteRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                    itemCompleteRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                    itemCompleteRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                    itemCompleteRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                    itemCompleteTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
                                                 })
                                                 : navigation.navigate('CourierRequestAccepted', {
 
-                                                    itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                                    itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
                                                     // itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
                                                     // itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
 
-                                                    itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
-                                                    itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+                                                    itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                                    itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
-                                                    itemMapKmStation: JSON.parse(route?.params?.itemRIDER_DISTANCE_SENT),
-                                                    itemMapMinStation: JSON.parse(route?.params?.itemRIDER_DURATUION_SENT),
+                                                    itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                                    itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                                                    itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
-                                                    itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
-                                                    itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
-                                                    itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
-                                                    itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                                                    itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                    itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                    itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                    itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                    itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
 
                                                 })
+
+                                            // "Courier Delivered" ?
+                                            // navigation.navigate('CourierRequestDriver', {
+                                            //     itemCompleteMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+
+                                            //     itemCompleteDistance: JSON.parse(route?.params?.itemRIDER_DISTANCE_SENT),
+                                            //     itemCompleteDuration: JSON.parse(route?.params?.itemRIDER_DURATUION_SENT),
+
+                                            //     itemCompletePickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                            //     itemCompleteDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                            //     itemCompleteRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                            //     itemCompleteRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                            //     itemCompleteRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                            //     itemCompleteRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                            //     itemCompleteTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                                            // })
+                                            // : navigation.navigate('CourierRequestAccepted', {
+
+                                            //     itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                            //     // itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                            //     // itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+
+                                            //     itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                            //     itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                            //     itemMapKmStation: JSON.parse(route?.params?.itemRIDER_DISTANCE_SENT),
+                                            //     itemMapMinStation: JSON.parse(route?.params?.itemRIDER_DURATUION_SENT),
+
+                                            //     itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                            //     itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                            //     itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                            //     itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                            //     itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+
+                                            // })
                                         }
                                         fontWeight="400"
                                         fontSize={wp(3.5)}

@@ -627,6 +627,7 @@ const HomeTabScreen = ({ route, navigation }) => {
                     console.log("TRUE", "TRUE");
                     console.log("TRUE", "TRUE");
 
+
                     navigation.navigate('BookingBiddingRequestUser', {
                         itemRIDEID_SENT: LastRideIdIUser_,
                         itemRIDER_ID_SENT: RideObjectIDUser,

@@ -611,21 +611,38 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
 
                         navigation.navigate("CancelBookingDetailsMap", {
-                            itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
-                            itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
-                            itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
 
-                            itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
-                            itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+                            itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                            itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                            itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+
+                            itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                            itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
                             // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
                             // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                            itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
-                            itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
-                            itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
-                            itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
-                            itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                            itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                            itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                            itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                            itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                            itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+
+                            // itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                            // itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                            // itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                            // itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                            // itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                            // // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                            // // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                            // itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                            // itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                            // itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                            // itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                            // itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
                         })
 
                     } else {
@@ -949,21 +966,39 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("BookingDetailsMap", {
-                                        itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
-                                        itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
-                                        itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
 
-                                        itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
-                                        itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+                                        itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                        itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                        itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+
+                                        itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                        itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
                                         // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
                                         // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                                        itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
-                                        itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
-                                        itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
-                                        itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
-                                        itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                                        itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                        itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                        itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                        itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                        itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+
+
+                                        // itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                        // itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                        // itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                                        // itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                        // itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                        // // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                        // // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                        // itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                        // itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                        // itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                        // itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                        // itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
 
                                     })
                                 }
@@ -1345,43 +1380,83 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                                                 "Ride Complete"
 
                                                 ? navigation.navigate("BookingDetailsMap", {
-                                                    itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
-                                                    itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
-                                                    itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+                                                    itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                                    itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                                    itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
 
-                                                    itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
-                                                    itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+                                                    itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                                    itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
                                                     // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
                                                     // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                                                    itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
-                                                    itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
-                                                    itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
-                                                    itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
-                                                    itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
-
+                                                    itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                    itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                    itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                    itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                    itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
                                                 }) :
 
                                                 navigation.navigate('BookingRequestAccepted', {
 
-                                                    itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
-                                                    itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
-                                                    itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+                                                    itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                                    itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                                    itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
 
-                                                    itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
-                                                    itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+                                                    itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                                    itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
                                                     // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
                                                     // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
-                                                    itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
-                                                    itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
-                                                    itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
-                                                    itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
-                                                    itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+                                                    itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                    itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                    itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                    itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                    itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
 
                                                 })
+
+
+
+                                            // ? navigation.navigate("BookingDetailsMap", {
+                                            //     itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                            //     itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                            //     itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                                            //     itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                            //     itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                            //     // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                            //     // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                            //     itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                            //     itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                            //     itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                            //     itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                            //     itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+
+                                            // }) :
+
+                                            // navigation.navigate('BookingRequestAccepted', {
+
+                                            //     itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+                                            //     itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+                                            //     itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+                                            //     itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+                                            //     itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+                                            //     // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                            //     // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                            //     itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+                                            //     itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+                                            //     itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+                                            //     itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+                                            //     itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+
+                                            // })
 
                                         }
                                         fontWeight="400"

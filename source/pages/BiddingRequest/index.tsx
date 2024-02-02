@@ -399,7 +399,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${JSON.parse(route.params.itemRIDEID_SENT)}`
 
             console.log("axiosCheckGetRideStatusRequest-1===>", url);
             console.log("axiosCheckGetRideStatusRequest-2===>", url);

@@ -33,6 +33,10 @@ const PickUpLocationScreen = ({ route, navigation }) => {
 
     const refPinCode = useRef<any>(null);
 
+
+    let countryLongName;
+    let countryShortName;
+
     const [isFocusedPasswordRef, setIsFocusedPasswordRef] = useState(false);
 
     const [isFocusedLocationRef, setIsFocusedLocationRef] = useState(false);
@@ -92,6 +96,12 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     let user_longitude;
     let fullAddress;
 
+
+    // USER
+    let secondPartOfAddress;
+    let remainingAddress;
+    let postalCode;
+
     const handleAccountRefCode = (userpass: any) => {
         setPassRef(userpass);
     }
@@ -133,7 +143,7 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     const [isPickVisible, setPickVisible] = useState(false);
 
     const [markerCoordinate, setMarkerCoordinate] =
-        useState({ latitude: 37.78825, longitude: -122.4324 });
+        useState({ latitude: 37.78825, longitude: -122.4324 }); // USER LAT - LONG
 
     // quick1
     const toggleModal = () => {
@@ -161,18 +171,52 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     };
 
     const getCurrentLocationAddress = async (user_latitude, user_longitude) => {
-        console.log("getCurrentLocationAddress111==>", user_latitude);
-        console.log("getCurrentLocationAddress222==>", user_longitude);
+        console.log("getCurrentLocationAddress111----==>", user_latitude);
+        console.log("getCurrentLocationAddress222----==>", user_longitude);
 
+        // setMarkerCoordinates({ latitude: user_latitude, longitude: user_longitude })
         setMarkerCoordinate({ latitude: user_latitude, longitude: user_longitude })
+        // Diff" To Store []
+
 
         try {
 
             fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + user_latitude + ',' + user_longitude + '&key=' + 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE')
                 .then((response) => response.json())
                 .then((responseJson) => {
-                    console.log('ADDRESS GEOCODE is BACK!! => '
-                        + JSON.stringify(responseJson, null, 2));
+
+                    // TODO :
+                    // GET ADDRESS IN 3 PART
+                    const result = responseJson.results[0];
+                    const formattedAddress = result.formatted_address;
+
+                    secondPartOfAddress = formattedAddress.split(',')[1];
+                    remainingAddress = formattedAddress.split(',').slice(1).join(',').trim();
+                    postalCode = result.address_components.find(component =>
+                        component.types.includes('postal_code')
+                    );
+
+                    // ? postalCode.long_name : 'N/A'
+
+                    console.log('GET ADDRESS 1', remainingAddress);
+                    console.log('GET ADDRESS 2', secondPartOfAddress);
+                    console.log('GET ADDRESS 3', postalCode.long_name);
+
+                    console.log('GET ADDRESS 4', markerCoordinates);
+
+                    // Set As Deafult : 1
+                    setDeafultAdd(remainingAddress);
+
+                    // Store Data : 2
+                    storeFullAddress(remainingAddress);
+                    storeLandMark(secondPartOfAddress);
+                    storePin(postalCode.long_name);
+
+                    // console.log('GET ADDRESS 0', remainingAddress);
+
+
+                    // console.log('ADDRESS GEOCODE is BACK!! => '
+                    //     + JSON.stringify(responseJson, null, 2));
                 })
 
             // const response = await fetch(
@@ -266,6 +310,37 @@ const PickUpLocationScreen = ({ route, navigation }) => {
             setSaveFullLocation(false);
         }
     }
+
+    const storeFullAddress = async (remainingAddress: any) => {
+        try {
+            await AsyncStorage.setItem('full_address', JSON.stringify(remainingAddress));
+            console.log('full_address===>', JSON.stringify(remainingAddress));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error full_address :', error);
+        }
+    }
+
+    const storeLandMark = async (secondPartOfAddress: any) => {
+        try {
+            await AsyncStorage.setItem('landmark_address', JSON.stringify(secondPartOfAddress));
+            console.log('landmark_address===>', JSON.stringify(secondPartOfAddress));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error landmark_address :', error);
+        }
+    }
+
+    const storePin = async (postalCode: any) => {
+        try {
+            await AsyncStorage.setItem('pin_address', JSON.stringify(postalCode));
+            console.log('pin_address===>', JSON.stringify(postalCode));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error pin_address :', error);
+        }
+    }
+
 
 
 
@@ -371,7 +446,7 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                 throw new Error("Invalid latitude or longitude");
             }
 
-            setMarkerCoordinate({ latitude, longitude });
+            setMarkerCoordinates({ latitude, longitude });
 
             setModalVisible(false);
 
@@ -450,24 +525,38 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         try {
             if (storedLinkedId !== null) {
 
+                // Get 3 Data As Local & Set !
+                let remainingAddress_ = "";
+                let secondPartOfAddress_ = "";
+                let postalCode_ = ""
+
                 const data = {
                     UserID: JSON.parse(storedLinkedId),
                     type: "Pick",  // as flow
                     service_type: "booking", // as flow
-                    complete_location: locationRef,
-                    nearby_landmark: locationNearByRef,
-                    pin_code: pin,
+                    complete_location: locationRef !== '' ? locationRef : remainingAddress_,
+                    nearby_landmark: locationNearByRef !== '' ? locationNearByRef : secondPartOfAddress_,
+                    pin_code: pin !== '' ? pin : postalCode_,
 
-                    // test lat - long
-                    Latitude: markerCoordinate.latitude,
-                    Longitude: markerCoordinate.longitude,
+                    // USER TEST
+                    // Latitude: markerCoordinate.latitude,
+                    // Longitude: markerCoordinate.longitude,
+
+                    // test lat - long as api
+                    Latitude: markerCoordinates.latitude == markerCoordinate.latitude ?
+                        markerCoordinates.latitude : markerCoordinate.latitude,
+                    Longitude: markerCoordinates.longitude == markerCoordinate.longitude ?
+                        markerCoordinates.longitude : markerCoordinate.longitude,
 
                     // "Person_Name": "Gosai",
                     // "mobilenumber_picku": "6356526597"
                 };
 
-                // console.log("axiosPostSaveFullLocationUpdate==>",
-                //     JSON.stringify(data, null, 2));
+                console.log("axiosPostSaveFullLocationUpdate----==>",
+                    JSON.stringify(data, null, 2));
+                console.log("axiosPostSaveFullLocationUpdate----==>",
+                    JSON.stringify(data, null, 2));
+
 
                 await axios.post(url, data, {
                     headers: {
@@ -523,13 +612,15 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         // Zoom to the marker using animateToRegion when markerCoordinate changes
         if (mapViewRef.current) {
             mapViewRef.current.animateToRegion({
-                latitude: markerCoordinate.latitude,
-                longitude: markerCoordinate.longitude,
+                latitude: markerCoordinates.latitude,
+                longitude: markerCoordinates.longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             }, 1000); // Adjust duration as needed
         }
-    }, [markerCoordinate]);
+    }, [markerCoordinates]);
+
+    // }, [markerCoordinates]);
 
 
     useEffect(() => {
@@ -550,7 +641,7 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                         latitude: user_latitude_map,
                         longitude: user_longitude_map
                     };
-                    setMarkerCoordinate(newCoordinate);
+                    setMarkerCoordinates(newCoordinate);
 
                 },
                 error => {
@@ -614,13 +705,15 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     }}
                 >
                     <Circle
-                        center={markerCoordinate}
+                        // center={markerCoordinate}
+                        center={markerCoordinates}
                         radius={radius}
                         fillColor="rgba(0, 0, 255, 0.2)" // Transparent blue fill color
                         strokeWidth={0} // No border
                     />
                     <Marker
-                        coordinate={markerCoordinate}
+                        // coordinate={markerCoordinate}
+                        coordinate={markerCoordinates}
                         title="Draggable Marker"
                         description="Drag me!"
                         draggable

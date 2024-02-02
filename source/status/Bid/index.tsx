@@ -196,7 +196,7 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
 
                 // itemRIDER_ID_SENT
 
-                console.log("RIDER_USER_ID_REQUESTEEEEE===>", route.params.itemRIDER_ID_SENT);
+                console.log("RIDER_USER_ID_REQUESTEEEEE1===>", route.params.itemRIDER_ID_SENT);
 
                 // Pay Now
                 console.log("itemRIDER_DISTANCE_SENTEEE===>", route.params.itemRIDER_DISTANCE_SENT);
