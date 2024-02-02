@@ -102,6 +102,20 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     let remainingAddress;
     let postalCode;
 
+
+    let secondPartOfAddress_;
+    let remainingAddress_;
+    let postalCode_;
+
+    // TODO :
+    let PassongLat;
+    let PassingLong;
+
+    // Selected :
+    let PassingLatSelected;
+    let PassingLongSelected;
+
+
     const handleAccountRefCode = (userpass: any) => {
         setPassRef(userpass);
     }
@@ -173,6 +187,9 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     const getCurrentLocationAddress = async (user_latitude, user_longitude) => {
         console.log("getCurrentLocationAddress111----==>", user_latitude);
         console.log("getCurrentLocationAddress222----==>", user_longitude);
+
+        storeUserLat(user_latitude);
+        storeUserLong(user_longitude);
 
         // setMarkerCoordinates({ latitude: user_latitude, longitude: user_longitude })
         setMarkerCoordinate({ latitude: user_latitude, longitude: user_longitude })
@@ -355,6 +372,29 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     // };
 
 
+    // USER LAT && LONG 
+    const storeUserLat = async (user_latitude: any) => {
+        try {
+            await AsyncStorage.setItem('lat_address', JSON.stringify(user_latitude));
+            console.log('lat_address===>', JSON.stringify(user_latitude));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error lat_address :', error);
+        }
+    }
+
+    const storeUserLong = async (user_longitude: any) => {
+        try {
+            await AsyncStorage.setItem('long_address', JSON.stringify(user_longitude));
+            console.log('long_address===>', JSON.stringify(user_longitude));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error long_address :', error);
+        }
+    }
+    // USER LAT && LONG 
+
+
     const axiosPostGetListLocation = async () => {
         try {
             const isConnected = await NetworkUtils.isNetworkAvailable()
@@ -448,6 +488,10 @@ const PickUpLocationScreen = ({ route, navigation }) => {
 
             setMarkerCoordinates({ latitude, longitude });
 
+            // // Selected List Lat Long 
+            // storeListLat(latitude);
+            // storeListLong(longitude);
+
             setModalVisible(false);
 
             // console.log("SelectedLocation===>" + locationNearByRef);
@@ -456,6 +500,27 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         }
 
     }
+
+    // // Selected List Lat Long -111
+    // const storeListLat = async (latitude: any) => {
+    //     try {
+    //         await AsyncStorage.setItem('lat_list', JSON.stringify(latitude));
+    //         console.log('lat_list===>', JSON.stringify(latitude));
+    //     } catch (error) {
+    //         // Handle any errors that might occur during the storage operation
+    //         console.log('Error lat_list :', error);
+    //     }
+    // }
+
+    // const storeListLong = async (longitude: any) => {
+    //     try {
+    //         await AsyncStorage.setItem('long_list', JSON.stringify(longitude));
+    //         console.log('long_list===>', JSON.stringify(longitude));
+    //     } catch (error) {
+    //         // Handle any errors that might occur during the storage operation
+    //         console.log('Error long_list :', error);
+    //     }
+    // }
 
     const RemoveSelectedLocation = async (item) => {
         // CALL REMOVE API :
@@ -525,18 +590,30 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         try {
             if (storedLinkedId !== null) {
 
-                // Get 3 Data As Local & Set !
-                let remainingAddress_ = "";
-                let secondPartOfAddress_ = "";
-                let postalCode_ = ""
+                try {
+
+                    // Get 3 Data As Local & Set !
+                    //  const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
+                    remainingAddress_ = await AsyncStorage.getItem('full_address');
+                    secondPartOfAddress_ = await AsyncStorage.getItem('landmark_address');
+                    postalCode_ = await AsyncStorage.getItem('pin_address');
+
+                    console.log("02-02==>==>", remainingAddress_);
+                    console.log("02-03==>==>", secondPartOfAddress_);
+                    console.log("02-04==>==>", postalCode_);
+
+                } catch (error) {
+
+                }
 
                 const data = {
+
                     UserID: JSON.parse(storedLinkedId),
                     type: "Pick",  // as flow
                     service_type: "booking", // as flow
-                    complete_location: locationRef !== '' ? locationRef : remainingAddress_,
-                    nearby_landmark: locationNearByRef !== '' ? locationNearByRef : secondPartOfAddress_,
-                    pin_code: pin !== '' ? pin : postalCode_,
+                    complete_location: locationRef !== '' ? locationRef : JSON.parse(remainingAddress_),
+                    nearby_landmark: locationNearByRef !== '' ? locationNearByRef : JSON.parse(secondPartOfAddress_),
+                    pin_code: pin !== '' ? pin : JSON.parse(postalCode_),
 
                     // USER TEST
                     // Latitude: markerCoordinate.latitude,
@@ -588,17 +665,83 @@ const PickUpLocationScreen = ({ route, navigation }) => {
 
     const mapViewRef = useRef<any>(null);
 
-    const onPressLocationToPickUp = () => {
+    const onPressLocationToPickUp = async () => {
         // Check Validation : locationNearByRef
-        if (locationNearByRef === null ||
+        if (
+            locationNearByRef === null ||
             locationNearByRef === '' ||
-            locationNearByRef === undefined) {
-            Toast.show("Nearby Landmark Field Is Required !", Toast.SHORT);
+            locationNearByRef === undefined ||
+            pin === null ||
+            pin === '' ||
+            pin === undefined
+        ) {
+
+            //  Manual  - LanMark - Pin Passing 
+            try {
+
+                // Get 3 Data As Local & Set !
+                //  const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
+                remainingAddress_ = await AsyncStorage.getItem('full_address');
+                secondPartOfAddress_ = await AsyncStorage.getItem('landmark_address');
+                postalCode_ = await AsyncStorage.getItem('pin_address');
+
+
+                // TODO : USER
+                PassongLat = await AsyncStorage.getItem('lat_address');
+                PassingLong = await AsyncStorage.getItem('long_address');
+
+                // PassingLatSelected = await AsyncStorage.getItem('lat_list');
+                // PassingLongSelected = await AsyncStorage.getItem('long_list');
+
+                // console.log("02-00002==>==>", remainingAddress_);
+                // console.log("02-00003==>==>", secondPartOfAddress_);
+                // console.log("02-00004==>==>", postalCode_);
+
+
+
+
+            } catch (error) {
+
+            }
+
+
+
+            navigation.navigate('BookingScreen', {
+                itemPickName: JSON.parse(secondPartOfAddress_),
+                itemType: 'Taxi Booking',
+                itemPin: JSON.parse(postalCode_),
+                itemPicklat: JSON.parse(PassongLat) !== '' ? JSON.parse(PassongLat) :
+                    markerCoordinates.latitude,
+                itemPicklong: JSON.parse(PassingLong) !== '' ? JSON.parse(PassingLong) :
+                    markerCoordinates.longitude,
+            });
+
         } else {
+
+            // Passing lat long As list OR Selected
+            try {
+
+                // TODO : USER
+                PassongLat = await AsyncStorage.getItem('lat_address');
+                PassingLong = await AsyncStorage.getItem('long_address');
+
+                // PassingLatSelected = await AsyncStorage.getItem('lat_list');
+                // PassingLongSelected = await AsyncStorage.getItem('long_list');
+
+
+            } catch (error) {
+
+            }
+
+
             navigation.navigate('BookingScreen', {
                 itemPickName: locationNearByRef,
                 itemType: 'Taxi Booking',
                 itemPin: pin,
+                itemPicklat: JSON.parse(PassongLat) !== '' ? JSON.parse(PassongLat) :
+                    markerCoordinates.latitude,
+                itemPicklong: JSON.parse(PassingLong) !== '' ? JSON.parse(PassingLong) :
+                    markerCoordinates.longitude,
             });
         }
     }

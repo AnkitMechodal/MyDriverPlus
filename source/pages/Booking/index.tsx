@@ -32,6 +32,13 @@ const BookingScreen = ({ route, navigation }) => {
     let PinPickUp;
     let PinDropUp;
 
+    // 02-02
+    let GetUserAsPickLat;
+    let GetUserAsPickLong;
+    let GetUserAsDropLat;
+    let GetUserAsDropLong;
+
+
     let GetUserLat_;
     let GetUserLong_;
     let GetUserPickUpPin_;
@@ -44,6 +51,14 @@ const BookingScreen = ({ route, navigation }) => {
 
     let itemPickNameGet;
     let itemDropNameGet;
+
+    // TODO :
+    let itemPICKLAT;
+    let itemPICKLONG;
+
+    let itemDROPLAT;
+    let itemDROPLONG;
+    // TODO :
 
     const [isSelectedViewFirst, setIsSelectedViewFirst] = useState(false);
 
@@ -428,6 +443,43 @@ const BookingScreen = ({ route, navigation }) => {
         const fetchData = () => { // itemPin
             try {
 
+                // 1 : PICK
+                console.log("USER_LONG_PICK", route.params.itemPicklat);
+                console.log("USER_LONG_PICK", route.params.itemPicklat);
+                console.log("USER_LONG_PICK", route.params.itemPicklat);
+
+                // 2 : PICK
+                console.log("USER_LONG_PICK", route.params.itemPicklong);
+                console.log("USER_LONG_PICK", route.params.itemPicklong);
+                console.log("USER_LONG_PICK", route.params.itemPicklong);
+
+
+                // 1 : DROP
+                console.log("USER_LAT_DROP", route.params.itemDroplat);
+                console.log("USER_LAT_DROP", route.params.itemDroplat);
+                console.log("USER_LAT_DROP", route.params.itemDroplat);
+
+                // 2 : DROP
+                console.log("USER_LONG_DROP", route.params.itemDroplong);
+                console.log("USER_LONG_DROP", route.params.itemDroplong);
+                console.log("USER_LONG_DROP", route.params.itemDroplong);
+
+                // STORE & RESTORE 
+                // CALL DISTNACE & DURATION API  - 4
+
+                itemPICKLAT = route?.params?.itemPicklat;
+                itemPICKLONG = route?.params?.itemPicklong;
+
+                // StorePickLatAsUser();
+                // StorePickLongAsUser();
+
+                itemDROPLAT = route?.params?.itemDroplat;
+                itemDROPLONG = route?.params?.itemDroplong;
+
+                // StoreDropLatAsUser();
+                // StoreDropLongAsUser();
+
+
                 if (route.params.itemPickName === undefined) {
                     setPickPlace1(ScreenText.SelectPickuplocation);
                 } else if (route.params.itemPickName === '') {
@@ -443,6 +495,18 @@ const BookingScreen = ({ route, navigation }) => {
 
                     // DropName ReStored
                     restoredPreviousDropName();
+
+                    // PICK TO STORE
+                    itemPICKLAT = route?.params?.itemPicklat;
+                    itemPICKLONG = route?.params?.itemPicklong;
+
+                    StorePick1(itemPICKLAT);
+                    StorePick2(itemPICKLONG);
+
+                    // DROP TO RESTORE - GET
+                    StoreDropLatAsUser();
+                    StoreDropLongAsUser();
+
                 }
 
                 if (route.params.itemPin === undefined) {
@@ -455,9 +519,9 @@ const BookingScreen = ({ route, navigation }) => {
 
                     // Get Pick Pin 
                     PinPickUp = route.params.itemPin;
-
                     // Picked Stored Pin
                     PickUpLocationPin(PinPickUp);
+
                 }
 
                 if (route.params.itemDropName === undefined) {
@@ -469,13 +533,23 @@ const BookingScreen = ({ route, navigation }) => {
 
                     console.log("setPickPlace2ERROR==>", route.params.itemDropName);
 
-
                     // DropName Stored
                     itemDropNameGet = route.params.itemDropName;
                     storedPreviousDropName(itemDropNameGet);
 
                     // PickName ReStored
                     restoredPreviousPickName();
+
+                    // DROP TO STORE
+                    itemDROPLAT = route?.params?.itemDroplat;
+                    itemDROPLONG = route?.params?.itemDroplong;
+
+                    StoreDrop1(itemDROPLAT);
+                    StoreDrop2(itemDROPLONG);
+
+                    // PICK TO RESTORE - GET
+                    StorePickLatAsUser();
+                    StorePickLongAsUser();
 
                 }
 
@@ -522,8 +596,8 @@ const BookingScreen = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 15 seconds
+        const intervalId = setInterval(fetchData, 15 * 1000);
         // Cleanup function
         return () => {
             // Clear the interval when the component unmounts
@@ -613,6 +687,115 @@ const BookingScreen = ({ route, navigation }) => {
     }
 
 
+    // 1 :
+    const StorePick1 = async (itemPICKLAT: any) => {
+        try {
+            await AsyncStorage.setItem('user_pick_lat', JSON.stringify(itemPICKLAT));
+            console.log('user_pick_lat===>', JSON.stringify(itemPICKLAT));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_pick_lat :', error);
+        }
+    }
+
+    const StorePick2 = async (itemPICKLONG: any) => {
+        try {
+            await AsyncStorage.setItem('user_pick_long', JSON.stringify(itemPICKLONG));
+            console.log('user_pick_long===>', JSON.stringify(itemPICKLONG));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_pick_long :', error);
+        }
+    }
+
+    // 1 :
+    const StoreDropLatAsUser = async () => {
+        try {
+            const storedDropPrevLat = await AsyncStorage.getItem('user_drop_lat');
+            if (storedDropPrevLat !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('DROP-LAT-RE:', storedDropPrevLat);
+                console.log('DROP-LAT-RE:', storedDropPrevLat);
+                console.log('DROP-LAT-RE:', storedDropPrevLat);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    }
+
+    const StoreDropLongAsUser = async () => {
+        try {
+            const storedDropPrevLong = await AsyncStorage.getItem('user_drop_long');
+            if (storedDropPrevLong !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('DROP-LONG-RE:', storedDropPrevLong);
+                console.log('DROP-LONG-RE:', storedDropPrevLong);
+                console.log('DROP-LONG-RE:', storedDropPrevLong);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    }
+
+    // 2 : 
+    const StorePickLatAsUser = async () => {
+        try {
+            const storedPickPrevLat = await AsyncStorage.getItem('user_pick_lat');
+            if (storedPickPrevLat !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('PICK-LAT-RE:', storedPickPrevLat);
+                console.log('PICK-LAT-RE:', storedPickPrevLat);
+                console.log('PICK-LAT-RE:', storedPickPrevLat);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    };
+
+    const StorePickLongAsUser = async () => {
+        try {
+            const storedPickPrevLong = await AsyncStorage.getItem('user_pick_long');
+            if (storedPickPrevLong !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('PICK-LONG-RE:', storedPickPrevLong);
+                console.log('PICK-LONG-RE:', storedPickPrevLong);
+                console.log('PICK-LONG-RE:', storedPickPrevLong);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    };
+
+
+    // 2 :
+    const StoreDrop1 = async (itemDROPLAT: any) => {
+        try {
+            await AsyncStorage.setItem('user_drop_lat', JSON.stringify(itemDROPLAT));
+            console.log('user_drop_lat===>', JSON.stringify(itemDROPLAT));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_drop_lat :', error);
+        }
+    }
+
+    const StoreDrop2 = async (itemDROPLONG: any) => {
+        try {
+            await AsyncStorage.setItem('user_drop_long', JSON.stringify(itemDROPLONG));
+            console.log('user_drop_long===>', JSON.stringify(itemDROPLONG));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_drop_long :', error);
+        }
+    }
+
 
     const onPressBookingConfirmRideNow = async () => {
 
@@ -627,12 +810,23 @@ const BookingScreen = ({ route, navigation }) => {
             // Get Latitude by stoarge
             GetUserLat_ = await AsyncStorage.getItem('user_lat');
             GetUserLong_ = await AsyncStorage.getItem('user_log');
-
             GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
 
-            console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
-            console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
-            console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
+
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
+
+            console.log("1:==>", JSON.parse(GetUserAsPickLat));
+            console.log("2:==>", JSON.parse(GetUserAsPickLong));
+            console.log("3:==>", JSON.parse(GetUserAsDropLat));
+            console.log("4:==>", JSON.parse(GetUserAsDropLong));
+
+            // console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
+            // console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
+            // console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
 
         } catch (error) {
 
@@ -660,8 +854,9 @@ const BookingScreen = ({ route, navigation }) => {
                         itemLoyalPointsConfrim: toggleCheckBoxYes === true ? "Yes" : "No",
                         itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
                         itemLocationCurrentDateConfrim: formattedDateLL, //currentDate.format('DD-MM-YYYY')
-                        itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-                        itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
+                        itemGetCurrentLatitudeConfrim: GetUserLat_,
+                        itemGetCurrentLongitudeConfrim: GetUserLong_,
+                        // Pick - Drop For Marker
                     })
                 }
             } else {
