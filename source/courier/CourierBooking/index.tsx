@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Geolocation from '@react-native-community/geolocation';
-import { getDistance } from 'geolib';
+import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -34,6 +34,14 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
     const refPassword = useRef<any>(null);
     const refPasswordDistance = useRef<any>(null);
+
+
+    // 02-02
+    let GetUserAsPickLat;
+    let GetUserAsPickLong;
+    let GetUserAsDropLat;
+    let GetUserAsDropLong;
+
 
     const [name, setName] = useState('')
     const [distance, setDistance] = useState('')
@@ -184,6 +192,15 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
     let itemPickNameGet;
     let itemDropNameGet;
+
+
+    // TODO :
+    let itemPICKLAT;
+    let itemPICKLONG;
+
+    let itemDROPLAT;
+    let itemDROPLONG;
+    // TODO :
 
 
     const handleSheduleDateChange = (event, date) => {
@@ -421,76 +438,118 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
 
     const onPressCouierRideNow = async () => {
-
-
-
-        // if (toggleCheckBoxCardInfo === true) {
-        // Pick And Drop Passing ! // As Type Flow
-        var dis = getDistance(
-            { latitude: 2.7689, longitude: 1.1316 },
-            { latitude: 1.7689, longitude: -0.3817 },
-        );
-
         try {
-            // Get Latitude by stoarge
-            GetUserLat_ = await AsyncStorage.getItem('user_lat');
-            GetUserLong_ = await AsyncStorage.getItem('user_log');
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
 
-            GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
 
-            console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
-            console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
-            console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
+            console.log("11:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("22:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("33:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("44:=======>", JSON.parse(GetUserAsDropLong));
+
+            // TODO : Distnace - Duration 
+            // BOOK NOW :
+            getCurrentLocationDistnaceDurationBookNow(GetUserAsPickLat,
+                GetUserAsPickLong, GetUserAsDropLat, GetUserAsDropLong);
 
         } catch (error) {
 
         }
+    }
 
-        // Get Current Date
-        const currentDate = moment();
-        let formattedDateLL = currentDate.format('LLL');
+    const getCurrentLocationDistnaceDurationBookNow = async (GetUserAsPickLat: any
+        , GetUserAsPickLong: any, GetUserAsDropLat: any,
+        GetUserAsDropLong: any) => {
 
+        const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
+        const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
 
-        if (toggleCheckBoxCardInfo === true) {
-            if (toggleCheckBoxYes1 || toggleCheckBoxNo1) {
-                if (toggleCheckBoxCash2 || toggleCheckBoxCard2) {
-                    if (PickPlace1 === ScreenText.SelectPickuplocation ||
-                        PickPlace2 === ScreenText.SelectDropofflocation) {
-                        Toast.show("Please choose 'Book Now' from the provided options.", Toast.SHORT);
+        try {
+            const response = await axios.get(url);
+            if (response.data.status === 'OK') {
+                const element = response.data.rows[0].elements[0];
+
+                const distance = element.distance.text;
+                const duration = element.duration.text;
+
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+
+                // Working ! - 05
+
+                // Pick And Drop Passing ! // As Type Flow
+                // var dis = getDistance(
+                //     { latitude: 2.7689, longitude: 1.1316 },
+                //     { latitude: 1.7689, longitude: -0.3817 },
+                // );
+
+                // Get Latitude by stoarge
+                GetUserLat_ = await AsyncStorage.getItem('user_lat');
+                GetUserLong_ = await AsyncStorage.getItem('user_log');
+                GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+
+                // Get Current Date
+                const currentDate = moment();
+                let formattedDateLL = currentDate.format('LLL');
+
+                if (toggleCheckBoxCardInfo === true) {
+                    if (toggleCheckBoxYes1 || toggleCheckBoxNo1) {
+                        if (toggleCheckBoxCash2 || toggleCheckBoxCard2) {
+                            if (PickPlace1 === ScreenText.SelectPickuplocation ||
+                                PickPlace2 === ScreenText.SelectDropofflocation) {
+                                Toast.show("Please choose 'Book Now' from the provided options.", Toast.SHORT);
+                            } else {
+                                // Passing Data To Confirm Page
+                                navigation.navigate('CourierConfirmScreen', {
+                                    itemTypeConfrim: 'Courier Delivery',
+                                    itemServiceConfrim: "Book Now",
+                                    itemPickLocationConfrim: PickPlace1,
+                                    itemDropLocationConfrim: PickPlace2,
+                                    itemPaymentTypeConfrim: toggleCheckBoxCash2 === true ? "Cash Payment" : "Card",
+                                    // itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
+                                    // itemLocationDurationConfrim: "30 Mins", // Google API 
+
+                                    itemLocationDistanceConfrim: distance,
+                                    itemLocationDurationConfrim: duration,
+
+                                    itemLoyalPointsConfrim: toggleCheckBoxYes1 === true ? "Yes" : "No",
+                                    itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
+                                    itemLocationCurrentDateConfrim: formattedDateLL,
+                                    itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
+                                    itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
+                                })
+                            }
+                        } else {
+                            Toast.show("Please choose 'Book Now' from the provided options.", Toast.SHORT);
+                        }
                     } else {
-                        // Passing Data To Confirm Page
-                        navigation.navigate('CourierConfirmScreen', {
-                            itemTypeConfrim: 'Courier Delivery',
-                            itemServiceConfrim: "Book Now",
-                            itemPickLocationConfrim: PickPlace1,
-                            itemDropLocationConfrim: PickPlace2,
-                            itemPaymentTypeConfrim: toggleCheckBoxCash2 === true ? "Cash Payment" : "Card",
-                            itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-                            itemLocationDurationConfrim: "30 Mins", // Google API 
-                            itemLoyalPointsConfrim: toggleCheckBoxYes1 === true ? "Yes" : "No",
-                            itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-                            itemLocationCurrentDateConfrim: formattedDateLL,
-                            itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-                            itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-                        })
+                        Toast.show("Please choose 'Book Now' from the provided options.", Toast.SHORT);
                     }
                 } else {
                     Toast.show("Please choose 'Book Now' from the provided options.", Toast.SHORT);
                 }
+
+                // Working ! - 05
+
+                return { distance, duration };
             } else {
-                Toast.show("Please choose 'Book Now' from the provided options.", Toast.SHORT);
+                throw new Error('Error fetching distance and duration');
             }
-        } else {
-            Toast.show("Please choose 'Book Now' from the provided options.", Toast.SHORT);
+        } catch (error) {
+            console.error(error);
+            return null;
         }
-
-
-
-        // } else {
-        //     Toast.show("Kindly Accept The Terms And Conditions.", Toast.SHORT);
-        // }
-
     }
+
+
+
 
     const onPressShowDateSchedulePicker = () => {
         setShedulePickerVisible(true);
@@ -500,6 +559,28 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
         const fetchData = () => { // itemPin
             try {
+
+                // 1 : PICK
+                console.log("USER_LONG_PICK-CO", route.params.itemPicklat);
+                console.log("USER_LONG_PICK-CO", route.params.itemPicklat);
+                console.log("USER_LONG_PICK-CO", route.params.itemPicklat);
+
+                // 2 : PICK
+                console.log("USER_LONG_PICK-CO", route.params.itemPicklong);
+                console.log("USER_LONG_PICK-CO", route.params.itemPicklong);
+                console.log("USER_LONG_PICK-CO", route.params.itemPicklong);
+
+
+                // 1 : DROP
+                console.log("USER_LAT_DROP-CO", route.params.itemDroplat);
+                console.log("USER_LAT_DROP-CO", route.params.itemDroplat);
+                console.log("USER_LAT_DROP-CO", route.params.itemDroplat);
+
+                // 2 : DROP
+                console.log("USER_LONG_DROP-CO", route.params.itemDroplong);
+                console.log("USER_LONG_DROP-CO", route.params.itemDroplong);
+                console.log("USER_LONG_DROP-CO", route.params.itemDroplong);
+
 
                 if (route.params.itemPickName === undefined) {
                     setPickPlace1(ScreenText.SelectPickuplocation);
@@ -514,6 +595,17 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
                     // DropName ReStored
                     restoredPreviousDropName();
+
+                    // PICK TO STORE
+                    itemPICKLAT = route?.params?.itemPicklat;
+                    itemPICKLONG = route?.params?.itemPicklong;
+
+                    StorePick1(itemPICKLAT);
+                    StorePick2(itemPICKLONG);
+
+                    // DROP TO RESTORE - GET
+                    StoreDropLatAsUser();
+                    StoreDropLongAsUser();
                 }
 
                 if (route.params.itemPin === undefined) {
@@ -543,10 +635,20 @@ const CourierBookingScreen = ({ route, navigation }) => {
                     storedPreviousDropName(itemDropNameGet);
 
                     // PickName ReStored
-                   restoredPreviousPickName();
+                    restoredPreviousPickName();
+
+                    // DROP TO STORE
+                    itemDROPLAT = route?.params?.itemDroplat;
+                    itemDROPLONG = route?.params?.itemDroplong;
+
+                    StoreDrop1(itemDROPLAT);
+                    StoreDrop2(itemDROPLONG);
+
+                    // PICK TO RESTORE - GET
+                    StorePickLatAsUser();
+                    StorePickLongAsUser();
 
                 }
-
 
                 Geolocation.getCurrentPosition(
                     position => {
@@ -597,6 +699,95 @@ const CourierBookingScreen = ({ route, navigation }) => {
         };
     }, [route.params.itemPickName, route.params.itemDropName,
     route.params.itemPin, route.params.itemDropPin]);
+
+
+
+    // 2 : 
+    const StorePickLatAsUser = async () => {
+        try {
+            const storedPickPrevLat = await AsyncStorage.getItem('user_pick_lat');
+            if (storedPickPrevLat !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('PICK-LAT-RE:', storedPickPrevLat);
+                console.log('PICK-LAT-RE:', storedPickPrevLat);
+                console.log('PICK-LAT-RE:', storedPickPrevLat);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    };
+
+    const StorePickLongAsUser = async () => {
+        try {
+            const storedPickPrevLong = await AsyncStorage.getItem('user_pick_long');
+            if (storedPickPrevLong !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('PICK-LONG-RE:', storedPickPrevLong);
+                console.log('PICK-LONG-RE:', storedPickPrevLong);
+                console.log('PICK-LONG-RE:', storedPickPrevLong);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    };
+
+    // 2 :
+    const StoreDrop1 = async (itemDROPLAT: any) => {
+        try {
+            await AsyncStorage.setItem('user_drop_lat', JSON.stringify(itemDROPLAT));
+            console.log('user_drop_lat===>', JSON.stringify(itemDROPLAT));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_drop_lat :', error);
+        }
+    }
+
+    const StoreDrop2 = async (itemDROPLONG: any) => {
+        try {
+            await AsyncStorage.setItem('user_drop_long', JSON.stringify(itemDROPLONG));
+            console.log('user_drop_long===>', JSON.stringify(itemDROPLONG));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_drop_long :', error);
+        }
+    }
+
+    // 1 :
+    const StoreDropLatAsUser = async () => {
+        try {
+            const storedDropPrevLat = await AsyncStorage.getItem('user_drop_lat');
+            if (storedDropPrevLat !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('DROP-LAT-RE:', storedDropPrevLat);
+                console.log('DROP-LAT-RE:', storedDropPrevLat);
+                console.log('DROP-LAT-RE:', storedDropPrevLat);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    }
+
+    const StoreDropLongAsUser = async () => {
+        try {
+            const storedDropPrevLong = await AsyncStorage.getItem('user_drop_long');
+            if (storedDropPrevLong !== null) {
+                // setPickPlace1(JSON.parse(storedDropPrev));
+                console.log('DROP-LONG-RE:', storedDropPrevLong);
+                console.log('DROP-LONG-RE:', storedDropPrevLong);
+                console.log('DROP-LONG-RE:', storedDropPrevLong);
+            } else {
+                // setPickPlace1(ScreenText.SelectPickuplocation);
+            }
+        } catch (error) {
+
+        }
+    }
 
 
 
@@ -679,567 +870,614 @@ const CourierBookingScreen = ({ route, navigation }) => {
         }
     }
 
+
+    // 1 //
+    const StorePick1 = async (itemPICKLAT: any) => {
+        try {
+            await AsyncStorage.setItem('user_pick_lat', JSON.stringify(itemPICKLAT));
+            console.log('user_pick_lat===>', JSON.stringify(itemPICKLAT));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_pick_lat :', error);
+        }
+    }
+
+    const StorePick2 = async (itemPICKLONG: any) => {
+        try {
+            await AsyncStorage.setItem('user_pick_long', JSON.stringify(itemPICKLONG));
+            console.log('user_pick_long===>', JSON.stringify(itemPICKLONG));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_pick_long :', error);
+        }
+    }
+    // 1 //
+
+
     const onPressShowPicker = () => {
         setDatePickerVisible(true);
     }
 
 
     const onPressNextSheduleBooking = async () => {
-
-        // if (toggleCheckBoxCardInfo === true) {
-        // Pick And Drop Passing ! // As Type Flow
-        var dis = getDistance(
-            { latitude: 2.7689, longitude: 1.1316 },
-            { latitude: 1.7689, longitude: -0.3817 },
-        );
-
         try {
-            // Get Latitude by stoarge
-            GetUserLat_ = await AsyncStorage.getItem('user_lat');
-            GetUserLong_ = await AsyncStorage.getItem('user_log');
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
 
-            GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
 
-            console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
-            console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
-            console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
+            console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+
+            // TODO : Distnace - Duration 
+            // SHEDULE BOOKING :
+            getCurrentLocationDistnaceDurationSchedule(GetUserAsPickLat,
+                GetUserAsPickLong, GetUserAsDropLat, GetUserAsDropLong);
 
         } catch (error) {
 
         }
+    }
 
-        // Get Current Date
-        // currentDate.format('DD-MM-YYYY')
-        const currentDate = moment();
-        let formattedDateLL = currentDate.format('LLL');
+    const getCurrentLocationDistnaceDurationSchedule = async (GetUserAsPickLat: any,
+        GetUserAsPickLong: any, GetUserAsDropLat: any, GetUserAsDropLong: any) => {
 
-        if (toggleCheckBoxCardInfo === true) {
-            if (toggleCheckBoxYesPoolSB || toggleCheckBoxNoPoolSB) {
-                if (toggleCheckBoxCashPoolSB || toggleCheckBoxCardPoolSB || toggleCheckBoxWalletPoolSB) {
+        const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
+        const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
 
-                    if (PickPlace1 === ScreenText.SelectPickuplocation
-                        || PickPlace2 === ScreenText.SelectDropofflocation
-                        || isSchedule === '' || isScheduleDate === '') {
-                        Toast.show("Please choose 'Schedule Booking' from the provided options.", Toast.SHORT);
+        try {
+            const response = await axios.get(url);
+            if (response.data.status === 'OK') {
+                const elementPool = response.data.rows[0].elements[0];
+
+                const distance = elementPool.distance.text;
+                const duration = elementPool.duration.text;
+
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+
+                // 05 : SCHEDULE RIDE :
+                // Get Current Date
+
+                // Get Latitude by stoarge
+                GetUserLat_ = await AsyncStorage.getItem('user_lat');
+                GetUserLong_ = await AsyncStorage.getItem('user_log');
+                GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+
+                // Get Current Date
+                const currentDate = moment();
+                let formattedDateLL = currentDate.format('LLL');
+
+
+                if (toggleCheckBoxCardInfo === true) {
+                    if (toggleCheckBoxYesPoolSB || toggleCheckBoxNoPoolSB) {
+                        if (toggleCheckBoxCashPoolSB || toggleCheckBoxCardPoolSB || toggleCheckBoxWalletPoolSB) {
+
+                            if (PickPlace1 === ScreenText.SelectPickuplocation
+                                || PickPlace2 === ScreenText.SelectDropofflocation
+                                || isSchedule === '' || isScheduleDate === '') {
+                                Toast.show("Please choose 'Schedule Booking' from the provided options.", Toast.SHORT);
+                            } else {
+                                // // Passing Data To Confirm Page
+                                navigation.navigate('CourierConfirmScreen', {
+                                    itemTypeConfrim: 'Courier Delivery',
+                                    itemServiceConfrim: "Schedule Booking",
+
+                                    // Added 
+                                    itemScheduleDateConfrim: isSchedule,
+                                    itemScheduleTimeConfrim: isScheduleDate,
+
+                                    itemPickLocationConfrim: PickPlace1,
+                                    itemDropLocationConfrim: PickPlace2,
+                                    itemPaymentTypeConfrim: toggleCheckBoxCashPoolSB === true
+                                        ? "Cash Payment"
+                                        : toggleCheckBoxWalletPoolSB === true
+                                            ? "Wallet"
+                                            : toggleCheckBoxCardPoolSB === true
+                                                ? "Card"
+                                                : "Cash Payment",
+
+                                    // itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
+                                    // itemLocationDurationConfrim: "30 Mins", // Google API 
+
+                                    itemLocationDistanceConfrim: distance,
+                                    itemLocationDurationConfrim: duration,
+
+                                    itemLoyalPointsConfrim: toggleCheckBoxYesPoolSB === true ? "Yes" : "No",
+                                    itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
+                                    itemLocationCurrentDateConfrim: formattedDateLL,
+                                    itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
+                                    itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
+                                })
+
+                            }
+                        } else {
+                            Toast.show("Please choose 'Schedule Booking' from the provided options.", Toast.SHORT);
+                        }
                     } else {
-                        // // Passing Data To Confirm Page
-                        navigation.navigate('CourierConfirmScreen', {
-                            itemTypeConfrim: 'Courier Delivery',
-                            itemServiceConfrim: "Schedule Booking",
-
-                            // Added 
-                            itemScheduleDateConfrim: isSchedule,
-                            itemScheduleTimeConfrim: isScheduleDate,
-
-                            itemPickLocationConfrim: PickPlace1,
-                            itemDropLocationConfrim: PickPlace2,
-                            itemPaymentTypeConfrim: toggleCheckBoxCashPoolSB === true
-                                ? "Cash Payment"
-                                : toggleCheckBoxWalletPoolSB === true
-                                    ? "Wallet"
-                                    : toggleCheckBoxCardPoolSB === true
-                                        ? "Card"
-                                        : "Cash Payment",
-                            itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-                            itemLocationDurationConfrim: "30 Mins", // Google API 
-                            itemLoyalPointsConfrim: toggleCheckBoxYesPoolSB === true ? "Yes" : "No",
-                            itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-                            itemLocationCurrentDateConfrim: formattedDateLL,
-                            itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-                            itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-                        })
-
+                        Toast.show("Please choose 'Schedule Booking' from the provided options.", Toast.SHORT);
                     }
                 } else {
                     Toast.show("Please choose 'Schedule Booking' from the provided options.", Toast.SHORT);
                 }
+
+                return { distance, duration };
             } else {
-                Toast.show("Please choose 'Schedule Booking' from the provided options.", Toast.SHORT);
             }
-        } else {
-            Toast.show("Please choose 'Schedule Booking' from the provided options.", Toast.SHORT);
+        } catch (error) {
+            console.error(error);
+            return null;
         }
-
-        // // Passing Data To Confirm Page
-        // navigation.navigate('CourierConfirmScreen', {
-        //     itemTypeConfrim: 'Courier Delivery',
-        //     itemServiceConfrim: "Schedule Booking",
-
-        //     // Added 
-        //     itemScheduleDateConfrim: isSchedule,
-        //     itemScheduleTimeConfrim: isScheduleDate,
-
-        //     itemPickLocationConfrim: PickPlace1,
-        //     itemDropLocationConfrim: PickPlace2,
-        //     itemPaymentTypeConfrim: toggleCheckBoxCashPoolSB === true
-        //         ? "Cash Payment"
-        //         : toggleCheckBoxWalletPoolSB === true
-        //             ? "Wallet"
-        //             : toggleCheckBoxCardPoolSB === true
-        //                 ? "Card"
-        //                 : "Cash Payment",
-        //     itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-        //     itemLocationDurationConfrim: "30 Mins", // Google API 
-        //     itemLoyalPointsConfrim: toggleCheckBoxYesPoolSB === true ? "Yes" : "No",
-        //     itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-        //     itemLocationCurrentDateConfrim: formattedDateLL,
-        //     itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-        //     itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-        // })
-
-        // } else {
-        //     // Toast.show("Kindly Accept The Terms And Conditions.", Toast.SHORT);***
-        // }
-
     }
 
+
     const onPressBookingConfirmRideNow = async () => {
-
-
-        // Pick And Drop Passing ! // As Type Flow
-        var dis = getDistance(
-            { latitude: 2.7689, longitude: 1.1316 },
-            { latitude: 1.7689, longitude: -0.3817 },
-        );
-
         try {
-            // Get Latitude by stoarge
-            GetUserLat_ = await AsyncStorage.getItem('user_lat');
-            GetUserLong_ = await AsyncStorage.getItem('user_log');
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
 
-            GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
 
-            console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
-            console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
-            console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
+            console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+
+            // TODO : Distnace - Duration 
+            // RIDE NOW :
+            getCurrentLocationDistnaceDuration(GetUserAsPickLat,
+                GetUserAsPickLong, GetUserAsDropLat, GetUserAsDropLong);
 
         } catch (error) {
 
         }
+    }
 
-        // Get Current Date
-        const currentDate = moment();
-        let formattedDateLL = currentDate.format('LLL');
+    const getCurrentLocationDistnaceDuration = async (GetUserAsPickLat: any
+        , GetUserAsPickLong: any, GetUserAsDropLat: any,
+        GetUserAsDropLong: any) => {
 
-        if (toggleCheckBoxYes || toggleCheckBoxNo) {
-            if (toggleCheckBoxCash || toggleCheckBoxCard) {
-                if (PickPlace1 === ScreenText.SelectPickuplocation
-                    || PickPlace2 === ScreenText.SelectDropofflocation) {
-                    Toast.show("Please choose 'Ride Now' from the provided options.", Toast.SHORT);
+        const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
+        const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
+
+        try {
+            const response = await axios.get(url);
+            if (response.data.status === 'OK') {
+                const element = response.data.rows[0].elements[0];
+
+                const distance = element.distance.text;
+                const duration = element.duration.text;
+
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+                console.error("DISTANCE===>DURATION===>", distance, duration);
+
+                // Working ! - 05
+
+                // Pick And Drop Passing ! // As Type Flow
+                // var dis = getDistance(
+                //     { latitude: 2.7689, longitude: 1.1316 },
+                //     { latitude: 1.7689, longitude: -0.3817 },
+                // );
+
+                // Get Latitude by stoarge
+                GetUserLat_ = await AsyncStorage.getItem('user_lat');
+                GetUserLong_ = await AsyncStorage.getItem('user_log');
+                GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+
+                // Get Current Date
+                const currentDate = moment();
+                let formattedDateLL = currentDate.format('LLL'); // SelectDropofflocation
+
+
+                if (toggleCheckBoxYes || toggleCheckBoxNo) {
+                    if (toggleCheckBoxCash || toggleCheckBoxCard) {
+                        if (PickPlace1 === ScreenText.SelectPickuplocation
+                            || PickPlace2 === ScreenText.SelectDropofflocation) {
+                            Toast.show("Please choose 'Ride Now' from the provided options.", Toast.SHORT);
+                        } else {
+                            navigation.navigate('BookingConfirmScreen', {
+                                itemTypeConfrim: 'Taxi Booking',
+                                itemServiceConfrim: "Ride Now",
+                                itemPickLocationConfrim: PickPlace1,
+                                itemDropLocationConfrim: PickPlace2,
+                                itemPaymentTypeConfrim: toggleCheckBoxCash === true ? "Cash Payment" : "Card",
+
+                                itemLocationDistanceConfrim: distance,
+                                itemLocationDurationConfrim: duration,
+
+                                // itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
+                                // itemLocationDurationConfrim: "30 Mins", // Google API 
+                                itemLoyalPointsConfrim: toggleCheckBoxYes === true ? "Yes" : "No",
+                                itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
+                                itemLocationCurrentDateConfrim: formattedDateLL, //currentDate.format('DD-MM-YYYY')
+                                itemGetCurrentLatitudeConfrim: GetUserLat_,
+                                itemGetCurrentLongitudeConfrim: GetUserLong_,
+                                // Pick - Drop For Marker
+                            })
+                        }
+                    } else {
+                        Toast.show("Please choose 'Ride Now' from the provided options.", Toast.SHORT);
+                    }
                 } else {
-                    // Passing Data To Confirm Page
-                    navigation.navigate('BookingConfirmScreen', {
-                        itemTypeConfrim: 'Taxi Booking',
-                        itemServiceConfrim: "Ride Now",
-                        itemPickLocationConfrim: PickPlace1,
-                        itemDropLocationConfrim: PickPlace2,
-                        itemPaymentTypeConfrim: toggleCheckBoxCash === true ? "Cash Payment" : "Card",
-                        itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-                        itemLocationDurationConfrim: "30 Mins", // Google API 
-                        itemLoyalPointsConfrim: toggleCheckBoxYes === true ? "Yes" : "No",
-                        itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-                        itemLocationCurrentDateConfrim: formattedDateLL, //currentDate.format('DD-MM-YYYY')
-                        itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-                        itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-                    })
+                    Toast.show("Please choose 'Ride Now' from the provided options.", Toast.SHORT);
                 }
+                // Working ! - 05
+
+
+                return { distance, duration };
             } else {
-                Toast.show("Please choose 'Ride Now' from the provided options.", Toast.SHORT);
+                throw new Error('Error fetching distance and duration');
             }
-        } else {
-            Toast.show("Please choose 'Ride Now' from the provided options.", Toast.SHORT);
+        } catch (error) {
+            console.error(error);
+            return null;
         }
-
-
-
-        // if (PickPlace1 === ScreenText.SelectPickuplocation
-        //     || PickPlace2 === ScreenText.SelectDropofflocation) {
-
-        //     Toast.show("Please choose 'Ride Now' from the provided options.", Toast.SHORT);
-
-        // } else {
-        //     // Passing Data To Confirm Page
-        //     navigation.navigate('BookingConfirmScreen', {
-        //         itemTypeConfrim: 'Taxi Booking',
-        //         itemServiceConfrim: "Ride Now",
-        //         itemPickLocationConfrim: PickPlace1,
-        //         itemDropLocationConfrim: PickPlace2,
-        //         itemPaymentTypeConfrim: toggleCheckBoxCash === true ? "Cash Payment" : "Card",
-        //         itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-        //         itemLocationDurationConfrim: "30 Mins", // Google API 
-        //         itemLoyalPointsConfrim: toggleCheckBoxYes === true ? "Yes" : "No",
-        //         itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-        //         itemLocationCurrentDateConfrim: formattedDateLL, //currentDate.format('DD-MM-YYYY')
-        //         itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-        //         itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-        //     })
-        // }
-
     }
 
 
     const onPressPoolRideRequest = async () => {
-        // Alert.alert("test--1111")
-
-        // Pick And Drop Passing ! // As Type Flow
-        var dis = getDistance(
-            { latitude: 2.7689, longitude: 1.1316 },
-            { latitude: 1.7689, longitude: -0.3817 },
-        );
-
-        // distanceCal = dis / 1000;
-        // console.log("Distance-KM==>", dis / 1000);
-
-        // // Get Current Lat And Long
-        // Geolocation.getCurrentPosition(
-        //     position => {
-        //         const { latitude, longitude } = position.coords;
-
-        //         user_latitude = position.coords.latitude;
-        //         user_longitude = position.coords.longitude;
-
-        //         console.log("User-LatitudEEEE==>", user_latitude);
-        //         console.log("User-LongitudEEE==>", user_longitude);
-
-        //     },
-        //     error => {
-        //         console.log(`Error getting location: ${error.message}`);
-        //     },
-        //     { enableHighAccuracy: true, timeout: 18000, maximumAge: 12000 }
-        // );
-
-
         try {
-            // Get Latitude by stoarge
-            GetUserLat_ = await AsyncStorage.getItem('user_lat');
-            GetUserLong_ = await AsyncStorage.getItem('user_log');
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
 
-            GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
 
-            console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
-            console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
-            console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
+            console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+
+            // TODO : Distnace - Duration 
+            // POOL RIDE :
+            getCurrentLocationDistnaceDurationPool(GetUserAsPickLat,
+                GetUserAsPickLong, GetUserAsDropLat, GetUserAsDropLong);
 
         } catch (error) {
 
         }
-
-
-        // Get Longitude by stoarge
-        // const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
-
-
-        // Get Current Date
-        const currentDate = moment();
-        let formattedDateLL = currentDate.format('LLL');
-
-        if (toggleCheckBoxYesPool || toggleCheckBoxNoPool) {
-            if (toggleCheckBoxCashPool ||
-                toggleCheckBoxWalletPool || toggleCheckBoxCardPool) {
-                if (PickPlace1 === ScreenText.SelectPickuplocation ||
-                    PickPlace2 === ScreenText.SelectDropofflocation) {
-                    Toast.show("Please choose 'Pool Ride' from the provided options.", Toast.SHORT);
-                } else {
-                    // Passing Data To Confirm Page
-                    navigation.navigate('BookingConfirmScreen', {
-                        itemTypeConfrim: 'Taxi Booking',
-                        itemServiceConfrim: "Pool Ride",
-                        itemPickLocationConfrim: PickPlace1,
-                        itemDropLocationConfrim: PickPlace2,
-                        itemSelectNoOfSeatsConfrim: selectedOption ? selectedOption.labelSeat : 1,
-                        itemPaymentTypeConfrim: toggleCheckBoxCashPool === true
-                            ? "Cash Payment"
-                            : toggleCheckBoxWalletPool === true
-                                ? "Wallet"
-                                : toggleCheckBoxCardPool === true
-                                    ? "Card"
-                                    : "Cash Payment",
-                        itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-                        itemLocationDurationConfrim: "30 Mins", // Google API 
-                        itemLoyalPointsConfrim: toggleCheckBoxYesPool === true ? "Yes" : "No",
-                        itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-                        itemLocationCurrentDateConfrim: formattedDateLL,
-                        // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
-                        // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
-                        itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-                        itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-                    })
-                }
-            } else {
-                Toast.show("Please choose 'Pool Ride' from the provided options.", Toast.SHORT);
-            }
-        } else {
-            Toast.show("Please choose 'Pool Ride' from the provided options.", Toast.SHORT);
-        }
-
-
-        // if (PickPlace1 === ScreenText.SelectPickuplocation
-        //     || PickPlace2 === ScreenText.SelectDropofflocation
-        //     || selectedOption.labelSeat === "Select No of seats") {
-
-        //     Toast.show("Please choose 'Pool Ride' from the provided options.", Toast.SHORT);
-
-        // } else {
-        //     // Passing Data To Confirm Page
-        //     navigation.navigate('BookingConfirmScreen', {
-        //         itemTypeConfrim: 'Taxi Booking',
-        //         itemServiceConfrim: "Pool Ride",
-        //         itemPickLocationConfrim: PickPlace1,
-        //         itemDropLocationConfrim: PickPlace2,
-        //         itemSelectNoOfSeatsConfrim: selectedOption ? selectedOption.labelSeat : 0,
-        //         itemPaymentTypeConfrim: toggleCheckBoxCashPool === true
-        //             ? "Cash Payment"
-        //             : toggleCheckBoxWalletPool === true
-        //                 ? "Wallet"
-        //                 : toggleCheckBoxCardPool === true
-        //                     ? "Card"
-        //                     : "Cash Payment",
-        //         itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-        //         itemLocationDurationConfrim: "30 Mins", // Google API 
-        //         itemLoyalPointsConfrim: toggleCheckBoxYesPool === true ? "Yes" : "No",
-        //         itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-        //         itemLocationCurrentDateConfrim: formattedDateLL,
-        //         // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
-        //         // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
-        //         itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-        //         itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-        //     })
-
-        // }
-
     }
 
+    const getCurrentLocationDistnaceDurationPool = async (GetUserAsPickLat: any
+        , GetUserAsPickLong: any, GetUserAsDropLat: any,
+        GetUserAsDropLong: any) => {
 
-    const onPressHourlyRideRequest = async () => {
-
-        // Pick And Drop Passing ! // As Type Flow
-        var dis = getDistance(
-            { latitude: 2.7689, longitude: 1.1316 },
-            { latitude: 1.7689, longitude: -0.3817 },
-        );
+        const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
+        const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
 
         try {
-            // Get Latitude by stoarge
-            GetUserLat_ = await AsyncStorage.getItem('user_lat');
-            GetUserLong_ = await AsyncStorage.getItem('user_log');
+            const response = await axios.get(url);
+            if (response.data.status === 'OK') {
+                const elementPool = response.data.rows[0].elements[0];
 
-            GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+                const distance = elementPool.distance.text;
+                const duration = elementPool.duration.text;
 
-            console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
-            console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
-            console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+
+                // 05 : Pool Ride
+                // Get Current Date
+
+                // Get Latitude by stoarge
+                GetUserLat_ = await AsyncStorage.getItem('user_lat');
+                GetUserLong_ = await AsyncStorage.getItem('user_log');
+                GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+
+                const currentDate = moment();
+                let formattedDateLL = currentDate.format('LLL');
+
+                if (toggleCheckBoxYesPool || toggleCheckBoxNoPool) {
+                    if (toggleCheckBoxCashPool ||
+                        toggleCheckBoxWalletPool || toggleCheckBoxCardPool) {
+                        if (PickPlace1 === ScreenText.SelectPickuplocation ||
+                            PickPlace2 === ScreenText.SelectDropofflocation) {
+                            Toast.show("Please choose 'Pool Ride' from the provided options.", Toast.SHORT);
+                        } else {
+                            // Passing Data To Confirm Page
+                            navigation.navigate('BookingConfirmScreen', {
+                                itemTypeConfrim: 'Taxi Booking',
+                                itemServiceConfrim: "Pool Ride",
+                                itemPickLocationConfrim: PickPlace1,
+                                itemDropLocationConfrim: PickPlace2,
+                                itemSelectNoOfSeatsConfrim: selectedOption ? selectedOption.labelSeat : 1,
+                                itemPaymentTypeConfrim: toggleCheckBoxCashPool === true
+                                    ? "Cash Payment"
+                                    : toggleCheckBoxWalletPool === true
+                                        ? "Wallet"
+                                        : toggleCheckBoxCardPool === true
+                                            ? "Card"
+                                            : "Cash Payment",
+                                // itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
+                                // itemLocationDurationConfrim: "30 Mins", // Google API 
+
+                                itemLocationDistanceConfrim: distance,
+                                itemLocationDurationConfrim: duration,
+
+                                itemLoyalPointsConfrim: toggleCheckBoxYesPool === true ? "Yes" : "No",
+                                itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
+                                itemLocationCurrentDateConfrim: formattedDateLL,
+                                // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
+                                // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
+                                itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
+                                itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
+                            })
+                        }
+                    } else {
+                        Toast.show("Please choose 'Pool Ride' from the provided options.", Toast.SHORT);
+                    }
+                } else {
+                    Toast.show("Please choose 'Pool Ride' from the provided options.", Toast.SHORT);
+                }
+                // 05 : Pool Ride
+
+                return { distance, duration };
+            } else {
+                throw new Error('Error fetching distance and duration');
+            }
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    }
+
+    const onPressHourlyRideRequest = async () => {
+        try {
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
+
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
+
+            console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+
+            // TODO : Distnace - Duration 
+
+            // POOL RIDE :
+            getCurrentLocationDistnaceDurationHourly(GetUserAsPickLat,
+                GetUserAsPickLong, GetUserAsDropLat, GetUserAsDropLong);
 
         } catch (error) {
 
         }
+    }
+
+    const getCurrentLocationDistnaceDurationHourly = async (GetUserAsPickLat, GetUserAsPickLong,
+        GetUserAsDropLat, GetUserAsDropLong) => {
+
+        // TODO : GET 2 LAT - 2 LONG
+        GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+        GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
+
+        GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+        GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
+
+        console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+        console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+        console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+        console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+
+        const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
+        const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
+
+        // TODO : Hourly Ride
+        try {
+            const response = await axios.get(url);
+            if (response.data.status === 'OK') {
+                const elementPool = response.data.rows[0].elements[0];
+
+                const distance = elementPool.distance.text;
+                const duration = elementPool.duration.text;
+
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
 
 
-        // Get Longitude by stoarge
-        // const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
+                // Get Latitude by stoarge
+                GetUserLat_ = await AsyncStorage.getItem('user_lat');
+                GetUserLong_ = await AsyncStorage.getItem('user_log');
+                GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+
+                // Get Longitude by stoarge
+                // const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
+
+                // Get Current Date
+                const currentDate = moment();
+                let formattedDateLL = currentDate.format('LLL');
 
 
-        // Get Current Date
-        const currentDate = moment();
-        let formattedDateLL = currentDate.format('LLL');
+                if (toggleCheckBoxYesHour || toggleCheckBoxNoHour) {
+                    if (toggleCheckBoxCashRide ||
+                        toggleCheckBoxWalletRide || toggleCheckBoxCardRide) {
+                        if (PickPlace1 === ScreenText.SelectPickuplocation ||
+                            PickPlace2 === ScreenText.SelectDropofflocation
+                            || name == '' || distance == '') {
+                            Toast.show("Please choose 'Hourly Ride' from the provided options.", Toast.SHORT);
+                        } else {
+                            // Passing Data To Confirm Page
+                            navigation.navigate('BookingConfirmScreen', {
+                                itemTypeConfrim: 'Taxi Booking',
 
-        if (toggleCheckBoxYesHour || toggleCheckBoxNoHour) {
-            if (toggleCheckBoxCashRide ||
-                toggleCheckBoxWalletRide || toggleCheckBoxCardRide) {
-                if (PickPlace1 === ScreenText.SelectPickuplocation ||
-                    PickPlace2 === ScreenText.SelectDropofflocation
-                    || name == '' || distance == '') {
-                    Toast.show("Please choose 'Hourly Ride' from the provided options.", Toast.SHORT);
+                                itemEnterNoOfHourConfrim: name.toString(), // 28quick
+                                itemEnterDistanceConfrim: distance.toString(), // 28quick
+
+                                itemServiceConfrim: "Hourly Ride",
+                                itemPickLocationConfrim: PickPlace1,
+                                itemDropLocationConfrim: PickPlace2,
+                                itemPaymentTypeConfrim: toggleCheckBoxCashRide === true
+                                    ? "Cash Payment"
+                                    : toggleCheckBoxWalletRide === true
+                                        ? "Wallet"
+                                        : toggleCheckBoxCardRide === true
+                                            ? "Card"
+                                            : "Cash Payment",
+                                // itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
+                                // itemLocationDurationConfrim: "30 Mins", 
+
+                                itemLocationDistanceConfrim: distance,
+                                itemLocationDurationConfrim: duration,
+
+                                // Google API 
+                                itemLoyalPointsConfrim: toggleCheckBoxYesHour === true ? "Yes" : "No",
+                                itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
+                                itemLocationCurrentDateConfrim: formattedDateLL,
+                                // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
+                                // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
+                                itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
+                                itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
+                            })
+                        }
+                    } else {
+                        Toast.show("Please choose 'Hourly Ride' from the provided options.", Toast.SHORT);
+                    }
                 } else {
-                    // Passing Data To Confirm Page
-                    navigation.navigate('BookingConfirmScreen', {
-                        itemTypeConfrim: 'Taxi Booking',
-                        itemEnterNoOfHourConfrim: name.toString(), // 28quick
-                        itemEnterDistanceConfrim: distance.toString(), // 28quick
-                        itemServiceConfrim: "Hourly Ride",
-                        itemPickLocationConfrim: PickPlace1,
-                        itemDropLocationConfrim: PickPlace2,
-                        itemPaymentTypeConfrim: toggleCheckBoxCashRide === true
-                            ? "Cash Payment"
-                            : toggleCheckBoxWalletRide === true
-                                ? "Wallet"
-                                : toggleCheckBoxCardRide === true
-                                    ? "Card"
-                                    : "Cash Payment",
-                        itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-                        itemLocationDurationConfrim: "30 Mins", // Google API 
-                        itemLoyalPointsConfrim: toggleCheckBoxYesHour === true ? "Yes" : "No",
-                        itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-                        itemLocationCurrentDateConfrim: formattedDateLL,
-                        // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
-                        // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
-                        itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-                        itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-                    })
+                    Toast.show("Please choose 'Hourly Ride' from the provided options.", Toast.SHORT);
                 }
+
+                // 05 : Hourly Ride
+
+                return { distance, duration };
             } else {
-                Toast.show("Please choose 'Hourly Ride' from the provided options.", Toast.SHORT);
+                throw new Error('Error fetching distance and duration');
             }
-        } else {
-            Toast.show("Please choose 'Hourly Ride' from the provided options.", Toast.SHORT);
+        } catch (error) {
+            console.error(error);
+            return null;
         }
-
-
-        // if (PickPlace1 === ScreenText.SelectPickuplocation
-        //     || PickPlace2 === ScreenText.SelectDropofflocation
-        //     || name === '' || distance === '') {
-
-        //     Toast.show("Please choose 'Hourly Ride' from the provided options.", Toast.SHORT);
-
-        // } else {
-        //     // Passing Data To Confirm Page
-        //     navigation.navigate('BookingConfirmScreen', {
-        //         itemTypeConfrim: 'Taxi Booking',
-
-        //         itemEnterNoOfHourConfrim: name.toString(), // 28quick
-        //         itemEnterDistanceConfrim: distance.toString(), // 28quick
-
-        //         itemServiceConfrim: "Hourly Ride",
-        //         itemPickLocationConfrim: PickPlace1,
-        //         itemDropLocationConfrim: PickPlace2,
-        //         itemPaymentTypeConfrim: toggleCheckBoxCashRide === true
-        //             ? "Cash Payment"
-        //             : toggleCheckBoxWalletRide === true
-        //                 ? "Wallet"
-        //                 : toggleCheckBoxCardRide === true
-        //                     ? "Card"
-        //                     : "Cash Payment",
-        //         itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-        //         itemLocationDurationConfrim: "30 Mins", // Google API 
-        //         itemLoyalPointsConfrim: toggleCheckBoxYesHour === true ? "Yes" : "No",
-        //         itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-        //         itemLocationCurrentDateConfrim: formattedDateLL,
-        //         // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
-        //         // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
-        //         itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-        //         itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-        //     })
-
-        // }
-
-
     }
 
     const onPressBiddingRequest = async () => {
-
-        // Pick And Drop Passing ! // As Type Flow
-        var dis = getDistance(
-            { latitude: 2.7689, longitude: 1.1316 },
-            { latitude: 1.7689, longitude: -0.3817 },
-        );
-
         try {
-            // Get Latitude by stoarge
-            GetUserLat_ = await AsyncStorage.getItem('user_lat');
-            GetUserLong_ = await AsyncStorage.getItem('user_log');
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
 
-            GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
 
-            console.log("GetUser-----Lat_", JSON.parse(GetUserLat_));
-            console.log("GetUser-----Long_", JSON.parse(GetUserLong_));
-            console.log("GetUser-----Pin_", JSON.parse(GetUserPickUpPin_));
+            console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+
+            // TODO : Distnace - Duration 
+            // POOL RIDE :
+            getCurrentLocationDistnaceDurationBiddingRide(GetUserAsPickLat,
+                GetUserAsPickLong, GetUserAsDropLat, GetUserAsDropLong);
 
         } catch (error) {
 
         }
-
-
-        // Get Longitude by stoarge
-        // const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
-
-
-        // Get Current Date
-        const currentDate = moment();
-        let formattedDateLL = currentDate.format('LLL');
-
-        if (toggleCheckBoxYesBid || toggleCheckBoxNoBid) {
-            if (toggleCheckBoxCashBid || toggleCheckBoxWalletBid || toggleCheckBoxCardBid) {
-                if (PickPlace1 === ScreenText.SelectPickuplocation
-                    || PickPlace2 === ScreenText.SelectDropofflocation) {
-                    Toast.show("Please choose 'Bidding Ride' from the provided options.", Toast.SHORT);
-                } else {
-                    // Passing Data To Confirm Page
-                    navigation.navigate('BiddingAmountBookNow', {
-                        itemTypeConfrim: 'Taxi Booking',
-
-                        itemEnterNoOfHourConfrim: name.toString(), // 28quick
-                        itemEnterDistanceConfrim: distance.toString(), // 28quick
-
-                        itemServiceConfrim: "Bidding Ride",
-                        itemPickLocationConfrim: PickPlace1,
-                        itemDropLocationConfrim: PickPlace2,
-                        itemPaymentTypeConfrim: toggleCheckBoxCashBid === true
-                            ? "Cash Payment"
-                            : toggleCheckBoxWalletBid === true
-                                ? "Wallet"
-                                : toggleCheckBoxCardBid === true
-                                    ? "Card"
-                                    : "Cash Payment",
-
-                        itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-                        itemLocationDurationConfrim: "30 Mins", // Google API 
-                        itemLoyalPointsConfrim: toggleCheckBoxYesBid === true ? "Yes" : "No",
-                        itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-                        itemLocationCurrentDateConfrim: formattedDateLL,
-                        // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
-                        // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
-                        itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-                        itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-                    })
-                }
-            } else {
-                Toast.show("Please choose 'Bidding Ride' from the provided options.", Toast.SHORT);
-            }
-        } else {
-            Toast.show("Please choose 'Bidding Ride' from the provided options.", Toast.SHORT);
-        }
-
-
-        // if (PickPlace1 === ScreenText.SelectPickuplocation
-        //     || PickPlace2 === ScreenText.SelectDropofflocation) {
-
-        //     Toast.show("Please choose 'Bidding Ride' from the provided options.", Toast.SHORT);
-
-        // } else {
-        //     // Passing Data To Confirm Page
-        //     navigation.navigate('BiddingAmountBookNow', {
-        //         itemTypeConfrim: 'Taxi Booking',
-
-        //         itemEnterNoOfHourConfrim: name.toString(), // 28quick
-        //         itemEnterDistanceConfrim: distance.toString(), // 28quick
-
-        //         itemServiceConfrim: "Bidding Ride",
-        //         itemPickLocationConfrim: PickPlace1,
-        //         itemDropLocationConfrim: PickPlace2,
-        //         itemPaymentTypeConfrim: toggleCheckBoxCashBid === true
-        //             ? "Cash Payment"
-        //             : toggleCheckBoxWalletBid === true
-        //                 ? "Wallet"
-        //                 : toggleCheckBoxCardBid === true
-        //                     ? "Card"
-        //                     : "Cash Payment",
-
-        //         itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
-        //         itemLocationDurationConfrim: "30 Mins", // Google API 
-        //         itemLoyalPointsConfrim: toggleCheckBoxYesBid === true ? "Yes" : "No",
-        //         itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
-        //         itemLocationCurrentDateConfrim: formattedDateLL,
-        //         // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
-        //         // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
-        //         itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
-        //         itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
-        //     })
-
-        // }
-
-
-
-
     }
+
+    const getCurrentLocationDistnaceDurationBiddingRide = async (GetUserAsPickLat: any,
+        GetUserAsPickLong: any, GetUserAsDropLat: any, GetUserAsDropLong: any) => {
+
+        const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
+        const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
+
+        try {
+            const response = await axios.get(url);
+            if (response.data.status === 'OK') {
+                const elementBid = response.data.rows[0].elements[0];
+
+                const distance = elementBid.distance.text;
+                const duration = elementBid.duration.text;
+
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+                console.log("DISTANCEPOOL===>DURATIONPOOL===>", distance, distance);
+
+                // 05 -02  : Bid Ride
+                // Get Latitude by stoarge
+                GetUserLat_ = await AsyncStorage.getItem('user_lat');
+                GetUserLong_ = await AsyncStorage.getItem('user_log');
+                GetUserPickUpPin_ = await AsyncStorage.getItem('user_pick_pin');
+
+                // Get Current Date
+                const currentDate = moment();
+                let formattedDateLL = currentDate.format('LLL');
+
+                if (toggleCheckBoxYesBid || toggleCheckBoxNoBid) {
+                    if (toggleCheckBoxCashBid || toggleCheckBoxWalletBid || toggleCheckBoxCardBid) {
+                        if (PickPlace1 === ScreenText.SelectPickuplocation
+                            || PickPlace2 === ScreenText.SelectDropofflocation) {
+                            Toast.show("Please choose 'Bidding Ride' from the provided options.", Toast.SHORT);
+                        } else {
+                            // Passing Data To Confirm Page
+                            navigation.navigate('BiddingAmountBookNow', {
+                                itemTypeConfrim: 'Taxi Booking',
+
+                                itemEnterNoOfHourConfrim: name.toString(), // 28quick
+                                itemEnterDistanceConfrim: distance.toString(), // 28quick
+
+                                itemServiceConfrim: "Bidding Ride",
+                                itemPickLocationConfrim: PickPlace1,
+                                itemDropLocationConfrim: PickPlace2,
+                                itemPaymentTypeConfrim: toggleCheckBoxCashBid === true
+                                    ? "Cash Payment"
+                                    : toggleCheckBoxWalletBid === true
+                                        ? "Wallet"
+                                        : toggleCheckBoxCardBid === true
+                                            ? "Card"
+                                            : "Cash Payment",
+
+                                // itemLocationDistanceConfrim: dis / 1000, // Other Lib // Google API 
+                                // itemLocationDurationConfrim: "30 Mins", // Google API 
+
+                                itemLocationDistanceConfrim: distance,
+                                itemLocationDurationConfrim: duration,
+
+                                itemLoyalPointsConfrim: toggleCheckBoxYesBid === true ? "Yes" : "No",
+                                itemLocationPinCodeConfrim: JSON.parse(GetUserPickUpPin_), // Pick
+                                itemLocationCurrentDateConfrim: formattedDateLL,
+                                // itemGetCurrentLatitudeConfrim: JSON.parse(GetUserLat_), // Pick - Drop For Marker
+                                // itemGetCurrentLongitudeConfrim: JSON.parse(GetUserLong_), // Pick - Drop For Marker
+                                itemGetCurrentLatitudeConfrim: GetUserLat_, // Pick - Drop For Marker
+                                itemGetCurrentLongitudeConfrim: GetUserLong_, // Pick - Drop For Marker
+                            })
+
+                        }
+                    } else {
+                        Toast.show("Please choose 'Bidding Ride' from the provided options.", Toast.SHORT);
+                    }
+                } else {
+                    Toast.show("Please choose 'Bidding Ride' from the provided options.", Toast.SHORT);
+                }
+
+                // 05 -02  : Bid Ride
+
+                return { distance, duration };
+            } else {
+                throw new Error('Error fetching distance and duration');
+            }
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    }
+
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -1373,6 +1611,7 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                         style={Styles.viewOrangeDot}
                                                         resizeMode="contain"
                                                         source={Images.orangeDot} />
+
                                                     <TouchableOpacity
                                                         activeOpacity={0.2}
                                                         onPress={() => navigation.navigate("CourierDropupScreen")}
@@ -1655,7 +1894,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
 
                                         <View>
-
                                             <ButtonComponent
                                                 isVisibleMobile={false}
                                                 isVisibleFaceBook={false}
@@ -2057,7 +2295,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                         width={wp(90)}
                                                         height={hp(7)}
                                                         // marginTop={hp(2)}
-                                                        selectionColor={Colors.white}
                                                         isUserHide={false}
                                                         textfontSize={ConstValue.value15}
                                                         textfontFamily={Fonts.PoppinsRegular}

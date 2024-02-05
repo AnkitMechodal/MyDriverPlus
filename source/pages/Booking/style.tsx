@@ -119,7 +119,7 @@ const Styles = StyleSheet.create({
     },
     viewRideNow: {
         flexDirection: 'row',
-        marginHorizontal: wp(4)
+        marginHorizontal: wp(4),
     },
     viewBackgroundMessage1: {
         flex: 1,

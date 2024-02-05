@@ -36,8 +36,6 @@ const CourierPickupScreen = (props: Props) => {
     const mapViewRef = useRef<any>(null);
 
 
-
-
     const [isFocusedPasswordRef, setIsFocusedPasswordRef] = useState(false);
 
     const [isFocusedLocationRef, setIsFocusedLocationRef] = useState(false);
@@ -93,29 +91,53 @@ const CourierPickupScreen = (props: Props) => {
 
     const [SavedLocationdModal_, SetSavedLocationdModal_] = useState([]);
 
+    // TODO :
+
     let user_latitude;
     let user_longitude;
     let fullAddress;
 
+    // USER
+    let secondPartOfAddress;
+    let remainingAddress;
+    let postalCode;
+
+
+    let secondPartOfAddress_;
+    let remainingAddress_;
+    let postalCode_;
+
+    // TODO :
+    let PassongLat;
+    let PassingLong;
+
+
     const [isModalVisible, setModalVisible] = useState(false);
     const [isPickVisible, setPickVisible] = useState(false);
 
+
     const [markerCoordinate, setMarkerCoordinate] =
         useState({ latitude: 37.78825, longitude: -122.4324 });
+
+
+    const [markerCoordinates, setMarkerCoordinates] = useState({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
+
 
     // Auto Zoom Added
     useEffect(() => {
         // Zoom to the marker using animateToRegion when markerCoordinate changes
         if (mapViewRef.current) {
             mapViewRef.current.animateToRegion({
-                latitude: markerCoordinate.latitude,
-                longitude: markerCoordinate.longitude,
+                latitude: markerCoordinates.latitude,
+                longitude: markerCoordinates.longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             }, 1000); // Adjust duration as needed
         }
-    }, [markerCoordinate]);
-
+    }, [markerCoordinates]);
 
     const handleAccountRefCode = (userpass: any) => {
         setPassRef(userpass);
@@ -166,10 +188,7 @@ const CourierPickupScreen = (props: Props) => {
         setPickVisible(true)
     };
 
-    const [markerCoordinates, setMarkerCoordinates] = useState({
-        latitude: 37.78825,
-        longitude: -122.4324,
-    });
+
 
     const handleMapPress = (event) => {
         // Update the marker's coordinates when the map is pressed
@@ -182,36 +201,57 @@ const CourierPickupScreen = (props: Props) => {
 
     };
 
+
     const getCurrentLocationAddress = async (user_latitude, user_longitude) => {
-        console.log("getCurrentLocationAddress111==>", user_latitude);
-        console.log("getCurrentLocationAddress222==>", user_longitude);
+        console.log("getCurrentLocationAddress111----==>", user_latitude);
+        console.log("getCurrentLocationAddress222----==>", user_longitude);
+
+        storeUserLat(user_latitude);
+        storeUserLong(user_longitude);
+
+        // setMarkerCoordinates({ latitude: user_latitude, longitude: user_longitude })
+        setMarkerCoordinate({ latitude: user_latitude, longitude: user_longitude })
+        // Diff" To Store []
 
         try {
 
             fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + user_latitude + ',' + user_longitude + '&key=' + 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE')
                 .then((response) => response.json())
                 .then((responseJson) => {
-                    console.log('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
+
+                    // TODO :
+                    // GET ADDRESS IN 3 PART
+                    const result = responseJson.results[0];
+                    const formattedAddress = result.formatted_address;
+
+                    secondPartOfAddress = formattedAddress.split(',')[1];
+                    remainingAddress = formattedAddress.split(',').slice(1).join(',').trim();
+                    postalCode = result.address_components.find(component =>
+                        component.types.includes('postal_code')
+                    );
+
+                    // ? postalCode.long_name : 'N/A'
+
+                    console.log('GET ADDRESS 1', remainingAddress);
+                    console.log('GET ADDRESS 2', secondPartOfAddress);
+                    console.log('GET ADDRESS 3', postalCode.long_name);
+
+                    console.log('GET ADDRESS 4', markerCoordinates);
+
+                    // Set As Deafult : 1
+                    setDeafultAdd(remainingAddress);
+
+                    // Store Data : 2
+                    storeFullAddress(remainingAddress);
+                    storeLandMark(secondPartOfAddress);
+                    storePin(postalCode.long_name);
+
+                    // console.log('GET ADDRESS 0', remainingAddress);
+
+                    // console.log('ADDRESS GEOCODE is BACK!! => '
+                    //     + JSON.stringify(responseJson, null, 2));
                 })
 
-            // const response = await fetch(
-            //     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${user_latitude},${user_longitude}&key=AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE`
-            // );
-
-            // if (!response.ok) {
-            //     throw new Error('Network response was not ok');
-            // }
-
-            // const data = await response.json();
-
-            // // Check if the API request was successful
-            // if (data.status === 'OK' && data.results.length > 0) {
-            //     // Get the formatted address from the first result
-            //     const formattedAddress = data.results[0].formatted_address;
-            //     console.log('Address:', formattedAddress);
-            // } else {
-            //     console.error('Unable to retrieve address information.');
-            // }
         } catch (error) {
             console.error('Error in getCurrentLocationAddress:', error);
             throw error;
@@ -225,6 +265,8 @@ const CourierPickupScreen = (props: Props) => {
         user_latitude = event.nativeEvent.coordinate.latitude;
         user_longitude = event.nativeEvent.coordinate.longitude;
 
+
+
         // Perform reverse geocoding
         // Geocoding.from(userLatitude, userLongitude)
         //     .then(json => {
@@ -233,11 +275,66 @@ const CourierPickupScreen = (props: Props) => {
         //     })
         //     .catch(error => console.warn(error));
 
+        // TODO :
         getCurrentLocationAddress(user_latitude, user_longitude);
 
         console.log("latitude==>", event.nativeEvent.coordinate.latitude);
         console.log("longitude==>", event.nativeEvent.coordinate.longitude);
     };
+
+
+    // USER LAT && LONG 
+    const storeUserLat = async (user_latitude: any) => {
+        try {
+            await AsyncStorage.setItem('lat_address', JSON.stringify(user_latitude));
+            console.log('lat_address===>', JSON.stringify(user_latitude));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error lat_address :', error);
+        }
+    }
+
+    const storeUserLong = async (user_longitude: any) => {
+        try {
+            await AsyncStorage.setItem('long_address', JSON.stringify(user_longitude));
+            console.log('long_address===>', JSON.stringify(user_longitude));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error long_address :', error);
+        }
+    }
+    // USER LAT && LONG 
+
+
+    const storeFullAddress = async (remainingAddress: any) => {
+        try {
+            await AsyncStorage.setItem('full_address', JSON.stringify(remainingAddress));
+            console.log('full_address===>', JSON.stringify(remainingAddress));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error full_address :', error);
+        }
+    }
+
+    const storeLandMark = async (secondPartOfAddress: any) => {
+        try {
+            await AsyncStorage.setItem('landmark_address', JSON.stringify(secondPartOfAddress));
+            console.log('landmark_address===>', JSON.stringify(secondPartOfAddress));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error landmark_address :', error);
+        }
+    }
+
+    const storePin = async (postalCode: any) => {
+        try {
+            await AsyncStorage.setItem('pin_address', JSON.stringify(postalCode));
+            console.log('pin_address===>', JSON.stringify(postalCode));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error pin_address :', error);
+        }
+    }
 
     // Define your custom map style
     const customMapStyle = !isDarkMode
@@ -446,7 +543,7 @@ const CourierPickupScreen = (props: Props) => {
                 throw new Error("Invalid latitude or longitude");
             }
 
-            setMarkerCoordinate({ latitude, longitude });
+            setMarkerCoordinates({ latitude, longitude });
 
             setModalVisible(false);
 
@@ -518,6 +615,7 @@ const CourierPickupScreen = (props: Props) => {
         }
     }
 
+
     const axiosPostSaveFullLocationUpdate = async () => {
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
@@ -526,19 +624,43 @@ const CourierPickupScreen = (props: Props) => {
         try {
             if (storedLinkedId !== null) {
 
+                try {
+                    // Get 3 Data As Local & Set !
+                    //  const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
+                    remainingAddress_ = await AsyncStorage.getItem('full_address');
+                    secondPartOfAddress_ = await AsyncStorage.getItem('landmark_address');
+                    postalCode_ = await AsyncStorage.getItem('pin_address');
+
+                    console.log("02-02==>==>", remainingAddress_);
+                    console.log("02-03==>==>", secondPartOfAddress_);
+                    console.log("02-04==>==>", postalCode_);
+
+                } catch (error) {
+
+                }
+
                 const data = {
                     UserID: JSON.parse(storedLinkedId),
                     type: "Pick",  // as flow
                     service_type: "courier", // as flow
-                    complete_location: locationRef,
-                    nearby_landmark: locationNearByRef,
-                    pin_code: pin,
+                    complete_location: locationRef !== '' ? locationRef : JSON.parse(remainingAddress_),
+                    nearby_landmark: locationNearByRef !== '' ? locationNearByRef : JSON.parse(secondPartOfAddress_),
+                    pin_code: pin !== '' ? pin : JSON.parse(postalCode_),
                     // "Person_Name": "Gosai",
                     // "mobilenumber_picku": "6356526597"
 
-                    // test lat - long
-                    Latitude: markerCoordinate.latitude,
-                    Longitude: markerCoordinate.longitude,
+                    // USER TEST
+                    // Latitude: markerCoordinate.latitude,
+                    // Longitude: markerCoordinate.longitude,
+
+                    // test lat - long as api
+                    Latitude: markerCoordinates.latitude == markerCoordinate.latitude ?
+                        markerCoordinates.latitude : markerCoordinate.latitude,
+                    Longitude: markerCoordinates.longitude == markerCoordinate.longitude ?
+                        markerCoordinates.longitude : markerCoordinate.longitude,
+
+                    // "Person_Name": "Gosai",
+                    // "mobilenumber_picku": "6356526597"
                 };
 
                 console.log("axiosPostSaveFullLocationUpdate==>",
@@ -572,22 +694,99 @@ const CourierPickupScreen = (props: Props) => {
 
     };
 
-    const onPressLocationToPickUp = () => {
+    // CourierBooking
+    // Courier Delivery
 
+    const onPressLocationToPickUp = async () => {
         // Check Validation : locationNearByRef
-        if (locationNearByRef === null ||
+        if (
+            locationNearByRef === null ||
             locationNearByRef === '' ||
-            locationNearByRef === undefined) {
-            Toast.show("Nearby Landmark Field Is Required !", Toast.SHORT);
+            locationNearByRef === undefined ||
+            pin === null ||
+            pin === '' ||
+            pin === undefined
+        ) {
+
+            //  Manual  - LanMark - Pin Passing 
+            try {
+
+                // Get 3 Data As Local & Set !
+                //  const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
+                remainingAddress_ = await AsyncStorage.getItem('full_address');
+                secondPartOfAddress_ = await AsyncStorage.getItem('landmark_address');
+                postalCode_ = await AsyncStorage.getItem('pin_address');
+
+
+                // TODO : USER
+                PassongLat = await AsyncStorage.getItem('lat_address');
+                PassingLong = await AsyncStorage.getItem('long_address');
+
+                // PassingLatSelected = await AsyncStorage.getItem('lat_list');
+                // PassingLongSelected = await AsyncStorage.getItem('long_list');
+
+                // console.log("02-00002==>==>", remainingAddress_);
+                // console.log("02-00003==>==>", secondPartOfAddress_);
+                // console.log("02-00004==>==>", postalCode_);
+
+            } catch (error) {
+
+            }
+
+            props.navigation.navigate('CourierBooking', {
+                itemPickName: JSON.parse(secondPartOfAddress_),
+                itemType: 'Courier Delivery',
+                itemPin: JSON.parse(postalCode_),
+                itemPicklat: JSON.parse(PassongLat) !== '' ? JSON.parse(PassongLat) :
+                    markerCoordinates.latitude,
+                itemPicklong: JSON.parse(PassingLong) !== '' ? JSON.parse(PassingLong) :
+                    markerCoordinates.longitude,
+            });
+
         } else {
+
+            // Passing lat long As list OR Selected
+            try {
+
+                // TODO : USER
+                PassongLat = await AsyncStorage.getItem('lat_address');
+                PassingLong = await AsyncStorage.getItem('long_address');
+
+                // PassingLatSelected = await AsyncStorage.getItem('lat_list');
+                // PassingLongSelected = await AsyncStorage.getItem('long_list');
+
+
+            } catch (error) {
+
+            }
+
+
             props.navigation.navigate('CourierBooking', {
                 itemPickName: locationNearByRef,
                 itemType: 'Courier Delivery',
                 itemPin: pin,
+                itemPicklat: JSON.parse(PassongLat) !== '' ? JSON.parse(PassongLat) :
+                    markerCoordinates.latitude,
+                itemPicklong: JSON.parse(PassingLong) !== '' ? JSON.parse(PassingLong) :
+                    markerCoordinates.longitude,
             });
         }
-
     }
+
+    // const onPressLocationToPickUp = () => {
+    //     // Check Validation : locationNearByRef
+    //     if (locationNearByRef === null ||
+    //         locationNearByRef === '' ||
+    //         locationNearByRef === undefined) {
+    //         Toast.show("Nearby Landmark Field Is Required !", Toast.SHORT);
+    //     } else {
+    //         props.navigation.navigate('CourierBooking', {
+    //             itemPickName: locationNearByRef,
+    //             itemType: 'Courier Delivery',
+    //             itemPin: pin,
+    //         });
+    //     }
+    // }
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -611,13 +810,13 @@ const CourierPickupScreen = (props: Props) => {
                     }}
                 >
                     <Circle
-                        center={markerCoordinate}
+                        center={markerCoordinates}
                         radius={radius}
                         fillColor="rgba(0, 0, 255, 0.2)" // Transparent blue fill color
                         strokeWidth={0} // No border
                     />
                     <Marker
-                        coordinate={markerCoordinate}
+                        coordinate={markerCoordinates}
                         title="Draggable Marker"
                         description="Drag me!"
                         draggable
@@ -637,7 +836,6 @@ const CourierPickupScreen = (props: Props) => {
                     style={Styles.viewPick1}
                     onPress={() => props.navigation.goBack()}>
                     <View style={Styles.overlay}>
-
                         <Image
                             style={Styles.imageOpenIcon}
                             resizeMode="contain"

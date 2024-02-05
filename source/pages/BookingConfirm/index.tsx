@@ -129,7 +129,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
         setModalVisible2(false);
     };
 
-
+    // SET AS PICK  & DROP 
     const [markerCoordinates1, setMarkerCoordinates1] = useState({
         latitude: 37.78825,
         longitude: -122.4324,
@@ -140,11 +140,11 @@ const BookingConfirmScreen = ({ route, navigation }) => {
         longitude: -122.4524, // Increased longitude for more distance
     });
 
+
     const [passDrop, setPassDrop] = useState('');
 
     const refDropUp = useRef<any>(null);
     const [pass, setPass] = useState('');
-
 
 
     // const handleAccountPasswordDrop = (userpass_: any) => {
@@ -161,19 +161,20 @@ const BookingConfirmScreen = ({ route, navigation }) => {
         setMarkerCoordinates(event.nativeEvent.coordinate);
     };
 
-    const handleMarkerDrag = (event) => {
-        // Handle marker drag event, e.g., update coordinates
-        setMarkerCoordinates(event.nativeEvent.coordinate);
-    };
+    // const handleMarkerDrag = (event) => {
+    //     // Handle marker drag event, e.g., update coordinates
+    //     // setMarkerCoordinates(event.nativeEvent.coordinate);
+    //     setMarkerCoordinates1(event.nativeEvent.coordinate);
+    // };
 
-    const handleMarkerDragEnd = (event) => {
-        // Handle marker drag end event, e.g., save new coordinates to state or server
-        setMarkerCoordinates(event.nativeEvent.coordinate);
-    };
+    // const handleMarkerDragEnd = (event) => {
+    //     // Handle marker drag end event, e.g., save new coordinates to state or server
+    //     setMarkerCoordinates1(event.nativeEvent.coordinate);
+    // };
 
-    const handleMarkerPress = () => {
-        setPickVisible(true)
-    };
+    // const handleMarkerPress = () => {
+    //     setPickVisible(true)
+    // };
 
     const handleItemClick1 = () => {
         setIsBorder1(false)
@@ -211,10 +212,63 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
     }
 
+    // // Auto Zoom Added
+    // useEffect(() => {
+    //     // Zoom to the marker using animateToRegion when markerCoordinate changes
+    //     if (mapViewRef.current) {
+    //         mapViewRef.current.animateToRegion({
+    //             latitude: markerCoordinates.latitude,
+    //             longitude: markerCoordinates.longitude,
+    //         }, 1000); // Adjust duration as needed
+    //     }
+    // }, [markerCoordinates]);
+
+
+    // useEffect(() => {
+    //     // Fit the map to include both sets of coordinates
+    //     if (mapRef.current) {
+    //         const coordinates = [markerCoordinates1, markerCoordinates2];
+
+    //         mapRef.current.fitToCoordinates(coordinates, {
+    //             edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+    //             animated: true,
+    //         });
+    //     }
+    // }, [markerCoordinates1, markerCoordinates2]);
+
+
     useEffect(() => {
+
+        setMarkerCoordinates1({ latitude: 21.7645, longitude: 72.1519 });
+        setMarkerCoordinates2({ latitude: 22.3039, longitude: 70.8022 });
+
+
         // This function will run when the component mounts
         requestRideNowData();
         axiosPostSetVehicalDataBooking();
+
+        // SET PICK 
+        // const latitudePick = parseFloat("21.7645"); // Ensure it's a number
+        // const longitudePick = parseFloat("72.1519"); // Ensure it's a number
+
+        // if (isNaN(latitudePick) || isNaN(longitudePick)) {
+        //     throw new Error("Invalid latitude or longitude");
+        // }
+
+        // setMarkerCoordinates1({ latitudePick: 21.7645, longitudePick: 72.1519 });
+
+
+        // SET DROP
+        // const latitudeDrop = parseFloat("22.3039"); // Ensure it's a number
+        // const longitudeDrop = parseFloat("70.8022"); // Ensure it's a number
+
+        // if (isNaN(latitudeDrop) || isNaN(longitudeDrop)) {
+        //     throw new Error("Invalid latitude or longitude");
+        // }
+
+        // setMarkerCoordinates2({ latitudeDrop: 22.3039, longitudeDrop: 70.8022 });
+
+
 
         // Set a delay of 15000 milliseconds (15 seconds) before calling axiosPostSetVehicalDataBooking
         // const delay = 15000;
@@ -264,6 +318,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
         }
     }
 
+    // Booking 
     const onPressBookingRequestConfirm = () => {
 
         // Check Service Type & Request Sent!
@@ -1020,16 +1075,19 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                         strokeWidth={0} // No border
                     />
 
+                    {/* First Lat Long */}
                     <Marker
                         coordinate={markerCoordinates1}
                         title="Draggable Marker"
                         description="Drag me!"
-                        draggable
-                        onDrag={handleMarkerDrag}
-                        onDragEnd={handleMarkerDragEnd}
-                        onPress={handleMarkerPress}
+                        // draggable
+                        // onDrag={handleMarkerDrag}
+                        // onDragEnd={handleMarkerDragEnd}
+                        // onPress={handleMarkerPress}
                         icon={Images.mapOrangeIcon}
                     />
+
+                    {/* Second Lat Long */}
                     <Marker
                         coordinate={markerCoordinates2}
                         title="Second Marker"

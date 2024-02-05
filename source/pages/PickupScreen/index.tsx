@@ -156,8 +156,11 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [isPickVisible, setPickVisible] = useState(false);
 
+
+    //05- 02
     const [markerCoordinate, setMarkerCoordinate] =
         useState({ latitude: 37.78825, longitude: -122.4324 }); // USER LAT - LONG
+
 
     // quick1
     const toggleModal = () => {
@@ -194,7 +197,6 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         // setMarkerCoordinates({ latitude: user_latitude, longitude: user_longitude })
         setMarkerCoordinate({ latitude: user_latitude, longitude: user_longitude })
         // Diff" To Store []
-
 
         try {
 
@@ -236,24 +238,6 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     //     + JSON.stringify(responseJson, null, 2));
                 })
 
-            // const response = await fetch(
-            //     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${user_latitude},${user_longitude}&key=AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE`
-            // );
-
-            // if (!response.ok) {
-            //     throw new Error('Network response was not ok');
-            // }
-
-            // const data = await response.json();
-
-            // // Check if the API request was successful
-            // if (data.status === 'OK' && data.results.length > 0) {
-            //     // Get the formatted address from the first result
-            //     const formattedAddress = data.results[0].formatted_address;
-            //     console.log('Address:', formattedAddress);
-            // } else {
-            //     console.error('Unable to retrieve address information.');
-            // }
         } catch (error) {
             console.error('Error in getCurrentLocationAddress:', error);
             throw error;
@@ -745,6 +729,8 @@ const PickUpLocationScreen = ({ route, navigation }) => {
             });
         }
     }
+
+    
 
     let user_latitude_map;
     let user_longitude_map;
