@@ -9,3 +9,4 @@ import {name as appName} from './app.json';
 
 
 AppRegistry.registerComponent(appName, () => App);
+// https://www.youtube.com/watch?v=wZ7TfD6OaEw
