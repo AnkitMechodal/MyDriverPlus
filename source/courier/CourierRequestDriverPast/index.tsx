@@ -607,7 +607,7 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
                                         <View style={CommonStyle.justifyContent}>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={route?.params?.itemCompleteDistance}
+                                                title={route?.params?.itemCompleteDuration}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
                                                 fontSize={wp(3.5)}
@@ -635,7 +635,7 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
                                         <View>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={route?.params?.itemCompleteDuration}
+                                                title={route?.params?.itemCompleteDistance}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
                                                 fontSize={wp(3.5)}

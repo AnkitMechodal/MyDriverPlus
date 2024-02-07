@@ -730,7 +730,7 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         }
     }
 
-    
+
 
     let user_latitude_map;
     let user_longitude_map;

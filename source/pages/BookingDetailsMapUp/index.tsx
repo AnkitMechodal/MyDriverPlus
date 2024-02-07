@@ -651,7 +651,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                                         <View style={CommonStyle.justifyContent}>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={route?.params?.itemBokingDetailsMapDistance}
+                                                title={route?.params?.itemBokingDetailsMapDuration}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
                                                 fontSize={wp(3.5)}
@@ -679,7 +679,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                                         <View>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={route?.params?.itemBokingDetailsMapDuration}
+                                                title={route?.params?.itemBokingDetailsMapDistance}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
                                                 fontSize={wp(3.5)}

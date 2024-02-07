@@ -85,6 +85,9 @@ const BookingConfirmScreen = ({ route, navigation }) => {
     const [modalVisible2, setModalVisible2] = useState(false);
 
 
+    const mapViewRef = useRef<any>(null);
+
+
     let RideIdGet;
     let distanceGet;
     let timeGet;
@@ -130,12 +133,12 @@ const BookingConfirmScreen = ({ route, navigation }) => {
     };
 
     // SET AS PICK  & DROP 
-    const [markerCoordinates1, setMarkerCoordinates1] = useState({
+    const [markerCoordinates1, setMarkerCoordinates1] = useState<any>({
         latitude: 37.78825,
         longitude: -122.4324,
     });
 
-    const [markerCoordinates2, setMarkerCoordinates2] = useState({
+    const [markerCoordinates2, setMarkerCoordinates2] = useState<any>({
         latitude: 37.80825, // Increased latitude for more distance
         longitude: -122.4524, // Increased longitude for more distance
     });
@@ -212,73 +215,54 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
     }
 
-    // // Auto Zoom Added
-    // useEffect(() => {
-    //     // Zoom to the marker using animateToRegion when markerCoordinate changes
-    //     if (mapViewRef.current) {
-    //         mapViewRef.current.animateToRegion({
-    //             latitude: markerCoordinates.latitude,
-    //             longitude: markerCoordinates.longitude,
-    //         }, 1000); // Adjust duration as needed
-    //     }
-    // }, [markerCoordinates]);
-
-
-    // useEffect(() => {
-    //     // Fit the map to include both sets of coordinates
-    //     if (mapRef.current) {
-    //         const coordinates = [markerCoordinates1, markerCoordinates2];
-
-    //         mapRef.current.fitToCoordinates(coordinates, {
-    //             edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-    //             animated: true,
-    //         });
-    //     }
-    // }, [markerCoordinates1, markerCoordinates2]);
-
 
     useEffect(() => {
+        const interval = setInterval(async () => {
+            if (mapViewRef.current) {
+                const coordinates = [markerCoordinates1, markerCoordinates2];
 
-        setMarkerCoordinates1({ latitude: 21.7645, longitude: 72.1519 });
-        setMarkerCoordinates2({ latitude: 22.3039, longitude: 70.8022 });
+                mapViewRef.current?.fitToCoordinates(coordinates, {
+                    edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                    animated: true,
+                });
+            }
 
+            // Get Lat & Long :
+            //2 :
+            const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+            const user_drop_long = await AsyncStorage.getItem('user_drop_long');
 
-        // This function will run when the component mounts
-        requestRideNowData();
-        axiosPostSetVehicalDataBooking();
+            //1:
+            const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+            const user_pick_long = await AsyncStorage.getItem('user_pick_long');
 
-        // SET PICK 
-        // const latitudePick = parseFloat("21.7645"); // Ensure it's a number
-        // const longitudePick = parseFloat("72.1519"); // Ensure it's a number
+            console.log("DROP----->1", user_drop_lat);
+            console.log("DROP----->1", user_drop_long);
 
-        // if (isNaN(latitudePick) || isNaN(longitudePick)) {
-        //     throw new Error("Invalid latitude or longitude");
-        // }
-
-        // setMarkerCoordinates1({ latitudePick: 21.7645, longitudePick: 72.1519 });
-
-
-        // SET DROP
-        // const latitudeDrop = parseFloat("22.3039"); // Ensure it's a number
-        // const longitudeDrop = parseFloat("70.8022"); // Ensure it's a number
-
-        // if (isNaN(latitudeDrop) || isNaN(longitudeDrop)) {
-        //     throw new Error("Invalid latitude or longitude");
-        // }
-
-        // setMarkerCoordinates2({ latitudeDrop: 22.3039, longitudeDrop: 70.8022 });
+            console.log("PICK----->1", user_pick_lat);
+            console.log("PICK----->1", user_pick_long);
 
 
+            // Check for null or undefined values
+            if (user_pick_lat !== null && user_pick_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+            }
 
-        // Set a delay of 15000 milliseconds (15 seconds) before calling axiosPostSetVehicalDataBooking
-        // const delay = 15000;
-        // const timeoutId = setTimeout(() => {
-        //     axiosPostSetVehicalDataBooking();
-        // }, delay);
+            if (user_drop_lat !== null && user_drop_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+            }
 
-        // // Cleanup: Clear the timeout when the component unmounts
-        // return () => clearTimeout(timeoutId);
-    }, []); // The empty dependency array ensures that this effect runs only once after the initial render
+            // This function will run every 5 seconds
+            requestRideNowData();
+            axiosPostSetVehicalDataBooking();
+
+        }, 5000); // 5000 milliseconds = 5 seconds
+
+        // Clear the interval on component unmount to prevent memory leaks
+        return () => clearInterval(interval);
+    }, [markerCoordinates1, markerCoordinates2]);
 
 
     const requestRideNowData = () => {
@@ -1005,7 +989,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
                     setVehicles(response.data.matchingVehicles);
 
-                    Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
+                    // Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
 
                 } else {
                     Toast.show('Enabel To Request Booking List!', Toast.SHORT);
@@ -1049,6 +1033,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
         }
     }
 
+
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
@@ -1056,6 +1041,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
             <View style={Styles.container}>
 
                 <MapView
+                    ref={mapViewRef}
                     style={Styles.viewMapview}
                     provider={PROVIDER_GOOGLE}
                     showsUserLocation={true}
@@ -1099,6 +1085,13 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                         coordinates={[markerCoordinates1, markerCoordinates2]}
                         strokeColor="#0040FF" // Line color
                         strokeWidth={2} // Line width
+                    />
+
+                    <Circle
+                        center={markerCoordinates2}
+                        radius={radius}
+                        fillColor="rgba(255, 165, 0, 0.2)"
+                        strokeWidth={0} // No border
                     />
 
 

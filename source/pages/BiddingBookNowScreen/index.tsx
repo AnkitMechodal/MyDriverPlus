@@ -35,6 +35,10 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
     const [adjust, setAdjust] = useState('');
     const [isClickItems, setClickItems] = useState(false);
 
+    // TODO :
+    const mapViewRef = useRef<any>(null);
+
+
     let RideIdGet;
     let distanceGet;
     let timeGet;
@@ -599,20 +603,61 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
 
     }
 
+    // useEffect(() => {
+    //     // This function will run when the component mounts
+    //     requestRideNowData();
+    //     axiosPostSetVehicalDataBooking();
+    // }, []);
+
+
+    // TODO :
     useEffect(() => {
-        // This function will run when the component mounts
-        requestRideNowData();
-        axiosPostSetVehicalDataBooking();
+        const interval = setInterval(async () => {
+            if (mapViewRef.current) {
+                const coordinates = [markerCoordinates1, markerCoordinates2];
 
-        // Set a delay of 15000 milliseconds (15 seconds) before calling axiosPostSetVehicalDataBooking
-        // const delay = 15000;
-        // const timeoutId = setTimeout(() => {
-        //     axiosPostSetVehicalDataBooking();
-        // }, delay);
+                mapViewRef.current?.fitToCoordinates(coordinates, {
+                    edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                    animated: true,
+                });
+            }
 
-        // // Cleanup: Clear the timeout when the component unmounts
-        // return () => clearTimeout(timeoutId);
-    }, []); // The empty dependency array ensures that this effect runs only once after the initial render
+            // Get Lat & Long :
+            //2 :
+            const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+            const user_drop_long = await AsyncStorage.getItem('user_drop_long');
+
+            //1:
+            const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+            const user_pick_long = await AsyncStorage.getItem('user_pick_long');
+
+            console.log("DROP----->drop", user_drop_lat);
+            console.log("DROP----->drop", user_drop_long);
+
+            console.log("PICK----->pick", user_pick_lat);
+            console.log("PICK----->pick", user_pick_long);
+
+            // Check for null or undefined values
+            if (user_pick_lat !== null && user_pick_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+            }
+
+            if (user_drop_lat !== null && user_drop_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+            }
+
+            // This function will run every 5 seconds
+            requestRideNowData();
+            axiosPostSetVehicalDataBooking();
+
+        }, 5000); // 5000 milliseconds = 5 seconds
+
+        // Clear the interval on component unmount to prevent memory leaks
+        return () => clearInterval(interval);
+    }, [markerCoordinates1, markerCoordinates2]);
+
 
 
     const requestRideNowData = () => {
@@ -680,7 +725,7 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
 
                     setVehicles(response.data.matchingVehicles);
 
-                    Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
+                    // Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
 
                 } else {
                     Toast.show('Enabel To Request Booking List!', Toast.SHORT);
@@ -735,6 +780,7 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
             <View style={Styles.container}>
 
                 <MapView
+                    ref={mapViewRef}
                     style={Styles.viewMapview}
                     provider={PROVIDER_GOOGLE}
                     showsUserLocation={true}
@@ -769,6 +815,13 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                         title="Second Marker"
                         description="Another location"
                         icon={Images.mapBlueIcon}
+                    />
+
+                    <Circle
+                        center={markerCoordinates2}
+                        radius={radius}
+                        fillColor="rgba(255, 165, 0, 0.2)"
+                        strokeWidth={0} // No border
                     />
 
                     <Polyline

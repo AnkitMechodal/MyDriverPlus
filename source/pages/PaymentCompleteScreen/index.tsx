@@ -351,7 +351,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"
                                 title={"Payment"}
-                                isVisiblePayout={false}
+                                isVisiblePayout={true} //0000
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
                             />
@@ -362,7 +362,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 <View style={CommonStyle.justifyContent}>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={route.params.itemCompleteDistance}
+                                        title={route.params.itemCompleteDuration}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -390,7 +390,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 <View>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={route.params.itemCompleteDuration}
+                                        title={route.params.itemCompleteDistance}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -549,6 +549,31 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 textAlign='left'
                             />
                         </View>
+
+                        <View style={Styles.viewSeprateLine3}>
+                            <TextComponent
+                                color={Colors.white}
+                                title={"Loyalty Points"}
+                                marginHorizontal={wp(3)}
+                                marginVertical={wp(2)}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3.5)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                            <TextComponent
+                                color={Colors.grayFull}
+                                title={"$ " + "00"}
+                                marginVertical={wp(2)}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3.5)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
+
 
                         <View style={Styles.viewSeprateLine3}>
                             <TextComponent
