@@ -69,6 +69,9 @@ const BookingDetailsMap = ({ route, navigation }) => {
     const [isDRIVERDISCOUNT, setDRIVERDISCOUNT] = useState("");
 
 
+
+    let DISCOUNT;
+
     // const [isModalVisible, setModalVisible] = useState(true);
 
     // RIDEID
@@ -377,7 +380,8 @@ const BookingDetailsMap = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
+                    DISCOUNT = USER_TOTAL - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(DISCOUNT);
 
 
                     setFARE(USER_FARE_VALUE); // ADDED 
@@ -939,7 +943,8 @@ const BookingDetailsMap = ({ route, navigation }) => {
                                             itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
                                             itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
                                             itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
-                                            itemCompleteTotalAmount: route?.params?.itemMapRideTotalAmount
+                                            // itemCompleteTotalAmount: route?.params?.itemMapRideTotalAmount
+                                            itemCompleteTotalAmount: isTOTAL_AMOUNT
                                         })
                                     }
                                     color={Colors.white}

@@ -26,11 +26,12 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     const [isFocusedApplyNow, setIsFocusedApplyNow] = useState(false);
     const [isFocusedRedeem, setIsFocusedRedeem] = useState(false);
 
-    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
     const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
-
-
     const [isModalVisible, setModalVisible] = useState(true);
+
+
+    const [isLoyalPoints, setLoyalPoints] = useState('');
 
 
     const starImageFilled1 =
@@ -79,7 +80,27 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
     const [isModalDriver, setModalDriver] = useState(false);
 
+    // -5 ---> Default Use 
+    const [Default, setDefault] = useState("");
+
+
+    const [DefaultLoyal, setDefaultLoyal] = useState("");
+
+
+    // route.params.itemCompleteTotalAmount
+    const [isAmount, setIsAmount] = useState("");
+
+
     let USER_RIDEID;
+
+    // TODO :
+    let user_point;
+    let CouponDiscount;
+    let GetNewAmoount;
+
+    let GetRedeemPonints;
+
+    let GetAsDiscount;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -95,8 +116,14 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                 console.log("COMPLETE8===>", route.params.itemCompleteRideDiscount);
                 console.log("COMPLETE9===>", route.params.itemCompleteTotalAmount);
 
-                // axios
+                // setDefault(route.params.itemCompleteRideDiscount);
+                setIsAmount(route.params.itemCompleteTotalAmount);
+
+                // axios :
                 await axiosPostRideDetailsRequest();
+
+                // Get Total Loyal Points :
+                await axiosPostProfilDataGetInfo();
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -105,14 +132,15 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // // Set interval to refresh every 5 seconds
+        // const intervalId = setInterval(fetchData, 5 * 1000);
 
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+
     }, [
 
         route.params.itemCompleteDistance,
@@ -126,6 +154,76 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
         route?.params?.itemMapRideDiscount,
         route.params.itemCompleteTotalAmount
     ]);
+
+
+    const axiosPostProfilDataGetInfo = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostSetProfileData();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosPostSetProfileData = async () => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        console.log("storedLinkedId=====>", storedLinkedId);
+        console.log("storedLinkedId=====>", storedLinkedId);
+        console.log("storedLinkedId=====>", storedLinkedId);
+        console.log("storedLinkedId=====>", storedLinkedId);
+
+        if (storedLinkedId !== null) {
+            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+            // Prepare data in JSON format
+            const data = {
+                id: JSON.parse(storedLinkedId),
+            };
+
+            console.log("axiosPostSetProfileData==>", data);
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'User Information') {
+
+                        user_point = response?.data?.matchingUsers[0]?.Point;
+
+                        console.log("user_point=====>", user_point);
+                        console.log("user_point=====>", user_point);
+                        console.log("user_point=====>", user_point);
+                        console.log("user_point=====>", user_point);
+                        console.log("user_point=====>", user_point);
+                        console.log("user_point=====>", user_point);
+                        console.log("user_point=====>", user_point);
+                        console.log("user_point=====>", user_point);
+
+                        setLoyalPoints(user_point);
+
+                        Toast.show('Done' + user_point, Toast.SHORT);
+
+                    } else {
+                        // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                });
+        } else {
+
+        }
+    }
 
     const axiosPostRideDetailsRequest = async () => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
@@ -203,6 +301,13 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
     // 01
     const onPressRedeem = () => {
+        // if (redeem.length < 1) {
+        //     Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+        // } else {
+        //     // Call Redeem API :
+        //     axiosGetRedeemRequest();
+        // }
+
         setRedeemBG(false);
         setApplyRedeem(false);
         setisRedeemBtn(true);
@@ -217,15 +322,171 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
         setIsFocusedRedeem(true);
     }
 
-    // 02
+    // 02 ----- >
     const onPressApplyNow = () => {
-        setApplyNowBG(false);
-        setApplyEdit(false);
-        setisApplyNowBtn(true);
-        setisApplyNowText(true);
+        if (couponcode.length < 1) {
+            Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+        } else {
+            // Call Coupon API :
+            axiosGetCouponRequest();
+        }
+
+        // setApplyNowBG(false);
+        // setApplyEdit(false);
+        // setisApplyNowBtn(true);
+        // setisApplyNowText(true);
     }
 
+    const axiosGetRedeemRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosGetRedeemRequestCalculation();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const axiosGetRedeemRequestCalculation = async () => {
+
+        // GET REG ID
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        if (storedLinkedId !== null) {
+
+            // Prepare data in JSON format
+            const data = {
+                userId: JSON.parse(storedLinkedId),
+                point: redeem, // USED
+                amount: isAmount, // USER
+                totalPoint: isLoyalPoints || "" // TOTAL
+            };
+
+            console.log("RedeemCodeData==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData==>", JSON.stringify(data, null, 2));
+
+            const url = 'https://rideshareandcourier.graphiglow.in/api/redeem/coin';
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'You can use point') {
+
+                        // // GetRedeemPonints = 50
+                        // setLoyalPoints("50");
+
+                        // // GetUpdatedTotalAmount
+                        // setIsAmount("100");
+
+
+                        Toast.show('Redeem Points Applied Successfully!', Toast.SHORT);
+
+                        // setApplyNowBG(false);
+                        // setApplyEdit(false);
+                        // setisApplyNowBtn(true);
+                        // setisApplyNowText(true);
+
+                    } else {
+                        Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+                });
+        } else {
+
+        }
+
+
+    }
+
+
+    const axiosGetCouponRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosGetCouponRequestCalculation();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const axiosGetCouponRequestCalculation = async () => {
+
+        // Prepare data in JSON format
+        const data = {
+            CouponCode: couponcode,
+        };
+        console.log("CouponCodeData==>", JSON.stringify(data, null, 2));
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/couponCode/checkCoupon';
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Matching records found') {
+
+                    console.log("CouponCodeDataAll==>", JSON.stringify(response?.data, null, 2));
+
+                    CouponDiscount = response?.data?.matchingCodes?.Discount;
+
+                    // CouponDiscount As Total 
+                    GetAsDiscount = route.params.itemCompleteTotalAmount * CouponDiscount / 100;
+
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    setDefault(GetAsDiscount);
+
+                    // SET AFTER AMOUNT 
+                    GetNewAmoount = route.params.itemCompleteTotalAmount - GetAsDiscount
+                    setIsAmount(GetNewAmoount)
+
+                    // Handle API response here
+                    Toast.show('Coupon Applied Successfully!', Toast.SHORT);
+
+                    setApplyNowBG(false);
+                    setApplyEdit(false);
+                    setisApplyNowBtn(true);
+                    setisApplyNowText(true);
+
+                } else {
+                    Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+            });
+
+    }
+
+
     const onPressCross = () => {
+
+        setIsAmount(route.params.itemCompleteTotalAmount);
+        setDefault("-5"); // ELSE
+
         setApplyNowBG(true);
         setApplyEdit(true);
         // setisApplyNowBtn(true);
@@ -298,11 +559,15 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         Toast.show('Rating Submitted Successfully!', Toast.SHORT);
                         setModalDriver(false);
 
-                        navigation.navigate('PaymentSuccessful', {
-                            itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
-                        })
 
-                        // Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
+                        // AFTER STRIPE :
+
+
+
+                        // navigation.navigate('PaymentSuccessful', {
+                        //     itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
+                        // })
+
 
                     } else {
                         Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
@@ -317,7 +582,6 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
         }
     };
-
 
 
     return (
@@ -340,6 +604,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 backgroundColorOpacity={Colors.circleGray}
                                 borderRadiusOpacity={hp(8)}
                                 paddingOpacity={wp(2.5)}
+                                LoyalPonits={isLoyalPoints}
                                 textAlign={"left"}
                                 source={Images.arrowRight}
                                 marginTop={wp(2)}
@@ -564,7 +829,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"$ " + "00"}
+                                title={"$ " + DefaultLoyal}
                                 marginVertical={wp(2)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -587,9 +852,10 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 marginVertical={wp(3)}
                                 textAlign='left'
                             />
+
                             <TextComponent
                                 color={Colors.greenDark}
-                                title={"-$ " + route.params.itemCompleteRideDiscount}
+                                title={"-$ " + Default}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3.5)}
@@ -597,6 +863,18 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
                             />
+
+
+                            {/* <TextComponent
+                                color={Colors.greenDark}
+                                title={"-$ " + Default}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3.5)}
+                                marginVertical={wp(3)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            /> */}
                         </View>
 
                         <View style={Styles.viewSeprateLine2}>
@@ -616,7 +894,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.white}
-                                title={"$ " + route.params.itemCompleteTotalAmount}
+                                title={"$ " + isAmount}
                                 marginVertical={wp(1)} // 3
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -652,6 +930,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
                             />
+
                             <TextInputComponent
                                 selectionColor={Colors.white}
                                 isVisibleDropDown={false}

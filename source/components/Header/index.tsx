@@ -59,7 +59,9 @@ type HeaderProps = {
     sourceBook: any
     selectedDataText: any
     selectedDataImg: any
-    transform:any
+    transform: any
+
+    LoyalPonits: any
 
 }
 
@@ -94,6 +96,7 @@ const HeaderComponent = (props: HeaderProps) => {
         marginHorizontal,
         marginRight,
         marginTop,
+        LoyalPonits
     } = props;
 
     return (
@@ -202,7 +205,8 @@ const HeaderComponent = (props: HeaderProps) => {
                     <View>
                         <TextComponent
                             color={Colors.white}
-                            title={ScreenText.RS1000} // As HTML Contain
+                            // title={ScreenText.RS1000} // As HTML Contain
+                            title={props.LoyalPonits}
                             textDecorationLine={'none'}
                             fontWeight="600"
                             fontSize={wp(3.5)}

@@ -67,7 +67,14 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
 
     const [isModalVisible, setModalVisible] = useState(true);
 
+
+    const [isLoyalPoints, setLoyalPoints] = useState('');
+
+
     let USER_RIDEID;
+
+    // TODO :
+    let user_point;
 
     const starImageFilled1 =
         Images.fillstarIcon; // fillStarIcon
@@ -154,6 +161,9 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                 // axios
                 await axiosPostRideDetailsRequest();
 
+                // Get Total Loyal Points :
+                await axiosPostProfilDataGetInfo();
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -182,6 +192,56 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
         route?.params?.itemMapRideDiscount,
         route.params.itemCompleteTotalAmount
     ]);
+
+
+    const axiosPostProfilDataGetInfo = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostSetProfileData();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosPostSetProfileData = async () => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        if (storedLinkedId !== null) {
+            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+            // Prepare data in JSON format
+            const data = {
+                id: JSON.parse(storedLinkedId),
+            };
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'User Information') {
+
+                        user_point = response?.data?.matchingUsers[0]?.Point;
+                        setLoyalPoints(user_point);
+
+                    } else {
+                        // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                });
+        } else {
+
+        }
+    }
 
 
     const axiosPostRideDetailsRequest = async () => {
@@ -336,6 +396,7 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                                 backgroundColorOpacity={Colors.circleGray}
                                 borderRadiusOpacity={hp(8)}
                                 paddingOpacity={wp(2.5)}
+                                LoyalPonits={isLoyalPoints}
                                 textAlign={"left"}
                                 source={Images.arrowRight}
                                 marginTop={wp(2)}
@@ -534,7 +595,7 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"$ " + "00"}
+                                title={"$ " + isLoyalPoints}
                                 marginVertical={wp(2)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"

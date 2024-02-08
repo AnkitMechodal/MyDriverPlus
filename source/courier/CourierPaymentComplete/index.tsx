@@ -25,6 +25,10 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
     const [isFocusedApplyNow, setIsFocusedApplyNow] = useState(false);
     const [isFocusedRedeem, setIsFocusedRedeem] = useState(false);
 
+
+    const [isLoyalPoints, setLoyalPoints] = useState('');
+
+
     const refApplyNow = useRef<any>(null);
     const refRedeem = useRef<any>(null);
 
@@ -35,6 +39,9 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
     const handleFocusRedeem = () => {
         setIsFocusedRedeem(true)
     }
+
+    // TODO :
+    let user_point;
 
     const [isValidCode, setValidCode] = useState(true);
     const [isValidRedeem, setValidRedeem] = useState(true);
@@ -151,6 +158,9 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
                 // axios
                 await axiosPostRideDetailsRequest();
 
+                // Get Total Loyal Points :
+                await axiosPostProfilDataGetInfo();
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -167,7 +177,6 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
             clearInterval(intervalId);
         };
     }, [
-
         route.params.itemCompleteDistance,
         route.params.itemCompleteDuration,
         route.params.itemCompletePickStation,
@@ -180,6 +189,54 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
         route.params.itemCompleteTotalAmount
     ]);
 
+    const axiosPostProfilDataGetInfo = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostSetProfileData();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosPostSetProfileData = async () => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        if (storedLinkedId !== null) {
+            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+            // Prepare data in JSON format
+            const data = {
+                id: JSON.parse(storedLinkedId),
+            };
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'User Information') {
+
+                        user_point = response?.data?.matchingUsers[0]?.Point;
+                        setLoyalPoints(user_point);
+
+                    } else {
+                        // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                });
+        } else {
+
+        }
+    }
 
     const axiosPostRideDetailsRequest = async () => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
@@ -272,6 +329,7 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
 
             console.log("RateDriverData==>", JSON.stringify(data, null, 2));
 
+
             await axios.post(url, data, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -307,6 +365,7 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
                     // Handle errors
                     Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
                 });
+
         } else {
 
         }
@@ -327,6 +386,7 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
                             margin={wp(3)}
                             backgroundColorOpacity={Colors.circleGray}
                             borderRadiusOpacity={hp(8)}
+                            LoyalPonits={isLoyalPoints}
                             paddingOpacity={wp(2.5)}
                             transform={[{ rotate: '180deg' }]}
                             textAlign={"left"}
@@ -528,7 +588,7 @@ const CourierPaymentCompleteScreen = ({ route, navigation }) => {
                         />
                         <TextComponent
                             color={Colors.grayFull}
-                            title={"$ " + "00"}
+                            title={"$ " + isLoyalPoints}
                             marginVertical={wp(2)}
                             textDecorationLine={'none'}
                             fontWeight="400"
