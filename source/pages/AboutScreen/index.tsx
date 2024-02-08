@@ -1,8 +1,10 @@
-import React from 'react';
-import { SafeAreaView, ScrollView, View } from 'react-native';
+// import React from 'react';
+import React, { useState } from "react";
+import { SafeAreaView, Text, View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import WebView from "react-native-webview";
 import HeaderComponent from '../../components/Header';
-import StatusBarComponent from '../../components/StatusBar';
+import StatusBarComponent from "../../components/StatusBar";
 import TextComponent from '../../components/Text';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
@@ -14,12 +16,16 @@ type Props = {
 }
 
 const Aboutcreen = (props: Props) => {
+
+    const [loadingError, setLoadingError] = useState(false);
+
     return (
-        <SafeAreaView style={CommonStyle.commonFlex}>
-            <StatusBarComponent
-                backgroundColor={Colors.black} />
-            <ScrollView style={CommonStyle.commonFlex}>
-                <View style={Styles.container}>
+        <View style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
+                <SafeAreaView style={CommonStyle.commonFlex}>
+                    <StatusBarComponent
+                        backgroundColor={Colors.black} />
+
                     <View style={Styles.viewHeader}>
                         <HeaderComponent
                             margin={wp(3)}
@@ -56,28 +62,32 @@ const Aboutcreen = (props: Props) => {
                         />
                     </View>
 
-                    <View style={Styles.viewAbout}>
-                    </View>
 
-                    <View>
-                        <TextComponent
-                            color={Colors.white}
-                            title={ScreenText.Loreum} // As HTML Contain
-                            textDecorationLine={'none'}
-                            fontWeight="600"
-                            fontSize={wp(4)}
-                            fontFamily={Fonts.PoppinsRegular}
-                            textAlign='left'
-                            marginHorizontal={wp(4)}
-                            marginVertical={hp(2)}
+                    {loadingError ? (
+                        <Text style={{
+                            color: 'white',
+                            justifyContent: 'center',
+                            alignSelf: 'center',
+                            fontSize: wp(5),
+                            marginVertical: wp(50),
+                            fontFamily: Fonts.MontserratMedium,
+                            flex: 1
+                        }}>Unable To Load Content</Text>
+                    ) : (
+                        <WebView
+                            source={{ uri: 'https://rideshareandcourier.graphiglow.in/public/AboutUs' }}
+                            style={CommonStyle.commonFlex}
+                            javaScriptEnabled={true}
+                            domStorageEnabled={true}
+                            onError={() => setLoadingError(true)}
                         />
-                    </View>
+                    )}
 
-                </View>
-            </ScrollView>
-
-        </SafeAreaView>
+                </SafeAreaView>
+            </View>
+        </View>
     )
 }
 
 export default Aboutcreen;
+

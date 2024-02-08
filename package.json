@@ -49,6 +49,7 @@
     "react-native-simple-toast": "^3.0.1",
     "react-native-tab-view": "^3.5.2",
     "react-native-uuid": "^2.0.1",
+    "react-native-webview": "^13.7.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

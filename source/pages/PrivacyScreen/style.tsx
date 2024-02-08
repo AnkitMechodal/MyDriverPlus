@@ -5,7 +5,7 @@ import { Colors } from '../../themes/index';
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.black,
+        backgroundColor: 'black', // Assuming you have imported Colors from somewhere else
     },
     viewHeader: {
         height: wp(30),
