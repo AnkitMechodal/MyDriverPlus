@@ -5,6 +5,7 @@ import { Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-n
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
+import WebView from 'react-native-webview';
 import ButtonComponent from '../../components/Button';
 import HeaderComponent from '../../components/Header';
 import StatusBarComponent from '../../components/StatusBar';
@@ -31,7 +32,10 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(true);
 
 
-    const [isLoyalPoints, setLoyalPoints] = useState('');
+    const [isLoyalPoints, setLoyalPoints] = useState<any>('');
+
+    const [isLoyalPointsDefault, setLoyalPointsDeafult] = useState<any>('');
+
 
 
     const starImageFilled1 =
@@ -44,6 +48,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     const starImageCorner =
         Images.unfillStarIcon;
 
+    let apiUrlPAY;
 
     const refApplyNow = useRef<any>(null);
     const refRedeem = useRef<any>(null);
@@ -80,16 +85,24 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
     const [isModalDriver, setModalDriver] = useState(false);
 
+
+    // STRIPE :
+    const [isSTRIPEModal, setSTRIPEModal] = useState(false);
+
+
     // -5 ---> Default Use 
     const [Default, setDefault] = useState("");
 
+    let NowYourCurrentPoint;
 
     const [DefaultLoyal, setDefaultLoyal] = useState("");
 
 
     // route.params.itemCompleteTotalAmount
-    const [isAmount, setIsAmount] = useState("");
+    const [isAmount, setIsAmount] = useState<any>("");
 
+    // isURLPAY
+    const [isURLPAY, setISURLPAY] = useState<any>("https://rideshareandcourier.graphiglow.in/app/StripeWeb.php?userId=65b9e2f0eb9e0db05a70bb0b&amount=105");
 
     let USER_RIDEID;
 
@@ -99,8 +112,9 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     let GetNewAmoount;
 
     let GetRedeemPonints;
-
     let GetAsDiscount;
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -122,8 +136,10 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                 // axios :
                 await axiosPostRideDetailsRequest();
 
-                // Get Total Loyal Points :
-                await axiosPostProfilDataGetInfo();
+
+                // Get Total Loyal Points : //0909
+                // await axiosPostProfilDataGetInfo();
+
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -156,6 +172,38 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     ]);
 
 
+
+    useEffect(() => {
+        // Function to fetch or refresh data
+        const fetchData1 = async () => {
+            // Replace this with your data fetching logic
+            console.log('Data refreshed');
+
+            // Get Total Loyal Points : //0909
+            await axiosPostProfilDataGetInfo();
+        };
+
+        // Call fetchData initially
+        fetchData1();
+
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData1, 1 * 1000);
+
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
+
+
+        // // Refresh data every 5 seconds
+        // const intervalId = setInterval(fetchData, 5000);
+
+        // // Clean up the interval on component unmount
+        // return () => clearInterval(intervalId);
+
+    }, []); // Emp
+
     const axiosPostProfilDataGetInfo = async () => {
         try {
             const isConnected = await NetworkUtils.isNetworkAvailable()
@@ -183,9 +231,14 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
             // Prepare data in JSON format
             const data = {
-                id: JSON.parse(storedLinkedId),
+                id: JSON.parse(storedLinkedId), //0909
+                // id: "65c4bf726e435ad32b0e86ca"
             };
 
+            console.log("axiosPostSetProfileData....==>", data);
+            console.log("axiosPostSetProfileData==>", data);
+            console.log("axiosPostSetProfileData==>", data);
+            console.log("axiosPostSetProfileData==>", data);
             console.log("axiosPostSetProfileData==>", data);
 
             await axios.post(url, data, {
@@ -210,7 +263,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
                         setLoyalPoints(user_point);
 
-                        Toast.show('Done' + user_point, Toast.SHORT);
+                        // Toast.show('Done' + user_point, Toast.SHORT);
 
                     } else {
                         // Toast.show('User Information Credentials Invalid', Toast.SHORT);
@@ -301,20 +354,24 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
     // 01
     const onPressRedeem = () => {
-        // if (redeem.length < 1) {
-        //     Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
-        // } else {
-        //     // Call Redeem API :
-        //     axiosGetRedeemRequest();
-        // }
+        if (redeem.length < 1) {
+            Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+        } else {
+            // Call Redeem API :
+            axiosGetRedeemRequest();
+        }
 
-        setRedeemBG(false);
-        setApplyRedeem(false);
-        setisRedeemBtn(true);
-        setisRedeemText(true);
+        // setRedeemBG(false);
+        // setApplyRedeem(false);
+        // setisRedeemBtn(true);
+        // setisRedeemText(true);
     }
 
     const onPressCrossPoints = () => {
+
+        setIsAmount(route.params.itemCompleteTotalAmount);
+        setLoyalPointsDeafult("");
+
         setRedeemBG(true);
         setApplyRedeem(true);
         // setisApplyNowBtn(true);
@@ -359,15 +416,19 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
             // Prepare data in JSON format
             const data = {
-                userId: JSON.parse(storedLinkedId),
+                userId: JSON.parse(storedLinkedId), // 65c4bf726e435ad32b0e86ca
+                // userId: "65c4bf726e435ad32b0e86ca",
                 point: redeem, // USED
                 amount: isAmount, // USER
-                totalPoint: isLoyalPoints || "" // TOTAL
+                totalPoint: isLoyalPoints // TOTAL // //0909
             };
 
-            console.log("RedeemCodeData==>", JSON.stringify(data, null, 2));
-            console.log("RedeemCodeData==>", JSON.stringify(data, null, 2));
-            console.log("RedeemCodeData==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
 
             const url = 'https://rideshareandcourier.graphiglow.in/api/redeem/coin';
 
@@ -379,21 +440,23 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                 .then(response => {
                     if (response.status === 200
                         &&
-                        response?.data?.message === 'You can use point') {
+                        response?.data?.message === 'You can use points') {
 
-                        // // GetRedeemPonints = 50
-                        // setLoyalPoints("50");
+                        // Now Your Current Point 
+                        // NowYourCurrentPoint = response?.data?.NowYourCurrentPoint;
 
-                        // // GetUpdatedTotalAmount
-                        // setIsAmount("100");
+                        Toast.show('Redeem Points Applied Successfully!' + NowYourCurrentPoint, Toast.SHORT);
 
+                        // Set Loyal Points
+                        setLoyalPointsDeafult(isLoyalPoints * 0.10)
 
-                        Toast.show('Redeem Points Applied Successfully!', Toast.SHORT);
+                        // Re Set Total Amount as Redeem
+                        setIsAmount(isAmount - (isLoyalPoints * 0.10));
 
-                        // setApplyNowBG(false);
-                        // setApplyEdit(false);
-                        // setisApplyNowBtn(true);
-                        // setisApplyNowText(true);
+                        setRedeemBG(false);
+                        setApplyRedeem(false);
+                        setisRedeemBtn(true);
+                        setisRedeemText(true);
 
                     } else {
                         Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
@@ -506,6 +569,14 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     // working !
 
     const axiosPostRateDriverRequest = async (defaultRatingSubmit: any) => {
+
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+
         try {
             const isConnected = await NetworkUtils.isNetworkAvailable()
             if (isConnected) {
@@ -526,6 +597,10 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
         const storedDriverLinkedId = await AsyncStorage.getItem('store_ride_id');
 
+        console.log("RateDriverData5555==>", JSON.stringify(storedDriverLinkedId, null, 2));
+        console.log("RateDriverData5555==>", JSON.stringify(storedDriverLinkedId, null, 2));
+        console.log("RateDriverData5555==>", JSON.stringify(storedDriverLinkedId, null, 2));
+
         if (storedLinkedId !== null && storedDriverLinkedId !== null) {
 
             const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
@@ -537,6 +612,11 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                 rating: defaultRatingSubmit
             };
 
+            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
             console.log("RateDriverData==>", JSON.stringify(data, null, 2));
 
             await axios.post(url, data, {
@@ -559,29 +639,105 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         Toast.show('Rating Submitted Successfully!', Toast.SHORT);
                         setModalDriver(false);
 
+                        // Working !
 
                         // AFTER STRIPE :
+                        // SET STRIPE MODAL :
+                        // setSTRIPEModal(true)
 
-
+                        // axiosPostRequestStripe();
 
                         // navigation.navigate('PaymentSuccessful', {
                         //     itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
-                        // })
-
+                        // });  **no use**
 
                     } else {
-                        Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                        Toast.show('Enabel To Submit Ratting!-1', Toast.SHORT);
+                        setModalDriver(false);
+                        setSTRIPEModal(true);
                         //  Welcome! Signed in successfully.
                     }
                 })
                 .catch(error => {
                     // Handle errors
-                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    Toast.show('Enabel To Submit Ratting!-2', Toast.SHORT);
+                    setModalDriver(false);
+                    setSTRIPEModal(true);
                 });
-        } else {
 
+        } else {
+            Toast.show('Enabel To Submit Ratting!-3', Toast.SHORT);
+
+            setModalDriver(false);
+            // setSTRIPEModal(true);
+
+            // Payment Getway
+            // id - amount
+            axiosPostRequestStripe();
         }
     };
+
+    const axiosPostRequestStripe = async () => {
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        if (storedLinkedId !== null) {
+            const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
+
+            // Prepare data in JSON format
+            const data = {
+                userId: JSON.parse(storedLinkedId),
+                // "userId": "2",
+                // "amount": "200"
+                amount: isAmount
+            };
+
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'URL constructed successfully') {
+
+                        console.log("ALLL----RES===>",
+                            JSON.stringify(response?.data?.data?.apiUrl, null, 2));
+
+                        console.log("ALLL----RES===>",
+                            JSON.stringify(response?.data?.data?.apiUrl, null, 2));
+
+                        // Get Payment URL :
+                        apiUrlPAY = response?.data?.data?.apiUrl;
+                        Toast.show('apiUrlPAY==>', Toast.SHORT);
+
+                        setSTRIPEModal(true);
+
+                        setISURLPAY(apiUrlPAY);
+
+                        // Get Link And Set In WebView
+
+                    } else {
+                        // Handle errors
+                        Toast.show('Payment Failed!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Payment Failed!', Toast.SHORT);
+                });
+
+        } else {
+            Toast.show('Payment Failed!', Toast.SHORT);
+        }
+    }
 
 
     return (
@@ -827,9 +983,10 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
                             />
+
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"$ " + DefaultLoyal}
+                                title={"-$ " + isLoyalPointsDefault}
                                 marginVertical={wp(2)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -1080,7 +1237,25 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         </View>
 
                         <View>
-                            <Modal isVisible={isModalDriver}>
+                            <Modal isVisible={isSTRIPEModal}
+                                onBackButtonPress={() => setSTRIPEModal(false)}>
+                                <View style={Styles.viewModalDriver}>
+
+                                    <WebView
+                                        source={{ uri: isURLPAY }}
+                                        style={CommonStyle.commonFlex}
+                                        javaScriptEnabled={true}
+                                        domStorageEnabled={true}
+                                    />
+
+
+                                </View>
+                            </Modal>
+                        </View>
+
+                        <View>
+                            <Modal isVisible={isModalDriver}
+                                onBackButtonPress={() => setModalDriver(false)}>
                                 <View style={Styles.viewModalDriver}>
                                     <TextComponent
                                         color={Colors.white}
