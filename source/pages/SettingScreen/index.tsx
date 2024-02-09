@@ -70,8 +70,8 @@ const SettingScreen = (props: Props) => {
 
     fetchData();
 
-    // Set interval to refresh every 1 seconds
-    const intervalId = setInterval(fetchData, 1 * 1000);
+    // Set interval to refresh every 5 seconds
+    const intervalId = setInterval(fetchData, 5 * 1000);
 
     // Cleanup function
     return () => {

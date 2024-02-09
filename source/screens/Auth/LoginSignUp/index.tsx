@@ -52,14 +52,14 @@ const LoginSignUpScreen = (props: Props) => {
         };
         checkAutoLogin();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(checkAutoLogin, 5 * 1000);
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(checkAutoLogin, 5 * 1000);
 
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
 
     }, []);
 

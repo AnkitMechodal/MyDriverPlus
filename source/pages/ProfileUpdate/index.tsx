@@ -69,7 +69,6 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
 
     const [selectedIS, setSelectedIS] = useState('Select');
 
-
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
     const [number, setNumber] = useState('')
@@ -93,7 +92,7 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
 
             // Previous Data
             if ("+" + countryCode[1] + "" === '+91' + "") {
-                setSelectedIS("+91")
+                setSelectedIS("+91 ")
                 setSelectedImage(Images1.flagIcon);
             } else if ("+" + countryCode[1] + "" === '+93' + "") {
                 setSelectedIS("+93")
@@ -727,8 +726,6 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
 
     const onPressUpdate = () => {
 
-
-
         axiosPostProfileUpdate();
 
         // if (name === '') {
@@ -776,7 +773,32 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                 const data = new FormData();
                 data.append('username', name || '');
                 data.append('email', nameMail || '');
-                data.append('mobilenumber', selected.label + number || '');
+                // data.append('mobilenumber', selected.label + number || '');
+
+                if (selectedIS !== null) {
+                    // Alert.alert("test");
+                    console.log("selectedIS====>", selectedIS);
+                    console.log("selectedIS====>", selectedIS);
+                    console.log("selectedIS====>", selectedIS);
+                    console.log("selectedIS====>", selectedIS);
+
+                    data.append('mobilenumber',
+                        (selected.label === undefined ? selectedIS : selected.label) +
+                        (number || ''));
+
+                } else {
+                    data.append('mobilenumber', selected.label + number || '');
+                }
+
+                // data.append('mobilenumber',
+                //     (selected.label === undefined ? selectedIS : selected.label) +
+                //     (number || ''));
+
+                // data.push({
+                //     mobilenumber: (selected.label === undefined ? selectedIS : selected.label) + (number || '')
+                // });
+
+                // selected.label + number =  "undefined" ? <> : selected.label + number || ''
 
                 // Check if selectedIMG exists and has a truthy uri property
                 if (selectedIMG && selectedIMG.uri) {
@@ -795,7 +817,11 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                     },
                 })
                     .then(response => {
-                        console.log("axiosPostProfileUpdateSubmit==>", JSON.stringify(data, null, 2));
+
+
+                        console.log("0000000000000000==>", JSON.stringify(data, null, 2));
+
+
                         console.log("response==>", JSON.stringify(response, null, 2));
                         if (response.status === 200 && response?.data?.message === 'Profile updated successfully') {
                             Toast.show('Success! Your profile has been updated successfully', Toast.SHORT);

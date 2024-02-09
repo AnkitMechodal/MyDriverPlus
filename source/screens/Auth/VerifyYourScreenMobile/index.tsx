@@ -177,10 +177,10 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
     }
 
 
-
-
     const onPressRegisterUser = () => {
-        Toast.show("Register Successfully!", Toast.SHORT);
+        // Toast.show("Register Successfully!", Toast.SHORT);
+        navigation.navigate("Home1");
+
         // if (isMobileColorText === true && isEmailColorText === true) {
         //     Toast.show("Kindly Verify Your Account Details For Continued Access.", Toast.SHORT);
         // } else {

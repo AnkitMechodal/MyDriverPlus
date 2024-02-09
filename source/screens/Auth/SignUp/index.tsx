@@ -525,7 +525,6 @@ const SignUpScreen = ({ route, navigation }) => {
     };
 
 
-
     const handleFocusPass = () => {
         setIsFocusedPassword(true)
     }

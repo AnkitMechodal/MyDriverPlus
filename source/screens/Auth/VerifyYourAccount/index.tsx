@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../../components/Button/index';
@@ -174,11 +174,9 @@ const VerifyYourScreen = ({ route, navigation }) => {
     }
 
 
-
-
     const onPressRegisterUser = () => {
-        Toast.show("Register Successfully!", Toast.SHORT);
 
+        // Toast.show("Register Successfully!", Toast.SHORT);
         navigation.navigate("Home1");
 
         // if (isMobileColorText === true && isEmailColorText === true) {
@@ -216,7 +214,7 @@ const VerifyYourScreen = ({ route, navigation }) => {
                     fontWeight="500"
                     title={""}
                     fontSize={wp(4)}
-                    onPress={() => navigation.goBack()}
+                    onPress={() => navigation.goBack()} //09
                 />
                 <View>
 
@@ -291,7 +289,7 @@ const VerifyYourScreen = ({ route, navigation }) => {
                                 title={isMobileType ? ScreenText.Verify : ScreenText.Verified}
                                 onPress={() => navigation.navigate('MobileVerfication', {
                                     itemOTPNumber: isGetMobile,
-                                })}
+                                })} //09
                                 textDecorationLine={'none'}
                                 fontWeight="600"
                                 fontSize={wp(3)}
@@ -347,7 +345,7 @@ const VerifyYourScreen = ({ route, navigation }) => {
                                 title={isEmailType ? ScreenText.Verify : ScreenText.Verified}
                                 onPress={() => navigation.navigate('EmailVerfication', {
                                     itemSentEmail: isGetEmail,
-                                })}
+                                })} //09
                                 textDecorationLine={'none'}
                                 fontWeight="600"
                                 fontSize={wp(3)}
