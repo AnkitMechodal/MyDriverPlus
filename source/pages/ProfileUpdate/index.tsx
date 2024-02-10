@@ -92,7 +92,7 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
 
             // Previous Data
             if ("+" + countryCode[1] + "" === '+91' + "") {
-                setSelectedIS("+91 ")
+                setSelectedIS("+91")
                 setSelectedImage(Images1.flagIcon);
             } else if ("+" + countryCode[1] + "" === '+93' + "") {
                 setSelectedIS("+93")
@@ -783,7 +783,7 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                     console.log("selectedIS====>", selectedIS);
 
                     data.append('mobilenumber',
-                        (selected.label === undefined ? selectedIS : selected.label) +
+                        (selected.label === undefined ? selectedIS + " " : selected.label) +
                         (number || ''));
 
                 } else {

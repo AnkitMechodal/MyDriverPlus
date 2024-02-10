@@ -135,6 +135,7 @@ export const ScreenText = {
    NearbyLandmark: "Nearby Landmark ",
    PinCode: "Pin Code",
    Mobile: 'Mobile',
+   Complete:'Complete',
    EnterEmail: 'Enter Your Email ',
    PickupLocation: "Pickup Location",
    DropOffLocation: "Drop Off Location",

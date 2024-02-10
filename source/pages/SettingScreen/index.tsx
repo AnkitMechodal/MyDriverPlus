@@ -182,10 +182,8 @@ const SettingScreen = (props: Props) => {
             user_averageRating = response?.data?.ratings?.averageRating;
             user_total = response?.data?.ratings?.numberOfRatings;
 
-
             setDefaultRating(user_averageRating);
             setRatedPerson("(" + user_total + ")");
-
 
             // user_mobilenumber = response?.data?.matchingUsers[0]?.mobilenumber;
             // user_email = response?.data?.matchingUsers[0]?.email;

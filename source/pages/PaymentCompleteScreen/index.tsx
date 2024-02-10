@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -36,7 +36,9 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
     const [isLoyalPointsDefault, setLoyalPointsDeafult] = useState<any>('');
 
-
+    let USER_PAY_STATUS;
+    let USER_PAY_CARD;
+    let USER_PAY_ID_ID;
 
     const starImageFilled1 =
         Images.fillstarIcon; // fillStarIcon
@@ -65,7 +67,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     const [isValidRedeem, setValidRedeem] = useState(true);
 
     const [couponcode, setCouponcode] = useState('');
-    const [redeem, setCouponRedeem] = useState('');
+    const [redeem, setCouponRedeem] = useState<any>('');
 
     // isApplyNow
     const [isApplyNowBG, setApplyNowBG] = useState(true);
@@ -130,11 +132,27 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                 console.log("COMPLETE8===>", route.params.itemCompleteRideDiscount);
                 console.log("COMPLETE9===>", route.params.itemCompleteTotalAmount);
 
+
+                // TODO :
+                console.log("COMPLETE10===>", route.params.itemCompleteDriverId);
+                console.log("COMPLETE11===>", route.params.itemCompleteRideId);
+                console.log("COMPLETE10===>", route.params.itemCompleteDriverId);
+                console.log("COMPLETE11===>", route.params.itemCompleteRideId);
+                // TODO :
+
+
+                // TODO :
+                console.log("COMPLETE12===>", route.params.itemCompleteRideIDID);
+                console.log("COMPLETE12===>", route.params.itemCompleteRideIDID);
+                console.log("COMPLETE12===>", route.params.itemCompleteRideIDID);
+                // TODO :
+
+
                 // setDefault(route.params.itemCompleteRideDiscount);
                 setIsAmount(route.params.itemCompleteTotalAmount);
 
                 // axios :
-                await axiosPostRideDetailsRequest();
+                // await axiosPostRideDetailsRequest();
 
 
                 // Get Total Loyal Points : //0909
@@ -251,16 +269,6 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         response?.data?.message === 'User Information') {
 
                         user_point = response?.data?.matchingUsers[0]?.Point;
-
-                        console.log("user_point=====>", user_point);
-                        console.log("user_point=====>", user_point);
-                        console.log("user_point=====>", user_point);
-                        console.log("user_point=====>", user_point);
-                        console.log("user_point=====>", user_point);
-                        console.log("user_point=====>", user_point);
-                        console.log("user_point=====>", user_point);
-                        console.log("user_point=====>", user_point);
-
                         setLoyalPoints(user_point);
 
                         // Toast.show('Done' + user_point, Toast.SHORT);
@@ -283,10 +291,17 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
         // Prepare data in JSON format
         const data = {
-            id: route?.params?.itemRider_ID_
+            id: route.params.itemCompleteRideId //quick
         };
 
-        console.log("RideDetails===>===>", data);
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+
 
         await axios.post(url, data, {
             headers: {
@@ -295,17 +310,38 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
         })
             .then(response => {
                 if (response.status === 200
-                    && response?.data?.message === 'Ride Details') {
+                    && response?.data?.message === "Ride Details") {
+
+
+                    console.log("Ride Details====>", JSON.stringify(response?.data, null, 2));
+
                     // Handle API response here
                     // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
 
-                    USER_RIDEID = response?.data?.matchingVehicle?.DriverID;
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_PAY_CARD = response?.data?.matchingVehicle?.payment_type;
+
+                    // USER_PAY_ID_ID = response?.data?.matchingVehicle?._id;
+
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+
+
+                    if (USER_PAY_STATUS == "Complete" && USER_PAY_CARD == "Card") {
+                        Alert.alert("Yes");
+                    } else {
+                        Alert.alert("No");
+                    }
+
 
                     // stored id : todo
-                    StoredRideID(USER_RIDEID);
+                    // StoredRideID(USER_RIDEID);
 
-                    console.log("RideDetails101===>",
-                        JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+                    // console.log("RideDetails101===>",
+                    //     JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
 
                 } else {
                     // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
@@ -317,16 +353,16 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
             });
     };
 
-    const StoredRideID = async (USER_RIDEID: any) => {
-        try {
-            await AsyncStorage.setItem('store_ride_id', JSON.stringify(USER_RIDEID));
-            console.log('store_ride_id===>', JSON.parse(USER_RIDEID));
+    // const StoredRideID = async (USER_RIDEID: any) => {
+    //     try {
+    //         await AsyncStorage.setItem('store_ride_id', JSON.stringify(USER_RIDEID));
+    //         console.log('store_ride_id===>', JSON.parse(USER_RIDEID));
 
-        } catch (error) {
-            // Handle any errors that might occur during the storage operation
-            console.log('Error store_ride_id :', error);
-        }
-    }
+    //     } catch (error) {
+    //         // Handle any errors that might occur during the storage operation
+    //         console.log('Error store_ride_id :', error);
+    //     }
+    // }
 
     const handleApplyNow = (usercouponcode: any) => {
         setCouponcode(usercouponcode);
@@ -447,11 +483,16 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
                         Toast.show('Redeem Points Applied Successfully!' + NowYourCurrentPoint, Toast.SHORT);
 
-                        // Set Loyal Points
-                        setLoyalPointsDeafult(isLoyalPoints * 0.10)
+                        // Set Loyal Points - working !
+                        // setLoyalPointsDeafult(isLoyalPoints * 0.10)
 
-                        // Re Set Total Amount as Redeem
-                        setIsAmount(isAmount - (isLoyalPoints * 0.10));
+                        setLoyalPointsDeafult(redeem);
+
+                        // Re Set Total Amount as Redeem - working !
+                        // setIsAmount(isAmount - (isLoyalPoints * 0.10));
+                        // isLoyalPointsDefault
+
+                        setIsAmount(isAmount - (redeem * 0.10));
 
                         setRedeemBG(false);
                         setApplyRedeem(false);
@@ -558,7 +599,10 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     }
 
     const onPressCompletePayment = () => {
-        setModalDriver(true)
+        // setModalDriver(true)
+
+        setSTRIPEModal(true);
+        axiosPostRequestStripe();
     }
 
     const onPressSubmit = () => {
@@ -589,35 +633,46 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
         }
     }
 
+    const onPressModalCheckPayment = () => {
+
+        // Check Payment Status - Yes To Next
+        // PaymentStatus : TODO
+        axiosPostRideDetailsRequest();
+
+        // setModalDriver(true);
+        // navigation.navigate('PaymentSuccessful', {
+        // itemSuccessfulAmount: isAmount,
+        // });
+
+    }
+
+    // const axiosPostRequestBookingPaymentStatus = () => {
+
+    // }
+
     // working !
 
     const axiosPostRateDriverRequestConfirm = async (defaultRatingSubmit: any) => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
-        const storedDriverLinkedId = await AsyncStorage.getItem('store_ride_id');
-
-        console.log("RateDriverData5555==>", JSON.stringify(storedDriverLinkedId, null, 2));
-        console.log("RateDriverData5555==>", JSON.stringify(storedDriverLinkedId, null, 2));
-        console.log("RateDriverData5555==>", JSON.stringify(storedDriverLinkedId, null, 2));
-
-        if (storedLinkedId !== null && storedDriverLinkedId !== null) {
+        if (storedLinkedId !== null) {
 
             const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
 
             // Prepare data in JSON format
             const data = {
                 UserID: JSON.parse(storedLinkedId),
-                DriverID: JSON.parse(storedDriverLinkedId),
+                DriverID: route.params.itemCompleteDriverId,
                 rating: defaultRatingSubmit
             };
 
-            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
 
             await axios.post(url, data, {
                 headers: {
@@ -637,7 +692,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         // console.log("RateDriverData...==>", JSON.stringify(response, null, 2));
 
                         Toast.show('Rating Submitted Successfully!', Toast.SHORT);
-                        setModalDriver(false);
+                        // setModalDriver(false);
 
                         // Working !
 
@@ -652,42 +707,42 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         // });  **no use**
 
                     } else {
-                        Toast.show('Enabel To Submit Ratting!-1', Toast.SHORT);
-                        setModalDriver(false);
-                        setSTRIPEModal(true);
+                        Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                        // setModalDriver(false);
+                        // setSTRIPEModal(true);
                         //  Welcome! Signed in successfully.
                     }
                 })
                 .catch(error => {
                     // Handle errors
-                    Toast.show('Enabel To Submit Ratting!-2', Toast.SHORT);
-                    setModalDriver(false);
-                    setSTRIPEModal(true);
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
                 });
 
         } else {
-            Toast.show('Enabel To Submit Ratting!-3', Toast.SHORT);
+            Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
 
-            setModalDriver(false);
+            // setModalDriver(false);
             // setSTRIPEModal(true);
 
             // Payment Getway
             // id - amount
-            axiosPostRequestStripe();
+            // axiosPostRequestStripe();
         }
     };
 
     const axiosPostRequestStripe = async () => {
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
         if (storedLinkedId !== null) {
             const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
 
             // Prepare data in JSON format
             const data = {
                 userId: JSON.parse(storedLinkedId),
-                // "userId": "2",
-                // "amount": "200"
-                amount: isAmount
+                amount: isAmount,
+                rideId: route.params.itemCompleteRideIDID // RIDE ID 
             };
 
             console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
@@ -696,7 +751,6 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
             console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
             console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
             console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
-
 
             await axios.post(url, data, {
                 headers: {
@@ -708,19 +762,22 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         &&
                         response?.data?.message === 'URL constructed successfully') {
 
-                        console.log("ALLL----RES===>",
+                        console.log("ALLL----***RES===>",
                             JSON.stringify(response?.data?.data?.apiUrl, null, 2));
 
-                        console.log("ALLL----RES===>",
+                        console.log("ALLL----***RES===>",
                             JSON.stringify(response?.data?.data?.apiUrl, null, 2));
 
                         // Get Payment URL :
                         apiUrlPAY = response?.data?.data?.apiUrl;
-                        Toast.show('apiUrlPAY==>', Toast.SHORT);
 
-                        setSTRIPEModal(true);
-
+                        // setSTRIPEModal(true);
                         setISURLPAY(apiUrlPAY);
+
+                        // Check Payment Complete OR Not ! - API CALL
+                        // setModalDriver(true);
+
+                        // axiosPostRequestBookingPaymentStatus()
 
                         // Get Link And Set In WebView
 
@@ -1239,15 +1296,36 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         <View>
                             <Modal isVisible={isSTRIPEModal}
                                 onBackButtonPress={() => setSTRIPEModal(false)}>
-                                <View style={Styles.viewModalDriver}>
+                                <View style={Styles.viewModalDriverStripe}>
 
                                     <WebView
                                         source={{ uri: isURLPAY }}
-                                        style={CommonStyle.commonFlex}
+                                        style={{
+                                            flex: 1,
+                                            justifyContent: 'center',
+                                        }}
                                         javaScriptEnabled={true}
                                         domStorageEnabled={true}
                                     />
-
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        marginVertical={hp(1)}
+                                        heightBtn={hp(6)}
+                                        widthBtn={wp(50)}
+                                        isRightArrow={false}
+                                        onPress={onPressModalCheckPayment}
+                                        color={Colors.white}
+                                        title={ScreenText.Next}
+                                        marginHorizontal={wp(15)}
+                                        fontWeight="500"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.blue}
+                                    />
 
                                 </View>
                             </Modal>

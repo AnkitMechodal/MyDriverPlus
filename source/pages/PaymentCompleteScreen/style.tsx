@@ -182,6 +182,14 @@ const Styles = StyleSheet.create({
         padding: wp(3),
         justifyContent: 'center',
     },
+    viewModalDriverStripe: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+    },
     customRatingBarStyle: {
         justifyContent: 'center',
         flexDirection: 'row',
