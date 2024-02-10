@@ -16,7 +16,7 @@ type ConfirmBookingListProps = {
 const ConfirmBookingListComponent = ({ data, handleGetItemDetails }: ConfirmBookingListProps) => {
 
     const [selectedItem, setSelectedItem] = useState(null);
-    
+
     // const [data, setData] = useState(props.data);
     // const [stateData, setData] = useState(data);
 
@@ -40,13 +40,16 @@ const ConfirmBookingListComponent = ({ data, handleGetItemDetails }: ConfirmBook
     const handleItemClick = ({ item, index }) => {
         const updatedData = [...data];
         if (selectedItem !== null) {
+
             // Deselect the previously selected item
             updatedData[selectedItem].border = item.border;
             updatedData[selectedItem].width = item.width;
         }
+
         // Select the new item
         updatedData[index].border = !item.border; // true
         updatedData[index].width = !item.width; // true
+
         setSelectedItem(index);
         // setData(updatedData);
         // Open the modal when the item is clicked

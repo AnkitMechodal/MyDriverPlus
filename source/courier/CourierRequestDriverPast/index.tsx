@@ -50,6 +50,11 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
     let USER_TOTAL;
 
 
+
+    let USER_DRIVER_ID;
+    let USER_RIDE_ID_;
+
+
     // RIDEID
     const [isRIDEID, setRIDEID] = useState("");
     const [isDATE_OF_RIDE, setDATE_OF_RIDE] = useState("");
@@ -75,6 +80,10 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
     let avg_username;
 
     const [isModalVisible, setModalVisible] = useState(true);
+
+
+    let DISCOUNT;
+
 
     // Driver Get Booking 
     let DriverBookingName;
@@ -161,6 +170,17 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
                     USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
                     USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
 
+                    // PASSING DATA TO PAYMENT SECTION :
+
+                    USER_DRIVER_ID = response?.data?.matchingVehicle?.DriverID;
+                    USER_RIDE_ID_ = response?.data?.matchingVehicle?._id;
+
+                    // STORED AS LOCAL :
+                    StoreDriverID(USER_DRIVER_ID);
+                    StoreRideID(USER_RIDE_ID_);
+                    StoreRideIDID(USER_RIDEID);
+                    StorePayType(USER_PAYMEMT_TYPE);
+
 
                     // RideCharge
                     USER_RIDE_CHARGE = response?.data?.matchingVehicle?.RideCharge;
@@ -193,6 +213,13 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
                     setDROP_UP_LOCATION(USER_DROP_UP_LOCATION);
                     setWATTING_CHARGES(USER_WATTING_CHARGES);
                     // setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
+
+
+
+                    // USER_DISCOUNT - NO USE
+                    DISCOUNT = USER_TOTAL - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(DISCOUNT);
+
                     setFARE(USER_FARE_VALUE); // ADDED 
 
                     // Discount  // ADDED
@@ -216,6 +243,50 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
             });
     };
 
+
+    const StoreDriverID = async (USER_DRIVER_ID: any) => {
+        try {
+            await AsyncStorage.setItem('store_driver_id', JSON.stringify(USER_DRIVER_ID));
+            console.log('store_driver_id===>', JSON.parse(USER_DRIVER_ID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_driver_id :', error);
+        }
+    }
+
+    const StoreRideID = async (USER_RIDE_ID_: any) => {
+        try {
+            await AsyncStorage.setItem('store_ride_id_', JSON.stringify(USER_RIDE_ID_));
+            console.log('store_ride_id_===>', JSON.parse(USER_RIDE_ID_));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_ride_id_ :', error);
+        }
+    }
+
+    const StoreRideIDID = async (USER_RIDEID: any) => {
+        try {
+            await AsyncStorage.setItem('store_RIDEID', JSON.stringify(USER_RIDEID));
+            console.log('store_RIDEID===>', JSON.parse(USER_RIDEID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_RIDEID :', error);
+        }
+    }
+
+    const StorePayType = async (USER_PAYMEMT_TYPE: any) => {
+        try {
+            await AsyncStorage.setItem('store_pay_type', JSON.stringify(USER_PAYMEMT_TYPE));
+            console.log('store_pay_type===>', JSON.parse(USER_PAYMEMT_TYPE));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_pay_type :', error);
+        }
+    }
 
     const axiosPostDriverInfoRequest = async () => {
         try {
@@ -897,19 +968,41 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
                                         isRightArrow={false}
                                         color={Colors.white}
                                         title={ScreenText.PayNow}
-                                        onPress={() =>
-                                            navigation.navigate('CourierPaymentCompletePast', {
-                                                itemCompleteDistance: route?.params?.itemCompleteDistance,
-                                                itemCompleteDuration: route?.params?.itemCompleteDuration,
-                                                itemCompletePickStation: route?.params?.itemCompletePickStation,
-                                                itemCompleteDropStation: route?.params?.itemCompleteDropStation,
-                                                itemCompleteRideCharge: route?.params?.itemCompleteRideCharge,
-                                                itemCompleteRideFeesCon: route?.params?.itemCompleteRideFeesCon,
-                                                itemCompleteRideWattingCharges: route?.params?.itemCompleteRideWattingCharges,
-                                                itemCompleteRideDiscount: route?.params?.itemCompleteRideDiscount,
-                                                itemCompleteTotalAmount: route?.params?.itemCompleteTotalAmount
-                                            })
-                                        }
+                                        onPress={async () => {
+                                            // GET DATA :
+                                            try {
+                                                const USER_DRIVER_IDget = await AsyncStorage.getItem('store_driver_id');
+                                                const USER_RIDE_ID_get = await AsyncStorage.getItem('store_ride_id_');
+                                                const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+                                                const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
+
+                                                // route?.params?.itemCompleteDuration
+
+                                                if (USER_DRIVER_IDget !== null && USER_RIDE_ID_get !==
+                                                    null && USER_RIDEIDID !== null && USER_PAY_TYPE !== null) {
+                                                    navigation.navigate('CourierPaymentCompletePast', {
+                                                        itemCompleteDistance: route?.params?.itemCompleteDistance,
+                                                        itemCompleteDuration: route?.params?.itemCompleteDuration,
+                                                        itemCompletePickStation: route?.params?.itemCompletePickStation,
+                                                        itemCompleteDropStation: route?.params?.itemCompleteDropStation,
+                                                        itemCompleteRideCharge: route?.params?.itemCompleteRideCharge,
+                                                        itemCompleteRideFeesCon: route?.params?.itemCompleteRideFeesCon,
+                                                        itemCompleteRideWattingCharges: route?.params?.itemCompleteRideWattingCharges,
+                                                        itemCompleteRideDiscount: route?.params?.itemCompleteRideDiscount,
+                                                        itemCompleteTotalAmount: isTOTAL_AMOUNT, // Note: This line might need correction
+                                                        itemCompleteDriverId: JSON.parse(USER_DRIVER_IDget),
+                                                        itemCompleteRideId: JSON.parse(USER_RIDE_ID_get),
+                                                        itemCompleteRideIDID: JSON.parse(USER_RIDEIDID),
+                                                        itemCompletePayType: JSON.parse(USER_PAY_TYPE)
+                                                    });
+                                                } else {
+
+                                                }
+
+                                            } catch (error) {
+
+                                            }
+                                        }}
                                         // onPress={() => navigation.navigate('CourierPaymentComplete')}
                                         marginHorizontal={wp(2)}
                                         fontWeight="600"

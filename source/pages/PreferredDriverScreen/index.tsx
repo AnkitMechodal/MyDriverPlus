@@ -374,13 +374,13 @@ const PreferredDriverScreen = ({ route, navigation }) => {
                         // Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);
 
                     } else {
-                        Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+                        // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
                         //  Welcome! Signed in successfully.
                     }
                 })
                 .catch(error => {
                     // Handle errors
-                    Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+                    // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
                 });
         } else {
 

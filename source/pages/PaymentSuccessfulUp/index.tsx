@@ -141,9 +141,7 @@ const PaymentSuccessfulUp = ({ route, navigation }) => {
                                 title={"Go To Home"}
                                 textDecorationLine={'none'}
                                 marginTop={wp(10)}
-                                onPress={() => navigation.navigate('BookingScreen', {
-                                    itemType: 'Taxi Booking'
-                                })}
+                                onPress={() => navigation.goBack()}
                                 fontWeight="400"
                                 fontSize={wp(4)}
                                 marginHorizontal={wp(2)}

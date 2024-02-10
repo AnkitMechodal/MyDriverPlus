@@ -33,6 +33,10 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
     const starImageCorner =
         Images.unfillStarIcon;
 
+
+    let USER_DRIVER_ID;
+    let USER_RIDE_ID_;
+
     let USER_RIDEID;
     let USER_DATE_OF_RIDE;
     let USER_PAYMEMT_TYPE;
@@ -52,6 +56,8 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
     let USER_DISCOUNT;
     let USER_FARE_VALUE;
     let USER_TOTAL;
+
+    let DISCOUNT;
 
 
     let USER_BOOKINGSTATUS;
@@ -335,6 +341,10 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
                     USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
 
+                    // PASSING DATA TO PAYMENT SECTION :
+                    USER_DRIVER_ID = response?.data?.matchingVehicle?.DriverID;
+                    USER_RIDE_ID_ = response?.data?.matchingVehicle?._id;
+
 
                     // BookingCurrentStatus 
                     USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
@@ -372,7 +382,6 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     // USER_DISCOUNT - NO USE
                     setTOTAL_AMOUNT(USER_TOTAL);
 
-
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
                     setSERVICE_TYPE(USER_SERVICE_TYPE);
@@ -382,6 +391,19 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     setDROP_UP_LOCATION(USER_DROP_UP_LOCATION);
                     setWATTING_CHARGES(USER_WATTING_CHARGES);
                     // setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
+
+
+                    // STORED AS LOCAL :
+                    StoreDriverID(USER_DRIVER_ID);
+                    StoreRideID(USER_RIDE_ID_);
+                    StoreRideIDID(USER_RIDEID);
+                    StorePayType(USER_PAYMEMT_TYPE);
+
+                    // USER_DISCOUNT - NO USE
+                    DISCOUNT = USER_TOTAL - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(DISCOUNT);
+
+
                     setFARE(USER_FARE_VALUE); // ADDED 
                     // Discount  // ADDED
                     // Ride Charge
@@ -405,7 +427,49 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
             });
     };
 
+    const StoreDriverID = async (USER_DRIVER_ID: any) => {
+        try {
+            await AsyncStorage.setItem('store_driver_id', JSON.stringify(USER_DRIVER_ID));
+            console.log('store_driver_id===>', JSON.parse(USER_DRIVER_ID));
 
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_driver_id :', error);
+        }
+    }
+
+    const StoreRideID = async (USER_RIDE_ID_: any) => {
+        try {
+            await AsyncStorage.setItem('store_ride_id_', JSON.stringify(USER_RIDE_ID_));
+            console.log('store_ride_id_===>', JSON.parse(USER_RIDE_ID_));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_ride_id_ :', error);
+        }
+    }
+
+    const StoreRideIDID = async (USER_RIDEID: any) => {
+        try {
+            await AsyncStorage.setItem('store_RIDEID', JSON.stringify(USER_RIDEID));
+            console.log('store_RIDEID===>', JSON.parse(USER_RIDEID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_RIDEID :', error);
+        }
+    }
+
+    const StorePayType = async (USER_PAYMEMT_TYPE: any) => {
+        try {
+            await AsyncStorage.setItem('store_pay_type', JSON.stringify(USER_PAYMEMT_TYPE));
+            console.log('store_pay_type===>', JSON.parse(USER_PAYMEMT_TYPE));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_pay_type :', error);
+        }
+    }
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -440,7 +504,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                                     color={Colors.white}
                                     fontFamily={Fonts.InterSemiBold}
                                     fontWeight="500"
-                                    title={"Booking Details"}
+                                    title={"Booking Details"} //uPUPUPPUPu
                                     fontSize={wp(4)}
                                     onPress={() => navigation.goBack()}
                                 />
@@ -933,19 +997,42 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                                         heightBtn={hp(7)}
                                         widthBtn={wp(90)}
                                         isRightArrow={false}
-                                        onPress={() =>
-                                            navigation.navigate('PaymentCompleteUp', {
-                                                itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
-                                                itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
-                                                itemCompletePickStation: route?.params?.itemMapPickStation,
-                                                itemCompleteDropStation: route?.params?.itemMapDropStation,
-                                                itemCompleteRideCharge: route?.params?.itemMapRideCharge,
-                                                itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
-                                                itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
-                                                itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
-                                                itemCompleteTotalAmount: route?.params?.itemMapRideTotalAmount
-                                            })
-                                        }
+                                        onPress={async () => {
+
+                                            // GET DATA :
+                                            try {
+                                                const USER_DRIVER_IDget = await AsyncStorage.getItem('store_driver_id');
+                                                const USER_RIDE_ID_get = await AsyncStorage.getItem('store_ride_id_');
+                                                const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+                                                const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
+
+
+                                                if (USER_DRIVER_IDget !== null && USER_RIDE_ID_get !==
+                                                    null && USER_RIDEIDID !== null && USER_PAY_TYPE !== null) {
+                                                    navigation.navigate('PaymentCompleteUp', {
+                                                        itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                                        itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
+                                                        itemCompletePickStation: route?.params?.itemMapPickStation,
+                                                        itemCompleteDropStation: route?.params?.itemMapDropStation,
+                                                        itemCompleteRideCharge: route?.params?.itemMapRideCharge,
+                                                        itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
+                                                        itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
+                                                        itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
+
+                                                        itemCompleteTotalAmount: isTOTAL_AMOUNT, // Note: This line might need correction
+                                                        itemCompleteDriverId: JSON.parse(USER_DRIVER_IDget),
+                                                        itemCompleteRideId: JSON.parse(USER_RIDE_ID_get),
+                                                        itemCompleteRideIDID: JSON.parse(USER_RIDEIDID),
+                                                        itemCompletePayType: JSON.parse(USER_PAY_TYPE)
+                                                    });
+                                                } else {
+
+                                                }
+
+                                            } catch (error) {
+
+                                            }
+                                        }}
                                         color={Colors.white}
                                         title={ScreenText.PayNow}
                                         marginHorizontal={wp(2)}

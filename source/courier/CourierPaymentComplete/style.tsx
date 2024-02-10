@@ -7,6 +7,14 @@ const Styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.black,
     },
+    viewModalDriverStripe: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+    },
     viewHeader: {
         height: wp(20), // wp(30)
         backgroundColor: Colors.black,

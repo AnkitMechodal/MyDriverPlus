@@ -148,7 +148,6 @@ const Tab00ScreenStack = () => {
                 component={CancelCourierDetailsMapPast} // tab2-1
             />
 
-
             <Stack.Screen
                 name="PreferredDriverUp" //up
                 component={PreferredDriverUp} />

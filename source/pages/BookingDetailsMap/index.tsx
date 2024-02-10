@@ -50,6 +50,8 @@ const BookingDetailsMap = ({ route, navigation }) => {
     let USER_RIDE_ID_;
     let USER_RIDE_IDID;
 
+    let USER_PAY_TYPE;
+
 
     let USER_RIDE_CHARGE;
     let USER_CON_CHARGE;
@@ -60,7 +62,7 @@ const BookingDetailsMap = ({ route, navigation }) => {
 
 
     let USER_BOOKINGSTATUS;
-    let USER_CANCELLATION;   // cancellation 
+    let USER_CANCELLATION;   //cancellation---->
 
 
     let PER;
@@ -344,11 +346,17 @@ const BookingDetailsMap = ({ route, navigation }) => {
 
                     USER_DRIVER_ID = response?.data?.matchingVehicle?.DriverID;
                     USER_RIDE_ID_ = response?.data?.matchingVehicle?._id;
+                    // USER_PAY_TYPE = response?.data?.matchingVehicle?.payment_type;
+
+
+                    // payment_type
 
                     // STORED AS LOCAL :
                     StoreDriverID(USER_DRIVER_ID);
                     StoreRideID(USER_RIDE_ID_);
                     StoreRideIDID(USER_RIDEID);
+                    StorePayType(USER_PAYMEMT_TYPE);
+
 
                     console.log("USER_DRIVER_ID==>", USER_DRIVER_ID);
                     console.log("USER_RIDE_ID_==>", USER_RIDE_ID_);
@@ -455,6 +463,17 @@ const BookingDetailsMap = ({ route, navigation }) => {
         } catch (error) {
             // Handle any errors that might occur during the storage operation
             console.log('Error store_RIDEID :', error);
+        }
+    }
+
+    const StorePayType = async (USER_PAYMEMT_TYPE: any) => {
+        try {
+            await AsyncStorage.setItem('store_pay_type', JSON.stringify(USER_PAYMEMT_TYPE));
+            console.log('store_pay_type===>', JSON.parse(USER_PAYMEMT_TYPE));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_pay_type :', error);
         }
     }
 
@@ -990,9 +1009,11 @@ const BookingDetailsMap = ({ route, navigation }) => {
                                             const USER_DRIVER_IDget = await AsyncStorage.getItem('store_driver_id');
                                             const USER_RIDE_ID_get = await AsyncStorage.getItem('store_ride_id_');
                                             const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+                                            const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
+
 
                                             if (USER_DRIVER_IDget !== null && USER_RIDE_ID_get !==
-                                                null && USER_RIDEIDID !== null) {
+                                                null && USER_RIDEIDID !== null && USER_PAY_TYPE !== null) {
                                                 navigation.navigate('PaymentComplete', {
                                                     itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
                                                     itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
@@ -1003,9 +1024,10 @@ const BookingDetailsMap = ({ route, navigation }) => {
                                                     itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
                                                     itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
                                                     itemCompleteTotalAmount: isTOTAL_AMOUNT, // Note: This line might need correction
-                                                    itemCompleteDriverId: USER_DRIVER_IDget,
+                                                    itemCompleteDriverId: JSON.parse(USER_DRIVER_IDget),
                                                     itemCompleteRideId: JSON.parse(USER_RIDE_ID_get),
-                                                    itemCompleteRideIDID: JSON.parse(USER_RIDEIDID)
+                                                    itemCompleteRideIDID: JSON.parse(USER_RIDEIDID),
+                                                    itemCompletePayType: JSON.parse(USER_PAY_TYPE)
                                                 });
                                             } else {
 

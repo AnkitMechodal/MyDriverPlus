@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -147,6 +147,16 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                 console.log("COMPLETE12===>", route.params.itemCompleteRideIDID);
                 // TODO :
 
+                // TODO :
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                // TODO :
+
+                // itemCompletePayType
+
 
                 // setDefault(route.params.itemCompleteRideDiscount);
                 setIsAmount(route.params.itemCompleteTotalAmount);
@@ -286,6 +296,82 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
         }
     }
 
+
+    const axiosPostRideDetailsRequest1 = async () => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId //quick
+        };
+
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    && response?.data?.message === "Ride Details") {
+
+
+                    console.log("Ride Details====>", JSON.stringify(response?.data, null, 2));
+
+                    // Handle API response here
+                    // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
+
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_PAY_CARD = response?.data?.matchingVehicle?.payment_type;
+
+                    // USER_PAY_ID_ID = response?.data?.matchingVehicle?._id;
+
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+
+                    // && USER_PAY_CARD == "Card"
+
+                    if (USER_PAY_STATUS == "Complete") {
+                        setModalDriver(true);
+
+                        // Alert.alert("Yes");
+                        // setSTRIPEModal(false);
+                        // setModalDriver(true);
+
+                    } else {
+
+                        Toast.show('Unable to Process Payment!', Toast.SHORT);
+                    }
+
+
+                    // stored id : todo
+                    // StoredRideID(USER_RIDEID);
+
+                    // console.log("RideDetails101===>",
+                    //     JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+
+                } else {
+                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+            });
+    };
+
+
     const axiosPostRideDetailsRequest = async () => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
 
@@ -331,9 +417,14 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
 
                     if (USER_PAY_STATUS == "Complete" && USER_PAY_CARD == "Card") {
-                        Alert.alert("Yes");
+                        // Alert.alert("Yes");
+
+                        setSTRIPEModal(false);
+                        setModalDriver(true);
+
                     } else {
-                        Alert.alert("No");
+
+                        Toast.show('Unable to Process Payment!', Toast.SHORT);
                     }
 
 
@@ -600,9 +691,17 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
     const onPressCompletePayment = () => {
         // setModalDriver(true)
+        if (route.params.itemCompletePayType == "Cash Payment"
+            || route.params.itemCompletePayType == "Wallet") {
+            // Payment Status Addded !
+            axiosPostRideStatusAccepted1();
+        } else {
+            setSTRIPEModal(true);
+            axiosPostRequestStripe();
+        }
 
-        setSTRIPEModal(true);
-        axiosPostRequestStripe();
+        // setSTRIPEModal(true);
+        // axiosPostRequestStripe();
     }
 
     const onPressSubmit = () => {
@@ -637,7 +736,14 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
         // Check Payment Status - Yes To Next
         // PaymentStatus : TODO
-        axiosPostRideDetailsRequest();
+
+        // payment_type
+
+
+        // Payment Status Addded !
+        axiosPostRideStatusAccepted();
+
+        // axiosPostRideDetailsRequest();
 
         // setModalDriver(true);
         // navigation.navigate('PaymentSuccessful', {
@@ -646,9 +752,100 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
     }
 
-    // const axiosPostRequestBookingPaymentStatus = () => {
+    const axiosPostRideStatusAccepted1 = async () => {
 
-    // }
+        const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+
+                    axiosPostRideDetailsRequest1();
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+            });
+
+    }
+
+    const axiosPostRideStatusAccepted = async () => {
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+                    // Handle API response here
+
+                    // console.log("BookingDataResponse==>",
+                    //     JSON.stringify(response?.data?.matchingVehicles, null, 2));
+
+                    // console.log("RateDriverData...==>", JSON.stringify(response, null, 2));
+
+                    // Toast.show('Status Completed!', Toast.SHORT);
+
+                    axiosPostRideDetailsRequest();
+
+                    // setModalDriver(false);
+
+                    // Working !
+
+                    // AFTER STRIPE :
+                    // SET STRIPE MODAL :
+                    // setSTRIPEModal(true)
+
+                    // axiosPostRequestStripe();
+
+                    // navigation.navigate('PaymentSuccessful', {
+                    //     itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
+                    // });  **no use**
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                // setModalDriver(false);
+                // setSTRIPEModal(true);
+            });
+
+    }
 
     // working !
 
@@ -667,7 +864,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                 rating: defaultRatingSubmit
             };
 
-            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData***********==>", JSON.stringify(data, null, 2));
             console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
             console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
             console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
@@ -702,9 +899,9 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
                         // axiosPostRequestStripe();
 
-                        // navigation.navigate('PaymentSuccessful', {
-                        //     itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
-                        // });  **no use**
+                        navigation.navigate('PaymentSuccessful', {
+                            itemSuccessfulAmount: isAmount,
+                        });
 
                     } else {
                         Toast.show('Enabel To Submit Ratting!', Toast.SHORT);

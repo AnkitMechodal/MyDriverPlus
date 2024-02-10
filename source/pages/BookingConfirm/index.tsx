@@ -1266,7 +1266,6 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                                         </View>
 
 
-
                                     </View>
 
                                 </View>
@@ -1323,8 +1322,6 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
                                 </View>
                             </View>
-
-
 
 
                         </View>

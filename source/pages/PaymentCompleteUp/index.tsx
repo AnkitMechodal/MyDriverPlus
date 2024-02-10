@@ -5,6 +5,7 @@ import { Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-n
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
+import WebView from 'react-native-webview';
 import ButtonComponent from '../../components/Button';
 import HeaderComponent from '../../components/Header';
 import StatusBarComponent from '../../components/StatusBar';
@@ -26,15 +27,18 @@ const PaymentCompleteUp = ({ route, navigation }) => {
     const [isFocusedApplyNow, setIsFocusedApplyNow] = useState(false);
     const [isFocusedRedeem, setIsFocusedRedeem] = useState(false);
 
-    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
     const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
-
-
     const [isModalVisible, setModalVisible] = useState(true);
-    const [isLoyalPoints, setLoyalPoints] = useState('');
 
-    // TODO :
-    let user_point;
+
+    const [isLoyalPoints, setLoyalPoints] = useState<any>('');
+
+    const [isLoyalPointsDefault, setLoyalPointsDeafult] = useState<any>('');
+
+    let USER_PAY_STATUS;
+    let USER_PAY_CARD;
+    let USER_PAY_ID_ID;
 
     const starImageFilled1 =
         Images.fillstarIcon; // fillStarIcon
@@ -46,6 +50,7 @@ const PaymentCompleteUp = ({ route, navigation }) => {
     const starImageCorner =
         Images.unfillStarIcon;
 
+    let apiUrlPAY;
 
     const refApplyNow = useRef<any>(null);
     const refRedeem = useRef<any>(null);
@@ -62,7 +67,7 @@ const PaymentCompleteUp = ({ route, navigation }) => {
     const [isValidRedeem, setValidRedeem] = useState(true);
 
     const [couponcode, setCouponcode] = useState('');
-    const [redeem, setCouponRedeem] = useState('');
+    const [redeem, setCouponRedeem] = useState<any>('');
 
     // isApplyNow
     const [isApplyNowBG, setApplyNowBG] = useState(true);
@@ -82,7 +87,36 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
     const [isModalDriver, setModalDriver] = useState(false);
 
+
+    // STRIPE :
+    const [isSTRIPEModal, setSTRIPEModal] = useState(false);
+
+
+    // -5 ---> Default Use 
+    const [Default, setDefault] = useState("");
+
+    let NowYourCurrentPoint;
+
+    const [DefaultLoyal, setDefaultLoyal] = useState("");
+
+
+    // route.params.itemCompleteTotalAmount
+    const [isAmount, setIsAmount] = useState<any>("");
+
+    // isURLPAY
+    const [isURLPAY, setISURLPAY] = useState<any>("https://rideshareandcourier.graphiglow.in/app/StripeWeb.php?userId=65b9e2f0eb9e0db05a70bb0b&amount=105");
+
     let USER_RIDEID;
+
+    // TODO :
+    let user_point;
+    let CouponDiscount;
+    let GetNewAmoount;
+
+    let GetRedeemPonints;
+    let GetAsDiscount;
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -98,11 +132,42 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                 console.log("COMPLETE8===>", route.params.itemCompleteRideDiscount);
                 console.log("COMPLETE9===>", route.params.itemCompleteTotalAmount);
 
-                // axios
-                await axiosPostRideDetailsRequest();
 
-                // Get Total Loyal Points :
-                await axiosPostProfilDataGetInfo();
+                // TODO :
+                console.log("COMPLETE10===>", route.params.itemCompleteDriverId);
+                console.log("COMPLETE11===>", route.params.itemCompleteRideId);
+                console.log("COMPLETE10===>", route.params.itemCompleteDriverId);
+                console.log("COMPLETE11===>", route.params.itemCompleteRideId);
+                // TODO :
+
+
+                // TODO :
+                console.log("COMPLETE12===>", route.params.itemCompleteRideIDID);
+                console.log("COMPLETE12===>", route.params.itemCompleteRideIDID);
+                console.log("COMPLETE12===>", route.params.itemCompleteRideIDID);
+                // TODO :
+
+                // TODO :
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                console.log("COMPLETE13===>", route.params.itemCompletePayType);
+                // TODO :
+
+                // itemCompletePayType
+
+
+                // setDefault(route.params.itemCompleteRideDiscount);
+                setIsAmount(route.params.itemCompleteTotalAmount);
+
+                // axios :
+                // await axiosPostRideDetailsRequest();
+
+
+                // Get Total Loyal Points : //0909
+                // await axiosPostProfilDataGetInfo();
+
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -111,14 +176,15 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // // Set interval to refresh every 5 seconds
+        // const intervalId = setInterval(fetchData, 5 * 1000);
 
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+
     }, [
 
         route.params.itemCompleteDistance,
@@ -133,6 +199,38 @@ const PaymentCompleteUp = ({ route, navigation }) => {
         route.params.itemCompleteTotalAmount
     ]);
 
+
+
+    useEffect(() => {
+        // Function to fetch or refresh data
+        const fetchData1 = async () => {
+            // Replace this with your data fetching logic
+            console.log('Data refreshed');
+
+            // Get Total Loyal Points : //0909
+            await axiosPostProfilDataGetInfo();
+        };
+
+        // Call fetchData initially
+        fetchData1();
+
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData1, 1 * 1000);
+
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
+
+
+        // // Refresh data every 5 seconds
+        // const intervalId = setInterval(fetchData, 5000);
+
+        // // Clean up the interval on component unmount
+        // return () => clearInterval(intervalId);
+
+    }, []); // Emp
 
     const axiosPostProfilDataGetInfo = async () => {
         try {
@@ -150,13 +248,26 @@ const PaymentCompleteUp = ({ route, navigation }) => {
     const axiosPostSetProfileData = async () => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        console.log("storedLinkedId=====>", storedLinkedId);
+        console.log("storedLinkedId=====>", storedLinkedId);
+        console.log("storedLinkedId=====>", storedLinkedId);
+        console.log("storedLinkedId=====>", storedLinkedId);
+
         if (storedLinkedId !== null) {
             const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
             // Prepare data in JSON format
             const data = {
-                id: JSON.parse(storedLinkedId),
+                id: JSON.parse(storedLinkedId), //0909
+                // id: "65c4bf726e435ad32b0e86ca"
             };
+
+            console.log("axiosPostSetProfileData....==>", data);
+            console.log("axiosPostSetProfileData==>", data);
+            console.log("axiosPostSetProfileData==>", data);
+            console.log("axiosPostSetProfileData==>", data);
+            console.log("axiosPostSetProfileData==>", data);
 
             await axios.post(url, data, {
                 headers: {
@@ -169,6 +280,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
                         user_point = response?.data?.matchingUsers[0]?.Point;
                         setLoyalPoints(user_point);
+
+                        // Toast.show('Done' + user_point, Toast.SHORT);
 
                     } else {
                         // Toast.show('User Information Credentials Invalid', Toast.SHORT);
@@ -184,15 +297,22 @@ const PaymentCompleteUp = ({ route, navigation }) => {
     }
 
 
-    const axiosPostRideDetailsRequest = async () => {
+    const axiosPostRideDetailsRequest1 = async () => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
 
         // Prepare data in JSON format
         const data = {
-            id: route?.params?.itemRider_ID_
+            id: route.params.itemCompleteRideId //quick
         };
 
-        console.log("RideDetails===>===>", data);
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+
 
         await axios.post(url, data, {
             headers: {
@@ -201,17 +321,45 @@ const PaymentCompleteUp = ({ route, navigation }) => {
         })
             .then(response => {
                 if (response.status === 200
-                    && response?.data?.message === 'Ride Details') {
-                    // Handle API response here
-                    Toast.show('Ride Details Get Successfully!', Toast.SHORT);
+                    && response?.data?.message === "Ride Details") {
 
-                    USER_RIDEID = response?.data?.matchingVehicle?.DriverID;
+
+                    console.log("Ride Details====>", JSON.stringify(response?.data, null, 2));
+
+                    // Handle API response here
+                    // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
+
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_PAY_CARD = response?.data?.matchingVehicle?.payment_type;
+
+                    // USER_PAY_ID_ID = response?.data?.matchingVehicle?._id;
+
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+
+                    // && USER_PAY_CARD == "Card"
+
+                    if (USER_PAY_STATUS == "Complete") {
+                        setModalDriver(true);
+
+                        // Alert.alert("Yes");
+                        // setSTRIPEModal(false);
+                        // setModalDriver(true);
+
+                    } else {
+
+                        Toast.show('Unable to Process Payment!', Toast.SHORT);
+                    }
+
 
                     // stored id : todo
-                    StoredRideID(USER_RIDEID);
+                    // StoredRideID(USER_RIDEID);
 
-                    console.log("RideDetails101===>",
-                        JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+                    // console.log("RideDetails101===>",
+                    //     JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
 
                 } else {
                     // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
@@ -223,16 +371,89 @@ const PaymentCompleteUp = ({ route, navigation }) => {
             });
     };
 
-    const StoredRideID = async (USER_RIDEID: any) => {
-        try {
-            await AsyncStorage.setItem('store_ride_id', JSON.stringify(USER_RIDEID));
-            console.log('store_ride_id===>', JSON.parse(USER_RIDEID));
 
-        } catch (error) {
-            // Handle any errors that might occur during the storage operation
-            console.log('Error store_ride_id :', error);
-        }
-    }
+    const axiosPostRideDetailsRequest = async () => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId //quick
+        };
+
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    && response?.data?.message === "Ride Details") {
+
+
+                    console.log("Ride Details====>", JSON.stringify(response?.data, null, 2));
+
+                    // Handle API response here
+                    // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
+
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_PAY_CARD = response?.data?.matchingVehicle?.payment_type;
+
+                    // USER_PAY_ID_ID = response?.data?.matchingVehicle?._id;
+
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+
+
+                    if (USER_PAY_STATUS == "Complete" && USER_PAY_CARD == "Card") {
+                        // Alert.alert("Yes");
+
+                        setSTRIPEModal(false);
+                        setModalDriver(true);
+
+                    } else {
+
+                        Toast.show('Unable to Process Payment!', Toast.SHORT);
+                    }
+
+
+                    // stored id : todo
+                    // StoredRideID(USER_RIDEID);
+
+                    // console.log("RideDetails101===>",
+                    //     JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+
+                } else {
+                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+            });
+    };
+
+    // const StoredRideID = async (USER_RIDEID: any) => {
+    //     try {
+    //         await AsyncStorage.setItem('store_ride_id', JSON.stringify(USER_RIDEID));
+    //         console.log('store_ride_id===>', JSON.parse(USER_RIDEID));
+
+    //     } catch (error) {
+    //         // Handle any errors that might occur during the storage operation
+    //         console.log('Error store_ride_id :', error);
+    //     }
+    // }
 
     const handleApplyNow = (usercouponcode: any) => {
         setCouponcode(usercouponcode);
@@ -260,13 +481,24 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
     // 01
     const onPressRedeem = () => {
-        setRedeemBG(false);
-        setApplyRedeem(false);
-        setisRedeemBtn(true);
-        setisRedeemText(true);
+        if (redeem.length < 1) {
+            Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+        } else {
+            // Call Redeem API :
+            axiosGetRedeemRequest();
+        }
+
+        // setRedeemBG(false);
+        // setApplyRedeem(false);
+        // setisRedeemBtn(true);
+        // setisRedeemText(true);
     }
 
     const onPressCrossPoints = () => {
+
+        setIsAmount(route.params.itemCompleteTotalAmount);
+        setLoyalPointsDeafult("");
+
         setRedeemBG(true);
         setApplyRedeem(true);
         // setisApplyNowBtn(true);
@@ -274,15 +506,182 @@ const PaymentCompleteUp = ({ route, navigation }) => {
         setIsFocusedRedeem(true);
     }
 
-    // 02
+    // 02 ----- >
     const onPressApplyNow = () => {
-        setApplyNowBG(false);
-        setApplyEdit(false);
-        setisApplyNowBtn(true);
-        setisApplyNowText(true);
+        if (couponcode.length < 1) {
+            Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+        } else {
+            // Call Coupon API :
+            axiosGetCouponRequest();
+        }
+
+        // setApplyNowBG(false);
+        // setApplyEdit(false);
+        // setisApplyNowBtn(true);
+        // setisApplyNowText(true);
     }
 
+    const axiosGetRedeemRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosGetRedeemRequestCalculation();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const axiosGetRedeemRequestCalculation = async () => {
+
+        // GET REG ID
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        if (storedLinkedId !== null) {
+
+            // Prepare data in JSON format
+            const data = {
+                userId: JSON.parse(storedLinkedId), // 65c4bf726e435ad32b0e86ca
+                // userId: "65c4bf726e435ad32b0e86ca",
+                point: redeem, // USED
+                amount: isAmount, // USER
+                totalPoint: isLoyalPoints // TOTAL // //0909
+            };
+
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+
+            const url = 'https://rideshareandcourier.graphiglow.in/api/redeem/coin';
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'You can use points') {
+
+                        // Now Your Current Point 
+                        // NowYourCurrentPoint = response?.data?.NowYourCurrentPoint;
+
+                        Toast.show('Redeem Points Applied Successfully!' + NowYourCurrentPoint, Toast.SHORT);
+
+                        // Set Loyal Points - working !
+                        // setLoyalPointsDeafult(isLoyalPoints * 0.10)
+
+                        setLoyalPointsDeafult(redeem);
+
+                        // Re Set Total Amount as Redeem - working !
+                        // setIsAmount(isAmount - (isLoyalPoints * 0.10));
+                        // isLoyalPointsDefault
+
+                        setIsAmount(isAmount - (redeem * 0.10));
+
+                        setRedeemBG(false);
+                        setApplyRedeem(false);
+                        setisRedeemBtn(true);
+                        setisRedeemText(true);
+
+                    } else {
+                        Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+                });
+        } else {
+
+        }
+
+
+    }
+
+
+    const axiosGetCouponRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosGetCouponRequestCalculation();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const axiosGetCouponRequestCalculation = async () => {
+
+        // Prepare data in JSON format
+        const data = {
+            CouponCode: couponcode,
+        };
+        console.log("CouponCodeData==>", JSON.stringify(data, null, 2));
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/couponCode/checkCoupon';
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Matching records found') {
+
+                    console.log("CouponCodeDataAll==>", JSON.stringify(response?.data, null, 2));
+
+                    CouponDiscount = response?.data?.matchingCodes?.Discount;
+
+                    // CouponDiscount As Total 
+                    GetAsDiscount = route.params.itemCompleteTotalAmount * CouponDiscount / 100;
+
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    setDefault(GetAsDiscount);
+
+                    // SET AFTER AMOUNT 
+                    GetNewAmoount = route.params.itemCompleteTotalAmount - GetAsDiscount
+                    setIsAmount(GetNewAmoount)
+
+                    // Handle API response here
+                    Toast.show('Coupon Applied Successfully!', Toast.SHORT);
+
+                    setApplyNowBG(false);
+                    setApplyEdit(false);
+                    setisApplyNowBtn(true);
+                    setisApplyNowText(true);
+
+                } else {
+                    Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+            });
+
+    }
+
+
     const onPressCross = () => {
+
+        setIsAmount(route.params.itemCompleteTotalAmount);
+        setDefault("-5"); // ELSE
+
         setApplyNowBG(true);
         setApplyEdit(true);
         // setisApplyNowBtn(true);
@@ -291,7 +690,18 @@ const PaymentCompleteUp = ({ route, navigation }) => {
     }
 
     const onPressCompletePayment = () => {
-        setModalDriver(true)
+        // setModalDriver(true)
+        if (route.params.itemCompletePayType == "Cash Payment"
+            || route.params.itemCompletePayType == "Wallet") {
+            // Payment Status Addded !
+            axiosPostRideStatusAccepted1();
+        } else {
+            setSTRIPEModal(true);
+            axiosPostRequestStripe();
+        }
+
+        // setSTRIPEModal(true);
+        // axiosPostRequestStripe();
     }
 
     const onPressSubmit = () => {
@@ -302,6 +712,14 @@ const PaymentCompleteUp = ({ route, navigation }) => {
     // working !
 
     const axiosPostRateDriverRequest = async (defaultRatingSubmit: any) => {
+
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+
         try {
             const isConnected = await NetworkUtils.isNetworkAvailable()
             if (isConnected) {
@@ -314,26 +732,144 @@ const PaymentCompleteUp = ({ route, navigation }) => {
         }
     }
 
+    const onPressModalCheckPayment = () => {
+
+        // Check Payment Status - Yes To Next
+        // PaymentStatus : TODO
+
+        // payment_type
+
+
+        // Payment Status Addded !
+        axiosPostRideStatusAccepted();
+
+        // axiosPostRideDetailsRequest();
+
+        // setModalDriver(true);
+        // navigation.navigate('PaymentSuccessful', {
+        // itemSuccessfulAmount: isAmount,
+        // });
+
+    }
+
+    const axiosPostRideStatusAccepted1 = async () => {
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+
+                    axiosPostRideDetailsRequest1();
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+            });
+
+    }
+
+    const axiosPostRideStatusAccepted = async () => {
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+                    // Handle API response here
+
+                    // console.log("BookingDataResponse==>",
+                    //     JSON.stringify(response?.data?.matchingVehicles, null, 2));
+
+                    // console.log("RateDriverData...==>", JSON.stringify(response, null, 2));
+
+                    // Toast.show('Status Completed!', Toast.SHORT);
+
+                    axiosPostRideDetailsRequest();
+
+                    // setModalDriver(false);
+
+                    // Working !
+
+                    // AFTER STRIPE :
+                    // SET STRIPE MODAL :
+                    // setSTRIPEModal(true)
+
+                    // axiosPostRequestStripe();
+
+                    // navigation.navigate('PaymentSuccessful', {
+                    //     itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
+                    // });  **no use**
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                // setModalDriver(false);
+                // setSTRIPEModal(true);
+            });
+
+    }
+
     // working !
 
     const axiosPostRateDriverRequestConfirm = async (defaultRatingSubmit: any) => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
-        const storedDriverLinkedId = await AsyncStorage.getItem('store_ride_id');
-
-        if (storedLinkedId !== null && storedDriverLinkedId !== null) {
+        if (storedLinkedId !== null) {
 
             const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
 
             // Prepare data in JSON format
             const data = {
                 UserID: JSON.parse(storedLinkedId),
-                DriverID: JSON.parse(storedDriverLinkedId),
+                DriverID: route.params.itemCompleteDriverId,
                 rating: defaultRatingSubmit
             };
 
-            console.log("RateDriverData==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData***********==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
 
             await axios.post(url, data, {
                 headers: {
@@ -353,28 +889,109 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                         // console.log("RateDriverData...==>", JSON.stringify(response, null, 2));
 
                         Toast.show('Rating Submitted Successfully!', Toast.SHORT);
-                        setModalDriver(false);
+                        // setModalDriver(false);
+
+                        // Working !
+
+                        // AFTER STRIPE :
+                        // SET STRIPE MODAL :
+                        // setSTRIPEModal(true)
+
+                        // axiosPostRequestStripe();
 
                         navigation.navigate('PaymentSuccessfulUp', {
-                            itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
-                        })
-
-                        // Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
+                            itemSuccessfulAmount: isAmount,
+                        });
 
                     } else {
                         Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                        // setModalDriver(false);
+                        // setSTRIPEModal(true);
                         //  Welcome! Signed in successfully.
                     }
                 })
                 .catch(error => {
                     // Handle errors
                     Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
                 });
-        } else {
 
+        } else {
+            Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+            // setModalDriver(false);
+            // setSTRIPEModal(true);
+
+            // Payment Getway
+            // id - amount
+            // axiosPostRequestStripe();
         }
     };
 
+    const axiosPostRequestStripe = async () => {
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        if (storedLinkedId !== null) {
+            const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
+
+            // Prepare data in JSON format
+            const data = {
+                userId: JSON.parse(storedLinkedId),
+                amount: isAmount,
+                rideId: route.params.itemCompleteRideIDID // RIDE ID 
+            };
+
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'URL constructed successfully') {
+
+                        console.log("ALLL----***RES===>",
+                            JSON.stringify(response?.data?.data?.apiUrl, null, 2));
+
+                        console.log("ALLL----***RES===>",
+                            JSON.stringify(response?.data?.data?.apiUrl, null, 2));
+
+                        // Get Payment URL :
+                        apiUrlPAY = response?.data?.data?.apiUrl;
+
+                        // setSTRIPEModal(true);
+                        setISURLPAY(apiUrlPAY);
+
+                        // Check Payment Complete OR Not ! - API CALL
+                        // setModalDriver(true);
+
+                        // axiosPostRequestBookingPaymentStatus()
+
+                        // Get Link And Set In WebView
+
+                    } else {
+                        // Handle errors
+                        Toast.show('Payment Failed!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Payment Failed!', Toast.SHORT);
+                });
+
+        } else {
+            Toast.show('Payment Failed!', Toast.SHORT);
+        }
+    }
 
 
     return (
@@ -397,19 +1014,19 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 backgroundColorOpacity={Colors.circleGray}
                                 borderRadiusOpacity={hp(8)}
                                 paddingOpacity={wp(2.5)}
-                                textAlign={"left"}
                                 LoyalPonits={isLoyalPoints}
+                                textAlign={"left"}
                                 source={Images.arrowRight}
-                                transform={[{ rotate: '180deg' }]}
                                 marginTop={wp(2)}
                                 width={wp(7)}
+                                transform={[{ rotate: '180deg' }]}
                                 height={wp(7)} // 7
                                 marginHorizontal={wp(5)}
                                 color={Colors.white}
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"
                                 title={"Payment"}
-                                isVisiblePayout={true}
+                                isVisiblePayout={true} //0000
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
                             />
@@ -620,9 +1237,10 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
                             />
+
                             <TextComponent
                                 color={Colors.grayFull}
-                                title={"$ " + isLoyalPoints}
+                                title={"-$ " + isLoyalPointsDefault}
                                 marginVertical={wp(2)}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -631,6 +1249,7 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 textAlign='left'
                             />
                         </View>
+
 
                         <View style={Styles.viewSeprateLine3}>
                             <TextComponent
@@ -644,9 +1263,10 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 marginVertical={wp(3)}
                                 textAlign='left'
                             />
+
                             <TextComponent
                                 color={Colors.greenDark}
-                                title={"-$ " + route.params.itemCompleteRideDiscount}
+                                title={"-$ " + Default}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3.5)}
@@ -654,6 +1274,18 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
                             />
+
+
+                            {/* <TextComponent
+                                color={Colors.greenDark}
+                                title={"-$ " + Default}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3.5)}
+                                marginVertical={wp(3)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            /> */}
                         </View>
 
                         <View style={Styles.viewSeprateLine2}>
@@ -673,7 +1305,7 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.white}
-                                title={"$ " + route.params.itemCompleteTotalAmount}
+                                title={"$ " + isAmount}
                                 marginVertical={wp(1)} // 3
                                 textDecorationLine={'none'}
                                 fontWeight="400"
@@ -709,6 +1341,7 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
                             />
+
                             <TextInputComponent
                                 selectionColor={Colors.white}
                                 isVisibleDropDown={false}
@@ -858,7 +1491,46 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                         </View>
 
                         <View>
-                            <Modal isVisible={isModalDriver}>
+                            <Modal isVisible={isSTRIPEModal}
+                                onBackButtonPress={() => setSTRIPEModal(false)}>
+                                <View style={Styles.viewModalDriverStripe}>
+
+                                    <WebView
+                                        source={{ uri: isURLPAY }}
+                                        style={{
+                                            flex: 1,
+                                            justifyContent: 'center',
+                                        }}
+                                        javaScriptEnabled={true}
+                                        domStorageEnabled={true}
+                                    />
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        marginVertical={hp(1)}
+                                        heightBtn={hp(6)}
+                                        widthBtn={wp(50)}
+                                        isRightArrow={false}
+                                        onPress={onPressModalCheckPayment}
+                                        color={Colors.white}
+                                        title={ScreenText.Next}
+                                        marginHorizontal={wp(15)}
+                                        fontWeight="500"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.blue}
+                                    />
+
+                                </View>
+                            </Modal>
+                        </View>
+
+                        <View>
+                            <Modal isVisible={isModalDriver}
+                                onBackButtonPress={() => setModalDriver(false)}>
                                 <View style={Styles.viewModalDriver}>
                                     <TextComponent
                                         color={Colors.white}

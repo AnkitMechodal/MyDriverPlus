@@ -14,6 +14,14 @@ const Styles = StyleSheet.create({
         borderBottomRightRadius: wp(5),
         justifyContent: 'center',
     },
+    viewModalDriverStripe: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+    },
     viewModalMargin: {
         margin: 0,
         backgroundColor: 'black'
