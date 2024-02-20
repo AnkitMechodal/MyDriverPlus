@@ -1,5 +1,5 @@
 import React from "react";
-import { GestureResponderEvent, Image, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, GestureResponderEvent, Image, TextInput, TouchableOpacity, View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { Colors, Fonts, Images } from "../../themes/index";
 import CommonStyle from '../../utils/commonStyle';
@@ -203,7 +203,7 @@ const TextInputComponent = React.forwardRef((props: TextInputsProps, ref) => {
                     resizeMode="contain" />
                 : null}
 
-           
+
 
             {props.isVisibleRef ?
                 <Image

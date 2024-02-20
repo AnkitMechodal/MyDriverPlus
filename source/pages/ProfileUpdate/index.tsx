@@ -843,64 +843,6 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
     };
 
 
-    // const axiosPostProfileUpdateSubmit = async () => {
-    //     try {
-    //         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
-
-    //         if (storedLinkedId !== null) {
-    //             const userId = JSON.parse(storedLinkedId);
-    //             const url = `https://rideshareandcourier.graphiglow.in/api/updateProfile/updateProfile/${userId}`;
-
-
-    //             const data = new FormData();
-    //             data.append('username', name || '');
-    //             data.append('email', nameMail || '');
-    //             data.append('mobilenumber', selected.label + number || '');
-
-
-    //             // Check if selectedIMG.uri exists or is null
-    //             if (selectedIMG.uri) {
-    //                 // If it exists, append the image file to FormData
-    //                 data.append('profile_image', {
-    //                     uri: selectedIMG.uri, // Use selectedIMG.uri if available, otherwise fallback to IMG
-    //                     type: 'image/jpeg', // Adjust the content type based on your image type
-    //                     name: 'profile_image.jpg', // Adjust the file name as needed
-    //                 });
-    //             }
-
-    //             // console.log("axiosPostProfileUpdateSubmit==>", JSON.stringify(data, null, 2));
-
-    //             await axios.post(url, data, {
-    //                 headers: {
-    //                     'Content-Type': 'multipart/form-data',
-    //                     'Accept': 'application/json',
-    //                 },
-    //             })
-    //                 .then(response => {
-
-    //                     console.log("axiosPostProfileUpdateSubmit==>", JSON.stringify(data, null, 2));
-
-    //                     console.log("response==>", JSON.stringify(response, null, 2));
-    //                     if (response.status === 200 && response?.data?.message === 'Profile updated successfully') {
-    //                         Toast.show('Success! Your profile has been updated successfully', Toast.SHORT);
-    //                         navigation.goBack();
-    //                     } else {
-    //                         Toast.show('Profile Credentials Invalid!', Toast.SHORT);
-    //                     }
-    //                 })
-    //                 .catch(error => {
-    //                     Toast.show('Profile Credentials Invalid!', Toast.SHORT);
-    //                 });
-    //         } else {
-    //             // Handle the case where storedLinkedId is null
-    //         }
-    //     } catch (error) {
-    //         // Handle any errors that occur during AsyncStorage operations
-    //         console.log("error==>", error);
-    //     }
-    // };
-
-
 
     const onPressOpenStorage = async () => {
         try {
@@ -981,17 +923,10 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                             textAlign='center'
                         />
                     </View>
-                    <View style={{ flex: 1 }}>
-                        <TextComponent
-                            color={Colors.gray}
-                            title={ScreenText.UploadProfilePhoto}
-                            textDecorationLine={'none'}
-                            fontWeight="400"
-                            fontSize={wp(3.5)}
-                            marginVertical={wp(3)}
-                            fontFamily={Fonts.PoppinsRegular}
-                            textAlign='center'
-                        />
+
+
+                    <View>
+
                         <TextInputComponent
                             selectionColor={Colors.white}
                             isVisibleDropDown={false}
@@ -1043,115 +978,137 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                             />
                             : null}
-
-                        <TextInputComponent
-                            selectionColor={Colors.white}
-                            isVisibleDropDown={true}
-                            isVisibleEye={false}
-                            isArrow={false}
-                            isArrowLeft={true}
-                            isVisibleEye_={false}
-                            selectedImage={selectedImage || Images1.downArrow}
-                            selected={(!!selected && selected.label) || selectedIS}
-                            toggleDropdown={toggleDropdown}
-                            renderDropdown={renderDropdown}
-                            marginVertical={hp(2)}
-                            marginHorizontal={wp(4)}
-                            width={wp(90)}
-                            borderWidth={isFocusedNumber ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocusedNumber ? Colors.white : Colors.blue}
-                            height={hp(7)}
-                            isUserHide={false}
-                            textfontSize={ConstValue.value15}
-                            textfontFamily={Fonts.PoppinsRegular}
-                            textlineHeight={ConstValue.value0}
-                            ref={refUserMobile}
-                            placeholder={ScreenText.EnterMobile}
-                            editable={true}
-                            multiline={false}
-                            secureTextEntry={false}
-                            isPadding={true}
-                            keyboardType='numeric'
-                            textAlign='left'
-                            numberOfLines={null}
-                            maxLength={10}
-                            color={Colors.white}
-                            value={number}
-                            backgroundColor={Colors.grayDark}
-                            borderRadius={wp(2)}
-                            onFocus={handleFocusNumber}
-                            onChangeText={handleAccountNumber}
-                            onSubmitEditing={() => {
-                                refUserEmail?.current?.focus();
-                            }}
-                            placeholderTextColor={Colors.white}
-                        />
-                        {!isValidNumber ?
-                            <TextComponent
-                                textDecorationLine={'none'}
-                                color={Colors.red}
-                                title={ScreenText.ValidMobileNumber}
-                                fontWeight="400"
-                                marginLeft={wp(5)}
-                                fontSize={wp(4)}
-                                fontFamily={Fonts.PoppinsRegular}
-                            />
-                            : null}
-
-
-                        <TextInputComponent
-                            selectionColor={Colors.white}
-                            isVisibleDropDown={false}
-                            isVisibleEye={false}
-                            isVisibleEye_={false}
-                            isVisibleMail={false}
-                            isVisibleMailGray={true}
-                            isVisibleLockWhite={false} // 00
-                            isVisibleUser={false}
-                            width={wp(90)}
-                            borderWidth={isFocusedMail ? ConstValue.value1 : ConstValue.value0}
-                            borderColor={isFocusedMail ? Colors.white : Colors.blue}
-                            height={hp(7)}
-                            marginHorizontal={wp(5)}
-                            marginVertical={wp(2)}
-                            isUserHide={false}
-                            textfontSize={ConstValue.value15}
-                            textfontFamily={Fonts.PoppinsRegular}
-                            textlineHeight={ConstValue.value0}
-                            ref={refUserEmail}
-                            placeholder={ScreenText.EnterEmail}
-                            editable={true}
-                            multiline={false}
-                            secureTextEntry={false}
-                            isPadding={true}
-                            keyboardType='default'
-                            textAlign='left'
-                            numberOfLines={null}
-                            value={nameMail}
-                            maxLength={null}
-                            color={Colors.white}
-                            backgroundColor={Colors.grayDark}
-                            borderRadius={wp(2)}
-                            onFocus={handleFocusMail}
-                            onChangeText={handleAccountNameMail}
-                            onSubmitEditing={() => {
-
-                            }}
-                            placeholderTextColor={Colors.white}
-                        />
-                        {!isValidNameMail ?
-                            <TextComponent
-                                textDecorationLine={'none'}
-                                color={Colors.red}
-                                title={ScreenText.ValidEmail}
-                                fontWeight="400"
-                                fontSize={wp(4)}
-                                marginLeft={wp(5)}
-                                fontFamily={Fonts.PoppinsRegular}
-                            />
-                            : null}
                     </View>
-                    <View style={{ flex: 1, marginTop: wp(80) }}>
+
+                    <View>
+
+                        <TouchableOpacity onPress={() =>
+                            Toast.show("You Can't Abel To Edit These Field", Toast.SHORT)
+                        }>
+                            <TextInputComponent
+                                selectionColor={Colors.white}
+                                isVisibleDropDown={true}
+                                isVisibleEye={false}
+                                isArrow={false}
+                                isArrowLeft={true}
+                                isVisibleEye_={false}
+                                selectedImage={selectedImage || Images1.downArrow}
+                                selected={(!!selected && selected.label) || selectedIS}
+                                toggleDropdown={toggleDropdown}
+                                renderDropdown={renderDropdown}
+                                marginVertical={hp(2)}
+                                marginHorizontal={wp(4)}
+                                width={wp(90)}
+                                borderWidth={isFocusedNumber ? ConstValue.value1 : ConstValue.value0}
+                                borderColor={isFocusedNumber ? Colors.white : Colors.blue}
+                                height={hp(7)}
+                                isUserHide={false}
+                                textfontSize={ConstValue.value15}
+                                textfontFamily={Fonts.PoppinsRegular}
+                                textlineHeight={ConstValue.value0}
+                                ref={refUserMobile}
+                                placeholder={ScreenText.EnterMobile}
+                                editable={false}
+                                multiline={false}
+                                secureTextEntry={false}
+                                isPadding={true}
+                                keyboardType='numeric'
+                                textAlign='left'
+                                numberOfLines={null}
+                                maxLength={10}
+                                color={Colors.white}
+                                value={number}
+                                backgroundColor={Colors.grayDark}
+                                borderRadius={wp(2)}
+                                onFocus={handleFocusNumber}
+                                onChangeText={handleAccountNumber}
+                                onSubmitEditing={() => {
+                                    refUserEmail?.current?.focus();
+                                }}
+                                placeholderTextColor={Colors.white}
+                            />
+                            {!isValidNumber ?
+                                <TextComponent
+                                    textDecorationLine={'none'}
+                                    color={Colors.red}
+                                    title={ScreenText.ValidMobileNumber}
+                                    fontWeight="400"
+                                    marginLeft={wp(5)}
+                                    fontSize={wp(4)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                />
+                                : null}
+                        </TouchableOpacity>
+
+
+                    </View>
+
+
+                    <View>
+
+                        <TouchableOpacity onPress={() =>
+                            Toast.show("You Can't Abel To Edit These Field", Toast.SHORT)
+                        }>
+                            <TextInputComponent
+                                selectionColor={Colors.white}
+                                isVisibleDropDown={false}
+                                isVisibleEye={false}
+                                isVisibleEye_={false}
+                                isVisibleMail={false}
+                                isVisibleMailGray={true}
+                                isVisibleLockWhite={false} // 00
+                                isVisibleUser={false}
+                                width={wp(90)}
+                                borderWidth={isFocusedMail ? ConstValue.value1 : ConstValue.value0}
+                                borderColor={isFocusedMail ? Colors.white : Colors.blue}
+                                height={hp(7)}
+                                marginHorizontal={wp(5)}
+                                marginVertical={wp(2)}
+                                isUserHide={false}
+                                textfontSize={ConstValue.value15}
+                                textfontFamily={Fonts.PoppinsRegular}
+                                textlineHeight={ConstValue.value0}
+                                ref={refUserEmail}
+                                placeholder={ScreenText.EnterEmail}
+                                editable={false}
+                                multiline={false}
+                                secureTextEntry={false}
+                                isPadding={true}
+                                keyboardType='default'
+                                textAlign='left'
+                                numberOfLines={null}
+                                value={nameMail}
+                                maxLength={null}
+                                color={Colors.white}
+                                backgroundColor={Colors.grayDark}
+                                borderRadius={wp(2)}
+                                onFocus={handleFocusMail}
+                                onChangeText={handleAccountNameMail}
+                                onSubmitEditing={() => {
+
+                                }}
+                                placeholderTextColor={Colors.white}
+                            />
+                            {!isValidNameMail ?
+                                <TextComponent
+                                    textDecorationLine={'none'}
+                                    color={Colors.red}
+                                    title={ScreenText.ValidEmail}
+                                    fontWeight="400"
+                                    fontSize={wp(4)}
+                                    marginLeft={wp(5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                />
+                                : null}
+                        </TouchableOpacity>
+
+
+
+
+                    </View>
+
+
+                    <View style={{ flex: 1, marginTop: wp(30) }}>
                         <ButtonComponent
                             isVisibleMobile={false}
                             isVisibleFaceBook={false}
