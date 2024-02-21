@@ -58,10 +58,9 @@ const MobileVerficationScreen = ({ route, navigation }) => {
     const { isDarkMode, toggleTheme } = useTheme();
 
 
-    useEffect(() => {
-        // Send OTP 
-        sendOTPFromFirebase();
-    }, []);
+  
+
+  
 
     const handleFocus = () => {
         setIsFocused(true)
@@ -184,6 +183,12 @@ const MobileVerficationScreen = ({ route, navigation }) => {
 
     }
 
+    // const handleTextChange = (text, nextRef) => {
+    //     if (text.length === 1 && nextRef.current) {
+    //         nextRef.current.focus();
+    //     }
+    // };
+
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
@@ -279,6 +284,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
                             onChangeText={handleAccountOne}
+                            // onChangeText={(text) => handleTextChange(text, refnumber2)}
                             onSubmitEditing={() => {
                                 refnumber2?.current?.focus();
                             }}
@@ -322,6 +328,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             borderRadius={wp(2)}
                             onFocus={handleFocus2}
                             onChangeText={handleAccountTwo}
+                            // onChangeText={(text) => handleTextChange(text, refnumber3)}
                             onSubmitEditing={() => {
                                 refnumber3?.current?.focus();
                             }}
@@ -367,6 +374,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             borderRadius={wp(2)}
                             onFocus={handleFocus3}
                             onChangeText={handleAccountThree}
+                            // onChangeText={(text) => handleTextChange(text, refnumber4)}
                             onSubmitEditing={() => {
                                 refnumber4?.current?.focus();
                             }}
@@ -413,6 +421,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             borderRadius={wp(2)}
                             onFocus={handleFocus4}
                             onChangeText={handleAccountFour}
+                            // onChangeText={(text) => handleTextChange(text, refnumber5)}
                             onSubmitEditing={() => {
                                 refnumber5?.current?.focus();
                             }}
@@ -458,6 +467,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                             borderRadius={wp(2)}
                             onFocus={handleFocus5}
                             onChangeText={handleAccountFive}
+                            // onChangeText={(text) => handleTextChange(text, refnumber6)}
                             onSubmitEditing={() => {
                                 refnumber6?.current?.focus();
                             }}

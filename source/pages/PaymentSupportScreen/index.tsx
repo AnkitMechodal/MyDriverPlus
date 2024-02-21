@@ -597,9 +597,22 @@ const PaymentScreen = (props: Props) => {
             mobilenumber: selected.label + num,
             orderType: selectedOption.labelSeat,
             descriptionsDispute: descRef
+
+            // "type": "Driver",
+            // "username": "Mer Gahan",
+            // "email": "gahan@gmail.com",
+            // "mobilenumber": "20202020202020",
+            // "orderType": "Type3",
+            // "descriptionsDispute": "Not Comp sdfsdf fsdfsdfsdfer"
         };
 
         console.log("SupportData==>", JSON.stringify(data, null, 2));
+        console.log("SupportData==>", JSON.stringify(data, null, 2));
+        console.log("SupportData==>", JSON.stringify(data, null, 2));
+        console.log("SupportData==>", JSON.stringify(data, null, 2));
+        console.log("SupportData==>", JSON.stringify(data, null, 2));
+
+
 
         await axios.post(url, data, {
             headers: {

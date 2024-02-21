@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -27,6 +27,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
 
 
     const refPassword = useRef<any>(null);
+
     const refnumber2 = useRef<any>(null);
     const refnumber3 = useRef<any>(null);
     const refnumber4 = useRef<any>(null);
@@ -56,6 +57,22 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
 
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
 
+
+    useEffect(() => {
+
+        console.log("00000000000000000", route?.params?.itemEmail);
+
+        // const interval = setInterval(() => {
+        //     console.log("00000000000000000", route?.params?.itemEmail);
+        //     console.log("00000000000000000", route?.params?.itemEmail);
+        //     console.log("00000000000000000", route?.params?.itemEmail);
+        //     console.log("00000000000000000", route?.params?.itemEmail);
+        // }, 5000); // Refresh every 5 seconds
+
+        // return () => clearInterval(interval); // Cleanup function to clear the interval
+    }, []); // Empty dependency array means it only runs once when the component mounts
+
+
     const handleFocus = () => {
         setIsFocused(true)
     }
@@ -79,6 +96,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
     const handleFocus6 = () => {
         setIsFocused6(true)
     }
+
 
 
     const handleAccountOne = (useremail: any) => {
@@ -116,6 +134,14 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
         };
 
         console.log("axiosPostRequestEmailChecked", data);
+        console.log("axiosPostRequestEmailChecked", data);
+
+        console.log("axiosPostRequestEmailChecked", data);
+        console.log("axiosPostRequestEmailChecked", data);
+
+        console.log("axiosPostRequestEmailChecked", data);
+        console.log("axiosPostRequestEmailChecked", data);
+
 
         await axios.post(url, data, {
             headers: {
@@ -125,14 +151,16 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
             .then(response => {
                 if (response.status == 200
                     && response?.data?.message === "Email Verify") {
+
                     // Handle API response here
                     navigation.navigate('CreateNewPassword', {
                         itemEmailReset: route?.params?.itemEmail
                     });
                     Toast.show('Congratulations! Your Email Address has been Successfully Verified!', Toast.SHORT);
+
                     // navigation.navigate("CreateNewPassword");
                 } else {
-                    Toast.show('400 Server Error !', Toast.SHORT);
+                    Toast.show('Credentials Invalid', Toast.SHORT);
                     // navigation.navigate('CreateNewPassword', {
                     //     itemEmailReset: route?.params?.itemEmail
                     // });
@@ -140,16 +168,43 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
             })
             .catch(error => {
                 // Handle errors
+                // TODO - Twilo 
+
                 // Toast.show('OTP Provided Credentials Invalid!-400' + error, Toast.SHORT);
-                Toast.show('400 Server Error !', Toast.SHORT);
-                navigation.navigate('CreateNewPassword', {
-                    itemEmailReset: route?.params?.itemEmail
-                });
+                Toast.show('Credentials Invalid', Toast.SHORT);
+                // navigation.navigate('CreateNewPassword', {
+                //     itemEmailReset: route?.params?.itemEmail
+                // });
             });
     };
 
 
     const onPressVerify = async () => {
+
+        // const allRefs = [refnumber2, refnumber3, refnumber4, refnumber5, refnumber6];
+        // let isEmpty = false;
+
+        // allRefs.forEach(ref => {
+        //     if (ref.current && ref.current._lastNativeText === "") {
+        //         isEmpty = true;
+        //     }
+        // });
+
+        // if (isEmpty) {
+        //     Toast.show('All', Toast.SHORT);
+        // } else {
+        //     try {
+        //         const isConnected = await NetworkUtils.isNetworkAvailable()
+        //         if (isConnected) {
+        //             axiosPostRequestEmailChecked();
+        //         } else {
+        //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+        //         }
+        //     } catch (error) {
+        //         Toast.show("axios error", Toast.SHORT);
+        //     }
+        // }
+
         if (one === '' || two === '' || three === '' ||
             four === '' || five === '' || six === '') {
             Toast.show('OTP Field Is Required', Toast.SHORT);
@@ -178,7 +233,16 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
             email: route?.params?.itemEmail,
         };
 
-        console.log("axiosPostRequestEmailOTPSent", data);
+        console.log("axiosPostRequestEmailOTPSent------", data);
+        console.log("axiosPostRequestEmailOTPSent------", data);
+
+        console.log("axiosPostRequestEmailOTPSent------", data);
+
+
+        console.log("axiosPostRequestEmailOTPSent------", data);
+
+        console.log("axiosPostRequestEmailOTPSent------", data);
+
 
         await axios.post(url, data, {
             headers: {
@@ -191,7 +255,7 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                     // Handle API response here
                     Toast.show('We`ve successfully sent your One-Time Password (OTP)', Toast.SHORT);
                 } else {
-                    Toast.show('Email Credentials Invalid', Toast.SHORT);
+                    Toast.show('400 Server Error !', Toast.SHORT);
                 }
             })
             .catch(error => {
@@ -212,6 +276,13 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
             Toast.show("axios error", Toast.SHORT);
         }
     }
+
+
+    // const handleTextChange = (text, nextRef) => {
+    //     if (text.length === 1 && nextRef.current) {
+    //         nextRef.current.focus();
+    //     }
+    // };
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -311,7 +382,14 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
-                            onChangeText={handleAccountOne}
+                            // onChangeText={handleAccountOne}
+                            onChangeText={text => {
+                                handleAccountOne(text);
+                                if (text.length === 1) {
+                                    refnumber2?.current?.focus();
+                                }
+                            }}
+                            // onChangeText={(text) => handleTextChange(text, refnumber2)}
                             onSubmitEditing={() => {
                                 refnumber2?.current?.focus();
                             }}
@@ -355,12 +433,19 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus2}
-                            onChangeText={handleAccountTwo}
+                            onChangeText={text => {
+                                handleAccountTwo(text);
+                                if (text.length === 1) {
+                                    refnumber3?.current?.focus();
+                                }
+                            }}
+                            // onChangeText={(text) => handleTextChange(text, refnumber3)}
                             onSubmitEditing={() => {
                                 refnumber3?.current?.focus();
                             }}
                             placeholderTextColor={isDarkMode === 'dark' ? Colors.gray : Colors.black}
                         />
+
 
                         <TextInputComponent
                             selectionColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
@@ -400,7 +485,15 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus3}
-                            onChangeText={handleAccountThree}
+                            // onChangeText={handleAccountThree}
+                            onChangeText={text => {
+                                handleAccountThree(text);
+                                if (text.length === 1) {
+                                    refnumber4?.current?.focus();
+                                }
+                            }}
+                            // onChangeText={(text) => handleTextChange(text, refnumber4)}
+
                             onSubmitEditing={() => {
                                 refnumber4?.current?.focus();
                             }}
@@ -446,7 +539,15 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus4}
-                            onChangeText={handleAccountFour}
+                            // onChangeText={handleAccountFour}
+                            onChangeText={text => {
+                                handleAccountFour(text);
+                                if (text.length === 1) {
+                                    refnumber5?.current?.focus();
+                                }
+                            }}
+                            // onChangeText={(text) => handleTextChange(text, refnumber5)}
+
                             onSubmitEditing={() => {
                                 refnumber5?.current?.focus();
                             }}
@@ -491,7 +592,14 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus5}
-                            onChangeText={handleAccountFive}
+                            // onChangeText={(text) => handleTextChange(text, refnumber6)}
+                            // onChangeText={handleAccountFive}
+                            onChangeText={text => {
+                                handleAccountFive(text);
+                                if (text.length === 1) {
+                                    refnumber6?.current?.focus();
+                                }
+                            }}
                             onSubmitEditing={() => {
                                 refnumber6?.current?.focus();
                             }}

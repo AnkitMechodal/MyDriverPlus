@@ -200,8 +200,17 @@ const LoginSignUpScreen = (props: Props) => {
 
                     props.navigation.navigate("Home1");
 
+                } else if (response?.data?.error === 'Please verify email and mobile number before logging in') {
+                    Toast.show('Google Login Failed!', Toast.SHORT);
+
+                    // email passing 
+                    props.navigation.navigate('VerifyYourAccountMail', {
+                        itemEmailMail: GoogleEmail
+                    });
+
                 } else {
                     Toast.show('Login Credentials Invalid!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
                 }
             })
             .catch(error => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, GestureResponderEvent, Image, TextInput, TouchableOpacity, View } from "react-native";
+import { GestureResponderEvent, Image, TextInput, TouchableOpacity, View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { Colors, Fonts, Images } from "../../themes/index";
 import CommonStyle from '../../utils/commonStyle';
@@ -18,7 +18,7 @@ type TextInputsProps = {
     numberOfLines: any
     placeholder: any
     placeholderTextColor: any
-    onChangeText: (text: string) => void
+    onChangeText: (text: string) => void // text: string) => void
     onFocus: any
     onSubmitEditing: any
     value: any

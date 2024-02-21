@@ -29,7 +29,7 @@ const SettingScreen = (props: Props) => {
 
 
   const [defaultRating, setDefaultRating] = useState(0);
-  const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
+  const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
   const [isProfileName, setProfileName] = useState(ScreenText.GuyHawkins);
   const [isProfileEmail, setProfileEmail] = useState(ScreenText.emailDummy);
@@ -47,9 +47,13 @@ const SettingScreen = (props: Props) => {
   let user_name;
   let user_img;
 
+  let user_password;
+
   let user_total;
 
   let user_averageRating;
+
+  let GetOldPsw;
 
   // {defaultRating} / {Math.max.apply(null, maxRating)}
 
@@ -134,6 +138,9 @@ const SettingScreen = (props: Props) => {
             user_name = response?.data?.matchingUsers[0]?.username;
             user_img = response?.data?.matchingUsers[0]?.profile_image;
 
+            user_password = response?.data?.matchingUsers[0]?.password;
+
+            StoreOldPassword(user_password);
             // Example 
             // user_total = response?.data?.matchingUsers[0]?.username;
 
@@ -156,6 +163,17 @@ const SettingScreen = (props: Props) => {
         });
     } else {
 
+    }
+  }
+
+
+  const StoreOldPassword = async (user_password: any) => {
+    try {
+      await AsyncStorage.setItem('user_password_old', JSON.stringify(user_password));
+      console.log('user_password_old===>', JSON.stringify(user_password));
+    } catch (error) {
+      // Handle any errors that might occur during the storage operation
+      console.log('Error user_password_old :', error);
     }
   }
 
@@ -400,11 +418,13 @@ const SettingScreen = (props: Props) => {
 
           <View style={Styles.viewBoxThree}>
             <TouchableOpacity style={CommonStyle.commonRow}
-              onPress={() =>
+              onPress={async () => {
+                const GetOldPsw = await AsyncStorage.getItem('user_password_old');
                 props.navigation.navigate('NewPasswordScreen', {
-                  itemEmailToChangePassword: isProfileEmail
-                })
-              }
+                  itemEmailToChangePassword: isProfileEmail,
+                  itemOldPassword: GetOldPsw
+                });
+              }}
             >
               <Image
                 source={Images.lockIcon}

@@ -59,7 +59,7 @@ const ForgotPasswordScreen = (props: Props) => {
     }
 
 
-    const axiosPostRequestEmailOTPSent = async () => {
+    const axiosPostRequestEmailOTPSent = async (email: any) => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/usersEmailOTP/sendOTP';
 
         // Prepare data in JSON format
@@ -68,6 +68,11 @@ const ForgotPasswordScreen = (props: Props) => {
         };
 
         console.log("axiosPostRequestEmailOTPSent", data);
+        console.log("axiosPostRequestEmailOTPSent", data);
+
+        console.log("axiosPostRequestEmailOTPSent", data);
+        console.log("axiosPostRequestEmailOTPSent", data);
+
 
         await axios.post(url, data, {
             headers: {
@@ -83,7 +88,7 @@ const ForgotPasswordScreen = (props: Props) => {
                     Toast.show('We`ve successfully sent your One-Time Password (OTP)', Toast.SHORT);
 
                     props.navigation.navigate('OTPFromEmail', {
-                        itemEmail: email.toString()
+                        itemEmail: email
                     });
 
                 } else {
@@ -92,7 +97,7 @@ const ForgotPasswordScreen = (props: Props) => {
             })
             .catch(error => {
                 // Handle errors
-                Toast.show('Email Credentials Invalid!', Toast.SHORT);
+                Toast.show('Account is Not Registered!', Toast.SHORT);
             });
     };
 
@@ -106,7 +111,14 @@ const ForgotPasswordScreen = (props: Props) => {
             try {
                 const isConnected = await NetworkUtils.isNetworkAvailable()
                 if (isConnected) {
-                    axiosPostRequestEmailOTPSent();
+
+                    // CHECK EMAIL REG OR NOT
+                    // YES - OTP SEND
+                    // NO - OTP NO SEND 
+
+                    axiosPostRequestEmailRegCheck();
+
+                    // axiosPostRequestEmailOTPSent();
                 } else {
                     Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
                 }
@@ -115,6 +127,43 @@ const ForgotPasswordScreen = (props: Props) => {
             }
         }
     }
+
+    const axiosPostRequestEmailRegCheck = async () => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+        // Prepare data in JSON format
+        const data = {
+            email: email,
+        };
+
+        console.log("Google11===>", data);
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async response => {
+                if (response.status == 200
+                    &&
+                    response?.data?.message === "User Information") {
+
+                    //  Welcome! Signed in successfully.
+                    // Toast.show('Google Account is Already Registered!', Toast.SHORT);
+                    // props.navigation.navigate('Home1');
+
+                    axiosPostRequestEmailOTPSent(email);
+
+                } else {
+                    Toast.show('Account is Not Registered!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Account is Not Registered!', Toast.SHORT);
+            });
+
+    };
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>

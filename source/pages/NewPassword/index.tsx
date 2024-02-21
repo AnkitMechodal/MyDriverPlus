@@ -63,8 +63,27 @@ const NewPasswordScreen = ({ route, navigation }) => {
 
 
     useEffect(() => {
+        // This will run whenever textInput1 or textInput2 changes
+
+        setPassCurrent(JSON.parse(route?.params?.itemOldPassword));
+
+
         console.log("itemEmailToChangePassword==>", route?.params?.itemEmailToChangePassword);
+
+        console.log("itemOldPassword==>", route?.params?.itemOldPassword);
+
+        // setName(route?.params?.itemProfileName);
+        // setNameMail(route?.params?.itemProfileEmail);
+        // setNumber(route?.params?.itemProfileNumber);
+        // setIMG(route?.params?.itemProfileImage);
+
+        // You can perform additional side effects or logic here if needed
+        return () => {
+            // Cleanup logic here (if needed)
+        };
     }, []);
+
+
 
     const handleFocus = () => {
         setIsFocused(true)
@@ -183,8 +202,32 @@ const NewPasswordScreen = ({ route, navigation }) => {
         } else if (pass !== passConfirm) {
             Toast.show("Passwords Do Not Match. Please try again.", Toast.SHORT);
         } else {
-            // Toast.show("Done", Toast.SHORT);
-            axiosPostProfileChangePassword();
+
+            // IF ALL PASSWORD MATCH THEN NOT CALL API
+            // ELSE CALL 
+
+            if (passCurrent === pass || passCurrent === passConfirm) {
+                Toast.show('Credentials Invalid! Current Password & New Password is Matched !', Toast.SHORT);
+            } else {
+
+                console.log("11111111", JSON.parse(route?.params?.itemOldPassword));
+                console.log("22222222", passCurrent);
+                console.log("11111111", JSON.parse(route?.params?.itemOldPassword));
+                console.log("22222222", passCurrent);
+                console.log("11111111", JSON.parse(route?.params?.itemOldPassword));
+                console.log("22222222", passCurrent);
+
+                if (JSON.parse(route?.params?.itemOldPassword) === passCurrent) {
+
+                    // Toast.show("Done", Toast.SHORT);
+                    axiosPostProfileChangePassword();
+                } else {
+                    Toast.show('Current Password is Invalid !', Toast.SHORT);
+                }
+
+
+            }
+
         }
     }
 
@@ -206,12 +249,19 @@ const NewPasswordScreen = ({ route, navigation }) => {
 
         // Prepare data in JSON format
         const data = {
-            email: route?.params?.itemEmailToChangePassword,
+            email: route?.params?.itemEmailToChangePassword, // passCurrent
+            // email: passCurrent,
             password: pass,
             newPassword: passConfirm
         };
 
-        console.log("axiosPostRequestProfileSubmit==>", data);
+        console.log("axiosPostRequestProfileSubmit99999==>", data);
+        console.log("axiosPostRequestProfileSubmit555555==>", data);
+
+        console.log("axiosPostRequestProfileSubmit22222==>", data);
+
+        console.log("axiosPostRequestProfileSubmit0000==>", data);
+
 
         await axios.post(url, data, {
             headers: {
@@ -298,6 +348,7 @@ const NewPasswordScreen = ({ route, navigation }) => {
                                 placeholder={ScreenText.EnterCurrentPassword}
                                 editable={true}
                                 multiline={false}
+                                // value={passCurrent}
                                 secureTextEntry={isSecureCurrent}
                                 isPadding={true}
                                 keyboardType='default'

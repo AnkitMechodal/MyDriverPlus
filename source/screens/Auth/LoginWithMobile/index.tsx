@@ -265,7 +265,7 @@ const LoginWithMobileScreen = (props: Props) => {
     const refMobile = useRef<any>(null);
     const refPassword = useRef<any>(null);
 
-    const [toggleCheckBox, setToggleCheckBox] = useState(false)
+    const [toggleCheckBox, setToggleCheckBox] = useState(true)
 
     const [isValidEmail, setValidEmail] = useState(true);
     const [isValidPassword, setValidPassword] = useState(true);
@@ -389,6 +389,52 @@ const LoginWithMobileScreen = (props: Props) => {
     }
 
 
+    const axiosPostRequestLoginMobileOff = async () => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+
+        // Prepare data in JSON format
+        const data = {
+            mobilenumber: selected.label + num,
+            password: pass
+        };
+
+        console.log("data", data);
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200 && response?.data?.message === 'Login successful') {
+                    // Handle API response here
+
+                    // Get User ID :
+                    // user_register_id = response?.data?.user?._id;
+                    // storeLoginMobileId(user_register_id);
+
+                    // not auto login with these process and step
+
+                    Toast.show('Login Successfully!', Toast.SHORT);
+                    props.navigation.navigate("Home1");
+
+                } else if (response?.data?.error === 'Please verify email and mobile number before logging in') {
+                    Toast.show('Login Failed!', Toast.SHORT);
+
+                    // email passing 
+                    props.navigation.navigate('VerifyYourAccountMobile', {
+                        itemEmailNumber: selected?.label + num.toString()
+                    });
+                } else {
+                    Toast.show('Login Credentials Invalid!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Login Credentials Invalid!', Toast.SHORT);
+            });
+    };
+
     const axiosPostRequestLoginMobile = async () => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
 
@@ -460,7 +506,14 @@ const LoginWithMobileScreen = (props: Props) => {
             try {
                 const isConnected = await NetworkUtils.isNetworkAvailable()
                 if (isConnected) {
-                    axiosPostRequestLoginMobile();
+
+                    // Reminder Me -  ON
+                    if (toggleCheckBox) {
+                        axiosPostRequestLoginMobile();
+                    } else {
+                        axiosPostRequestLoginMobileOff();
+                    }
+
                 } else {
                     Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
                 }
@@ -469,6 +522,8 @@ const LoginWithMobileScreen = (props: Props) => {
             }
         }
     }
+
+
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>

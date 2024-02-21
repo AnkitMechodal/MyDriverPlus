@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
-import { Linking, SafeAreaView, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
+import { openInbox } from 'react-native-email-link';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import HeaderComponent from '../../../components/Header';
@@ -212,11 +213,16 @@ const EmailVerficationScreen = ({ route, navigation }) => {
     }
 
 
-    const onPressGoToMail = () => {
+    const onPressGoToMail = async () => {
 
-        Linking.openURL(`mailto:${route?.params?.itemSentEmail}`)
+        // Linking.openURL(`mailto:${route?.params?.itemSentEmail}`)
 
-
+        try {
+            // This will open the email inbox
+            await openInbox();
+        } catch (error) {
+            console.error('Error opening email inbox:', error);
+        }
 
     }
 
