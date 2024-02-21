@@ -8,7 +8,7 @@ import { Alert, Image, ImageBackground, SafeAreaView, View } from 'react-native'
 // import { AccessToken, GraphRequest, GraphRequestManager, LoginButton } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
-import axios from "axios";
+import axios from 'axios';
 import { AccessToken } from 'react-native-fbsdk-next';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -28,6 +28,8 @@ type Props = {
 
 const LoginSignUpScreen = (props: Props) => {
     // const isDarkMode = useisDarkMode();
+
+    let user_register_id;
 
     const { isDarkMode, toggleTheme } = useTheme();
 
@@ -88,22 +90,40 @@ const LoginSignUpScreen = (props: Props) => {
             GoogleEmail = user?.user?.email;
             GoogleName = user?.user?.name;
 
+            console.log("GoogleEmail===>", GoogleEmail);
+            console.log("GoogleEmail===>", GoogleEmail);
+
+            console.log("GoogleName===>", GoogleName);
+            console.log("GoogleName===>", GoogleName);
+
             try {
                 const isConnected = await NetworkUtils.isNetworkAvailable()
                 if (isConnected) {
-                    axiosPostRequestGoogleEmail(GoogleEmail, GoogleName);
+
+                    const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+                    if (storedLinkedId === null || storedLinkedId === '' || storedLinkedId === undefined) {
+
+                        await AsyncStorage.clear();
+                        await GoogleSignin.revokeAccess();
+                        await GoogleSignin.signOut();
+
+                        // TODO : REG EMAIL IS ALREADY OR NOT API
+                        // YES - GoogleSignUp
+                        // NO - API CALL MESSAGE - IS ALREADY REGISTER PLEASE USE OTHER
+
+                        axiosPostRequestGoogleEmail(GoogleEmail);
+
+                    } else {
+                        props.navigation.navigate('Home1');
+                    }
+
+
                 } else {
                     Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
                 }
             } catch (error) {
                 Toast.show("axios error", Toast.SHORT);
             }
-            // Toast.show('Welcome! Signed in successfully.', Toast.SHORT);
-
-            // props.navigation.navigate('GoogleSignUp', {
-            //     itemGoogleEmail: user?.user?.email,
-            //     itemGoogleName: user?.user?.name
-            // });
 
         } catch (error: any) {
             console.log("error===>", error);
@@ -111,8 +131,8 @@ const LoginSignUpScreen = (props: Props) => {
     };
 
 
-    const axiosPostRequestGoogleEmail = async (GoogleEmail, GoogleName) => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+    const axiosPostRequestGoogleEmail = async (GoogleEmail) => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
         // Prepare data in JSON format
         const data = {
@@ -126,28 +146,81 @@ const LoginSignUpScreen = (props: Props) => {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => {
-                if (response.status === 200
+            .then(async response => {
+                if (response.status == 200
                     &&
-                    response?.data?.message === 'Login successful') {
-                    // Handle API response here
-                    props.navigation.navigate('Home1');
+                    response?.data?.message === "User Information") {
+
+                    //  Welcome! Signed in successfully.
+                    // Toast.show('Google Account is Already Registered!', Toast.SHORT);
+                    // props.navigation.navigate('Home1');
+
+                    // LOGIN  API CALL FOR REG USER
+                    axiosPostRequestEmail(GoogleEmail);
 
                 } else {
-                    //  Welcome! Signed in successfully.
-                    Toast.show('Welcome! Signed in successfully.', Toast.SHORT);
-
                     props.navigation.navigate('GoogleSignUp', {
                         itemGoogleEmail: GoogleEmail,
                         itemGoogleName: GoogleName
                     });
+
                 }
             })
             .catch(error => {
                 // Handle errors
-                Toast.show('Google Credentials Invalid!', Toast.SHORT);
+                props.navigation.navigate('GoogleSignUp', {
+                    itemGoogleEmail: GoogleEmail,
+                    itemGoogleName: GoogleName
+                });
             });
+
     };
+
+    const axiosPostRequestEmail = async (GoogleEmail) => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+
+        // Prepare data in JSON format
+        const data = {
+            email: GoogleEmail,
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async response => {
+                if (response.status == 200
+                    &&
+                    response?.data?.message === "Login successful") {
+
+                    // Get User ID :
+                    user_register_id = response?.data?.user?._id;
+                    storeLoginMobileId(user_register_id);
+
+                    props.navigation.navigate("Home1");
+
+                } else {
+                    Toast.show('Login Credentials Invalid!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Login Credentials Invalid!', Toast.SHORT);
+            });
+
+    }
+
+
+    const storeLoginMobileId = async (user_register_id: any) => {
+        try {
+            await AsyncStorage.setItem('user_register_id', JSON.stringify(user_register_id));
+            console.log('user_register_id===>', JSON.stringify(user_register_id));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_register_id :', error);
+        }
+    }
 
     async function fb_login() {
         let cred = await handleButtonClick();

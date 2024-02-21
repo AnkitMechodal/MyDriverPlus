@@ -622,7 +622,8 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
     ];
 
     const toggleDropdown = () => {
-        setVisible((prevVisible) => !prevVisible);
+        // setVisible((prevVisible) => !prevVisible); - Working !
+        Toast.show("You Can't Abel To Edit These Field", Toast.SHORT)
     };
 
     const onItemPress = (item) => {

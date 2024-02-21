@@ -577,7 +577,7 @@ const SignUpScreen = ({ route, navigation }) => {
             })
             .catch(error => {
                 // Handle errors
-                Toast.show('Registered Credentials Invalid!', Toast.SHORT);
+                Toast.show('Account is Already Registered!', Toast.SHORT);
             });
     };
 

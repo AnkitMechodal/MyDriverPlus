@@ -115,6 +115,21 @@ const EmailVerficationScreen = ({ route, navigation }) => {
         // Get User In User Info
         axiosPostRequestEmailGetInfo();
 
+
+        // axiosPostRequestSendOTPEmail(); //20
+
+
+        // try {
+        //     const isConnected = await NetworkUtils.isNetworkAvailable()
+        //     if (isConnected) {
+        //         axiosPostRequestSendOTPEmail();
+        //     } else {
+        //         Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+        //     }
+        // } catch (error) {
+        //     Toast.show("axios error", Toast.SHORT);
+        // }
+
     });
 
     const storeAccountEmail = async (storeemaillink: any) => {
@@ -178,6 +193,8 @@ const EmailVerficationScreen = ({ route, navigation }) => {
                         user__id = response?.data?.user?._id;
                         storeEmailId(user__id);
 
+                        axiosPostRequestSendOTPEmail(); //20
+
                         // Handle API response here
                         Toast.show("Email Information Get Successfully!", Toast.SHORT);
                     } else {
@@ -195,17 +212,12 @@ const EmailVerficationScreen = ({ route, navigation }) => {
     }
 
 
-    const onPressGoToMail = async () => {
-        try {
-            const isConnected = await NetworkUtils.isNetworkAvailable()
-            if (isConnected) {
-                axiosPostRequestSendOTPEmail();
-            } else {
-                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-            }
-        } catch (error) {
-            Toast.show("axios error", Toast.SHORT);
-        }
+    const onPressGoToMail = () => {
+
+        Linking.openURL(`mailto:${route?.params?.itemSentEmail}`)
+
+
+
     }
 
     const axiosPostRequestSendOTPEmail = async () => {
@@ -236,7 +248,6 @@ const EmailVerficationScreen = ({ route, navigation }) => {
 
                         // console.log("Response==>", JSON.stringify(response, null, 2));
 
-                        Linking.openURL(`mailto:${route?.params?.itemSentEmail}`)
 
                         // Handle API response here
                         Toast.show("Email Verification Successfully!", Toast.SHORT);

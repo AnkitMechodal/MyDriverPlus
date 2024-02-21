@@ -562,10 +562,11 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
             mobilenumberStatus: "Deactive",
             mobilenumberOTP: "000000",
             password: pass,
-            refercode: passRef ? passRef : '',
+            // refercode: passRef ? passRef : ''
+            refercode: passRef !== null ? passRef : ''
         };
 
-        console.log("axiosPostRequestCreateAccount==>", JSON.stringify(data, null, 2));
+        console.log("axiosPostRequestCreateAccount-Google==>", JSON.stringify(data, null, 2));
 
         await axios.post(url, data, {
             headers: {
@@ -596,7 +597,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
             })
             .catch(error => {
                 // Handle errors
-                Toast.show('Registered Credentials Invalid!', Toast.SHORT);
+                Toast.show('Account is Already Registered!', Toast.SHORT);
             });
     };
 

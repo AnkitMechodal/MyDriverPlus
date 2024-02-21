@@ -96,11 +96,12 @@ const MyComponent = ({ navigation }) => {
         setModalVisible(!isModalVisible);
     };
 
-    // working !
     const SignInWithGoogle = async () => {
         // BackHandler.exitApp();
+        // navigation.navigate("LoginSignUp");
         try {
             BackHandler.exitApp();
+
             await AsyncStorage.clear();
             await GoogleSignin.revokeAccess();
             await GoogleSignin.signOut();
