@@ -224,7 +224,7 @@ const LoginWithMailScreen = (props: Props) => {
             password: pass
         };
 
-        console.log("data", data);
+        console.log("data====>", data);
 
         await axios.post(url, data, {
             headers: {
@@ -292,7 +292,11 @@ const LoginWithMailScreen = (props: Props) => {
                     // Reminder Me -  ON
                     if (toggleCheckBox) {
                         axiosPostRequestLoginMail();
+
+
                     } else {
+
+
                         axiosPostRequestLoginMailOff();
                     }
 

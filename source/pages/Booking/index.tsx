@@ -579,7 +579,7 @@ const BookingScreen = ({ route, navigation }) => {
                         // 15000 - 10000
                         console.log(`Error getting location: ${error.message}`);
                     },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                    { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
                 );
 
                 // Drop :

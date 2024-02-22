@@ -249,16 +249,23 @@ const SettingScreen = (props: Props) => {
 
         const url = `https://rideshareandcourier.graphiglow.in/api/userAccountDelete/user/${userId}`
 
+        console.log('DELETE:', url);
+        console.log('DELETE:', url);
+        console.log('DELETE:', url);
+
         await axios.delete(url, {
           headers: {
             'Content-Type': 'application/json'
           }
         })
-          .then(response => {
+          .then(async response => {
             if (response.status === 200
               && response?.data?.message === 'User deleted successfully') {
+
               Toast.show('Account Successfully Deleted!', Toast.SHORT);
+              await AsyncStorage.clear();
               BackHandler.exitApp();
+
             } else {
               Toast.show('Unable to Delete Account!', Toast.SHORT);
             }

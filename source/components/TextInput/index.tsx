@@ -224,7 +224,7 @@ const TextInputComponent = React.forwardRef((props: TextInputsProps, ref) => {
                 editable={props.editable}
                 maxLength={props.maxLength}
                 blurOnSubmit={false}
-                multiline={props.multiline}
+                multiline
                 numberOfLines={props.numberOfLines}
                 placeholder={props.placeholder}
                 placeholderTextColor={props.placeholderTextColor}

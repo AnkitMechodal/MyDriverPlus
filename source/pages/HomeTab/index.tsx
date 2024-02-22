@@ -101,6 +101,12 @@ const HomeTabScreen = ({ route, navigation }) => {
     let storedRideType;
     let storedBidType;
 
+
+    // USER
+    let secondPartOfAddress;
+    let remainingAddress;
+    let postalCode;
+
     //Status
     //RideStatus
     //LastRideId
@@ -130,6 +136,11 @@ const HomeTabScreen = ({ route, navigation }) => {
 
 
     const mapViewRef = useRef<any>(null);
+
+    // CurrentAdd
+
+    const [CurrentAdd, setCurrentAdd] = useState("");
+
 
 
     useEffect(() => {
@@ -228,33 +239,146 @@ const HomeTabScreen = ({ route, navigation }) => {
                     user_latitude = position.coords.latitude;
                     user_longitude = position.coords.longitude;
 
-                    console.log("User-fetchData1==>", user_latitude);
-                    console.log("User-fetchData2==>", user_longitude);
+                    console.log("User-fetchData1---==>", user_latitude);
+                    console.log("User-fetchData2---==>", user_longitude);
+
+                    console.log("User-fetchData1---==>", user_latitude);
+                    console.log("User-fetchData2---==>", user_longitude);
 
                     let newCoordinate = { latitude: user_latitude, longitude: user_longitude };
                     setMarkerCoordinate(newCoordinate);
 
+                    // GET ADDRESS API Call
+                    getCurrentLocationAddress(user_latitude, user_longitude);
+
                 },
                 error => {
                     console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
             );
         }
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchData, 5 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
     }, []);
 
     const { isDarkMode, toggleTheme } = useTheme();
 
+
+    const getCurrentLocationAddress = async (user_latitude, user_longitude) => {
+
+        console.log("HOME1----==>", user_latitude);
+        console.log("HOME2----==>", user_longitude);
+
+        try {
+
+            fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + user_latitude + ',' + user_longitude + '&key=' + 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE')
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    // TODO :
+                    // GET ADDRESS IN 3 PART
+                    const result = responseJson.results[0];
+                    const formattedAddress = result.formatted_address;
+
+                    secondPartOfAddress = formattedAddress.split(',')[1];
+                    remainingAddress = formattedAddress.split(',').slice(1).join(',').trim();
+                    postalCode = result.address_components.find(component =>
+                        component.types.includes('postal_code')
+                    );
+
+                    console.log('GET ADDRESS 1-HOME', remainingAddress);
+                    console.log('GET ADDRESS 2-HOME', secondPartOfAddress);
+                    console.log('GET ADDRESS 3-HOME', postalCode.long_name);
+
+                    // SET 2ND ADDRESS TO INPUT
+                    setCurrentAdd(remainingAddress);
+
+                    // DATA INSERT INTO UPDATE API 
+                    axiosUpdateLocationRequest(user_latitude, user_longitude, remainingAddress);
+
+                })
+
+        } catch (error) {
+            console.error('Error in getCurrentLocationAddress:', error);
+            throw error;
+        }
+    };
+
+    const axiosUpdateLocationRequest = async (user_latitude, user_longitude, remainingAddress) => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosUpdateLocationRequestGet(user_latitude, user_longitude, remainingAddress);
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosUpdateLocationRequestGet = async (user_latitude, user_longitude, remainingAddress) => {
+        try {
+            const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            if (storedLinkedId !== null) {
+                const userId = JSON.parse(storedLinkedId);
+                const url = `https://rideshareandcourier.graphiglow.in/api/UserlocationsUpdate/updatelocations/${userId}`;
+
+
+                console.log("current_latitude", user_latitude);
+                console.log("current_longitude", user_longitude);
+                console.log("addresh", remainingAddress);
+
+                await axios.get(url, {
+
+                    params: {
+                        current_latitude: user_latitude,
+                        current_longitude: user_longitude,
+                        addresh: remainingAddress
+                    },
+
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200
+                            && response?.data?.message === 'Locations updated successfully') {
+
+                            // Toast.show('Locations Inserted!', Toast.SHORT);
+
+                            // Toast.show('Ride Status Get Success!', Toast.SHORT);
+
+                        } else {
+                            // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                        }
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                    });
+
+            } else {
+
+            }
+
+        } catch (error) {
+
+        }
+    }
 
     // GetRideStatusCheck
     const axiosPostLastRideStatus = async () => {
@@ -760,6 +884,40 @@ const HomeTabScreen = ({ route, navigation }) => {
         }
     }
 
+
+    const onPressGetCurrentLocation = () => {
+        // Get Current Lat And Long
+        Geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+
+                user_latitude = position.coords.latitude;
+                user_longitude = position.coords.longitude;
+
+                console.log("User-fetchData1---==>", user_latitude);
+                console.log("User-fetchData2---==>", user_longitude);
+
+                console.log("User-fetchData1---==>", user_latitude);
+                console.log("User-fetchData2---==>", user_longitude);
+
+                let newCoordinate = { latitude: user_latitude, longitude: user_longitude };
+                setMarkerCoordinate(newCoordinate);
+
+                // GET ADDRESS API Call
+                getCurrentLocationAddress(user_latitude, user_longitude);
+
+            },
+            error => {
+                console.log(`Error getting location: ${error.message}`);
+                console.log(`Error getting location: ${error.message}`);
+                console.log(`Error getting location: ${error.message}`);
+
+            },
+            { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
+        );
+    }
+
+
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
@@ -818,33 +976,40 @@ const HomeTabScreen = ({ route, navigation }) => {
 
                     </TouchableOpacity>
 
-                    <TextInputComponent
-                        selectionColor={Colors.white}
-                        isVisibleDropDown={false}
-                        marginVertical={hp(1)}
-                        width={wp(50)}
-                        height={hp(7)}
-                        marginTop={hp(2)}
-                        isUserHide={false}
-                        textfontSize={ConstValue.value15}
-                        textfontFamily={Fonts.PoppinsRegular}
-                        textlineHeight={ConstValue.value0}
-                        ref={ref}
-                        placeholder={"Your Current Location"}
-                        editable={true}
-                        multiline={false}
-                        secureTextEntry={false}
-                        isPadding={true}
-                        keyboardType='default'
-                        textAlign='left'
-                        numberOfLines={null}
-                        maxLength={null}
-                        color={Colors.white}
-                        backgroundColor={'transparent'}
-                        borderRadius={wp(2)}
-                        onChangeText={handleUserLocation}
-                        placeholderTextColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
-                    />
+                    <TouchableOpacity onPress={onPressGetCurrentLocation}>
+
+                        <TextInputComponent
+                            selectionColor={Colors.white}
+                            isVisibleDropDown={false}
+                            marginVertical={hp(1)}
+                            width={wp(50)}
+                            height={hp(7)}
+                            marginTop={hp(2)}
+                            isUserHide={false}
+                            textfontSize={ConstValue.value12}
+                            textfontFamily={Fonts.PoppinsRegular}
+                            textlineHeight={ConstValue.value0}
+                            ref={ref}
+                            placeholder={"Fetch Your Current Location"}
+                            editable={false}
+                            multiline={false}
+                            secureTextEntry={false}
+                            isPadding={true}
+                            keyboardType='default'
+                            textAlign='left'
+                            value={CurrentAdd}
+                            numberOfLines={1}
+                            maxLength={28}
+                            color={Colors.white}
+                            backgroundColor={'transparent'}
+                            borderRadius={wp(2)}
+                            onChangeText={handleUserLocation}
+                            placeholderTextColor={isDarkMode === 'dark' ? Colors.white : Colors.black}
+                        />
+
+                    </TouchableOpacity>
+
+
 
                     <View style={Styles.viewMargin}>
                         <ButtonComponent
