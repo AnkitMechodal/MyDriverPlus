@@ -1016,7 +1016,6 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                                                         isPadding={true}
                                                         value={route?.params?.itemPickLocationConfrim}
                                                         keyboardType='default'
-                                                        maxLength={null}
                                                         textAlign='left'
                                                         numberOfLines={null}
                                                         color={Colors.white}
@@ -1075,7 +1074,6 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
-                                                            maxLength={null}
                                                             textAlign='left'
                                                             numberOfLines={null}
                                                             value={route?.params?.itemDropLocationConfrim}

@@ -1421,7 +1421,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                             textAlignVertical={"top"}
                                             textAlign='left'
                                             numberOfLines={null}
-                                            maxLength={null}
                                             color={Colors.white}
                                             backgroundColor={Colors.grayDark}
                                             borderRadius={wp(2)}

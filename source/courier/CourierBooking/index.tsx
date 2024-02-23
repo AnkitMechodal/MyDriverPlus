@@ -549,8 +549,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
     }
 
 
-
-
     const onPressShowDateSchedulePicker = () => {
         setShedulePickerVisible(true);
     }
@@ -1578,7 +1576,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
-                                                        maxLength={null}
                                                         textAlign='left'
                                                         numberOfLines={null}
                                                         color={Colors.white}
@@ -1638,7 +1635,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
-                                                            maxLength={null}
                                                             textAlign='left'
                                                             numberOfLines={null}
                                                             color={Colors.white}
@@ -2306,7 +2302,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
-                                                        maxLength={null}
                                                         textAlign='left'
                                                         numberOfLines={null}
                                                         color={Colors.white}
@@ -2365,7 +2360,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
-                                                            maxLength={null}
                                                             textAlign='left'
                                                             numberOfLines={null}
                                                             color={Colors.white}
@@ -2871,7 +2865,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                     keyboardType='numeric'
                                                     textAlign='left'
                                                     numberOfLines={null}
-                                                    maxLength={null}
                                                     color={Colors.white}
                                                     backgroundColor={Colors.grayDark}
                                                     borderRadius={wp(2)}
@@ -2935,7 +2928,6 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                     keyboardType='numeric'
                                                     textAlign='left'
                                                     numberOfLines={null}
-                                                    maxLength={null}
                                                     color={Colors.white}
                                                     backgroundColor={Colors.grayDark}
                                                     borderRadius={wp(2)}

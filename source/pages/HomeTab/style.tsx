@@ -44,7 +44,7 @@ const Styles = StyleSheet.create({
         height: wp(3),
         borderRadius: 15,
         padding: 0,
-        margin: 0
+        margin: 0,
     },
     modalConainer: {
         justifyContent: 'space-evenly',
@@ -77,7 +77,7 @@ const Styles = StyleSheet.create({
     },
     sliderBox: {
         marginHorizontal: wp(5),
-        marginTop: wp(15)
+        marginTop: wp(18)
     },
 
     overlay: {

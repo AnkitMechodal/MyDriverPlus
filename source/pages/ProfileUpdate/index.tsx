@@ -956,7 +956,6 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                             keyboardType='default'
                             textAlign='left'
                             numberOfLines={null}
-                            maxLength={null}
                             color={Colors.white}
                             backgroundColor={Colors.grayDark}
                             borderRadius={wp(2)}
@@ -1079,7 +1078,6 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
                                 textAlign='left'
                                 numberOfLines={null}
                                 value={nameMail}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}

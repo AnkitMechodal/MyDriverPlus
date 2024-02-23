@@ -700,7 +700,6 @@ const PaymentScreen = (props: Props) => {
                                 keyboardType='default'
                                 textAlign='left'
                                 numberOfLines={null}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
@@ -809,7 +808,6 @@ const PaymentScreen = (props: Props) => {
                                 keyboardType='default'
                                 textAlign='left'
                                 numberOfLines={null}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
@@ -872,7 +870,6 @@ const PaymentScreen = (props: Props) => {
                                 multiline={false}
                                 isPadding={true}
                                 keyboardType='default'
-                                maxLength={null}
                                 textAlign='left'
                                 numberOfLines={null}
                                 color={Colors.white}

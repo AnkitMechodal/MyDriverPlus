@@ -1095,7 +1095,6 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                                 keyboardType='numeric'
                                 textAlign='left'
                                 numberOfLines={null}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
@@ -1195,7 +1194,6 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                                 textAlignVertical={"top"}
                                 textAlign='left'
                                 numberOfLines={null}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}

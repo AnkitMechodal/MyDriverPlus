@@ -13,8 +13,11 @@ type TextInputsProps = {
     secureTextEntry: boolean
     editable: boolean
     defaultValue: any
-    maxLength: any
-    multiline: any
+
+    ellipsizeMode: any
+
+    maxLength: number
+    multiline: boolean
     numberOfLines: any
     placeholder: any
     placeholderTextColor: any
@@ -224,7 +227,7 @@ const TextInputComponent = React.forwardRef((props: TextInputsProps, ref) => {
                 editable={props.editable}
                 maxLength={props.maxLength}
                 blurOnSubmit={false}
-                multiline
+                multiline={props.multiline}
                 numberOfLines={props.numberOfLines}
                 placeholder={props.placeholder}
                 placeholderTextColor={props.placeholderTextColor}
@@ -236,6 +239,7 @@ const TextInputComponent = React.forwardRef((props: TextInputsProps, ref) => {
                 keyboardType={props.keyboardType}
                 defaultValue={props.defaultValue}
                 value={props.value}
+                ellipsizeMode={props.ellipsizeMode}
                 selectionColor={props.selectionColor} // set as default
                 cursorColor={Colors.buttonBackgroundColor}
                 textAlignVertical={props.textAlignVertical}

@@ -1372,7 +1372,6 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                                 isApplyNow={isApplyNowBtn}
                                 isVisibleApplyNow={!isApplyNowText}
                                 onPressApplyNow={onPressApplyNow}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={isApplyNowBG ? Colors.grayDark : Colors.lightGreen}
                                 borderRadius={wp(2)}
@@ -1443,7 +1442,6 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                             isApplyNowPoints={isRedeemBtn}
                             isVisibleApplyNowPoints={!isRedeemText}
                             onPressApplyNowRedeem={onPressRedeem}
-                            maxLength={null}
                             color={Colors.white}
                             backgroundColor={isRedeemBG ? Colors.grayDark : Colors.lightGreen}
                             borderRadius={wp(2)}

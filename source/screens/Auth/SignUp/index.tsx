@@ -730,7 +730,6 @@ const SignUpScreen = ({ route, navigation }) => {
                             keyboardType='default'
                             textAlign='left'
                             numberOfLines={null}
-                            maxLength={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
@@ -850,7 +849,6 @@ const SignUpScreen = ({ route, navigation }) => {
                             keyboardType='default'
                             textAlign='left'
                             numberOfLines={null}
-                            maxLength={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
@@ -907,7 +905,6 @@ const SignUpScreen = ({ route, navigation }) => {
                             secureTextEntry={!isSecureFirst}
                             isPadding={true}
                             keyboardType='default'
-                            maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
@@ -965,7 +962,6 @@ const SignUpScreen = ({ route, navigation }) => {
                             secureTextEntry={!isSecureConfirm}
                             isPadding={true}
                             keyboardType='default'
-                            maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
@@ -1019,7 +1015,6 @@ const SignUpScreen = ({ route, navigation }) => {
                             multiline={false}
                             isPadding={true}
                             keyboardType='default'
-                            maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}

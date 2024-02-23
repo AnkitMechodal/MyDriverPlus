@@ -272,7 +272,6 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
                             keyboardType='default'
                             textAlign='left'
                             numberOfLines={null}
-                            maxLength={null}
                             color={Colors.white}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
@@ -324,7 +323,6 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
                             secureTextEntry={isSecureConfirm}
                             isPadding={true}
                             keyboardType='default'
-                            maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
                             color={Colors.white}

@@ -611,7 +611,6 @@ const LocationScreen = (props: Props) => {
                         multiline={false}
                         isPadding={true}
                         keyboardType='default'
-                        maxLength={null}
                         textAlign='left'
                         numberOfLines={null}
                         color={Colors.white}
@@ -684,7 +683,6 @@ const LocationScreen = (props: Props) => {
                                 multiline={false}
                                 isPadding={true}
                                 keyboardType='default'
-                                maxLength={null}
                                 textAlign='left'
                                 numberOfLines={null}
                                 color={Colors.white}
@@ -736,7 +734,6 @@ const LocationScreen = (props: Props) => {
                                 multiline={false}
                                 isPadding={true}
                                 keyboardType='default'
-                                maxLength={null}
                                 textAlign='left'
                                 numberOfLines={null}
                                 color={Colors.white}

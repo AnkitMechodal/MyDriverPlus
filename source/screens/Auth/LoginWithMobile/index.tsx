@@ -697,7 +697,6 @@ const LoginWithMobileScreen = (props: Props) => {
                                 secureTextEntry={isSecure}
                                 isPadding={true}
                                 keyboardType='default'
-                                maxLength={null}
                                 textAlign='left'
                                 numberOfLines={null}
                                 color={isDarkMode === 'dark' ? Colors.white : Colors.black}

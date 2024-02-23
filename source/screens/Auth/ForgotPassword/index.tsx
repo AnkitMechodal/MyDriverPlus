@@ -248,7 +248,6 @@ const ForgotPasswordScreen = (props: Props) => {
                             keyboardType='default'
                             textAlign='left'
                             numberOfLines={null}
-                            maxLength={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}

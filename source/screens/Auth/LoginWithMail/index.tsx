@@ -448,7 +448,6 @@ const LoginWithMailScreen = (props: Props) => {
                             keyboardType='default'
                             textAlign='left'
                             numberOfLines={null}
-                            maxLength={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}
                             backgroundColor={isDarkMode === 'dark' ? Colors.grayDark :
                                 Colors.whiteGray}
@@ -507,7 +506,6 @@ const LoginWithMailScreen = (props: Props) => {
                             secureTextEntry={isSecure}
                             isPadding={true}
                             keyboardType='default'
-                            maxLength={null}
                             textAlign='left'
                             numberOfLines={null}
                             color={isDarkMode === 'dark' ? Colors.white : Colors.black}

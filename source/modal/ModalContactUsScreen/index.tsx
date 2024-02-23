@@ -655,7 +655,6 @@ const ModalContactUsScreen = (props: Props) => {
                                         keyboardType='default'
                                         textAlign='left'
                                         numberOfLines={null}
-                                        maxLength={null}
                                         color={Colors.white}
                                         backgroundColor={Colors.grayDark}
                                         borderRadius={wp(2)}
@@ -766,7 +765,6 @@ const ModalContactUsScreen = (props: Props) => {
                                         keyboardType='default'
                                         textAlign='left'
                                         numberOfLines={null}
-                                        maxLength={null}
                                         color={Colors.white}
                                         backgroundColor={Colors.grayDark}
                                         borderRadius={wp(2)}
@@ -815,7 +813,6 @@ const ModalContactUsScreen = (props: Props) => {
                                         multiline={false}
                                         isPadding={true}
                                         keyboardType='default'
-                                        maxLength={null}
                                         textAlign='left'
                                         numberOfLines={null}
                                         color={Colors.white}
@@ -865,7 +862,6 @@ const ModalContactUsScreen = (props: Props) => {
                                         multiline={false}
                                         isPadding={true}
                                         keyboardType='default'
-                                        maxLength={null}
                                         textAlign='left'
                                         numberOfLines={null}
                                         color={Colors.white}

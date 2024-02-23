@@ -60,6 +60,11 @@ const DropUpLocationScreen = (props: Props) => {
 
     const [DeafultAdd, setDeafultAdd] = useState(ScreenText.LocationAddress);
 
+
+    const [isShowView, setShowView] = useState(true);
+    const [isShowViewBlank, setShowViewBlank] = useState(true);
+
+
     const handleFocusPassRefCode = () => {
         setIsFocusedPasswordRef(true)
     }
@@ -102,8 +107,8 @@ const DropUpLocationScreen = (props: Props) => {
 
 
     const [passRef, setPassRef] = useState('')
-    const [locationRef, setLocationRef] = useState('')
 
+    const [locationRef, setLocationRef] = useState('')
     const [locationNearByRef, setLocationNearByRef] = useState('')
     const [radius, setRadius] = useState(1200); // Define the radius in meters
 
@@ -163,10 +168,24 @@ const DropUpLocationScreen = (props: Props) => {
 
     const handleMapPress = (event) => {
         // Update the marker's coordinates when the map is pressed
+
+        setShowView(false);
+        setShowViewBlank(false);
+
+        // Update the marker's coordinates when the map is pressed
         setMarkerCoordinates(event.nativeEvent.coordinate);
+
+        user_latitude = event.nativeEvent.coordinate.latitude;
+        user_longitude = event.nativeEvent.coordinate.longitude;
+
+        getCurrentLocationAddress(user_latitude, user_longitude);
     };
 
     const handleMarkerDrag = (event) => {
+
+        setShowView(false);
+        setShowViewBlank(false);
+
         // Handle marker drag event, e.g., update coordinates
         setMarkerCoordinates(event.nativeEvent.coordinate);
     };
@@ -234,13 +253,13 @@ const DropUpLocationScreen = (props: Props) => {
 
         fetchDataMap();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchDataMap, 10 * 1000);
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchDataMap, 10 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
     }, []);
 
     useEffect(() => {
@@ -711,6 +730,21 @@ const DropUpLocationScreen = (props: Props) => {
 
     };
 
+    const onPressUpdateAddress = async () => {
+        setSaveFullLocation(true)
+
+        // GET COMPLETE - NEARBY - PIN CODE 
+        remainingAddress_ = await AsyncStorage.getItem('full_address');
+        secondPartOfAddress_ = await AsyncStorage.getItem('landmark_address');
+        postalCode_ = await AsyncStorage.getItem('pin_address');
+
+        // SET DATA TO UPDATE CHNAGE LOCATION 
+        setLocationRef(JSON.parse(remainingAddress_));
+        setLocationNearByRef(JSON.parse(secondPartOfAddress_));
+        setLocationPin(JSON.parse(postalCode_));
+
+    }
+
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
@@ -789,11 +823,10 @@ const DropUpLocationScreen = (props: Props) => {
                         textlineHeight={ConstValue.value0}
                         ref={refDispute}
                         placeholder={ScreenText.DropOffLocation}
-                        editable={true}
+                        editable={false}
                         multiline={false}
                         isPadding={true}
                         keyboardType='default'
-                        maxLength={null}
                         textAlign='left'
                         numberOfLines={null}
                         color={Colors.white}
@@ -861,18 +894,20 @@ const DropUpLocationScreen = (props: Props) => {
                                 textfontFamily={Fonts.PoppinsRegular}
                                 textlineHeight={ConstValue.value0}
                                 ref={refLocation}
+                                maxLength={500}
+                                ellipsizeMode={"tail"}
+                                numberOfLines={1}
                                 placeholder={ScreenText.CompleteLocation}
                                 editable={true}
                                 multiline={false}
                                 isPadding={true}
                                 keyboardType='default'
-                                maxLength={null}
                                 textAlign='left'
-                                numberOfLines={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
                                 onFocus={handleFocusLocationRef}
+                                value={locationRef}
                                 onChangeText={handleAccountLocationCode}
                                 onSubmitEditing={() => {
                                 }}
@@ -918,14 +953,16 @@ const DropUpLocationScreen = (props: Props) => {
                                 multiline={false}
                                 isPadding={true}
                                 keyboardType='default'
-                                maxLength={null}
                                 textAlign='left'
-                                numberOfLines={null}
                                 color={Colors.white}
+                                maxLength={500}
+                                ellipsizeMode={"tail"}
+                                numberOfLines={1}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
                                 onFocus={handleFocusNearByRef}
                                 onChangeText={handleAccountNearBy}
+                                value={locationNearByRef}
                                 onSubmitEditing={() => {
                                 }}
                                 placeholderTextColor={Colors.gray}
@@ -975,6 +1012,7 @@ const DropUpLocationScreen = (props: Props) => {
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
                                 onFocus={handleFocusPinRef}
+                                value={pin}
                                 onChangeText={handlePinCode}
                                 onSubmitEditing={() => {
                                 }}
@@ -1043,68 +1081,80 @@ const DropUpLocationScreen = (props: Props) => {
                                 <View style={Styles.viewHorizontalLine}>
                                 </View>
 
-                                <View style={Styles.viewAddressConatiner}>
-                                    <View style={Styles.viewLocationAddress}>
+
+                                {!isShowViewBlank ?
+                                    <></> :
+                                    <View style={{ height: wp(30) }}>
+                                    </View>
+                                }
+
+                                {!isShowView ?
+                                    <View style={Styles.viewAddressConatiner}>
+                                        <View style={Styles.viewLocationAddress}>
+                                            <TextComponent
+                                                color={Colors.grayFull}
+                                                title={DeafultAdd} // As HTML Contain
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3.5)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                        <View>
+                                            <TouchableOpacity
+                                                onPress={onPressSavedLocation}>
+                                                <Image
+                                                    style={Styles.imageFavIcon}
+                                                    resizeMode="contain"
+                                                    source={Images.loveIcon} />
+                                            </TouchableOpacity>
+                                        </View>
+
+                                    </View>
+                                    : <></>}
+
+
+                                {!isShowView ?
+                                    <View style={Styles.viewChangeLocation}>
                                         <TextComponent
-                                            color={Colors.grayFull}
-                                            title={DeafultAdd} // As HTML Contain
+                                            color={Colors.blue}
+                                            title={ScreenText.ChangeLocation} // As HTML Contain
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
+                                            // onPress={() => setSaveFullLocation(true)}
+                                            onPress={onPressUpdateAddress}
                                             fontFamily={Fonts.PoppinsRegular}
                                             textAlign='left'
                                         />
                                     </View>
+                                    : <></>}
 
+                                {!isShowView ?
                                     <View>
-                                        <TouchableOpacity
-                                            onPress={onPressSavedLocation}>
-                                            <Image
-                                                style={Styles.imageFavIcon}
-                                                resizeMode="contain"
-                                                source={Images.loveIcon} />
-                                        </TouchableOpacity>
+                                        <ButtonComponent
+                                            isVisibleMobile={false}
+                                            isVisibleFaceBook={false}
+                                            marginVertical={hp(1)}
+                                            heightBtn={hp(7)}
+                                            widthBtn={wp(90)}
+                                            isRightArrow={false}
+                                            onPress={onPressLocationToPickUp}
+                                            color={Colors.white}
+                                            title={ScreenText.ConfirmLocation_}
+                                            marginHorizontal={wp(4)}
+                                            fontWeight="600"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            alignSelf='center'
+                                            textAlign='center'
+                                            borderRadius={wp(2)}
+                                            backgroundColor={Colors.blue}
+                                        />
                                     </View>
-
-                                </View>
-
-                                <View style={Styles.viewChangeLocation}>
-                                    <TextComponent
-                                        color={Colors.blue}
-                                        title={ScreenText.ChangeLocation} // As HTML Contain
-                                        textDecorationLine={'none'}
-                                        fontWeight="400"
-                                        fontSize={wp(3.5)}
-                                        onPress={() => setSaveFullLocation(true)}
-                                        fontFamily={Fonts.PoppinsRegular}
-                                        textAlign='left'
-                                    />
-                                </View>
-
-
-
-                                <View>
-                                    <ButtonComponent
-                                        isVisibleMobile={false}
-                                        isVisibleFaceBook={false}
-                                        marginVertical={hp(1)}
-                                        heightBtn={hp(7)}
-                                        widthBtn={wp(90)}
-                                        isRightArrow={false}
-                                        onPress={onPressLocationToPickUp}
-                                        color={Colors.white}
-                                        title={ScreenText.ConfirmLocation_}
-                                        marginHorizontal={wp(4)}
-                                        fontWeight="600"
-                                        fontSize={wp(4)}
-                                        fontFamily={Fonts.PoppinsSemiBold}
-                                        alignSelf='center'
-                                        textAlign='center'
-                                        borderRadius={wp(2)}
-                                        backgroundColor={Colors.blue}
-                                    />
-                                </View>
-
+                                    : <></>}
 
                             </View>
 

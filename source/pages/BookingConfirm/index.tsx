@@ -1184,7 +1184,6 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
-                                                        maxLength={null}
                                                         textAlign='left'
                                                         numberOfLines={null}
                                                         color={Colors.white}
@@ -1244,7 +1243,6 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
-                                                            maxLength={null}
                                                             textAlign='left'
                                                             numberOfLines={null}
                                                             color={Colors.white}

@@ -196,7 +196,6 @@ const RegisterScreen = (props: Props) => {
                     secureTextEntry={false}
                     keyboardType='default'
                     numberOfLines={null}
-                    maxLength={null}
                     color={Colors.black}
                     backgroundColor={Colors.white}
                     borderRadius={wp(4)}
@@ -242,7 +241,6 @@ const RegisterScreen = (props: Props) => {
                     secureTextEntry={false}
                     keyboardType='default'
                     numberOfLines={null}
-                    maxLength={null}
                     color={Colors.black}
                     backgroundColor={Colors.white}
                     borderRadius={wp(4)}

@@ -90,7 +90,6 @@ const HomeScreen = ({ navigation }) => {
             keyboardType='default'
             textAlign='left'
             numberOfLines={null}
-            maxLength={null}
             color={Colors.white}
             backgroundColor={'transparent'}
             borderRadius={wp(2)}

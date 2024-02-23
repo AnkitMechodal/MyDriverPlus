@@ -918,7 +918,6 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
-                                                        maxLength={null}
                                                         textAlign='left'
                                                         numberOfLines={null}
                                                         value={route?.params?.itemPickLocationConfrim}
@@ -978,7 +977,6 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
-                                                            maxLength={null}
                                                             textAlign='left'
                                                             numberOfLines={null}
                                                             color={Colors.white}
@@ -1144,7 +1142,6 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                                             keyboardType='numeric'
                                             textAlign='left'
                                             numberOfLines={null}
-                                            maxLength={null}
                                             color={Colors.white}
                                             backgroundColor={Colors.grayDark}
                                             borderRadius={wp(2)}
@@ -1234,7 +1231,6 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                                                 keyboardType='numeric'
                                                 textAlign='left'
                                                 numberOfLines={null}
-                                                maxLength={null}
                                                 color={Colors.white}
                                                 backgroundColor={Colors.grayDark}
                                                 borderRadius={wp(2)}

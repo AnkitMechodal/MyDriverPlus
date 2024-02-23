@@ -52,13 +52,25 @@ const HomeTabScreen = ({ route, navigation }) => {
         setEmail(useremail);
     }
 
-    const images = [
-        Images.sliderIcon,
-        Images.sliderIcon,
-        Images.sliderIcon,
-        Images.sliderIcon,
-        // Add more image URLs as needed
-    ];
+    // const [images, setImages] = useState([
+    //     "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyfGVufDB8fDB8fHww",
+    //     "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyfGVufDB8fDB8fHww",
+    //     "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyfGVufDB8fDB8fHww",
+    // ]);
+
+
+    const [images, setImages] = useState(
+
+        [
+            // Images.sliderIcon,
+            // Images.sliderIcon,
+            // Images.sliderIcon,
+        ]
+    );
+
+    let SliderImage;
+
+
 
     let user_latitude;
     let user_longitude;
@@ -141,6 +153,12 @@ const HomeTabScreen = ({ route, navigation }) => {
 
     const [CurrentAdd, setCurrentAdd] = useState("");
 
+    useEffect(() => {
+        // Perform some action when the component mounts
+
+        axiosBannerPostRequest();
+
+    }, []);
 
 
     useEffect(() => {
@@ -303,7 +321,12 @@ const HomeTabScreen = ({ route, navigation }) => {
                     console.log('GET ADDRESS 3-HOME', postalCode.long_name);
 
                     // SET 2ND ADDRESS TO INPUT
-                    setCurrentAdd(remainingAddress);
+
+                    if (remainingAddress !== null) {
+                        setCurrentAdd(remainingAddress);
+                    } else {
+                        setCurrentAdd("Fecth Your Current Location");
+                    }
 
                     // DATA INSERT INTO UPDATE API 
                     axiosUpdateLocationRequest(user_latitude, user_longitude, remainingAddress);
@@ -314,6 +337,16 @@ const HomeTabScreen = ({ route, navigation }) => {
             console.error('Error in getCurrentLocationAddress:', error);
             throw error;
         }
+    };
+
+    const RoundedImage = ({ source, style }) => {
+        return (
+            <Image
+                source={source}
+                style={[style, { borderRadius: 7 }]} // Adjust the borderRadius as needed
+                defaultSource={Images.sliderIcon}
+            />
+        );
     };
 
     const axiosUpdateLocationRequest = async (user_latitude, user_longitude, remainingAddress) => {
@@ -378,6 +411,61 @@ const HomeTabScreen = ({ route, navigation }) => {
         } catch (error) {
 
         }
+    }
+
+    const axiosBannerPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosBannerPostRequestList();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+
+    }
+
+    const axiosBannerPostRequestList = async () => {
+
+        // Prepare data in JSON format
+        const url = 'https://rideshareandcourier.graphiglow.in/api/banner/banner';
+
+        await axios.post(url, null, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Banner successfully') {
+
+                    const imageData = response.data.data.map(item => {
+                        return Object.values(item)[0];
+                    });
+
+                    setImages(imageData);
+
+                    console.log("axios-1",
+                        JSON.stringify(SliderImage, null, 2));
+                    console.log("axios-1",
+                        JSON.stringify(SliderImage, null, 2));
+                    console.log("axios-1",
+                        JSON.stringify(SliderImage, null, 2));
+                    console.log("axios-1",
+                        JSON.stringify(SliderImage, null, 2));
+
+                } else {
+                    setImages(images)
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                setImages(images)
+            });
+
     }
 
     // GetRideStatusCheck
@@ -1161,15 +1249,17 @@ const HomeTabScreen = ({ route, navigation }) => {
                             <View style={Styles.sliderBox}>
                                 <SliderBox
                                     images={images}
-                                    sliderBoxHeight={wp(50)}
+                                    sliderBoxHeight={wp(35)}
                                     parentWidth={wp(90)}
                                     autoPlay={true}
                                     dotColor={Colors.blue}
                                     inactiveDotColor={Colors.white}
                                     dotStyle={Styles.dotStyle}
                                     resizeMethod={'resize'}
-                                    resizeMode={'contain'}
+                                    resizeMode={'cover'}
                                     autoplayInterval={1000}
+                                    paginationBoxStyle={{ bottom: -30 }}
+                                    ImageComponent={RoundedImage}
                                 />
                             </View>
                         </View>

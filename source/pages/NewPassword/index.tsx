@@ -354,7 +354,6 @@ const NewPasswordScreen = ({ route, navigation }) => {
                                 keyboardType='default'
                                 textAlign='left'
                                 numberOfLines={null}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
@@ -408,7 +407,6 @@ const NewPasswordScreen = ({ route, navigation }) => {
                                 keyboardType='default'
                                 textAlign='left'
                                 numberOfLines={null}
-                                maxLength={null}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
@@ -460,7 +458,6 @@ const NewPasswordScreen = ({ route, navigation }) => {
                                 secureTextEntry={isSecureConfirm}
                                 isPadding={true}
                                 keyboardType='default'
-                                maxLength={null}
                                 textAlign='left'
                                 numberOfLines={null}
                                 color={Colors.white}
