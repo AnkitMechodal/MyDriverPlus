@@ -77,7 +77,11 @@ const Styles = StyleSheet.create({
     },
     sliderBox: {
         marginHorizontal: wp(5),
-        marginTop: wp(18)
+        marginTop: wp(18),
+        borderRadius: wp(2),
+        overflow: 'hidden',
+        // borderWidth: 1,
+        // borderColor: "green"
     },
 
     overlay: {

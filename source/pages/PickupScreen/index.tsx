@@ -565,11 +565,22 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     'Content-Type': 'application/json'
                 }
             })
-                .then(response => {
+                .then(async response => {
                     if (response.status === 200
                         && response?.data?.message === 'Save Locations Remove successfully') {
 
                         Toast.show('Remove Save Location Successfully!', Toast.SHORT);
+
+                        if (!response) {
+                            throw new Error('Failed to delete item');
+                        }
+
+                        // Update the local state to reflect the changes
+                        // setApiList(apiList.filter(item => item !== itemToRemove));
+
+                        // REMOVE ITEM ON CLICK 
+                        SetSavedLocationdModal_(SavedLocationdModal_.filter(item => item !== item));
+
 
                     } else {
                         Toast.show('Unable To Save Location!', Toast.SHORT);
@@ -616,9 +627,17 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     secondPartOfAddress_ = await AsyncStorage.getItem('landmark_address');
                     postalCode_ = await AsyncStorage.getItem('pin_address');
 
-                    console.log("02-02==>==>", remainingAddress_);
-                    console.log("02-03==>==>", secondPartOfAddress_);
-                    console.log("02-04==>==>", postalCode_);
+
+                    // LOCATION BY MAP CLICK USE 
+
+                    console.log("02-02///==>==>", remainingAddress_);
+                    console.log("02-03///==>==>", secondPartOfAddress_);
+                    console.log("02-04///==>==>", postalCode_);
+                    console.log("02-02///==>==>", remainingAddress_);
+                    console.log("02-03///==>==>", secondPartOfAddress_);
+                    console.log("02-04///==>==>", postalCode_);
+
+                    // LOCATION BY MAP CLICK USE 
 
                 } catch (error) {
 
@@ -647,9 +666,9 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                     // "mobilenumber_picku": "6356526597"
                 };
 
-                console.log("axiosPostSaveFullLocationUpdate----==>",
+                console.log("axiosPostSaveFullLocationUpdate//----==>",
                     JSON.stringify(data, null, 2));
-                console.log("axiosPostSaveFullLocationUpdate----==>",
+                console.log("axiosPostSaveFullLocationUpdate//----==>",
                     JSON.stringify(data, null, 2));
 
 
@@ -838,13 +857,27 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         fetchData();
 
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 5 * 1000);
         // Cleanup function
         return () => {
             // Clear the interval when the component unmounts
             clearInterval(intervalId);
         };
     }, []);
+
+    const onRefresh = () => {
+        // Set refreshing to true
+        setRefreshing(true);
+        // Perform the refresh action, e.g., refetch data
+        props.fetchData().then(() => {
+            // After the refresh action is completed, set refreshing to false
+            setRefreshing(false);
+        }).catch(() => {
+            // Handle error if any
+            setRefreshing(false);
+        });
+    };
+
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>

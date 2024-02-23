@@ -13,11 +13,16 @@ type PreferredListProps = {
     data: any,
     fetchlocations: any
     onPressLocationItemClick(item): any
+
+    // onRefresh: () => void
 }
 
 const SavedListComponent = (props: PreferredListProps) => {
 
     const [data, setData] = useState(props.data);
+
+    // const [refreshing, setRefreshing] = useState(false);
+
 
     const handleFavouriteChange = ({ item, index }) => {
 
@@ -35,6 +40,21 @@ const SavedListComponent = (props: PreferredListProps) => {
         });
         setData(newCategories);
     };
+
+
+    // const onRefresh = () => {
+    //     setRefreshing(true); // Set refreshing state to true
+    //     // Perform the refresh action, e.g., refetch data
+    //     // Assuming fetchLocations is a function that fetches data again
+    //     props.fetchlocations().then((refreshedData) => {
+    //         setData(refreshedData); // Update the data with the refreshed data
+    //         setRefreshing(false); // Set refreshing state to false after refresh action is completed
+    //     }).catch(() => {
+    //         setRefreshing(false); // Set refreshing state to false in case of error
+    //     });
+    // };
+
+
     return (
         <View style={{ flex: 1, backgroundColor: Colors.desc }}>
             <FlatList
@@ -42,6 +62,13 @@ const SavedListComponent = (props: PreferredListProps) => {
                 bounces={true}
                 contentContainerStyle={Styles.viewContentContainerStyle}
                 keyExtractor={(item) => item._id}
+                // refreshControl={
+                //     <RefreshControl
+                //         refreshing={refreshing}
+                //         onRefresh={onRefresh} // Define a function to handle refresh
+                //         colors={[Colors.black]} // Customize the colors of the refresh indicator
+                //     />
+                // }
                 ItemSeparatorComponent={() => {
                     return (
                         <View style={Styles.ItemSeparatorComponent}>

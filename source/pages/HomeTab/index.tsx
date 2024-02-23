@@ -339,11 +339,14 @@ const HomeTabScreen = ({ route, navigation }) => {
         }
     };
 
+    // Loader
+
     const RoundedImage = ({ source, style }) => {
         return (
             <Image
                 source={source}
-                style={[style, { borderRadius: 7 }]} // Adjust the borderRadius as needed
+                // style={[style, { borderRadius: 7 }]} // Adjust the borderRadius as needed
+                style={[style]} // Adjust the borderRadius as needed
                 defaultSource={Images.sliderIcon}
             />
         );
@@ -458,12 +461,12 @@ const HomeTabScreen = ({ route, navigation }) => {
                         JSON.stringify(SliderImage, null, 2));
 
                 } else {
-                    setImages(images)
+                    // setImages(images)
                 }
             })
             .catch(error => {
                 // Handle errors
-                setImages(images)
+                // setImages(images)
             });
 
     }
@@ -1251,6 +1254,7 @@ const HomeTabScreen = ({ route, navigation }) => {
                                     images={images}
                                     sliderBoxHeight={wp(35)}
                                     parentWidth={wp(90)}
+                                    radius={wp(2)}
                                     autoPlay={true}
                                     dotColor={Colors.blue}
                                     inactiveDotColor={Colors.white}
@@ -1258,8 +1262,8 @@ const HomeTabScreen = ({ route, navigation }) => {
                                     resizeMethod={'resize'}
                                     resizeMode={'cover'}
                                     autoplayInterval={1000}
-                                    paginationBoxStyle={{ bottom: -30 }}
-                                    ImageComponent={RoundedImage}
+                                    paginationBoxStyle={{ bottom: -30, borderRadius: 7 }}
+                                // ImageComponent={RoundedImage} // For Loader
                                 />
                             </View>
                         </View>
