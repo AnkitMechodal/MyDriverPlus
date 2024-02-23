@@ -3,7 +3,7 @@ import CheckBox from '@react-native-community/checkbox';
 import axios from "axios";
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -74,9 +74,46 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
     const [adjust, setAdjust] = useState('');
 
 
+    // ADJUST 
     const toggleModalCancel = () => {
         setModalCancel(!isModalCancel);
     };
+
+
+    useEffect(() => {
+        const backAction = async () => {
+            // Handle the back button press
+            // Return true to prevent default behavior (e.g., closing the app)
+            // Return false to allow default behavior
+            // You can add your custom logic here
+            // For example, navigate to a different screen or show an alert
+            console.log('Back button pressed!');
+            setModalCancel(false);
+
+            // // Add your custom logic for clearing AsyncStorage data
+            // try {
+            //     await AsyncStorage.clear();
+            //     console.log('AsyncStorage data cleared!');
+            // } catch (error) {
+            //     console.error('Error clearing AsyncStorage data:', error);
+            // }
+
+
+
+
+            // BackHandler.exitApp();
+
+            return true; // Prevent default behavior
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+
+        return () => backHandler.remove(); // Remove the event listener on component unmount
+
+    }, []);
 
     const toggleModalFeedback = () => {
         setModalFeedBack(!isModalFeedBack);
@@ -336,8 +373,19 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
 
 
     const onPressSubmitAmount = () => {
-        // Cancel Bidding 
-        axiosCancelBiddingPostRequest();
+
+        // Alert.alert("test1");
+
+        if (adjust === '') {
+            // If 'adjust' is null, execute this logic
+            Toast.show('Please Adjust Bidding Amount!', Toast.SHORT);
+            // setModalCancel(false);
+        } else {
+            // If 'adjust' is not null, execute the following logic
+            // Cancel Bidding 
+            axiosCancelBiddingPostRequest();
+        }
+
     }
 
 
@@ -377,21 +425,24 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'Adjust Bid Amount Successfully') {
+                        && response?.data?.message === 'Adjust Bid Amount and Price Successfully') {
 
                         Toast.show('Your Bidding Amount Submitted!', Toast.SHORT);
                         setModalCancel(false);
 
                     } else {
                         Toast.show('Unable to Bidding Amount Submitted!', Toast.SHORT);
+                        setModalCancel(false);
                     }
                 })
                 .catch(error => {
                     Toast.show('Unable to Bidding Amount Submitted!', Toast.SHORT);
+                    setModalCancel(false);
                 });
 
         } catch (error) {
             // Handle any errors that occur during AsyncStorage operations
+            setModalCancel(false);
         }
     };
 
@@ -1054,7 +1105,11 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
 
                 </View>
 
-                <Modal isVisible={isModalCancel}>
+                <Modal isVisible={isModalCancel}
+                    onBackButtonPress={() => setModalCancel(false)}
+                    onBackdropPress={() => setModalCancel(false)
+                    }
+                >
                     <View
                         style={Styles.modalCancelConatiner}>
 
@@ -1095,6 +1150,7 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                                 keyboardType='numeric'
                                 textAlign='left'
                                 numberOfLines={null}
+                                value={adjust}
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
@@ -1124,7 +1180,8 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                                 heightBtn={hp(6)}
                                 widthBtn={wp(50)}
                                 isRightArrow={false}
-                                onPress={onPressSubmitAmount} // onPressSubmitAmount
+                                onPress={onPressSubmitAmount}
+                                // onPress={() => Alert.alert("ettsts")}
                                 color={Colors.white}
                                 title={ScreenText.Submit}
                                 marginHorizontal={wp(6)}

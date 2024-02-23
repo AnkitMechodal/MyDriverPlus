@@ -2,13 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, SafeAreaView, TouchableOpacity, View, useColorScheme } from 'react-native';
+import { FlatList, Image, SafeAreaView, TouchableOpacity, View, useColorScheme } from 'react-native';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../components/Button/index';
-import SavedListComponent from '../../components/SavedLocationList/index';
+import ListEmptyComponent from '../../components/ListEmptyComponent';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
 import TextInputComponent from '../../components/TextInput/index';
@@ -93,7 +93,7 @@ const CourierPickupScreen = (props: Props) => {
 
     const [DeafultAdd, setDeafultAdd] = useState(ScreenText.LocationAddress);
 
-    const [SavedLocationdModal_, SetSavedLocationdModal_] = useState([]);
+    const [SavedLocationdModal_, SetSavedLocationdModal_] = useState<any>([]);
 
     // TODO :
 
@@ -616,6 +616,8 @@ const CourierPickupScreen = (props: Props) => {
                     if (response.status === 200
                         && response?.data?.message === 'Save Locations Remove successfully') {
 
+                        SetSavedLocationdModal_(SavedLocationdModal_.filter(location => location._id !== item._id));
+
                         Toast.show('Remove Save Location Successfully!', Toast.SHORT);
 
                     } else {
@@ -819,6 +821,28 @@ const CourierPickupScreen = (props: Props) => {
     //         });
     //     }
     // }
+
+    // TODO : 
+    const handleFavouriteChange = async ({ item, index }) => {
+
+        // fetchlocations(item);
+        console.log("handleFavouriteChange==>", item?._id);
+        console.log("handleFavouriteChange==>", item?._id);
+        console.log("handleFavouriteChange==>", item?._id);
+        console.log("handleFavouriteChange==>", item?._id);
+
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable();
+            if (isConnected) {
+                axiosPostRemovedSelected(item);
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+
+    };
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -1278,10 +1302,93 @@ const CourierPickupScreen = (props: Props) => {
                     <View style={{
                         backgroundColor: Colors.desc,
                     }}>
-                        <SavedListComponent
-                            onPressLocationItemClick={(item) => SelectedLocation(item)}
-                            fetchlocations={(item) => RemoveSelectedLocation(item)}
-                            data={SavedLocationdModal_} />
+                        <FlatList
+                            data={SavedLocationdModal_}
+                            bounces={true}
+                            contentContainerStyle={Styles.viewContentContainerStyle}
+                            keyExtractor={(item) => item._id}
+
+                            ItemSeparatorComponent={() => {
+                                return (
+                                    <View style={Styles.ItemSeparatorComponent}>
+                                    </View>
+                                )
+                            }}
+                            renderItem={({ item, index }) => {
+                                return (
+                                    <View>
+                                        <TouchableOpacity
+                                            activeOpacity={0.2}
+                                            onPress={() => SelectedLocation(item)}
+                                        >
+                                            <View style={Styles.viewMapConatiner}>
+                                                <View style={Styles.viewUserLcoation}>
+                                                    <Image
+                                                        style={Styles.imageMap}
+                                                        resizeMode="contain" // item?.userLocation
+                                                        source={Images.mapIcon} />
+
+                                                </View>
+
+                                                <View style={CommonStyle.commonFlex}>
+                                                    <TextComponent
+                                                        color={Colors.white}
+                                                        title={item?.complete_location} // userStation
+                                                        textDecorationLine={'none'}
+                                                        fontWeight="400"
+                                                        fontSize={wp(4)}
+                                                        fontFamily={Fonts.PoppinsRegular}
+                                                        textAlign='left'
+                                                    />
+                                                    <TextComponent
+                                                        color={Colors.circleGray}
+                                                        title={item?.nearby_landmark} // userRoad
+                                                        textDecorationLine={'none'}
+                                                        fontWeight="400"
+                                                        fontSize={wp(4)}
+                                                        fontFamily={Fonts.PoppinsRegular}
+                                                        textAlign='left'
+                                                    />
+                                                </View>
+
+
+                                                <View style={Styles.viewFavourite}>
+                                                    <TouchableOpacity
+                                                        activeOpacity={0.2}
+                                                        onPress={() => handleFavouriteChange({ item, index })}>
+                                                        {!item?.selected ?
+                                                            <Image
+                                                                style={Styles.imageHeartFill} // imageHeart FOR API
+                                                                resizeMode="contain"
+                                                                source={Images.heartIcon} />
+                                                            :
+                                                            <Image
+                                                                style={Styles.imageHeartFill}
+                                                                resizeMode="contain"
+                                                                source={Images.heartFillIcon} />
+                                                        }
+                                                    </TouchableOpacity>
+                                                </View>
+
+                                            </View>
+                                        </TouchableOpacity>
+
+                                    </View>
+
+                                );
+                            }}
+                            ListEmptyComponent={() => (
+                                <ListEmptyComponent
+                                    color={Colors.black}
+                                    textDecorationLine={'none'}
+                                    fontWeight="600"
+                                    fontSize={wp(5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    alignSelf='center'
+                                    textAlign='center'
+                                    title={ScreenText.NoDataAvailable} />
+                            )}
+                        />
                     </View>
 
 

@@ -153,11 +153,22 @@ const HomeTabScreen = ({ route, navigation }) => {
 
     const [CurrentAdd, setCurrentAdd] = useState("");
 
+    // useEffect(() => {
+    //     // Perform some action when the component mounts
+
+    //     axiosBannerPostRequest();
+
+    // }, []);
+
     useEffect(() => {
         // Perform some action when the component mounts
-
         axiosBannerPostRequest();
 
+        // Set an interval to execute axiosBannerPostRequest every 5 seconds
+        const intervalId = setInterval(axiosBannerPostRequest, 5000);
+
+        // Clean up function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
     }, []);
 
 
@@ -431,45 +442,22 @@ const HomeTabScreen = ({ route, navigation }) => {
     }
 
     const axiosBannerPostRequestList = async () => {
-
-        // Prepare data in JSON format
-        const url = 'https://rideshareandcourier.graphiglow.in/api/banner/banner';
-
-        await axios.post(url, null, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (response.status === 200
-                    &&
-                    response?.data?.message === 'Banner successfully') {
-
-                    const imageData = response.data.data.map(item => {
-                        return Object.values(item)[0];
-                    });
-
-                    setImages(imageData);
-
-                    console.log("axios-1",
-                        JSON.stringify(SliderImage, null, 2));
-                    console.log("axios-1",
-                        JSON.stringify(SliderImage, null, 2));
-                    console.log("axios-1",
-                        JSON.stringify(SliderImage, null, 2));
-                    console.log("axios-1",
-                        JSON.stringify(SliderImage, null, 2));
-
-                } else {
-                    // setImages(images)
-                }
-            })
-            .catch(error => {
-                // Handle errors
-                // setImages(images)
+        try {
+            const url = 'https://rideshareandcourier.graphiglow.in/api/banner/banner';
+            const response = await axios.post(url, null, {
             });
 
+            if (response.status === 200 && response?.data?.message === "Banner successfully") {
+                setImages(response.data.data.map(item => item.image));
+
+            } else {
+                setImages(images); // Assuming you want to clear images in case of other responses
+            }
+        } catch (error) {
+            setImages(images); // Assuming you want to clear images in case of errors
+        }
     }
+
 
     // GetRideStatusCheck
     const axiosPostLastRideStatus = async () => {

@@ -337,7 +337,17 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
     const onPressSubmitAmount = () => {
         // Cancel Bidding 
-        axiosCancelBiddingPostRequest();
+        // axiosCancelBiddingPostRequest();
+
+        if (adjust === '') {
+            // If 'adjust' is null, execute this logic
+            Toast.show('Please Adjust Bidding Amount!', Toast.SHORT);
+            // setModalCancel(false);
+        } else {
+            // If 'adjust' is not null, execute the following logic
+            // Cancel Bidding 
+            axiosCancelBiddingPostRequest();
+        }
     }
 
 
@@ -377,7 +387,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'Adjust Bid Amount Successfully') {
+                        && response?.data?.message === 'Adjust Bid Amount and Price Successfully') {
 
                         Toast.show('Your Bidding Amount Submitted!', Toast.SHORT);
                         setModalCancel(false);
@@ -1035,7 +1045,11 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
                 </View>
 
-                <Modal isVisible={isModalCancel}>
+                <Modal isVisible={isModalCancel}
+                    onBackButtonPress={() => setModalCancel(false)}
+                    onBackdropPress={() => setModalCancel(false)
+                    }
+                >
                     <View
                         style={Styles.modalCancelConatiner}>
 
@@ -1079,6 +1093,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}
+                                value={adjust}
                                 onFocus={handleFocusAdjust}
                                 onChangeText={handleAccountAdjust}
                                 onSubmitEditing={() => {
@@ -1123,7 +1138,9 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
                 </Modal>
 
-                <Modal isVisible={isModalFeedBack}>
+                <Modal isVisible={isModalFeedBack}
+                    onBackButtonPress={() => setModalFeedBack(false)}
+                    onBackdropPress={() => setModalFeedBack(false)}>
                     <View
                         style={Styles.modalCancelConatiner}>
 

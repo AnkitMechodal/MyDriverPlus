@@ -140,7 +140,7 @@ const LoginScreen = (props: Props) => {
         widthBtn={wp(90)}
         isRightArrow={false}
         onPress={() => props.navigation.navigate("LoginSignUp")}
-        color={isDarkMode === 'dark' ? Colors.black : Colors.white}
+        color={isDarkMode === 'dark' ? Colors.white : Colors.black}
         title={ScreenText.GetStated}
         fontWeight="600"
         fontSize={wp(5)}

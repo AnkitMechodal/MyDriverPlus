@@ -62,13 +62,7 @@ const SavedListComponent = (props: PreferredListProps) => {
                 bounces={true}
                 contentContainerStyle={Styles.viewContentContainerStyle}
                 keyExtractor={(item) => item._id}
-                // refreshControl={
-                //     <RefreshControl
-                //         refreshing={refreshing}
-                //         onRefresh={onRefresh} // Define a function to handle refresh
-                //         colors={[Colors.black]} // Customize the colors of the refresh indicator
-                //     />
-                // }
+               
                 ItemSeparatorComponent={() => {
                     return (
                         <View style={Styles.ItemSeparatorComponent}>

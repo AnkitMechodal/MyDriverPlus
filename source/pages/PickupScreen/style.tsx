@@ -60,6 +60,42 @@ const Styles = StyleSheet.create({
         margin: 0,
         height: 'auto',
     },
+
+    // TODO :
+    viewContentContainerStyle: {
+        marginVertical: wp(2)
+    },
+    ItemSeparatorComponent: {
+        width: '90%',
+        height: wp(0.1),
+        backgroundColor: Colors.grayDrawerBg,
+        marginHorizontal: wp(5)
+    },
+    imageMap: {
+        width: wp(7),
+        height: wp(7),
+    },
+    viewMapConatiner: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: wp(2), // 5
+    },
+    viewUserLcoation: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginHorizontal: wp(10)
+    },
+    viewFavourite: {
+        justifyContent: 'center',
+        marginHorizontal: wp(10)
+    },
+    imageHeartFill: {
+        width: wp(7),
+        height: wp(7),
+        tintColor: Colors.blue
+    },
+    // TODO :
+
     viewPickConatiner: {
         backgroundColor: Colors.desc,
         justifyContent: "center",

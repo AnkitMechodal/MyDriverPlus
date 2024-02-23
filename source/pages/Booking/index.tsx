@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Geolocation from '@react-native-community/geolocation';
+// import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
@@ -178,6 +179,133 @@ const BookingScreen = ({ route, navigation }) => {
     const [isShedulePickerVisible, setShedulePickerVisible] = useState(false);
     const [selectedSheduleDate, setSelectedSheduleDate] = useState(new Date());
 
+    // // Focued UI 
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         // Function to run when the screen gains focus
+
+    //         if (route.params.itemPickName === undefined) {
+    //             setPickPlace1(ScreenText.SelectPickuplocation);
+    //         } else if (route.params.itemPickName === '') {
+    //             setPickPlace1(ScreenText.SelectPickuplocation);
+    //         } else {
+    //             setPickPlace1(route.params.itemPickName);
+
+    //             console.log("setPickPlace1ERROR==>", route.params.itemPickName);
+
+    //             // PickName Stored
+    //             itemPickNameGet = route.params.itemPickName;
+    //             storedPreviousPickName(itemPickNameGet);
+
+    //             // DropName ReStored
+    //             restoredPreviousDropName(); // WE1
+
+    //             // PICK TO STORE
+    //             itemPICKLAT = route?.params?.itemPicklat;
+    //             itemPICKLONG = route?.params?.itemPicklong;
+
+    //             StorePick1(itemPICKLAT);
+    //             StorePick2(itemPICKLONG);
+
+    //             // DROP TO RESTORE - GET
+    //             StoreDropLatAsUser();
+    //             StoreDropLongAsUser();
+
+    //         }
+
+
+    //         if (route.params.itemDropName === undefined) {
+    //             setPickPlace2(ScreenText.SelectDropofflocation);
+    //         } else if (route.params.itemDropName === '') {
+    //             setPickPlace2(ScreenText.SelectDropofflocation);
+    //         } else {
+    //             setPickPlace2(route.params.itemDropName); // WA
+    //             console.log("setPickPlace2ERROR==>", route.params.itemDropName);
+
+    //             // DropName Stored
+    //             itemDropNameGet = route.params.itemDropName;
+    //             storedPreviousDropName(itemDropNameGet);
+
+    //             // PickName ReStored
+    //             restoredPreviousPickName(); // WE1
+
+    //             // DROP TO STORE
+    //             itemDROPLAT = route?.params?.itemDroplat;
+    //             itemDROPLONG = route?.params?.itemDroplong;
+
+    //             StoreDrop1(itemDROPLAT);
+    //             StoreDrop2(itemDROPLONG);
+
+    //             // PICK TO RESTORE - GET
+    //             StorePickLatAsUser();
+    //             StorePickLongAsUser();
+
+    //         }
+
+    //         // Cleanup function to run when the screen loses focus
+    //         return () => {
+
+    //             if (route.params.itemPickName === undefined) {
+    //                 setPickPlace1(ScreenText.SelectPickuplocation);
+    //             } else if (route.params.itemPickName === '') {
+    //                 setPickPlace1(ScreenText.SelectPickuplocation);
+    //             } else {
+    //                 setPickPlace1(route.params.itemPickName);
+
+    //                 console.log("setPickPlace1ERROR==>", route.params.itemPickName);
+
+    //                 // PickName Stored
+    //                 itemPickNameGet = route.params.itemPickName;
+    //                 storedPreviousPickName(itemPickNameGet);
+
+    //                 // DropName ReStored
+    //                 restoredPreviousDropName();  // WE1
+
+    //                 // PICK TO STORE
+    //                 itemPICKLAT = route?.params?.itemPicklat;
+    //                 itemPICKLONG = route?.params?.itemPicklong;
+
+    //                 StorePick1(itemPICKLAT);
+    //                 StorePick2(itemPICKLONG);
+
+    //                 // DROP TO RESTORE - GET
+    //                 StoreDropLatAsUser();
+    //                 StoreDropLongAsUser();
+
+    //             }
+
+
+    //             if (route.params.itemDropName === undefined) {
+    //                 setPickPlace2(ScreenText.SelectDropofflocation);
+    //             } else if (route.params.itemDropName === '') {
+    //                 setPickPlace2(ScreenText.SelectDropofflocation);
+    //             } else {
+    //                 setPickPlace2(route.params.itemDropName); // WA
+    //                 console.log("setPickPlace2ERROR==>", route.params.itemDropName);
+
+    //                 // DropName Stored
+    //                 itemDropNameGet = route.params.itemDropName;
+    //                 storedPreviousDropName(itemDropNameGet);
+
+    //                 // PickName ReStored
+    //                 restoredPreviousPickName();  // WE1
+
+    //                 // DROP TO STORE
+    //                 itemDROPLAT = route?.params?.itemDroplat;
+    //                 itemDROPLONG = route?.params?.itemDroplong;
+
+    //                 StoreDrop1(itemDROPLAT);
+    //                 StoreDrop2(itemDROPLONG);
+
+    //                 // PICK TO RESTORE - GET
+    //                 StorePickLatAsUser();
+    //                 StorePickLongAsUser();
+
+    //             }
+
+    //         };
+    //     }, [])
+    // );
 
     const handleDateChange = (event, date) => {
         hideDatePicker();
@@ -501,7 +629,7 @@ const BookingScreen = ({ route, navigation }) => {
                     storedPreviousPickName(itemPickNameGet);
 
                     // DropName ReStored
-                    restoredPreviousDropName();
+                    restoredPreviousDropName(); // WE1
 
                     // PICK TO STORE
                     itemPICKLAT = route?.params?.itemPicklat;
@@ -521,7 +649,7 @@ const BookingScreen = ({ route, navigation }) => {
                 } else if (route.params.itemPin === '') {
                     setUserLocationPin('');
                 } else {
-                    setUserLocationPin(route.params.itemPin);
+                    setUserLocationPin(route.params.itemPin); // WA
                     console.log("USER_LOCATION_PIN==>", route.params.itemPin);
 
                     // Get Pick Pin 
@@ -536,7 +664,7 @@ const BookingScreen = ({ route, navigation }) => {
                 } else if (route.params.itemDropName === '') {
                     setPickPlace2(ScreenText.SelectDropofflocation);
                 } else {
-                    setPickPlace2(route.params.itemDropName);
+                    setPickPlace2(route.params.itemDropName); // WA
                     console.log("setPickPlace2ERROR==>", route.params.itemDropName);
 
                     // DropName Stored
@@ -544,7 +672,7 @@ const BookingScreen = ({ route, navigation }) => {
                     storedPreviousDropName(itemDropNameGet);
 
                     // PickName ReStored
-                    restoredPreviousPickName();
+                    restoredPreviousPickName(); // WE1
 
                     // DROP TO STORE
                     itemDROPLAT = route?.params?.itemDroplat;
@@ -603,12 +731,13 @@ const BookingScreen = ({ route, navigation }) => {
         fetchData();
 
         // Set interval to refresh every 15 seconds
-        const intervalId = setInterval(fetchData, 15 * 1000);
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
+        // const intervalId = setInterval(fetchData, 15 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+
     }, [route.params.itemPickName, route.params.itemDropName,
     route.params.itemPin, route.params.itemDropPin]);
 
