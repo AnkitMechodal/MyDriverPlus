@@ -1,6 +1,6 @@
 import auth, { PhoneAuthState } from '@react-native-firebase/auth';
 import axios from "axios";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -57,10 +57,6 @@ const MobileVerficationScreen = ({ route, navigation }) => {
 
     const { isDarkMode, toggleTheme } = useTheme();
 
-
-  
-
-  
 
     const handleFocus = () => {
         setIsFocused(true)
@@ -283,7 +279,13 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus}
-                            onChangeText={handleAccountOne}
+                            // onChangeText={handleAccountOne}
+                            onChangeText={text => {
+                                handleAccountOne(text);
+                                if (text.length === 1) {
+                                    refnumber2?.current?.focus();
+                                }
+                            }}
                             // onChangeText={(text) => handleTextChange(text, refnumber2)}
                             onSubmitEditing={() => {
                                 refnumber2?.current?.focus();
@@ -327,7 +329,13 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus2}
-                            onChangeText={handleAccountTwo}
+                            // onChangeText={handleAccountTwo}
+                            onChangeText={text => {
+                                handleAccountTwo(text);
+                                if (text.length === 1) {
+                                    refnumber3?.current?.focus();
+                                }
+                            }}
                             // onChangeText={(text) => handleTextChange(text, refnumber3)}
                             onSubmitEditing={() => {
                                 refnumber3?.current?.focus();
@@ -373,7 +381,13 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus3}
-                            onChangeText={handleAccountThree}
+                            // onChangeText={handleAccountThree}
+                            onChangeText={text => {
+                                handleAccountThree(text);
+                                if (text.length === 1) {
+                                    refnumber4?.current?.focus();
+                                }
+                            }}
                             // onChangeText={(text) => handleTextChange(text, refnumber4)}
                             onSubmitEditing={() => {
                                 refnumber4?.current?.focus();
@@ -420,7 +434,13 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus4}
-                            onChangeText={handleAccountFour}
+                            // onChangeText={handleAccountFour}
+                            onChangeText={text => {
+                                handleAccountFour(text);
+                                if (text.length === 1) {
+                                    refnumber5?.current?.focus();
+                                }
+                            }}
                             // onChangeText={(text) => handleTextChange(text, refnumber5)}
                             onSubmitEditing={() => {
                                 refnumber5?.current?.focus();
@@ -466,7 +486,13 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                                 Colors.whiteGray}
                             borderRadius={wp(2)}
                             onFocus={handleFocus5}
-                            onChangeText={handleAccountFive}
+                            // onChangeText={handleAccountFive}
+                            onChangeText={text => {
+                                handleAccountFive(text);
+                                if (text.length === 1) {
+                                    refnumber6?.current?.focus();
+                                }
+                            }}
                             // onChangeText={(text) => handleTextChange(text, refnumber6)}
                             onSubmitEditing={() => {
                                 refnumber6?.current?.focus();

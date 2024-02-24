@@ -3,7 +3,7 @@ import CheckBox from '@react-native-community/checkbox';
 import axios from "axios";
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";

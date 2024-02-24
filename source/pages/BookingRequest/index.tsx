@@ -1088,7 +1088,9 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
                 </View>
 
-                <Modal isVisible={isModalCancel}>
+                <Modal isVisible={isModalCancel}
+                    onBackButtonPress={() => setModalCancel(false)}
+                    onBackdropPress={() => setModalCancel(false)}>
                     <View
                         style={Styles.modalCancelConatiner}>
                         <View>
@@ -1170,7 +1172,9 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
                 </Modal>
 
-                <Modal isVisible={isModalFeedBack}>
+                <Modal isVisible={isModalFeedBack}
+                    onBackButtonPress={() => setModalFeedBack(false)}
+                    onBackdropPress={() => setModalFeedBack(false)}>
                     <View
                         style={Styles.modalCancelConatiner}>
 
@@ -1222,7 +1226,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                                 textAlignVertical={"top"}
                                 textAlign='left'
                                 numberOfLines={null}
-                                
+
                                 color={Colors.white}
                                 backgroundColor={Colors.grayDark}
                                 borderRadius={wp(2)}

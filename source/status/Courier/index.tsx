@@ -362,9 +362,17 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${JSON.parse(route.params.itemRIDEID_SENT)}`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
 
-            console.log("axiosCheckGetRideStatusRequest===>", url);
+            // AS COUIER 
+            const url = `https://rideshareandcourier.graphiglow.in/api/CourierStatus/checkCourier/${route.params.itemRIDEID_SENT}`
+            // Y314WAGVFRKV
+
+            console.log("axiosCheckGetRideStatusRequest11111===>", url);
+            console.log("axiosCheckGetRideStatusRequest11111===>", url);
+            console.log("axiosCheckGetRideStatusRequest2222===>", url);
+            console.log("axiosCheckGetRideStatusRequest22222===>", url);
+
 
             await axios.get(url, {
                 headers: {
@@ -373,7 +381,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'Ride Status Derived Successful') {
+                        && response?.data?.message === 'Courier Status Derived Successful') {
                         Toast.show('Ride Status Get Successfully!', Toast.SHORT);
 
                         statusCheack = response?.data?.matchingUsers?.Status;
@@ -389,30 +397,42 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         OTPVerify = response?.data?.matchingUsers?.OTPStatus;
                         console.log("OTPVerify===>", OTPVerify);
 
-                        setToggleArrived(true);
-                        setToggleOTP(true);
+                        ArrivedOTPPICK = response?.data?.matchingUsers?.ArrivedOTP;
+
+                        console.log("ArrivedOTPPICK///===>", ArrivedOTPPICK);
+                        console.log("ArrivedOTPPICK///===>", ArrivedOTPPICK);
+
+
+                        // if (statusCheack === "Accept") {
+                        //     // CALL OTP GET API - ArrivedOTPGenerate
+                        //     axiosRequestArrivedPICKOTP();
+                        // } else {
+                        //     setToggleArrived(false);
+                        // }
+
+                        // setToggleArrived(false); // true
+                        // setToggleOTP(false);
+
+                        // https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate
 
                         // setToggleArrived
 
                         // TODO :
-                        if (OTPVerify === "Verify") {
-                            setToggleOTP(true);
-                        } else {
-                            setToggleOTP(false);
-                            setDRIVERSTATUS("Driver Started Waiting Timer")
-                        }
+                        // if (OTPVerify === "Verify") {
+                        //     setToggleOTP(true);
+                        // } else {
+                        //     setToggleOTP(false);
+                        //     setDRIVERSTATUS("Driver Started Waiting Timer")
+                        // }
+
+                        // if (toggleOTP === true) {
+                        //     setToggleArrivedDrop(true);
 
 
-                        if (toggleOTP === true) {
-                            setToggleOTP(true); // auto true
+                        // } else {
+                        //     console.log("ERROR!", "ERROR!");
+                        // }
 
-                            setToggleArrivedDrop(true)
-                            setDROPOTP("000000"); // DROP OTP Set
-
-                            // setDROPOTP(OTPGenerated_); // DROP OTP Set
-                        } else {
-                            console.log("ERROR!", "ERROR!");
-                        }
                         // TODO :
 
                         console.log("paymentStatus===>", JSON.stringify(response?.data, null, 2));
@@ -420,10 +440,18 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
 
                         console.log("paymentStatus****===>", paymentStatus);
 
+
                         // 1
                         if (statusCheack === "Accept") {
                             console.log("GetStatus===>", statusCheack);
                             setToggleAccepted(true);
+
+                            setToggleArrived(true);
+
+                            // CALL OTP GET API - ArrivedOTPGenerate
+                            axiosRequestArrivedPICKOTP();
+
+                            // setToggleArrived(false);
 
                             // Booking Request Accepted
                             setDRIVERSTATUS("Booking Request Accepted");
@@ -445,24 +473,32 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             // Toast.show('Unable to Get Ride Status!', Toast.SHORT); **
                         }
 
-                        // 2
-                        if (paymentStatus === "Done") {
+                        if (statusCheack === "Completed") {
                             setTogglePaymentCompleted(true);
+                            setToggleAccepted(true);
+
                         } else {
                             setTogglePaymentCompleted(false);
                         }
 
-                        // 3
-                        if (rideStatus === "Completed") {
-                            setDRIVERSTATUS("Courier Delivered");
-                            setToggleRideCompleted(true);
-                            setToggleDelivered(true)
+                        // // 2
+                        // if (paymentStatus === "Done") {
+                        //     setTogglePaymentCompleted(true);
+                        // } else {
+                        //     setTogglePaymentCompleted(false);
+                        // }
 
-                            // setToggleFeedBack(true);
-                        } else {
-                            setToggleRideCompleted(false);
-                            setToggleDelivered(false);
-                        }
+                        // // 3
+                        // if (rideStatus === "Completed") {
+                        //     setDRIVERSTATUS("Courier Delivered");
+                        //     setToggleRideCompleted(true);
+                        //     setToggleDelivered(true)
+
+                        //     // setToggleFeedBack(true);
+                        // } else {
+                        //     setToggleRideCompleted(false);
+                        //     setToggleDelivered(false);
+                        // }
 
                         // 4 - setToggleDelivered
 
@@ -480,6 +516,144 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
             // Handle any errors that occur during AsyncStorage operations
         }
     };
+
+
+    const axiosRequestArrivedPICKOTP = async () => {
+        try {
+            const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
+
+            const data = {
+                id: route?.params?.itemRIDER_ID_SENT
+            }
+
+            console.log("_IIDIDIDIIDIDID===>", data);
+            console.log("_IIDIDIDIIDIDID===>", data);
+            console.log("_IIDIDIDIIDIDID===>", data);
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'ArrivedOTP generated successfully') {
+
+                        // GET OTP SET
+                        ArrivedOTP_GET_PICK = response?.data?.ArrivedOTP;
+                        setPICKOTP(ArrivedOTP_GET_PICK);
+
+                        STOREPICK(ArrivedOTP_GET_PICK);
+
+                        setToggleArrivedDrop(true);
+                        setToggleOTP(true);
+
+                        if (toggleOTP == true && isPICKOTP !== null) {
+                            setToggleArrivedDrop(true);
+
+                            // CALL VERFIY PICK OTP 
+                            axiosRequestArrivedCHECK();
+                        } else {
+                            console.log("test");
+                        }
+
+                    } else {
+                        Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                });
+
+
+        } catch (error) {
+
+        }
+    }
+
+
+    const STOREPICK = async (ArrivedOTP_GET_PICK: any) => {
+        try {
+            await AsyncStorage.setItem('user_pick_otp', JSON.stringify(ArrivedOTP_GET_PICK));
+            console.log('user_pick_otp===>', JSON.stringify(ArrivedOTP_GET_PICK));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_pick_otp :', error);
+        }
+    }
+
+    const axiosRequestArrivedCHECK = async () => {
+
+        try {
+
+            const url = "https://rideshareandcourier.graphiglow.in/api/verifyArrivedOTP/otp";
+
+            const storedPickOTP = await AsyncStorage.getItem('user_pick_otp');
+
+            if (storedPickOTP !== null) {
+                const data = {
+                    id: route?.params?.itemRIDER_ID_SENT,
+                    otp: JSON.parse(storedPickOTP)
+                }
+
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+                console.log("000000000000000===>", data);
+
+
+
+                await axios.post(url, data, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200
+                            && response?.data?.message === 'Ride Completed') {
+
+                            setDROPOTP('123456');
+
+                            if (isDROPOTP !== null) {
+                                setTogglePaymentCompleted(true);
+                                setToggleDelivered(true);
+                            } else {
+                                setTogglePaymentCompleted(false);
+                                setToggleDelivered(false);
+                            }
+
+                            // Toast.show('OTP PICK - Verfiy!', Toast.SHORT);
+
+                        } else {
+                            Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                        }
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                    });
+            } else {
+
+            }
+
+
+        } catch (error) {
+
+        }
+    }
 
 
     // const axiosGetOTPPostRequest = async () => {

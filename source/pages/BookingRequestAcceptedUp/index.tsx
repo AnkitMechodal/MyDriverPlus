@@ -696,7 +696,13 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
                                                 backgroundColor={Colors.grayDark}
                                                 borderRadius={wp(2)}
                                                 onFocus={handleFocus}
-                                                onChangeText={handleAccountOne}
+                                                // onChangeText={handleAccountOne}
+                                                onChangeText={text => {
+                                                    handleAccountOne(text);
+                                                    if (text.length === 1) {
+                                                        refnumber2?.current?.focus();
+                                                    }
+                                                }}
                                                 onSubmitEditing={() => {
                                                     refnumber2?.current?.focus();
                                                 }}
@@ -735,7 +741,13 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
                                                 backgroundColor={Colors.grayDark}
                                                 borderRadius={wp(2)}
                                                 onFocus={handleFocus2}
-                                                onChangeText={handleAccountTwo}
+                                                onChangeText={text => {
+                                                    handleAccountTwo(text);
+                                                    if (text.length === 1) {
+                                                        refnumber3?.current?.focus();
+                                                    }
+                                                }}
+                                                // onChangeText={handleAccountTwo}
                                                 onSubmitEditing={() => {
                                                     refnumber3?.current?.focus();
                                                 }}
@@ -775,7 +787,13 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
                                                 backgroundColor={Colors.grayDark}
                                                 borderRadius={wp(2)}
                                                 onFocus={handleFocus3}
-                                                onChangeText={handleAccountThree}
+                                                // onChangeText={handleAccountThree}
+                                                onChangeText={text => {
+                                                    handleAccountThree(text);
+                                                    if (text.length === 1) {
+                                                        refnumber4?.current?.focus();
+                                                    }
+                                                }}
                                                 onSubmitEditing={() => {
                                                     refnumber4?.current?.focus();
                                                 }}
@@ -816,7 +834,13 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
                                                 backgroundColor={Colors.grayDark}
                                                 borderRadius={wp(2)}
                                                 onFocus={handleFocus4}
-                                                onChangeText={handleAccountFour}
+                                                // onChangeText={handleAccountFour}
+                                                onChangeText={text => {
+                                                    handleAccountFour(text);
+                                                    if (text.length === 1) {
+                                                        refnumber5?.current?.focus();
+                                                    }
+                                                }}
                                                 onSubmitEditing={() => {
                                                     refnumber5?.current?.focus();
                                                 }}
@@ -856,7 +880,13 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
                                                 backgroundColor={Colors.grayDark}
                                                 borderRadius={wp(2)}
                                                 onFocus={handleFocus5}
-                                                onChangeText={handleAccountFive}
+                                                // onChangeText={handleAccountFive}
+                                                onChangeText={text => {
+                                                    handleAccountFive(text);
+                                                    if (text.length === 1) {
+                                                        refnumber6?.current?.focus();
+                                                    }
+                                                }}
                                                 onSubmitEditing={() => {
                                                     refnumber6?.current?.focus();
                                                 }}
@@ -1181,7 +1211,9 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
                     </View>
 
                     <View>
-                        <Modal isVisible={isModalSOS}>
+                        <Modal isVisible={isModalSOS}
+                            onBackButtonPress={() => setModalSOS(false)}
+                            onBackdropPress={() => setModalSOS(false)}>
                             <View style={Styles.modalIOS}>
 
                                 <View style={Styles.timerValueContain}>

@@ -617,7 +617,7 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                             titleWithRightContent={"SOS/Help ?"}
                             marginRight={wp(5)}
                             fontFamilyRight={Fonts.InterSemiBold}
-                            title={"Boking Request Accepted"}
+                            title={"Booking Request Accepted"}
                             onPressRightEnd={onPressRightEnd}
                             fontSize={wp(4)}
                             onPress={() => navigation.goBack()}
@@ -689,7 +689,13 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                             backgroundColor={Colors.grayDark}
                                             borderRadius={wp(2)}
                                             onFocus={handleFocus}
-                                            onChangeText={handleAccountOne}
+                                            // onChangeText={handleAccountOne}
+                                            onChangeText={text => {
+                                                handleAccountOne(text);
+                                                if (text.length === 1) {
+                                                    refnumber2?.current?.focus();
+                                                }
+                                            }}
                                             onSubmitEditing={() => {
                                                 refnumber2?.current?.focus();
                                             }}
@@ -728,7 +734,13 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                             backgroundColor={Colors.grayDark}
                                             borderRadius={wp(2)}
                                             onFocus={handleFocus2}
-                                            onChangeText={handleAccountTwo}
+                                            // onChangeText={handleAccountTwo}
+                                            onChangeText={text => {
+                                                handleAccountTwo(text);
+                                                if (text.length === 1) {
+                                                    refnumber3?.current?.focus();
+                                                }
+                                            }}
                                             onSubmitEditing={() => {
                                                 refnumber3?.current?.focus();
                                             }}
@@ -768,7 +780,13 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                             backgroundColor={Colors.grayDark}
                                             borderRadius={wp(2)}
                                             onFocus={handleFocus3}
-                                            onChangeText={handleAccountThree}
+                                            // onChangeText={handleAccountThree}
+                                            onChangeText={text => {
+                                                handleAccountThree(text);
+                                                if (text.length === 1) {
+                                                    refnumber4?.current?.focus();
+                                                }
+                                            }}
                                             onSubmitEditing={() => {
                                                 refnumber4?.current?.focus();
                                             }}
@@ -809,7 +827,13 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                             backgroundColor={Colors.grayDark}
                                             borderRadius={wp(2)}
                                             onFocus={handleFocus4}
-                                            onChangeText={handleAccountFour}
+                                            // onChangeText={handleAccountFour}
+                                            onChangeText={text => {
+                                                handleAccountFour(text);
+                                                if (text.length === 1) {
+                                                    refnumber5?.current?.focus();
+                                                }
+                                            }}
                                             onSubmitEditing={() => {
                                                 refnumber5?.current?.focus();
                                             }}
@@ -849,7 +873,13 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                             backgroundColor={Colors.grayDark}
                                             borderRadius={wp(2)}
                                             onFocus={handleFocus5}
-                                            onChangeText={handleAccountFive}
+                                            // onChangeText={handleAccountFive}
+                                            onChangeText={text => {
+                                                handleAccountFive(text);
+                                                if (text.length === 1) {
+                                                    refnumber6?.current?.focus();
+                                                }
+                                            }}
                                             onSubmitEditing={() => {
                                                 refnumber6?.current?.focus();
                                             }}
@@ -1174,7 +1204,9 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                 </View>
 
                 <View>
-                    <Modal isVisible={isModalSOS}>
+                    <Modal isVisible={isModalSOS}
+                     onBackButtonPress={() => setModalSOS(false)}
+                     onBackdropPress={() => setModalSOS(false)}>
                         <View style={Styles.modalIOS}>
 
                             <View style={Styles.timerValueContain}>
