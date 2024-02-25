@@ -401,7 +401,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
                     DriverID: "65b265d1e96ba17261218f34",           // When Any Doctor Accept Booking   // How to Get
-                    status: "Accept"
+                    status: "Pending"
                 };
 
                 console.log("All_CONFIRM_HOURLY==>", JSON.stringify(data, null, 2));
@@ -679,7 +679,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
                     DriverID: "65b265d1e96ba17261218f34",           // When Any Doctor Accept Booking   // How to Get
-                    status: "Accept"
+                    // status: "Accept",
+                    status: "Pending"
                 };
 
                 console.log("All_CONFIRM_POOL==>", JSON.stringify(data, null, 2));
@@ -844,7 +845,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
                     DriverID: "65b265d1e96ba17261218f34",           // When Any Doctor Accept Booking   // How to Get
-                    status: "Accept"
+                    status: "Pending"
                 };
 
                 console.log("All_CONFIRM_BOOING==>", JSON.stringify(data, null, 2));

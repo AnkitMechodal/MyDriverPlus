@@ -1303,9 +1303,10 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                                                 navigation.navigate('CourierRequestDriverPast', {
                                                     itemCompleteMapId: route?.params?.itemBokingDetailsMapId,
 
-                                                    itemCompleteDistance: route?.params?.itemMapKmStation,
-                                                    itemCompleteDuration: route?.params?.itemMapMinStation,
+                                                    itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                                    itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
 
+                                               
                                                     itemCompletePickStation: route?.params?.itemMapPickStation,
                                                     itemCompleteDropStation: route?.params?.itemMapDropStation,
                                                     itemCompleteRideCharge: route?.params?.itemMapRideCharge,

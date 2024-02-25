@@ -284,7 +284,7 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
                     DriverID: "65b265d1e96ba17261218f34",           // When Any Doctor Accept Booking   // How to Get
-                    status: "Accept"
+                    status: "Pending"
                 };
 
                 console.log("All_CONFIRM_BIDDING==>", JSON.stringify(data, null, 2));

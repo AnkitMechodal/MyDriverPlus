@@ -65,9 +65,21 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
 
 
+    // isArriedOTPDate
+    const [isArriedOTPDate, setIsArriedOTPDate] = useState('');
+    const [isArriedTrueOTPDate, setIsArriedTrueOTPDate] = useState('');
+
+    const [isRequestAcceptTime, setIsRequestAcceptTime] = useState('');
+
+    const [isRequestPayAcceptTime, setIsRequestPayAcceptTime] = useState('');
+
+
+
     // isDriverOnTheWay
 
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
+
+    const [isAccepted, setIsAccepted] = useState(true);
 
 
     let OTPGenerated;
@@ -150,7 +162,6 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         console.log("FeedbackDataResponse==>",
                             JSON.stringify(response?.data?.matchingVehicles, null, 2));
 
-                        // setVehicles(response.data.matchingVehicles);
 
                         Toast.show('Feedback Sent Successfully!', Toast.SHORT);
                         setToggleFeedBack(true);
@@ -232,14 +243,14 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
         fetchData();
 
-        // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(fetchData, 5 * 1000); // 888
+        // Set interval to refresh every 10 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
-        // // Cleanup function
-        // return () => {
-        //     // Clear the interval when the component unmounts
-        //     clearInterval(intervalId);
-        // };
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
 
     }, [route.params.itemRIDEID_SENT,
     route.params.itemRIDER_ID_SENT,
@@ -269,69 +280,20 @@ const BookingRequestScreen = ({ route, navigation }) => {
     }
 
 
-
-    // const axiosCheckUserGetRideRattingRequest = async () => {
-
-    //     try {
-
-    //         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
-
-    //         if (storedLinkedId !== null) {
-
-    //         }else{
-
-    //         }
-
-    //         const userId = JSON.parse(storedLinkedId);
-    //         const url = `https://rideshareandcourier.graphiglow.in/api/updateProfile/updateProfile/${userId}`;
-
-    //         console.log("axiosPostRequestCreateAccount==>", JSON.stringify(data, null, 2));
-
-    //         await axios.get(url, {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         })
-    //             .then(response => {
-    //                 if (response.status === 201
-    //                     && response?.data?.message === 'User Registered Successfully') {
-
-    //                     // GETUSERID = response?.data?.data?._id;
-    //                     // console.log("GETUSERID==>", GETUSERID);
-
-    //                     user_register_id = response?.data?.data?._id;
-    //                     storeCreateAccountId(user_register_id);
-
-    //                     Toast.show('Your Account Has Been Successfully Registered!', Toast.SHORT);
-
-    //                     navigation.navigate("VerifyYourAccount", {
-    //                         itemAccountUserId: user_register_id
-    //                         // itemAccountMobile: selected.label + num.toString(),
-    //                         // itemAccountEmail: email.toString()
-    //                     })
-
-    //                 } else {
-    //                     Toast.show('Registered Credentials Invalid!', Toast.SHORT);
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 // Handle errors
-    //                 Toast.show('Registered Credentials Invalid!', Toast.SHORT);
-    //             });
-    //     } catch (error) {
-
-    //     }
-
-
-    // };
-
-
     let statusCheack;
     let dateCheack;
 
     let paymentStatus;
     let rideStatus;
     let OTPVerify;
+
+
+    let OTPGenerateTimeArrived;
+    let OTPVerifyTimeArrived;
+    let PaymentStatusArrived;
+    let RideStatusArrived;
+    let BookingRequestTimeArrived;
+    let PaymentStatusTimeArrived;
 
 
     // TODO :
@@ -342,7 +304,6 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
             const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
 
-            // JSON.parse(route.params.itemRIDEID_SENT)
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
 
@@ -354,7 +315,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                 .then(response => {
                     if (response.status === 200
                         && response?.data?.message === 'Ride Status Derived Successful') {
-                        Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+                        // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
 
                         statusCheack = response?.data?.matchingUsers?.Status;
                         dateCheack = response?.data?.matchingUsers?.date;
@@ -362,27 +323,106 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
                         rideStatus = response?.data?.matchingUsers?.RideStatus;
 
+
                         // TODO :
-                        OTPVerify = response?.data?.matchingUsers?.OTPStatus;
+                        OTPGenerateTimeArrived = response?.data?.matchingUsers?.OTPGenerateTime;
+
+                        // TODO :
+                        OTPVerifyTimeArrived = response?.data?.matchingUsers?.OTPVerifyTime;
+
+
+                        // BookingRequestTime //2502
+                        BookingRequestTimeArrived = response?.data?.matchingUsers?.BookingRequestTime;
+
+                        PaymentStatusTimeArrived = response?.data?.matchingUsers?.PaymentStatusTime;
+
+
+                        if (PaymentStatusTimeArrived !== null) {
+                            setIsRequestPayAcceptTime(PaymentStatusTimeArrived);
+                        } else {
+                            setIsRequestPayAcceptTime('');
+                        }
+
+                        // TODO :
+                        OTPVerify = response?.data?.matchingUsers?.ArrivedOTPStatus;
                         console.log("OTPVerify===>", OTPVerify);
 
                         OTPStatus = response?.data?.matchingUsers?.OTP;
 
-                        if (OTPStatus !== null) {
-                            setPICKOTP(OTPStatus);
-                            setToggleArrived(true);
-                            // Driver arrived your location
-                            setDRIVERSTATUS("Driver arrived your location")
+                        PaymentStatusArrived = response?.data?.matchingUsers?.PaymentStatus;
+
+                        RideStatusArrived = response?.data?.matchingUsers?.RideStatus;
+
+                        if (BookingRequestTimeArrived !== null) {
+                            setIsRequestAcceptTime(BookingRequestTimeArrived);
                         } else {
-                            setPICKOTP("");
-                            setToggleArrived(false);
+                            setIsRequestAcceptTime('');
                         }
 
-                        if (OTPVerify === "Verify") {
+                        if (OTPStatus == '') {
+                            setPICKOTP("");
+                            setToggleArrived(false);
+
+                        } else {
+                            setPICKOTP(OTPStatus);
+                            setToggleArrived(true);
+
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+                        }
+
+
+                        // if (OTPStatus !== null) {
+                        //     setPICKOTP(OTPStatus);
+                        //     setToggleArrived(true);
+
+                        //     // Driver arrived your location
+                        //     setDRIVERSTATUS("Driver Arrived Your Location");
+                        // } else {
+                        //     setPICKOTP("");
+                        //     setToggleArrived(false);
+                        // }
+
+
+                        if (OTPVerify === "Pending") {
+                            setToggleOTP(false);
+
+
+                        } else if (OTPVerify === "Verify") {
                             setToggleOTP(true);
+                            setToggleAccepted(true);
+
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            } else {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            }
+
+                            if (OTPVerifyTimeArrived !== null) {
+                                setIsArriedTrueOTPDate(OTPVerifyTimeArrived);
+                            } else {
+                                setIsArriedTrueOTPDate(OTPVerifyTimeArrived);
+                            }
+
+
                         } else {
                             setToggleOTP(false);
-                            setDRIVERSTATUS("Driver Started Waiting Timer")
+                            setDRIVERSTATUS("Driver Started Waiting Timer");
+                        }
+
+
+                        if (PaymentStatusArrived === "Pending") {
+                            setTogglePaymentCompleted(false);
+                        } else {
+                            setTogglePaymentCompleted(true);
+                        }
+
+                        if (RideStatusArrived === "Complete") {
+                            setToggleRideCompleted(true);
+                            setDRIVERSTATUS("Ride Complete");
+                        } else {
+                            setToggleRideCompleted(false);
                         }
 
                         // TODO :
@@ -392,60 +432,70 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         // 1
                         if (statusCheack === "Accept") {
                             console.log("GetStatus===>", statusCheack);
+
                             setToggleAccepted(true);
+                            setIsAccepted(false);
+
 
                             // Booking Request Accepted
                             setDRIVERSTATUS("Booking Request Accepted");
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
                             setDRIVERSTATUS("Driver is On the Way");
 
-                            // Driver is On the Way
-
-                            // setRequestSentDate(dateCheack.concat(" " + currentTime))
 
                             setDriverOnTheWay(true);
 
-                            // setViewRequest(""); //QC
 
-                            //  generateOTP 
-                            // axiosGetOTPPostRequest();
+                            //  Arrived OTP  
+                            axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
 
+                        } else if (statusCheack === "Arrived") {
+                            setToggleAccepted(true);
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+
+                        } else if (statusCheack === "RideStart") {
+                            // setToggleRideCompleted(true);
+                            // setDRIVERSTATUS("Ride Complete");
+
+                            // Call Booking Complete API As Pending
+                            // axiosPendingPaymentPostRequest();
+
                         } else {
                             setToggleAccepted(false);
-                            Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                            // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                         }
 
-                        // 2
-                        if (paymentStatus === "Done") {
-                            setTogglePaymentCompleted(true);
-                        } else {
-                            setTogglePaymentCompleted(false);
-                        }
+                        // // 2
+                        // if (paymentStatus === "Done") {
+                        //     setTogglePaymentCompleted(true);
+                        // } else {
+                        //     setTogglePaymentCompleted(false);
+                        // }
 
-                        // 3
-                        if (rideStatus === "Completed") {
-                            setToggleRideCompleted(true);
-                            setDRIVERSTATUS("Ride Complete");
+                        // 3 
+                        // if (rideStatus === "Completed") {
+                        //     setToggleRideCompleted(true);
+                        //     setDRIVERSTATUS("Ride Complete");
 
-                            // setToggleFeedBack(true);
-                        } else {
-                            setToggleRideCompleted(false);
-                        }
+                        //     // setToggleFeedBack(true);
+                        // } else {
+                        //     setToggleRideCompleted(false);
+                        // }
 
 
 
                     } else {
                         setToggleAccepted(false);
-                        Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                        // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                     }
                 })
                 .catch(error => {
                     setToggleAccepted(false);
-                    Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                    // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                 });
 
         } catch (error) {
@@ -454,121 +504,174 @@ const BookingRequestScreen = ({ route, navigation }) => {
     };
 
 
-    // const axiosGetOTPPostRequest = async () => {
-    //     try {
-    //         const isConnected = await NetworkUtils.isNetworkAvailable()
-    //         if (isConnected) {
-    //             axiosGetOTPPostRequestSend();
-    //         } else {
-    //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-    //         }
-    //     } catch (error) {
-    //         Toast.show("axios error", Toast.SHORT);
-    //     }
-    // }
 
-    // const axiosGetOTPPostRequestSend = async () => {
-    //     try {
-    //         const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+    const axiosPendingPaymentPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPendingPaymentRequestArrived();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
 
-    //         console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+    const axiosPendingPaymentRequestArrived = async () => {
+        try {
+            const url = `https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment`
 
-    //         const data = {
-    //             id: route?.params?.itemRIDER_ID_SENT
-    //         }
+            // Prepare data in JSON format
+            const data = {
+                id: route?.params?.itemRIDER_ID_SENT,
+                PaymentStatus: "Pending"
+            };
 
-    //         await axios.post(url, data, {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         })
-    //             .then(response => {
-    //                 if (response.status === 200
-    //                     && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
-
-    //                     // GET OTP FROM API 
-    //                     OTPGenerated = response?.data?.OTP;
-    //                     console.log("OTPGenerated==>", OTPGenerated);
-
-    //                     Toast.show('Generat OTP Successfully!', Toast.SHORT);
-
-    //                     setPICKOTP(OTPGenerated);
-    //                     setToggleArrived(true);
-
-    //                     setToggleOTP(true); // auto true
-
-    //                     // VERIFY OTP API
-    //                     // axiosGetOTPVerifyPostRequest(OTPGenerated);
-
-    //                 } else {
-    //                     Toast.show('Enabel To Generat OTP!', Toast.SHORT);
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 // Handle errors
-    //                 Toast.show('Enabel To Generat OTP!', Toast.SHORT);
-    //             });
-    //     } catch (error) {
-
-    //     }
-    // }
+            console.log("DATA------GETCHECK", data);
+            console.log("DATA------GETCHECK", data);
+            console.log("DATA------GETCHECK", data);
+            console.log("DATA------GETCHECK", data);
 
 
-    // const axiosGetOTPVerifyPostRequest = async (OTPGenerated: any) => {
-    //     try {
-    //         const isConnected = await NetworkUtils.isNetworkAvailable()
-    //         if (isConnected) {
-    //             axiosGetOTPVerifyTruePostRequest(OTPGenerated);
-    //         } else {
-    //             Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-    //         }
-    //     } catch (error) {
-    //         Toast.show("axios error", Toast.SHORT);
-    //     }
-    // }
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Payment Status changed successfully') {
 
-    // const axiosGetOTPVerifyTruePostRequest = async (OTPGenerated: any) => {
-    //     try {
-
-    //         const url = `https://rideshareandcourier.graphiglow.in/api/verifyOTP/verifyOTP`
-
-    //         console.log("TruePostRequestOTP===>", url);
-
-    //         // Prepare data in JSON format
-    //         const data = {
-    //             id: route?.params?.itemRIDER_ID_SENT,
-    //             otp: OTPGenerated
-    //         };
-
-    //         console.log("TruePostRequestOTPData==>", JSON.stringify(data, null, 2));
+                        console.log("RES_TRUE==>", JSON.stringify(response?.data, null, 2));
 
 
-    //         await axios.post(url, data, {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         })
-    //             .then(response => {
-    //                 if (response.status === 200
-    //                     && response?.data?.message === 'Driver Arrived') {
+                    } else {
+                        Toast.show('Unable to Driver Arrived!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    Toast.show('Unable to Driver Arrived!', Toast.SHORT);
+                });
+        } catch (error) {
+            Toast.show('Unable to Driver Arrived!', Toast.SHORT);
+        }
+    }
 
-    //                     console.log("RES_TRUE==>", JSON.stringify(response?.data, null, 2));
+    const axiosRideArrivedOTPStatusRequest = async (OTPGenerated) => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosRideArrivedOTPStatusRequestCheck(OTPGenerated);
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
 
-    //                     // Toast.show('Driver Arrived Successfully!', Toast.SHORT);
-    //                     // setToggleOTP(true);
+    const axiosRideArrivedOTPStatusRequestCheck = async (OTPGenerated) => {
+        try {
 
-    //                 } else {
-    //                     Toast.show('Unable to Driver Arrived!', Toast.SHORT);
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 Toast.show('Unable to Driver Arrived!', Toast.SHORT);
-    //             });
+            const url = `https://rideshareandcourier.graphiglow.in/api/verifyOTP/verifyOTP`
 
-    //     } catch (error) {
-    //         // Handle any errors that occur during AsyncStorage operations
-    //     }
-    // };
+            console.log("TruePostRequestOTP===>", url);
+
+            // Prepare data in JSON format
+            const data = {
+                id: route?.params?.itemRIDER_ID_SENT,
+                otp: OTPGenerated
+            };
+
+            console.log("TruePostRequestOTPData==>", JSON.stringify(data, null, 2));
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Ride Start Now Injoy it') {
+
+                        console.log("RES_TRUE==>", JSON.stringify(response?.data, null, 2));
+
+                        setToggleOTP(true);
+                        setToggleAccepted(true);
+
+                        //  Call Booking Complete API As Pending
+                        // axiosPendingPaymentPostRequest();
+
+                    } else {
+                        Toast.show('Unable to Driver Arrived!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    Toast.show('Unable to Driver Arrived!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    }
+
+    const axiosGetOTPPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosGetOTPPostRequestSend();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosGetOTPPostRequestSend = async () => {
+        try {
+            const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+
+            console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+
+            const data = {
+                id: route?.params?.itemRIDER_ID_SENT
+            }
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'OTP generated successfully, status updated to Arrived') {
+
+                        // GET OTP FROM API 
+                        OTPGenerated = response?.data?.OTP;
+                        console.log("OTPGenerated==>", OTPGenerated);
+
+                        setPICKOTP(OTPGenerated);
+
+                        // setToggleArrived(true);
+
+                        // VERIFY OTP API
+                        // axiosRideArrivedOTPStatusRequest(OTPGenerated);
+
+                    } else {
+                        Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                });
+        } catch (error) {
+
+        }
+    }
 
     const onPressCancelBooking = () => {
         // Cancel Booking 
@@ -769,7 +872,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemDateBookingSent}
+                                // title={route.params.itemDateBookingSent}
+                                title={isRequestAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -782,7 +886,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.ViewDriver}
+                                title={isAccepted ? "" : ScreenText.ViewDriver} //99
                                 textDecorationLine={'underline'}
                                 onPress={() =>
                                     navigation.navigate('PreferredDriver', {
@@ -826,7 +930,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemDateBookingSent}
+                                // title={route.params.itemDateBookingSent}
+                                title={isArriedOTPDate}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -893,7 +998,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemDateBookingSent}
+                                title={isArriedTrueOTPDate}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -922,6 +1027,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                         </View>
 
+                 
+
                         <View>
                             <TextComponent
                                 color={Colors.white}
@@ -935,7 +1042,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemDateBookingSent}
+                                // title={route.params.itemDateBookingSent}
+                                title={isRequestPayAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -992,6 +1100,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                                 disabled={true}
                                 tintColors={{ true: Colors.blue, false: Colors.white }}
                                 value={toggleRideCompleted}
+
                                 onValueChange={(newValue) => setToggleRideCompleted(newValue)}
                             />
                         </View>
@@ -1009,7 +1118,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemDateBookingSent}
+                                // title={route.params.itemDateBookingSent}
+                                title={isRequestPayAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}

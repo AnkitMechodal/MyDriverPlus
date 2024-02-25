@@ -216,6 +216,11 @@ export const ScreenText = {
    SelectVehicle: "Select Vehicle",
    SaveFullLocation: "Save Full Location",
    OTPVerification: "OTP Verification",
+
+   OTPVerificationPick: "OTP PickUp Verification",
+   OTPVerificationDrop: "OTP DropUp Verification",
+
+
    TermsAndCondition: 'Terms And Conditions',
    ConfirmBooking: "Confirm Booking",
    Verification: "Verification",

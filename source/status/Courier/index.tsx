@@ -362,10 +362,10 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+             const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
 
             // AS COUIER 
-            const url = `https://rideshareandcourier.graphiglow.in/api/CourierStatus/checkCourier/${route.params.itemRIDEID_SENT}`
+            //const url = `https://rideshareandcourier.graphiglow.in/api/CourierStatus/checkCourier/${route.params.itemRIDEID_SENT}`
             // Y314WAGVFRKV
 
             console.log("axiosCheckGetRideStatusRequest11111===>", url);
@@ -381,7 +381,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
             })
                 .then(response => {
                     if (response.status === 200
-                        && response?.data?.message === 'Courier Status Derived Successful') {
+                        && response?.data?.message === 'Ride Status Derived Successful') {
                         Toast.show('Ride Status Get Successfully!', Toast.SHORT);
 
                         statusCheack = response?.data?.matchingUsers?.Status;
