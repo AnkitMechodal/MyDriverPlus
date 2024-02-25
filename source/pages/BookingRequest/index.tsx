@@ -199,8 +199,12 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
 
                 // Pay Now
-                console.log("itemRIDER_DISTANCE_SENT===>", route.params.itemRIDER_DISTANCE_SENT);
-                console.log("itemRIDER_DURATUION_SENT===>", route.params.itemRIDER_DURATUION_SENT);
+                console.log("itemRIDER_DISTANCE_SENT******===>", route.params.itemRIDER_DISTANCE_SENT);
+                console.log("itemRIDER_DURATUION_SENT*****===>", route.params.itemRIDER_DURATUION_SENT);
+                console.log("itemRIDER_DISTANCE_SENT****===>", route.params.itemRIDER_DISTANCE_SENT);
+                console.log("itemRIDER_DURATUION_SENT****===>", route.params.itemRIDER_DURATUION_SENT);
+                console.log("itemRIDER_DISTANCE_SENT***===>", route.params.itemRIDER_DISTANCE_SENT);
+                console.log("itemRIDER_DURATUION_SENT****===>", route.params.itemRIDER_DURATUION_SENT);
 
                 // Added MapData
                 console.log("itemPICK_STATION_SENT===>", route.params.itemRIDER_PICKSTATION);

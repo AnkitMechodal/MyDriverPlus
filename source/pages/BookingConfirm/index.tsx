@@ -1036,7 +1036,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
         } catch (error) {
             // Handle any errors that might occur during the storage operation
             console.log('Error store_last_price :', error);
-        }
+        } //24022222
     }
 
 

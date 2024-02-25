@@ -82,7 +82,8 @@ const Styles = StyleSheet.create({
     },
     marginRight: {
         alignSelf: "flex-end",
-        marginHorizontal: wp(5), // 3 //10
+        // marginHorizontal: wp(5), // 3 //10
+        marginRight: wp(12)
     },
     marginVertical: {
         marginVertical: wp(115),

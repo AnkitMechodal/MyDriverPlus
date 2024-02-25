@@ -74,7 +74,6 @@ const BookingDetailsMap = ({ route, navigation }) => {
     const [isDRIVERDISCOUNT, setDRIVERDISCOUNT] = useState("");
 
 
-
     let DISCOUNT;
 
     // const [isModalVisible, setModalVisible] = useState(true);

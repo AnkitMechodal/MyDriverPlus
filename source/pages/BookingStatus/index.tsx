@@ -27,10 +27,14 @@ const BookingStatusScreen = ({ route, navigation }) => {
         console.log("ITEM_RIDER_ID===>", route?.params?.itemRider_ID);
 
         // itemRiderDuration
-        console.log("ITEM_RIDER_DURATUION===>", route?.params?.itemRiderDuration);
+        console.log("ITEM_RIDER_DURATUION7777777777===>", route?.params?.itemRiderDuration);
+        console.log("ITEM_RIDER_DURATUION7777777777===>", route?.params?.itemRiderDuration);
+        console.log("ITEM_RIDER_DURATUION7777777777===>", route?.params?.itemRiderDuration);
 
         // itemRiderDistance
-        console.log("ITEM_RIDER_DISTANCE===>", route?.params?.itemRiderDistance);
+        console.log("ITEM_RIDER_DISTANCE77777777777===>", route?.params?.itemRiderDistance);
+        console.log("ITEM_RIDER_DISTANCE77777777777===>", route?.params?.itemRiderDistance);
+        console.log("ITEM_RIDER_DISTANCE77777777777===>", route?.params?.itemRiderDistance);
 
         //  itemPickStation: PickStation,
         //  itemDropStation: DropStation,

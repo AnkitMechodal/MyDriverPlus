@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, Linking, SafeAreaView, TouchableOpacity, View } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Circle, Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -95,6 +96,135 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
     const [five, setFive] = useState('');
     const [six, setSix] = useState('');
 
+    let user_latitude;
+    let user_longitude;
+
+
+    // SET AS PICK  & DROP 
+    const [markerCoordinates1, setMarkerCoordinates1] = useState<any>({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
+
+    const mapViewRef = useRef<any>(null);
+
+    const [radius, setRadius] = useState(50); // Define the radius in meters
+
+    // SET AS PICK  & DROP  - DEAFULT
+    const [markerCoordinates0, setMarkerCoordinates0] = useState<any>({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
+
+    const [markerCoordinates2, setMarkerCoordinates2] = useState<any>({
+        latitude: 37.80825, // Increased latitude for more distance
+        longitude: -122.4524, // Increased longitude for more distance
+    });
+
+
+    // useEffect(() => {
+    //     setModalDriver(true);
+    // }, []);
+
+
+    // Auto Zoom Added
+    useEffect(() => {
+        // Zoom to the marker using animateToRegion when markerCoordinate changes
+        if (mapViewRef.current) {
+            mapViewRef.current.animateToRegion({
+                latitude: markerCoordinates1.latitude,
+                longitude: markerCoordinates1.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }, 1000); // Adjust duration as needed
+        }
+    }, [markerCoordinates1]);
+
+
+    // SET CURRENT LOCATION 
+    useEffect(() => {
+
+        const fetchData1 = () => {
+            // Get Current Lat And Long
+            Geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+
+                    user_latitude = position.coords.latitude;
+                    user_longitude = position.coords.longitude;
+
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+
+                    let newCoordinate = { latitude: user_latitude, longitude: user_longitude };
+                    setMarkerCoordinates0(newCoordinate);
+                },
+                error => {
+                    console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+
+                },
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
+            );
+        }
+
+        fetchData1();
+
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchData, 5 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            // Get Lat & Long:
+            const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+            const user_drop_long = await AsyncStorage.getItem('user_drop_long');
+            const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+            const user_pick_long = await AsyncStorage.getItem('user_pick_long');
+
+            // console.log("DROP----->1", user_drop_lat);
+            // console.log("DROP----->1", user_drop_long);
+            // console.log("PICK----->1", user_pick_lat);
+            // console.log("PICK----->1", user_pick_long);
+
+            // Check for null or undefined values
+            if (user_pick_lat !== null && user_pick_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+            }
+
+            if (user_drop_lat !== null && user_drop_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+            }
+        };
+
+        fetchData(); // Call fetchData function
+
+        // if (mapViewRef.current) {
+        //     const coordinates = [markerCoordinates1, markerCoordinates2];
+
+        //     mapViewRef.current?.fitToCoordinates(coordinates, {
+        //         edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        //         animated: false,
+        //     });
+        // }
+
+    }, [markerCoordinates1, markerCoordinates2]);
+
+
     useEffect(() => {
         let timerId;
 
@@ -158,8 +288,15 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                 //itemMapDropStation
                 console.log("itemMapPickStation**==>", route.params.itemMapPickStation);
                 console.log("itemMapDropStation**==>", route.params.itemMapDropStation);
-                console.log("itemMapKmStation**", route?.params?.itemMapKmStation);
-                console.log("itemMapMinStation**", route?.params?.itemMapMinStation);
+
+
+                // console.log("itemMapKmStation**", route?.params?.itemMapKmStation);
+                // console.log("itemMapMinStation**", route?.params?.itemMapMinStation);
+
+                // TODO :
+                console.log("itemMapKmStation000000000000==>", route?.params?.itemBokingDetailsMapDistance);
+                console.log("itemMapMinStation00000000000==>", route?.params?.itemBokingDetailsMapDuration);
+                // TODO :
 
                 console.log("PayRideCharge**", route?.params?.itemMapRideCharge);
                 console.log("PayBookingsFees**", route?.params?.itemMapRideFeesCon);
@@ -192,14 +329,119 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
     }, [
         route.params.itemMapPickStation,
         route.params.itemMapDropStation,
-        route?.params?.itemMapKmStation,
-        route?.params?.itemMapMinStation,
+        route?.params?.itemBokingDetailsMapDistance,
+        route?.params?.itemBokingDetailsMapDuration,
         route?.params?.itemMapRideCharge,
         route?.params?.itemMapRideFeesCon,
         route?.params?.itemMapRideWattingCharges,
         route?.params?.itemMapRideDiscount,
         route?.params?.itemMapRideTotalAmount
     ]);
+
+
+
+    // useEffect(() => {
+    //     setModalDriver(true);
+    // }, []);
+
+
+    // Auto Zoom Added
+    useEffect(() => {
+        // Zoom to the marker using animateToRegion when markerCoordinate changes
+        if (mapViewRef.current) {
+            mapViewRef.current.animateToRegion({
+                latitude: markerCoordinates1.latitude,
+                longitude: markerCoordinates1.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }, 1000); // Adjust duration as needed
+        }
+    }, [markerCoordinates1]);
+
+
+    // SET CURRENT LOCATION 
+    useEffect(() => {
+
+        const fetchData1 = () => {
+            // Get Current Lat And Long
+            Geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+
+                    user_latitude = position.coords.latitude;
+                    user_longitude = position.coords.longitude;
+
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+
+                    let newCoordinate = { latitude: user_latitude, longitude: user_longitude };
+                    setMarkerCoordinates0(newCoordinate);
+                },
+                error => {
+                    console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+
+                },
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
+            );
+        }
+
+        fetchData1();
+
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchData, 5 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            // Get Lat & Long:
+            const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+            const user_drop_long = await AsyncStorage.getItem('user_drop_long');
+            const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+            const user_pick_long = await AsyncStorage.getItem('user_pick_long');
+
+            // console.log("DROP----->1", user_drop_lat);
+            // console.log("DROP----->1", user_drop_long);
+            // console.log("PICK----->1", user_pick_lat);
+            // console.log("PICK----->1", user_pick_long);
+
+            // Check for null or undefined values
+            if (user_pick_lat !== null && user_pick_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+            }
+
+            if (user_drop_lat !== null && user_drop_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+            }
+        };
+
+        fetchData(); // Call fetchData function
+
+        // if (mapViewRef.current) {
+        //     const coordinates = [markerCoordinates1, markerCoordinates2];
+
+        //     mapViewRef.current?.fitToCoordinates(coordinates, {
+        //         edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        //         animated: false,
+        //     });
+        // }
+
+    }, [markerCoordinates1, markerCoordinates2]);
+
 
 
     const axiosPostRideDetailsRequest = async () => {
@@ -509,6 +751,7 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
             <View style={Styles.container}>
 
                 <MapView
+                    ref={mapViewRef}
                     style={Styles.viewMapview}
                     provider={PROVIDER_GOOGLE}
                     showsUserLocation={true}
@@ -521,6 +764,47 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                         longitudeDelta: 0.0421,
                     }}
                 >
+                    <Circle
+                        center={markerCoordinates1}
+                        radius={radius}
+                        fillColor="rgba(0, 0, 255, 0.2)" // Transparent blue fill color
+                        strokeWidth={0} // No border
+                    />
+
+                    {/* First Lat Long */}
+                    <Marker
+                        coordinate={markerCoordinates1}
+                        title="Draggable Marker"
+                        description="Drag me!"
+                        // draggable
+                        // onDrag={handleMarkerDrag}
+                        // onDragEnd={handleMarkerDragEnd}
+                        // onPress={handleMarkerPress}
+                        icon={Images.mapOrangeIcon}
+                    />
+
+                    {/* Second Lat Long */}
+                    <Marker
+                        coordinate={markerCoordinates2}
+                        title="Second Marker"
+                        description="Another location"
+                        icon={Images.mapBlueIcon}
+                    />
+
+                    <Polyline
+                        coordinates={[markerCoordinates1, markerCoordinates2]}
+                        strokeColor="#0040FF" // Line color
+                        strokeWidth={2} // Line width
+                    />
+
+                    <Circle
+                        center={markerCoordinates2}
+                        radius={radius}
+                        fillColor="rgba(255, 165, 0, 0.2)"
+                        strokeWidth={0} // No border
+                    />
+
+
                 </MapView>
 
                 <View style={Styles.requestHeaderConatin}>
@@ -940,14 +1224,15 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                                 <View>
                                     <TextComponent
                                         color={Colors.blue}
-                                        title={route?.params?.itemMapMinStation + " KM"}
+                                        title={route?.params?.itemBokingDetailsMapDuration}
                                         textDecorationLine={'none'}
                                         fontWeight="700"
-                                        fontSize={wp(2.5)}
+                                        fontSize={wp(3)} // 3
                                         fontFamily={Fonts.PoppinsSemiBold}
                                         textAlign='center'
-                                        marginVertical={wp(4)}
-                                        marginHorizontal={wp(2)}
+                                        numberOfLines={2}
+                                        marginVertical={wp(5)} // 0000
+                                    // marginHorizontal={wp(2)}
                                     />
                                 </View>
 
@@ -957,12 +1242,13 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                             <View style={Styles.marginRight}>
                                 <TextComponent
                                     color={Colors.white}
-                                    title={route?.params?.itemMapKmStation}
+                                    title={route?.params?.itemBokingDetailsMapDistance}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
-                                    fontSize={wp(3)}
+                                    fontSize={wp(3)} // 3
                                     fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='center'
+                                    textAlign='left'
+                                    numberOfLines={2}
                                     marginVertical={wp(1)}
                                 />
                             </View>
