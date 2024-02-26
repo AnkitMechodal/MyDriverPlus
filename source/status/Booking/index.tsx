@@ -889,7 +889,8 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route.params.itemDateBookingSent)}
+                                // title={JSON.parse(route.params.itemDateBookingSent)}
+                                title={isRequestAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1015,7 +1016,8 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route.params.itemDateBookingSent)}
+                                // title={JSON.parse(route.params.itemDateBookingSent)}
+                                title={isArriedTrueOTPDate}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1057,7 +1059,8 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route.params.itemDateBookingSent)}
+                                // title={JSON.parse(route.params.itemDateBookingSent)}
+                                title={isRequestPayAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1150,7 +1153,8 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route.params.itemDateBookingSent)}
+                                // title={JSON.parse(route.params.itemDateBookingSent)}
+                                title={isRequestAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}

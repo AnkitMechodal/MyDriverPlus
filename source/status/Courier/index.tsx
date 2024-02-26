@@ -32,6 +32,17 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
 
     const [isModalVisible, setModalVisible] = useState(true);
 
+    const [toggleDropOTP, setToggleDropOTP] = useState(false);
+
+
+    const [isArriedOTPDate, setIsArriedOTPDate] = useState('');
+    const [isArriedTrueOTPDate, setIsArriedTrueOTPDate] = useState('');
+
+    const [isAccepted, setIsAccepted] = useState(true);
+
+
+    // ONE TO CALL API
+    const [toggleONE, setToggleONE] = useState(false);
 
     // Drop
     const [toggleArrivedDrop, setToggleArrivedDrop] = useState(false);
@@ -45,6 +56,10 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     // Courier Delivered
     const [toggleDelivered, setToggleDelivered] = useState(false);
 
+
+
+    let ArrivedOTP_GET_PICK;
+    let ArrivedOTP_GET_DROP;
 
     // TODO : Modal 
     const [isModalFeedBack, setModalFeedBack] = useState(false);
@@ -63,6 +78,17 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     const [isValidFeed, setValidFeed] = useState(true);
 
 
+    let BookingRequestTimeArrived;
+    let PaymentStatusTimeArrived;
+
+
+    let OTPGenerateTimeArrived;
+    let OTPVerifyTimeArrived;
+
+    let PaymentStatusArrived;
+    let RideStatusArrived;
+
+
     // is ArrivedOTP
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
@@ -73,9 +99,25 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     // Courier Request Sent
 
 
+    const [isRequestAcceptTime, setIsRequestAcceptTime] = useState('');
+
+    const [isRequestPayAcceptTime, setIsRequestPayAcceptTime] = useState('');
+
+    const [isArriedOTPDropDate, setIsArriedOTPDropDate] = useState('');
+    const [isArriedTrueDropOTPDate, setIsArriedTrueDropOTPDate] = useState('');
+
+
+    let DropOTPArrived;
+    let DropOTPStatusArrived;
+    let DropOTPGenerateTimeArrived;
+
+
+    let ArrivedOTPPICK;
+
+
+
     let statusCheack;
     let dateCheack;
-
 
     let OTPGenerated;
 
@@ -129,14 +171,14 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
 
         fetchData();
 
-        // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 15 seconds
+        const intervalId = setInterval(fetchData, 15 * 1000);
 
-        // // Cleanup function
-        // return () => {
-        //     // Clear the interval when the component unmounts
-        //     clearInterval(intervalId);
-        // };
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
 
     }, [route.params.itemRIDEID_SENT,
     route.params.itemRIDER_ID_SENT,
@@ -150,6 +192,27 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     route.params.itemRIDER_RIDE_DICOUNT,
     route.params.itemRIDER_RIDE_TOTALAMOUNT
     ]);
+
+    useEffect(() => {
+        // IF PICK OTP VERIFY THEN CALL AS STATE...
+        if (toggleONE === true) {
+            console.log(toggleONE);
+            console.log(toggleONE);
+            console.log(toggleONE);
+            console.log(toggleONE);
+
+            setToggleArrivedDrop(true);
+            // axiosRequestArrivedDROPOTP(); // 15 SEC CALL - WORKING TEST
+
+        } else {
+            // CALL DROP OTP - 2 API
+            console.log("toggleONE", toggleONE);
+            console.log("toggleONE", toggleONE);
+            console.log("toggleONE", toggleONE);
+            console.log("toggleONE", toggleONE);
+            console.log("toggleONE", toggleONE);
+        }
+    }, [toggleONE]); // This EEEE
 
 
     const toggleModalCancel = () => {
@@ -359,10 +422,10 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
         }
     }
 
-    const axiosCheckGetRideStatusRequest = async () => {
+    const axiosCheckGetRideStatusRequest = async () => { //010101
         try {
 
-             const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
 
             // AS COUIER 
             //const url = `https://rideshareandcourier.graphiglow.in/api/CourierStatus/checkCourier/${route.params.itemRIDEID_SENT}`
@@ -382,19 +445,32 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                 .then(response => {
                     if (response.status === 200
                         && response?.data?.message === 'Ride Status Derived Successful') {
-                        Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+                        // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
 
                         statusCheack = response?.data?.matchingUsers?.Status;
                         dateCheack = response?.data?.matchingUsers?.date;
 
                         paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
-                        rideStatus = response?.data?.matchingUsers?.RideStatus;
+                        // rideStatus = response?.data?.matchingUsers?.RideStatus;
 
                         // TODO :
                         OTPStatus = response?.data?.matchingUsers?.OTP;
-                        setPICKOTP(OTPStatus);
 
-                        OTPVerify = response?.data?.matchingUsers?.OTPStatus;
+                        // TODO :
+                        OTPGenerateTimeArrived = response?.data?.matchingUsers?.OTPGenerateTime;
+                        OTPVerifyTimeArrived = response?.data?.matchingUsers?.OTPVerifyTime;
+
+                        BookingRequestTimeArrived = response?.data?.matchingUsers?.BookingRequestTime;
+                        PaymentStatusTimeArrived = response?.data?.matchingUsers?.PaymentStatusTime;
+
+                        if (PaymentStatusTimeArrived !== null) {
+                            setIsRequestPayAcceptTime(PaymentStatusTimeArrived);
+                        } else {
+                            setIsRequestPayAcceptTime('');
+                        }
+
+
+                        OTPVerify = response?.data?.matchingUsers?.ArrivedOTPStatus;
                         console.log("OTPVerify===>", OTPVerify);
 
                         ArrivedOTPPICK = response?.data?.matchingUsers?.ArrivedOTP;
@@ -403,82 +479,171 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         console.log("ArrivedOTPPICK///===>", ArrivedOTPPICK);
 
 
-                        // if (statusCheack === "Accept") {
-                        //     // CALL OTP GET API - ArrivedOTPGenerate
-                        //     axiosRequestArrivedPICKOTP();
-                        // } else {
-                        //     setToggleArrived(false);
-                        // }
-
-                        // setToggleArrived(false); // true
-                        // setToggleOTP(false);
-
-                        // https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate
-
-                        // setToggleArrived
-
-                        // TODO :
-                        // if (OTPVerify === "Verify") {
-                        //     setToggleOTP(true);
-                        // } else {
-                        //     setToggleOTP(false);
-                        //     setDRIVERSTATUS("Driver Started Waiting Timer")
-                        // }
-
-                        // if (toggleOTP === true) {
-                        //     setToggleArrivedDrop(true);
-
-
-                        // } else {
-                        //     console.log("ERROR!", "ERROR!");
-                        // }
-
-                        // TODO :
-
                         console.log("paymentStatus===>", JSON.stringify(response?.data, null, 2));
 
+                        PaymentStatusArrived = response?.data?.matchingUsers?.PaymentStatus;
+
+                        RideStatusArrived = response?.data?.matchingUsers?.RideStatus;
+
+                        // DROP 1 -2 - 3
+                        DropOTPArrived = response?.data?.matchingUsers?.DropOTP;
+                        DropOTPStatusArrived = response?.data?.matchingUsers?.DropOTPStatus;
+                        DropOTPGenerateTimeArrived = response?.data?.matchingUsers?.DropOTPGenerateTime;
 
                         console.log("paymentStatus****===>", paymentStatus);
+
+                        if (BookingRequestTimeArrived !== null) {
+                            setIsRequestAcceptTime(BookingRequestTimeArrived);
+                        } else {
+                            setIsRequestAcceptTime('');
+                        }
+                        // DROP 
+
+                        if (DropOTPArrived == '') {
+                            setDROPOTP("");
+                            // setToggleArrivedDrop(false); //00
+                        } else {
+                            // setDROPOTP(DropOTPArrived);
+                            // setToggleArrivedDrop(true); //00
+
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+                        }
+
+                        // PICK 
+                        if (OTPStatus == '') {
+                            setPICKOTP("");
+                            setToggleArrived(false);
+
+                        } else {
+                            setPICKOTP(OTPStatus);
+                            setToggleArrived(true);
+
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+                        }
+
+
+                        // TODO :
+                        if (DropOTPStatusArrived === "Pending") {
+                            setToggleArrivedDrop(false);
+
+                        } else if (DropOTPStatusArrived === "Verify") {
+
+                            // OTP DROP VERFIFICATION :
+                            setToggleDropOTP(true);
+                            setToggleAccepted(true);
+
+                            // SET OTP GenerateTimeArrived
+                            if (DropOTPGenerateTimeArrived !== null) {
+                                setIsArriedOTPDropDate(OTPGenerateTimeArrived);
+                            } else {
+                                setIsArriedOTPDropDate(OTPGenerateTimeArrived);
+                            }
+
+                            if (DropOTPGenerateTimeArrived !== null) {
+                                setIsArriedTrueDropOTPDate(OTPVerifyTimeArrived);
+                            } else {
+                                setIsArriedTrueDropOTPDate(OTPVerifyTimeArrived);
+                            }
+
+                        } else {
+                            setToggleDropOTP(false);
+                            setDRIVERSTATUS("Driver Started Waiting Timer");
+                        }
+
+                        // TODO :
+
+
+
+                        if (OTPVerify === "Pending") {
+                            setToggleOTP(false);
+
+                        } else if (OTPVerify === "Verify") {
+                            setToggleOTP(true);
+                            setToggleAccepted(true);
+
+                            setToggleArrivedDrop(true); // DROP 
+                            setToggleONE(true);
+
+                            // CALL DROP OTP - 2 API
+                            // axiosRequestArrivedDROPOTP(); // todo...
+
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            } else {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            }
+
+                            if (OTPVerifyTimeArrived !== null) {
+                                setIsArriedTrueOTPDate(OTPVerifyTimeArrived);
+                            } else {
+                                setIsArriedTrueOTPDate(OTPVerifyTimeArrived);
+                            }
+
+
+
+                        } else {
+                            setToggleOTP(false);
+                            setDRIVERSTATUS("Driver Started Waiting Timer");
+                        }
+
+                        if (PaymentStatusArrived === "Pending") {
+                            setTogglePaymentCompleted(false);
+                        } else {
+                            setTogglePaymentCompleted(true);
+                        }
+
+
+                        if (RideStatusArrived === "Complete") {
+                            setToggleDelivered(true);
+                            setDRIVERSTATUS("Ride Complete");
+                        } else {
+                            setToggleDelivered(false);
+                        }
 
 
                         // 1
                         if (statusCheack === "Accept") {
                             console.log("GetStatus===>", statusCheack);
+
                             setToggleAccepted(true);
+                            setIsAccepted(false);
 
-                            setToggleArrived(true);
-
-                            // CALL OTP GET API - ArrivedOTPGenerate
-                            axiosRequestArrivedPICKOTP();
+                            // CALL OTP -1  GET API
+                            // axiosRequestArrivedPICKOTP(); // 15 SEC CALL - WORKING TEST
 
                             // setToggleArrived(false);
 
                             // Booking Request Accepted
-                            setDRIVERSTATUS("Booking Request Accepted");
+                            setDRIVERSTATUS("Courier Request Accepted");
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
                             setDRIVERSTATUS("Driver is On the Way");
 
-                            // setRequestSentDate(dateCheack.concat(" " + currentTime))
+
                             setDriverOnTheWay(true);
 
-                            //  generateOTP 
-                            // axiosGetOTPPostRequest();
+                            //  Arrived OTP - 1 - WORKING TEST
+                            //  axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
-                            // Booking Request Accepted
-                            // setDRIVERSTATUS("Ride Started , Enjoy your ride");**
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+
+
+                        } else if (statusCheack === "Arrived") {
+                            setToggleAccepted(true);
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+
+                        } else if (statusCheack === "Completed") {
+                            setToggleAccepted(true);
+                            setToggleDropOTP(true); // other  CALL TO CHECK
+
+                        } else if (statusCheack === "RideStart") {
 
                         } else {
                             setToggleAccepted(false);
-                            // Toast.show('Unable to Get Ride Status!', Toast.SHORT); **
-                        }
-
-                        if (statusCheack === "Completed") {
-                            setTogglePaymentCompleted(true);
-                            setToggleAccepted(true);
-
-                        } else {
-                            setTogglePaymentCompleted(false);
+                            // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                         }
 
                         // // 2
@@ -541,22 +706,9 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         && response?.data?.message === 'ArrivedOTP generated successfully') {
 
                         // GET OTP SET
-                        ArrivedOTP_GET_PICK = response?.data?.ArrivedOTP;
+                        ArrivedOTP_GET_PICK = response?.data?.OTP;
                         setPICKOTP(ArrivedOTP_GET_PICK);
 
-                        STOREPICK(ArrivedOTP_GET_PICK);
-
-                        setToggleArrivedDrop(true);
-                        setToggleOTP(true);
-
-                        if (toggleOTP == true && isPICKOTP !== null) {
-                            setToggleArrivedDrop(true);
-
-                            // CALL VERFIY PICK OTP 
-                            axiosRequestArrivedCHECK();
-                        } else {
-                            console.log("test");
-                        }
 
                     } else {
                         Toast.show('Enabel To Generat OTP!', Toast.SHORT);
@@ -655,6 +807,44 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
         }
     }
 
+
+    const axiosRequestArrivedDROPOTP = async () => {
+        try {
+            const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
+
+            const data = {
+                id: route?.params?.itemRIDER_ID_SENT
+            }
+            console.log("_IIDIDIDIIDIDID===>", data);
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'ArrivedOTP generated successfully') {
+
+                        // GET OTP SET
+                        ArrivedOTP_GET_DROP = response?.data?.ArrivedOTP;
+                        setDROPOTP(ArrivedOTP_GET_DROP);
+
+                    } else {
+                        Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Generat OTP!', Toast.SHORT);
+                });
+
+
+        } catch (error) {
+
+        }
+
+    }
 
     // const axiosGetOTPPostRequest = async () => {
     //     try {
@@ -898,7 +1088,8 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                // title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                title={isRequestAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -911,7 +1102,8 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.ViewCourierboy} // View courier boy
+                                // title={ScreenText.ViewCourierboy} // View courier boy
+                                title={isAccepted ? "" : ScreenText.ViewCourierboy}
                                 textDecorationLine={'underline'}
                                 onPress={() => navigation.navigate("CourierPreferredDriver")}
                                 fontWeight="400"
@@ -951,7 +1143,8 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                // title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                title={isArriedOTPDate}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1002,7 +1195,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                                 boxType="square"
                                 disabled={true}
                                 tintColors={{ true: Colors.blue, false: Colors.white }}
-                                value={toggleOTP}
+                                value={toggleDropOTP}
                                 onValueChange={(newValue) => setToggleOTP(newValue)}
                             />
                         </View>
@@ -1010,7 +1203,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         <View>
                             <TextComponent
                                 color={Colors.white}
-                                title={ScreenText.OTPVerification}
+                                title={ScreenText.OTPVerificationDrop}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(4)}
@@ -1020,7 +1213,8 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                // title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                title={isArriedTrueDropOTPDate}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1031,6 +1225,51 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         </View>
 
                     </View>
+
+                    <View style={{
+                        flexDirection: "row",
+                        marginVertical: wp(1)
+                    }}>
+
+                        <View style={{ justifyContent: 'center' }}>
+                            <CheckBox
+                                onCheckColor={'white'}
+                                onFillColor={'blue'}
+                                boxType="square"
+                                disabled={true}
+                                tintColors={{ true: Colors.blue, false: Colors.white }}
+                                value={toggleOTP}
+                                onValueChange={(newValue) => setToggleOTP(newValue)}
+                            />
+                        </View>
+
+                        <View>
+                            <TextComponent
+                                color={Colors.white}
+                                title={ScreenText.OTPVerificationPick}
+                                // title={isArriedTrueOTPDate}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(4)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                            <TextComponent
+                                color={Colors.gray}
+                                // title={route?.params?.itemDateBookingSent}
+                                title={isArriedTrueOTPDate}
+                                textDecorationLine={'none'}
+                                fontWeight="400"
+                                fontSize={wp(3)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='left'
+                            />
+                        </View>
+
+                    </View>
+
 
                     <View style={{ flexDirection: "row" }}>
 
@@ -1057,9 +1296,11 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
                             />
+
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                // title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                title={isArriedOTPDropDate}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1128,7 +1369,8 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                // title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                title={isRequestPayAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1183,7 +1425,8 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                // title={JSON.parse(route?.params?.itemDateBookingSent)}
+                                title={isRequestPayAcceptTime}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1266,7 +1509,9 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
 
                 </View>
 
-                <Modal isVisible={isModalCancel}>
+                <Modal isVisible={isModalCancel}
+                    onBackButtonPress={() => setModalCancel(false)}
+                    onBackdropPress={() => setModalCancel(false)}>
                     <View
                         style={Styles.modalCancelConatiner}>
                         <View>
@@ -1323,6 +1568,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                                 borderRadius={wp(2)}
                                 backgroundColor={Colors.blue}
                             />
+
                             <ButtonComponent
                                 isVisibleMobile={false}
                                 isVisibleFaceBook={false}
@@ -1348,7 +1594,9 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
 
                 </Modal>
 
-                <Modal isVisible={isModalFeedBack}>
+                <Modal isVisible={isModalFeedBack}
+                    onBackButtonPress={() => setModalFeedBack(false)}
+                    onBackdropPress={() => setModalFeedBack(false)}>
                     <View
                         style={Styles.modalCancelConatiner}>
 

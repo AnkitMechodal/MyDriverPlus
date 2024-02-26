@@ -60,6 +60,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
     const [toggleDelivered, setToggleDelivered] = useState(false);
 
 
+
     // TODO : Modal 
     const [isModalFeedBack, setModalFeedBack] = useState(false);
     const [isModalCancel, setModalCancel] = useState(false);
@@ -116,6 +117,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
     let OTPGenerated;
 
     let OTPGenerated_;
+
 
     let paymentStatus;
     let rideStatus;
@@ -519,7 +521,6 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             setToggleDropOTP(true);
                             setToggleAccepted(true);
 
-
                             // SET OTP GenerateTimeArrived
                             if (DropOTPGenerateTimeArrived !== null) {
                                 setIsArriedOTPDropDate(OTPGenerateTimeArrived);
@@ -610,8 +611,8 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                             setDriverOnTheWay(true);
 
-                            //  Arrived OTP
-                            axiosGetOTPPostRequest();
+                            //  Arrived OTP - 1 - WORKING TEST
+                            //  axiosGetOTPPostRequest();
 
                             // Ride Started , Enjoy your ride
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
@@ -821,7 +822,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
     //     try {
 
-    //         const url = "https://rideshareandcourier.graphiglow.in/api/verifyArrivedOTP/otp";
+    //         const url = "https://rideshareandcourier.graphiglow.in/api/veritoggleArrivedDropfyArrivedOTP/otp";
 
     //         const storedPickOTP = await AsyncStorage.getItem('user_pick_otp');
 
@@ -1555,7 +1556,9 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                 </View>
 
-                <Modal isVisible={isModalCancel}>
+                <Modal isVisible={isModalCancel}
+                    onBackButtonPress={() => setModalCancel(false)}
+                    onBackdropPress={() => setModalCancel(false)}>
                     <View
                         style={Styles.modalCancelConatiner}>
                         <View>
@@ -1637,7 +1640,9 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                 </Modal>
 
-                <Modal isVisible={isModalFeedBack}>
+                <Modal isVisible={isModalFeedBack}
+                    onBackButtonPress={() => setModalFeedBack(false)}
+                    onBackdropPress={() => setModalFeedBack(false)}>
                     <View
                         style={Styles.modalCancelConatiner}>
 
