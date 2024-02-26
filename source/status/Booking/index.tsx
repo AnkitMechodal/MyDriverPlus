@@ -65,9 +65,28 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
     const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
 
 
-    // isDriverOnTheWay
+    // isArriedOTPDate
+    const [isArriedOTPDate, setIsArriedOTPDate] = useState('');
+    const [isArriedTrueOTPDate, setIsArriedTrueOTPDate] = useState('');
 
+    const [isRequestAcceptTime, setIsRequestAcceptTime] = useState('');
+
+    const [isRequestPayAcceptTime, setIsRequestPayAcceptTime] = useState('');
+
+
+
+    // isDriverOnTheWay
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
+    const [isAccepted, setIsAccepted] = useState(true);
+
+
+    let OTPGenerateTimeArrived;
+    let OTPVerifyTimeArrived;
+    let PaymentStatusArrived;
+    let RideStatusArrived;
+    let BookingRequestTimeArrived;
+    let PaymentStatusTimeArrived;
+
 
 
     let OTPGenerated;
@@ -228,14 +247,14 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
 
         fetchData();
 
-        // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(fetchData, 5 * 1000); // 888
+        // Set interval to refresh every 15 seconds
+        const intervalId = setInterval(fetchData, 15 * 1000); // 888
 
-        // // Cleanup function
-        // return () => {
-        //     // Clear the interval when the component unmounts
-        //     clearInterval(intervalId);
-        // };
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
 
     }, [route.params.itemRIDEID_SENT,
     route.params.itemRIDER_ID_SENT,
@@ -336,9 +355,8 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${JSON.parse(route.params.itemRIDEID_SENT)}`
+            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
 
-            // JSON.parse(route.params.itemRIDEID_SENT)
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
 
@@ -350,7 +368,7 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                 .then(response => {
                     if (response.status === 200
                         && response?.data?.message === 'Ride Status Derived Successful') {
-                        Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+                        // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
 
                         statusCheack = response?.data?.matchingUsers?.Status;
                         dateCheack = response?.data?.matchingUsers?.date;
@@ -358,27 +376,106 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                         paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
                         rideStatus = response?.data?.matchingUsers?.RideStatus;
 
+
                         // TODO :
-                        OTPVerify = response?.data?.matchingUsers?.OTPStatus;
+                        OTPGenerateTimeArrived = response?.data?.matchingUsers?.OTPGenerateTime;
+
+                        // TODO :
+                        OTPVerifyTimeArrived = response?.data?.matchingUsers?.OTPVerifyTime;
+
+
+                        // BookingRequestTime //2502
+                        BookingRequestTimeArrived = response?.data?.matchingUsers?.BookingRequestTime;
+
+                        PaymentStatusTimeArrived = response?.data?.matchingUsers?.PaymentStatusTime;
+
+
+                        if (PaymentStatusTimeArrived !== null) {
+                            setIsRequestPayAcceptTime(PaymentStatusTimeArrived);
+                        } else {
+                            setIsRequestPayAcceptTime('');
+                        }
+
+                        // TODO :
+                        OTPVerify = response?.data?.matchingUsers?.ArrivedOTPStatus;
                         console.log("OTPVerify===>", OTPVerify);
 
                         OTPStatus = response?.data?.matchingUsers?.OTP;
 
-                        if (OTPStatus !== null) {
-                            setPICKOTP(OTPStatus);
-                            setToggleArrived(true);
-                            // Driver arrived your location
-                            setDRIVERSTATUS("Driver arrived your location")
+                        PaymentStatusArrived = response?.data?.matchingUsers?.PaymentStatus;
+
+                        RideStatusArrived = response?.data?.matchingUsers?.RideStatus;
+
+                        if (BookingRequestTimeArrived !== null) {
+                            setIsRequestAcceptTime(BookingRequestTimeArrived);
                         } else {
-                            setPICKOTP("");
-                            setToggleArrived(false);
+                            setIsRequestAcceptTime('');
                         }
 
-                        if (OTPVerify === "Verify") {
+                        if (OTPStatus == '') {
+                            setPICKOTP("");
+                            setToggleArrived(false);
+
+                        } else {
+                            setPICKOTP(OTPStatus);
+                            setToggleArrived(true);
+
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+                        }
+
+
+                        // if (OTPStatus !== null) {
+                        //     setPICKOTP(OTPStatus);
+                        //     setToggleArrived(true);
+
+                        //     // Driver arrived your location
+                        //     setDRIVERSTATUS("Driver Arrived Your Location");
+                        // } else {
+                        //     setPICKOTP("");
+                        //     setToggleArrived(false);
+                        // }
+
+
+                        if (OTPVerify === "Pending") {
+                            setToggleOTP(false);
+
+
+                        } else if (OTPVerify === "Verify") {
                             setToggleOTP(true);
+                            setToggleAccepted(true);
+
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            } else {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            }
+
+                            if (OTPVerifyTimeArrived !== null) {
+                                setIsArriedTrueOTPDate(OTPVerifyTimeArrived);
+                            } else {
+                                setIsArriedTrueOTPDate(OTPVerifyTimeArrived);
+                            }
+
+
                         } else {
                             setToggleOTP(false);
-                            setDRIVERSTATUS("Driver Started Waiting Timer")
+                            setDRIVERSTATUS("Driver Started Waiting Timer");
+                        }
+
+
+                        if (PaymentStatusArrived === "Pending") {
+                            setTogglePaymentCompleted(false);
+                        } else {
+                            setTogglePaymentCompleted(true);
+                        }
+
+                        if (RideStatusArrived === "Complete") {
+                            setToggleRideCompleted(true);
+                            setDRIVERSTATUS("Ride Complete");
+                        } else {
+                            setToggleRideCompleted(false);
                         }
 
                         // TODO :
@@ -388,60 +485,70 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                         // 1
                         if (statusCheack === "Accept") {
                             console.log("GetStatus===>", statusCheack);
+
                             setToggleAccepted(true);
+                            setIsAccepted(false);
+
 
                             // Booking Request Accepted
                             setDRIVERSTATUS("Booking Request Accepted");
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
                             setDRIVERSTATUS("Driver is On the Way");
 
-                            // Driver is On the Way
-
-                            // setRequestSentDate(dateCheack.concat(" " + currentTime))
 
                             setDriverOnTheWay(true);
 
-                            // setViewRequest(""); //QC
 
-                            //  generateOTP 
-                            // axiosGetOTPPostRequest();
+                            //  Arrived OTP  
+                            // axiosGetOTPPostRequest(); - CALL 15SEC - WORKING TEST
 
                             // Ride Started , Enjoy your ride
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
 
+                        } else if (statusCheack === "Arrived") {
+                            setToggleAccepted(true);
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+
+                        } else if (statusCheack === "RideStart") {
+                            // setToggleRideCompleted(true);
+                            // setDRIVERSTATUS("Ride Complete");
+
+                            // Call Booking Complete API As Pending
+                            // axiosPendingPaymentPostRequest();
+
                         } else {
                             setToggleAccepted(false);
-                            Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                            // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                         }
 
-                        // 2
-                        if (paymentStatus === "Done") {
-                            setTogglePaymentCompleted(true);
-                        } else {
-                            setTogglePaymentCompleted(false);
-                        }
+                        // // 2
+                        // if (paymentStatus === "Done") {
+                        //     setTogglePaymentCompleted(true);
+                        // } else {
+                        //     setTogglePaymentCompleted(false);
+                        // }
 
-                        // 3
-                        if (rideStatus === "Completed") {
-                            setToggleRideCompleted(true);
-                            setDRIVERSTATUS("Ride Complete");
+                        // 3 
+                        // if (rideStatus === "Completed") {
+                        //     setToggleRideCompleted(true);
+                        //     setDRIVERSTATUS("Ride Complete");
 
-                            // setToggleFeedBack(true);
-                        } else {
-                            setToggleRideCompleted(false);
-                        }
+                        //     // setToggleFeedBack(true);
+                        // } else {
+                        //     setToggleRideCompleted(false);
+                        // }
 
 
 
                     } else {
                         setToggleAccepted(false);
-                        Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                        // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                     }
                 })
                 .catch(error => {
                     setToggleAccepted(false);
-                    Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                    // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                 });
 
         } catch (error) {
@@ -795,7 +902,8 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.ViewDriver}
+                                // title={ScreenText.ViewDriver}
+                                title={isAccepted ? "" : ScreenText.ViewDriver} //99
                                 textDecorationLine={'underline'}
                                 onPress={() =>
                                     navigation.navigate('PreferredDriver', {
@@ -839,7 +947,8 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={JSON.parse(route.params.itemDateBookingSent)}
+                                // title={JSON.parse(route.params.itemDateBookingSent)}
+                                title={isArriedOTPDate}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}

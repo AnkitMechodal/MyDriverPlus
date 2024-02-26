@@ -119,8 +119,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
 
     // isDriverOnTheWay
-
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
+    const [isAccepted, setIsAccepted] = useState(true);
+
 
     // TODO :
     const [isFocusedFeedBack, setIsFocusedFeedBack] = useState(false);
@@ -198,14 +199,14 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
         fetchData();
 
-        // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(fetchData, 5 * 1000); // 888
+        // Set interval to refresh every 10 seconds
+        const intervalId = setInterval(fetchData, 15 * 1000); // 888
 
-        // // Cleanup function
-        // return () => {
-        //     // Clear the interval when the component unmounts
-        //     clearInterval(intervalId);
-        // };
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
 
     }, [route.params.itemRIDEID_SENT,
     route.params.itemRIDER_ID_SENT,
@@ -979,7 +980,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <View style={{ flex: 1 }}>
                                         <TextComponent
                                             color={Colors.orange}
-                                            title={ScreenText.ViewDriver}
+                                            // title={ScreenText.ViewDriver}
+                                            title={isAccepted ? "" : ScreenText.ViewDriver} //99
                                             textDecorationLine={'underline'}
                                             onPress={() =>
                                                 navigation.navigate('PreferredDriverUp', {

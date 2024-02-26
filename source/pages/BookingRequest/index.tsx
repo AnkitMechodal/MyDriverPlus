@@ -76,9 +76,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
 
     // isDriverOnTheWay
-
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
-
     const [isAccepted, setIsAccepted] = useState(true);
 
 
@@ -243,8 +241,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 1 * 1000);
+        // Set interval to refresh every 15 seconds
+        const intervalId = setInterval(fetchData, 15 * 1000);
 
         // Cleanup function
         return () => {
@@ -447,7 +445,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
 
                             //  Arrived OTP  
-                            axiosGetOTPPostRequest();
+                            // axiosGetOTPPostRequest(); - CALL 15SEC - WORKING TEST
 
                             // Ride Started , Enjoy your ride
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
@@ -1027,7 +1025,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                         </View>
 
-                 
+
 
                         <View>
                             <TextComponent
