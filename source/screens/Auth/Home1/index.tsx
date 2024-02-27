@@ -19,6 +19,7 @@ import TextComponent from '../../../components/Text';
 import CancelCourierDetailsMap from '../../../courier/CancelCourierDetailsMap';
 import CourierBookingScreen from '../../../courier/CourierBooking';
 import CourierConfirmScreen from '../../../courier/CourierConfirm';
+import CourierDetailsMap from '../../../courier/CourierDetailsMap';
 import CourierDropupScreen from '../../../courier/CourierDropupScreen';
 import CourierPaymentCompleteScreen from '../../../courier/CourierPaymentComplete';
 import CourierPaymentSuccessfulScreen from '../../../courier/CourierPaymentSuccessful';
@@ -649,12 +650,21 @@ const InnerHomeStack = () => {
             />
 
             <Stack.Screen
-                name="BookingDetailsMap" // BookingBiddingRequest
+                name="BookingDetailsMap"
                 options={{
                     animation: 'slide_from_right'
                 }}
                 component={BookingDetailsMap}
             />
+
+            <Stack.Screen
+                name="CourierDetailsMap" // CourierDetailsMap
+                options={{
+                    animation: 'slide_from_right'
+                }}
+                component={CourierDetailsMap}
+            />
+
 
         </Stack.Navigator>
     );
@@ -758,7 +768,7 @@ const BottomTabStack = ({ route }) => {
                         } else if (routeName === "DropupScreen") {
                             return {
                                 display: "none",
-                            }
+                            } // CourierDetailsMap
                         }
 
 
@@ -771,6 +781,10 @@ const BottomTabStack = ({ route }) => {
                                 display: "none",
                             }
                         } else if (routeName === "CourierRequestUser") {
+                            return {
+                                display: "none",
+                            }
+                        } else if (routeName === "CourierDetailsMap") {
                             return {
                                 display: "none",
                             }

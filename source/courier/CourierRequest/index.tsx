@@ -490,7 +490,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             setDROPOTP("");
                             // setToggleArrivedDrop(false); //00
                         } else {
-                            // setDROPOTP(DropOTPArrived);
+                            setDROPOTP(DropOTPArrived); //last
                             // setToggleArrivedDrop(true); //00
 
                             // Driver arrived your location
@@ -1427,19 +1427,38 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                         </View>
 
+                        <View style={{ flex: 1 }}>
+                            <TextComponent
+                                color={Colors.orange}
+                                title={ScreenText.PayNow}
+                                textDecorationLine={'underline'} // BookingDetailsMap
+                                onPress={() =>
+                                    navigation.navigate("CourierDetailsMap", {
+                                        itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                        itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                        itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
 
-                        {/* <View style={{ flex: 1 }}>
-            <TextComponent
-                color={Colors.orange}
-                title={ScreenText.PayNow}
-                textDecorationLine={'underline'}
-                fontWeight="400"
-                fontSize={wp(3.5)}
-                marginVertical={wp(0)}
-                fontFamily={Fonts.PoppinsRegular}
-                textAlign='right'
-            />
-        </View> */}
+                                        itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                        itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+
+                                        // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                        // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                                        itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                        itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                        itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                        itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                        itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                                    })
+                                }
+                                fontWeight="400"
+                                fontSize={wp(3.5)}
+                                marginVertical={wp(0)}
+                                fontFamily={Fonts.PoppinsRegular}
+                                textAlign='right'
+                            />
+                        </View>
+
 
                     </View>
 

@@ -849,9 +849,9 @@ const CourierBookingScreen = ({ route, navigation }) => {
             const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
             console.log('ErrorrestoredPreviousPickName :', storedDropPrev);
             if (storedDropPrev !== null) {
-                setPickPlace1(JSON.parse(storedDropPrev));
+                setPickPlace2(JSON.parse(storedDropPrev));
             } else {
-                setPickPlace1(ScreenText.SelectPickuplocation);
+                setPickPlace2(ScreenText.SelectPickuplocation);
             }
         } catch (error) {
 

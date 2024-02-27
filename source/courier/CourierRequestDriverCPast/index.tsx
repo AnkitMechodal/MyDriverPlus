@@ -40,6 +40,8 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
     let USER_RIDEDURATION;
     let USER_RIDEDISTANCE;
 
+    let USER_DRIVEID;
+
     let USER_RIDE_CHARGE;
     let USER_CON_CHARGE;
     let USER_DISCOUNT;
@@ -160,6 +162,12 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
                     USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
 
 
+                    // TODO :
+                    USER_DRIVEID = response?.data?.matchingVehicle?.DriverID;
+                    StoreDriverID(USER_DRIVEID);
+                    // TODO :
+
+
                     // RideCharge
                     USER_RIDE_CHARGE = response?.data?.matchingVehicle?.RideCharge;
                     USER_CON_CHARGE = response?.data?.matchingVehicle?.BookingFeesConvenience;
@@ -215,6 +223,16 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
             });
     };
 
+    const StoreDriverID = async (USER_DRIVER_ID: any) => {
+        try {
+            await AsyncStorage.setItem('store_driver_id', JSON.stringify(USER_DRIVER_ID));
+            console.log('store_driver_id===>', JSON.parse(USER_DRIVER_ID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_driver_id :', error);
+        }
+    }
 
     const axiosPostDriverInfoRequest = async () => {
         try {
@@ -231,7 +249,7 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
 
     const axiosUserPostDriverInfoRequest = async () => {
 
-        const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
+        const storedLinkedId = await AsyncStorage.getItem('store_driver_id'); // store_driver_id - store_ride_id
         if (storedLinkedId !== null) {
             const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
 

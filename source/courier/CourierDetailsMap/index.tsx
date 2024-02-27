@@ -11,24 +11,26 @@ import TextComponent from '../../components/Text/index';
 import { Colors, Fonts, Images } from '../../themes/index';
 import { ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
-import NetworkUtils from '../../utils/commonfunction';
+import NetworkUtils from "../../utils/commonfunction";
 import Styles from './style';
 
 
 type Props = {
-    navigation: any
+    navigation: any // props: Props
 }
 
-const BookingRequestDriverScreen = ({ route, navigation }) => {
+const CourierDetailsMap = ({ route, navigation }) => {
 
     const [defaultRating, setDefaultRating] = useState(0);
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
+
+    const [isGETPERCENTAGE, setGETPERCENTAGE] = useState("0");
+    const [isCHARGE, setCHARGE] = useState("20");
 
     const starImageFilled =
         Images.fillStarIcon;
     const starImageCorner =
         Images.unfillStarIcon;
-
 
     let USER_RIDEID;
     let USER_DATE_OF_RIDE;
@@ -44,15 +46,35 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
     let USER_RIDEDISTANCE;
 
 
+    let USER_DRIVER_ID;
+    let USER_RIDE_ID_;
+    let USER_RIDE_IDID;
+
+    let USER_PAY_TYPE;
+
+
     let USER_RIDE_CHARGE;
     let USER_CON_CHARGE;
     let USER_DISCOUNT;
     let USER_FARE_VALUE;
 
-    let USER_DRIVEID;
-
     let USER_TOTAL;
 
+
+    let USER_BOOKINGSTATUS;
+    let USER_CANCELLATION;   //cancellation---->
+
+
+    let PER;
+    let CAN;
+
+
+    const [isDRIVERIDECHARGE, setDRIVERRIDECHARGE] = useState("");
+    const [isDRIVERCONCHARGE, setDRIVERCONCHARGE] = useState("");
+    const [isDRIVERDISCOUNT, setDRIVERDISCOUNT] = useState("");
+
+
+    let DISCOUNT;
 
     // const [isModalVisible, setModalVisible] = useState(true);
 
@@ -68,17 +90,10 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
     const [isSERVICE_TYPE, setSERVICE_TYPE] = useState("");
     const [isFARE, setFARE] = useState("");
 
-    const [isDRIVERNAME, setDRIVERNAME] = useState(""); // USER_RIDE_CHARGE
-
-    const [isDRIVERIDECHARGE, setDRIVERRIDECHARGE] = useState("");
-    const [isDRIVERCONCHARGE, setDRIVERCONCHARGE] = useState("");
-    const [isDRIVERDISCOUNT, setDRIVERDISCOUNT] = useState("");
+    const [isDRIVERNAME, setDRIVERNAME] = useState("");
 
     const [isDRIVERPROFILe, setDRIVERPROFILE] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo"); // USER_RIDE_CHARGE
 
-
-    let averageRating;
-    let avg_username;
 
     // Driver Get Booking 
     let DriverBookingName;
@@ -86,29 +101,33 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
 
     let Driver_id;
 
+    let averageRating;
+    let avg_username;
 
-    // Booking Details 
 
     useEffect(() => {
-
         const fetchData = async () => {
             try {
+
                 // RIDER_MAP_ID
-                console.log("RIDER_MAP_ID===>", route.params.itemCompleteMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+
 
                 // Duration & Distnace
-                console.log("ITEM11===>", route?.params?.itemCompleteDistance);
-                console.log("ITEM22===>", route?.params?.itemCompleteDuration);
+                console.log("ITEM1===>", route?.params?.itemBokingDetailsMapDistance);
+                console.log("ITEM2===>", route?.params?.itemBokingDetailsMapDuration);
 
-                console.log("ITEM33===>", route?.params?.itemCompletePickStation);
-                console.log("ITEM44===>", route?.params?.itemCompleteDropStation);
-                console.log("ITEM55===>", route?.params?.itemCompleteRideCharge);
-                console.log("ITEM66===>", route?.params?.itemCompleteRideFeesCon);
-                console.log("ITEM77===>", route?.params?.itemCompleteRideWattingCharges);
-                console.log("ITEM88===>", route?.params?.itemCompleteRideWattingCharges);
-                console.log("ITEM99===>", route?.params?.itemCompleteTotalAmount);
-
-
+                console.log("ITEM3===>", route?.params?.itemMapPickStation);
+                console.log("ITEM4===>", route?.params?.itemMapDropStation);
+                console.log("ITEM5===>", route?.params?.itemMapRideCharge);
+                console.log("ITEM6===>", route?.params?.itemMapRideFeesCon);
+                console.log("ITEM7===>", route?.params?.itemMapRideWattingCharges);
+                console.log("ITEM8===>", route?.params?.itemMapRideDiscount);
+                console.log("ITEM9===>", route?.params?.itemMapRideTotalAmount);
 
                 // axios
                 await axiosPostRideDetailsOfMap();
@@ -116,7 +135,6 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                 // axios
                 await axiosPostDriverInfoRequest();
                 await axiosGetRideRattingRequest();
-
 
                 // await axiosPostRideDetailsOfMap();
                 // await axiosGetRideRattingRequest();
@@ -127,14 +145,26 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
         };
 
         fetchData();
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
 
-        // Clean up the interval when the component is unmounted
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
-
-        return () => clearInterval(intervalId);
-    }, []);
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
+    }, [route.params.itemBokingDetailsMapId,
+    route?.params?.itemBokingDetailsMapDistance,
+    route?.params?.itemBokingDetailsMapDuration,
+    route?.params?.itemMapPickStation,
+    route?.params?.itemMapDropStation,
+    route?.params?.itemMapRideCharge,
+    route?.params?.itemMapRideFeesCon,
+    route?.params?.itemMapRideWattingCharges,
+    route?.params?.itemMapRideDiscount,
+    route?.params?.itemMapRideTotalAmount
+    ]);
 
 
     const axiosPostDriverInfoRequest = async () => {
@@ -150,10 +180,9 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
         }
     }
 
-
     const axiosUserPostDriverInfoRequest = async () => {
 
-        const storedLinkedId = await AsyncStorage.getItem('store_driver_id');
+        const storedLinkedId = await AsyncStorage.getItem('store_driver_id'); // store_driver_id / /store_ride_id
         if (storedLinkedId !== null) {
             const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
 
@@ -187,8 +216,19 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                         // Store for star : todo
                         StoredDriverID(Driver_id);
 
-                        console.log("Driver_id==>",
-                            JSON.stringify(Driver_id, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+
 
                         setDRIVERNAME(DriverBookingName);
                         setDRIVERPROFILE(DriverProfileImage);
@@ -210,8 +250,6 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
 
     };
 
-
-
     const StoredDriverID = async (Driver_id: any) => {
         try {
             await AsyncStorage.setItem('store_star_id', JSON.stringify(Driver_id));
@@ -220,116 +258,6 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
         } catch (error) {
             // Handle any errors that might occur during the storage operation
             console.log('Error store_star_id :', error);
-        }
-    }
-
-
-    const axiosPostRideDetailsOfMap = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
-
-        // Prepare data in JSON format
-        const data = {
-            id: route.params.itemCompleteMapId
-        };
-
-        console.log("ERROR_ERROR===>", data);
-
-        await axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (response.status === 200
-                    && response?.data?.message === 'Ride Details') {
-                    // Handle API response here
-                    // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
-
-                    USER_RIDEID = response?.data?.matchingVehicle?.RideId;
-                    USER_DATE_OF_RIDE = response?.data?.matchingVehicle?.date;
-                    USER_PAYMEMT_TYPE = response?.data?.matchingVehicle?.payment_type;
-                    USER_TOTAL_AMOUNT = response?.data?.matchingVehicle?.TotalAmount;
-                    USER_WATTING_CHARGES = response?.data?.matchingVehicle?.Waiting_Charge;
-                    USER_PICK_UP_LOCATION = response?.data?.matchingVehicle?.pickup_locations;
-                    USER_DROP_UP_LOCATION = response?.data?.matchingVehicle?.drop_locations;
-                    USER_VEHICAL = response?.data?.matchingVehicle?.vehical;
-                    USER_SERVICE_TYPE = response?.data?.matchingVehicle?.service_stype;
-                    USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
-                    USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
-
-
-                    // RideCharge
-                    USER_RIDE_CHARGE = response?.data?.matchingVehicle?.RideCharge;
-                    USER_CON_CHARGE = response?.data?.matchingVehicle?.BookingFeesConvenience;
-                    USER_DISCOUNT = response?.data?.matchingVehicle?.Discount;
-
-
-                    // TODO :
-                    USER_DRIVEID = response?.data?.matchingVehicle?.DriverID;
-                    StoreDriverID(USER_DRIVEID);
-                    // TODO :
-
-                    USER_FARE_VALUE = response?.data?.matchingVehicle?.farValues;
-
-
-                    console.log("USER_VEHICAL==>", USER_VEHICAL);
-
-
-                    // GET TOTAL :
-                    USER_TOTAL = parseInt(USER_RIDE_CHARGE) + parseInt(USER_CON_CHARGE) +
-                        parseInt(USER_WATTING_CHARGES);
-
-                    console.log("USER_TOTAL1==>", parseInt(USER_RIDE_CHARGE));
-                    console.log("USER_TOTAL2==>", parseInt(USER_CON_CHARGE));
-                    console.log("USER_TOTAL3==>", parseInt(USER_WATTING_CHARGES));
-
-                    console.log("USER_TOTAL==>", USER_TOTAL);
-
-                    // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
-
-                    setRIDEID(USER_RIDEID);
-                    setVEHICAL(USER_VEHICAL); // ADDED
-                    setSERVICE_TYPE(USER_SERVICE_TYPE);
-                    setDATE_OF_RIDE(USER_DATE_OF_RIDE); // ADDED 
-                    setPAYMEMT_TYPE(USER_PAYMEMT_TYPE);
-                    setPICK_UP_LOCATION(USER_PICK_UP_LOCATION);
-                    setDROP_UP_LOCATION(USER_DROP_UP_LOCATION);
-                    setWATTING_CHARGES(USER_WATTING_CHARGES);
-                    // setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
-                    setFARE(USER_FARE_VALUE); // ADDED 
-
-                    setDRIVERRIDECHARGE(USER_RIDE_CHARGE);
-                    setDRIVERCONCHARGE(USER_CON_CHARGE);
-                    setDRIVERDISCOUNT(USER_DISCOUNT);
-
-                    // Discount  // ADDED
-                    // Ride Charge
-                    // Booking Fees
-
-
-
-                    console.log("RideDetails101===>",
-                        JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
-
-                } else {
-                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
-                }
-            })
-            .catch(error => {
-                // Handle errors
-                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
-            });
-    };
-
-    const StoreDriverID = async (USER_DRIVER_ID: any) => {
-        try {
-            await AsyncStorage.setItem('store_driver_id', JSON.stringify(USER_DRIVER_ID));
-            console.log('store_driver_id===>', JSON.parse(USER_DRIVER_ID));
-
-        } catch (error) {
-            // Handle any errors that might occur during the storage operation
-            console.log('Error store_driver_id :', error);
         }
     }
 
@@ -396,11 +324,185 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
         }
     }
 
+
+    const axiosPostRideDetailsOfMap = async () => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemBokingDetailsMapId // route.params.itemBokingDetailsMapId
+        };
+
+        console.log("RideDetails===>", data);
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    && response?.data?.message === 'Ride Details') {
+                    // Handle API response here
+                    // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
+
+                    USER_RIDEID = response?.data?.matchingVehicle?.RideId;
+                    USER_DATE_OF_RIDE = response?.data?.matchingVehicle?.date;
+                    USER_PAYMEMT_TYPE = response?.data?.matchingVehicle?.payment_type;
+                    USER_TOTAL_AMOUNT = response?.data?.matchingVehicle?.TotalAmount;
+                    USER_WATTING_CHARGES = response?.data?.matchingVehicle?.Waiting_Charge;
+                    USER_PICK_UP_LOCATION = response?.data?.matchingVehicle?.pickup_locations;
+                    USER_DROP_UP_LOCATION = response?.data?.matchingVehicle?.drop_locations;
+                    USER_VEHICAL = response?.data?.matchingVehicle?.vehical;
+                    USER_SERVICE_TYPE = response?.data?.matchingVehicle?.service_stype;
+                    USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
+                    USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
+
+                    // PASSING DATA TO PAYMENT SECTION :
+
+                    USER_DRIVER_ID = response?.data?.matchingVehicle?.DriverID;
+                    USER_RIDE_ID_ = response?.data?.matchingVehicle?._id;
+                    // USER_PAY_TYPE = response?.data?.matchingVehicle?.payment_type;
+
+
+                    // payment_type
+
+                    // STORED AS LOCAL :
+                    StoreDriverID(USER_DRIVER_ID);
+                    StoreRideID(USER_RIDE_ID_);
+                    StoreRideIDID(USER_RIDEID);
+                    StorePayType(USER_PAYMEMT_TYPE);
+
+
+                    console.log("USER_DRIVER_ID==>", USER_DRIVER_ID);
+                    console.log("USER_RIDE_ID_==>", USER_RIDE_ID_);
+                    console.log("USER_DRIVER_ID==>", USER_DRIVER_ID);
+                    console.log("USER_RIDE_ID_==>", USER_RIDE_ID_);
+
+                    // BookingCurrentStatus 
+                    USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
+                    USER_CANCELLATION = response?.data?.matchingVehicle?.cancelationsAmount;
+
+                    PER = USER_TOTAL_AMOUNT * USER_CANCELLATION / 100;
+
+                    // cancelationsAmount
+                    setGETPERCENTAGE(PER);
+
+                    CAN = USER_TOTAL_AMOUNT - PER
+
+                    setCHARGE(CAN)
+
+                    // RideCharge
+                    USER_RIDE_CHARGE = response?.data?.matchingVehicle?.RideCharge;
+                    USER_CON_CHARGE = response?.data?.matchingVehicle?.BookingFeesConvenience;
+                    USER_DISCOUNT = response?.data?.matchingVehicle?.Discount;
+
+                    USER_FARE_VALUE = response?.data?.matchingVehicle?.farValues;
+
+
+                    console.log("USER_VEHICAL==>", USER_VEHICAL);
+
+                    setRIDEID(USER_RIDEID);
+                    setVEHICAL(USER_VEHICAL); // ADDED
+                    setSERVICE_TYPE(USER_SERVICE_TYPE);
+                    setDATE_OF_RIDE(USER_DATE_OF_RIDE); // ADDED 
+                    setPAYMEMT_TYPE(USER_PAYMEMT_TYPE);
+                    setPICK_UP_LOCATION(USER_PICK_UP_LOCATION);
+                    setDROP_UP_LOCATION(USER_DROP_UP_LOCATION);
+                    setWATTING_CHARGES(USER_WATTING_CHARGES);
+
+                    // GET TOTAL :
+                    USER_TOTAL = parseInt(USER_RIDE_CHARGE) + parseInt(USER_CON_CHARGE) +
+                        parseInt(USER_WATTING_CHARGES);
+
+                    console.log("USER_TOTAL1==>", parseInt(USER_RIDE_CHARGE));
+                    console.log("USER_TOTAL2==>", parseInt(USER_CON_CHARGE));
+                    console.log("USER_TOTAL3==>", parseInt(USER_WATTING_CHARGES));
+
+                    console.log("USER_TOTAL==>", USER_TOTAL);
+
+                    // USER_DISCOUNT - NO USE
+                    DISCOUNT = USER_TOTAL - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(DISCOUNT);
+
+
+                    setFARE(USER_FARE_VALUE); // ADDED 
+                    // Discount  // ADDED
+                    // Ride Charge
+                    // Booking Fees
+
+                    setDRIVERRIDECHARGE(USER_RIDE_CHARGE);
+                    setDRIVERCONCHARGE(USER_CON_CHARGE);
+                    setDRIVERDISCOUNT(USER_DISCOUNT);
+
+
+                    console.log("RideDetails101===>",
+                        JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+
+                } else {
+                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+            });
+    };
+
+    const StoreDriverID = async (USER_DRIVER_ID: any) => {
+        try {
+            await AsyncStorage.setItem('store_driver_id', JSON.stringify(USER_DRIVER_ID));
+            console.log('store_driver_id===>', JSON.parse(USER_DRIVER_ID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_driver_id :', error);
+        }
+    }
+
+    const StoreRideID = async (USER_RIDE_ID_: any) => {
+        try {
+            await AsyncStorage.setItem('store_ride_id_', JSON.stringify(USER_RIDE_ID_));
+            console.log('store_ride_id_===>', JSON.parse(USER_RIDE_ID_));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_ride_id_ :', error);
+        }
+    }
+
+    const StoreRideIDID = async (USER_RIDEID: any) => {
+        try {
+            await AsyncStorage.setItem('store_RIDEID', JSON.stringify(USER_RIDEID));
+            console.log('store_RIDEID===>', JSON.parse(USER_RIDEID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_RIDEID :', error);
+        }
+    }
+
+    const StorePayType = async (USER_PAYMEMT_TYPE: any) => {
+        try {
+            await AsyncStorage.setItem('store_pay_type', JSON.stringify(USER_PAYMEMT_TYPE));
+            console.log('store_pay_type===>', JSON.parse(USER_PAYMEMT_TYPE));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_pay_type :', error);
+        }
+    }
+
+
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
             <StatusBarComponent
                 backgroundColor={Colors.black} />
             <View style={Styles.container}>
+                {/* <Modal
+                    isVisible={isModalVisible}
+                    swipeDirection={[]} // Disables swiping
+                    style={Styles.viewModalMargin}> */}
                 <ScrollView
                     bounces={true}
                     overScrollMode="always">
@@ -421,11 +523,10 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                 color={Colors.white}
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"
-                                title={"Booking Details"} // 100
+                                title={"Booking Details"}
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
                             />
-
 
                         </View>
                         <View style={Styles.viewRowContent}>
@@ -609,7 +710,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                             <View style={Styles.textConatiner2}>
                                 <TextComponent
                                     color={Colors.white}
-                                    title={"Paid by "}
+                                    title={"Paid by"}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
@@ -632,14 +733,14 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                     <View style={CommonStyle.justifyContent}>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={route?.params?.itemCompleteDuration}
+                                            title={route.params.itemBokingDetailsMapDuration}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
                                             marginHorizontal={wp(2)}
                                             marginVertical={wp(1)}
                                             fontFamily={Fonts.PoppinsSemiBold}
-                                            textAlign='left'
+                                            textAlign='center'
                                         />
                                         <TextComponent
                                             color={Colors.gray}
@@ -647,10 +748,10 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
-                                            // marginHorizontal={wp(2)} // itemCompleteDuration
+                                            marginHorizontal={wp(2)}
                                             marginVertical={wp(1)}
                                             fontFamily={Fonts.PoppinsRegular}
-                                            textAlign='center'
+                                            textAlign='left'
                                         />
                                     </View>
 
@@ -660,14 +761,14 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                     <View>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={route?.params?.itemCompleteDistance}
+                                            title={route.params.itemBokingDetailsMapDistance}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
                                             marginHorizontal={wp(2)}
                                             marginVertical={wp(1)}
                                             fontFamily={Fonts.PoppinsSemiBold}
-                                            textAlign='left'
+                                            textAlign='center'
                                         />
                                         <TextComponent
                                             color={Colors.gray}
@@ -772,7 +873,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                             <View style={Styles.viewSeprateLine3}>
                                 <TextComponent
                                     color={Colors.white}
-                                    title={"Bookings Fees & Convenience Charges "}
+                                    title={"Bookings Fees & Convenience Charges"}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
@@ -794,20 +895,20 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                 <TextComponent
                                     color={Colors.white}
                                     title={"Waiting Charge"}
-                                    marginVertical={wp(2)}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
                                     fontFamily={Fonts.PoppinsRegular}
+                                    marginVertical={wp(3)}
                                     textAlign='left'
                                 />
                                 <TextComponent
                                     color={Colors.grayFull}
                                     title={"$   " + isWATTING_CHARGES}
-                                    marginVertical={wp(2)}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
+                                    marginVertical={wp(3)}
                                     fontFamily={Fonts.PoppinsRegular}
                                     textAlign='left'
                                 />
@@ -815,7 +916,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
 
                             <View style={Styles.viewSeprateLine3}>
                                 <TextComponent
-                                    color={Colors.greenDark}
+                                    color={Colors.discount}
                                     title={"Discount"}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
@@ -825,7 +926,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                     textAlign='left'
                                 />
                                 <TextComponent
-                                    color={Colors.greenDark}
+                                    color={Colors.discount}
                                     title={"-$   " + isDRIVERDISCOUNT}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
@@ -874,10 +975,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                 />
                             </View>
 
-                            <TouchableOpacity
-                                activeOpacity={0.1}
-                                onPress={() => navigation.navigate("HelpScreen")}
-                            >
+                            <TouchableOpacity onPress={() => navigation.navigate("HelpScreen")}>
                                 <View style={Styles.viewHelpAndSupport}>
                                     <View style={CommonStyle.justifyContent}>
                                         <Image
@@ -902,14 +1000,13 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
 
                                     <View style={Styles.viewRightArrow}>
                                         <Image
-                                            style={Styles.imageHelp}
+                                            style={Styles.imageArrow}
                                             resizeMode="contain"
                                             source={Images.rightArrowIcon} />
                                     </View>
 
 
                                 </View>
-
                             </TouchableOpacity>
 
 
@@ -917,28 +1014,51 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                 <ButtonComponent
                                     isVisibleMobile={false}
                                     isVisibleFaceBook={false}
+                                    marginVertical={hp(1)}
                                     heightBtn={hp(7)}
                                     widthBtn={wp(90)}
                                     isRightArrow={false}
+                                    onPress={async () => {
+
+                                        // GET DATA :
+                                        try {
+                                            const USER_DRIVER_IDget = await AsyncStorage.getItem('store_driver_id');
+                                            const USER_RIDE_ID_get = await AsyncStorage.getItem('store_ride_id_');
+                                            const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+                                            const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
+
+
+                                            if (USER_DRIVER_IDget !== null && USER_RIDE_ID_get !==
+                                                null && USER_RIDEIDID !== null && USER_PAY_TYPE !== null) {
+                                                navigation.navigate('CourierPaymentComplete', {
+                                                    itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                                    itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
+                                                    itemCompletePickStation: route?.params?.itemMapPickStation,
+                                                    itemCompleteDropStation: route?.params?.itemMapDropStation,
+                                                    itemCompleteRideCharge: route?.params?.itemMapRideCharge,
+                                                    itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
+                                                    itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
+                                                    itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
+                                                    itemCompleteTotalAmount: isTOTAL_AMOUNT, // Note: This line might need correction
+                                                    itemCompleteDriverId: JSON.parse(USER_DRIVER_IDget),
+                                                    itemCompleteRideId: JSON.parse(USER_RIDE_ID_get),
+                                                    itemCompleteRideIDID: JSON.parse(USER_RIDEIDID),
+                                                    itemCompletePayType: JSON.parse(USER_PAY_TYPE)
+                                                });
+                                            } else {
+
+                                            }
+
+                                        } catch (error) {
+
+                                        }
+                                    }}
                                     color={Colors.white}
                                     title={ScreenText.PayNow}
-                                    onPress={() =>
-                                        navigation.navigate('PaymentComplete', {
-                                            itemCompleteDistance: route?.params?.itemCompleteDistance,
-                                            itemCompleteDuration: route?.params?.itemCompleteDuration,
-                                            itemCompletePickStation: route?.params?.itemCompletePickStation,
-                                            itemCompleteDropStation: route?.params?.itemCompleteDropStation,
-                                            itemCompleteRideCharge: route?.params?.itemCompleteRideCharge,
-                                            itemCompleteRideFeesCon: route?.params?.itemCompleteRideFeesCon,
-                                            itemCompleteRideWattingCharges: route?.params?.itemCompleteRideWattingCharges,
-                                            itemCompleteRideDiscount: route?.params?.itemCompleteRideDiscount,
-                                            itemCompleteTotalAmount: route?.params?.itemCompleteTotalAmount
-                                        })
-                                    }
                                     marginHorizontal={wp(2)}
-                                    fontWeight="600"
+                                    fontWeight="500"
                                     fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    fontFamily={Fonts.PoppinsRegular}
                                     alignSelf='center'
                                     textAlign='center'
                                     borderRadius={wp(2)}
@@ -946,14 +1066,42 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                 />
                             </View>
 
+                            {/* <View style={Styles.viewWhiteConatiner}>
+                                    <View style={Styles.viewRatting}>
+                                        <View style={CommonStyle.justifyContent}>
+                                            <Image
+                                                style={Styles.viewWhiteDot}
+                                                resizeMode="contain"
+                                                source={Images.orangeDot} />
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={"Courier delivery Complete"}
+                                                marginVertical={wp(1)} // 3
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                marginHorizontal={wp(5)}
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsSemiBold}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                    </View>
+
+                                </View> */}
 
                         </View>
                     </View>
 
                 </ScrollView>
+
+                {/* </Modal> */}
             </View>
         </SafeAreaView>
     )
 }
 
-export default BookingRequestDriverScreen;
+export default CourierDetailsMap;

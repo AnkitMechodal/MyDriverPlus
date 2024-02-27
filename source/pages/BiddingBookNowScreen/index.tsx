@@ -249,7 +249,9 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
 
             const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
-            if (storedLinkedId !== null && get_last_price !== null) {
+            const get_last_vname = await AsyncStorage.getItem('store_last_vname');
+
+            if (storedLinkedId !== null && get_last_price !== null && get_last_vname !== null) {
 
 
                 console.log("get_last_pricerrrrrrrr===>", JSON.parse(get_last_price));
@@ -263,7 +265,8 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                     service_stype: route?.params?.itemServiceConfrim,   // Schedule booking And Book Now ,   Ride Now , Pool Ride , Hourly Ride , Bidding Ride
                     pickup_locations: route?.params?.itemPickLocationConfrim,
                     drop_locations: route?.params?.itemDropLocationConfrim,
-                    vehical: UserSelctedVehicalName,
+                    // vehical: UserSelctedVehicalName,
+                    vehical: JSON.parse(get_last_vname),
                     Price: name.toString(), // UserSelctedVehicalPrice // ERROR " " //  "$" + price
                     // "No_of_Seats": 2,               // When Pool Ride used
                     //Price: "$".concat(JSON.parse(get_last_price)), // UserSelctedVehicalPrice // ERROR " " //  "$" + price
@@ -283,7 +286,8 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
                     date: route?.params?.itemLocationCurrentDateConfrim,                // User Current Date
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
-                    DriverID: "65b265d1e96ba17261218f34",           // When Any Doctor Accept Booking   // How to Get
+                    // DriverID: "65b265d1e96ba17261218f34",     
+                    DriverID: "0000",       // When Any Doctor Accept Booking   // How to Get
                     status: "Pending"
                 };
 
@@ -796,11 +800,31 @@ const BiddingBookNowScreen = ({ route, navigation }) => {
 
 
         console.log("User Selected Vehicle Price:", beforeHyphenValue);
+
+        storedSelectedVName(UserSelctedVehicalName);
+
         // Store As Local Price
         storedSelectedPrice(beforeHyphenValue);
         // parseFloat(UserSelctedVehicalPrice.trim())
 
     }
+
+    const storedSelectedVName = async (UserSelctedVehicalName: any) => {
+
+        console.log("storedSelectedVName111--->", UserSelctedVehicalName);
+        console.log("storedSelectedVName222--->", UserSelctedVehicalName);
+        console.log("storedSelectedVName333--->", UserSelctedVehicalName);
+
+        try {
+            await AsyncStorage.setItem('store_last_vname', JSON.stringify(UserSelctedVehicalName));
+            console.log('store_last_vname===>', JSON.parse(UserSelctedVehicalName));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_last_vname :', error);
+        }
+    }
+
 
     const storedSelectedPrice = async (storelastprice: any) => {
         try {

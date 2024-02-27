@@ -282,7 +282,7 @@ const CourierPreferredDriverScreen = ({ route, navigation }) => {
 
     const axiosUserPostDriverInfoRequest = async () => {
 
-        const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
+        const storedLinkedId = await AsyncStorage.getItem('store_ride_id'); // store_ride_id
         if (storedLinkedId !== null) {
             const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
 

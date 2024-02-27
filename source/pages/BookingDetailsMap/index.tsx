@@ -108,8 +108,14 @@ const BookingDetailsMap = ({ route, navigation }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+
                 // RIDER_MAP_ID
-                console.log("RIDER_MAP_ID===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID***===>", route.params.itemBokingDetailsMapId);
+
 
                 // Duration & Distnace
                 console.log("ITEM1===>", route?.params?.itemBokingDetailsMapDistance);
@@ -140,8 +146,8 @@ const BookingDetailsMap = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Cleanup function
         return () => {
@@ -176,7 +182,7 @@ const BookingDetailsMap = ({ route, navigation }) => {
 
     const axiosUserPostDriverInfoRequest = async () => {
 
-        const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
+        const storedLinkedId = await AsyncStorage.getItem('store_driver_id'); // store_driver_id / /store_ride_id
         if (storedLinkedId !== null) {
             const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
 
@@ -210,8 +216,19 @@ const BookingDetailsMap = ({ route, navigation }) => {
                         // Store for star : todo
                         StoredDriverID(Driver_id);
 
-                        console.log("Driver_id==>",
-                            JSON.stringify(Driver_id, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+                        console.log("DriverProfileImage==>",
+                            JSON.stringify(DriverProfileImage, null, 2));
+
 
                         setDRIVERNAME(DriverBookingName);
                         setDRIVERPROFILE(DriverProfileImage);
