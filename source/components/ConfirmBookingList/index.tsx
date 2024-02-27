@@ -20,7 +20,7 @@ const ConfirmBookingListComponent = ({ data, handleGetItemDetails }: ConfirmBook
     // const [data, setData] = useState(props.data);
     // const [stateData, setData] = useState(data);
 
-    // const [modalVisibilities, setModalVisibilities] = useState(false);
+    const [modalVisibilities, setModalVisibilities] = useState(false);
 
 
     // const handleItemClickInfo = (index) => {
@@ -76,7 +76,6 @@ const ConfirmBookingListComponent = ({ data, handleGetItemDetails }: ConfirmBook
                     handleGetItemDetails(item)
                 }}
             >
-
                 <View style={CommonStyle.commonFlex}>
                     <Image
                         style={Styles.carImageIcon}
@@ -110,7 +109,7 @@ const ConfirmBookingListComponent = ({ data, handleGetItemDetails }: ConfirmBook
 
                     <View style={Styles.infoImageConatiner}>
                         <TouchableOpacity
-                        // onPress={() => handleItemClickInfo(index)}
+                        // onPress={() => handleItemClickInfo(index)} //2277
                         >
                             <View>
                                 <Image

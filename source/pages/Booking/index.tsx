@@ -614,6 +614,7 @@ const BookingScreen = ({ route, navigation }) => {
                 // // StoreDropLatAsUser();
                 // // StoreDropLongAsUser();
 
+                // TODO : 27
 
                 if (route.params.itemPickName === undefined) {
                     setPickPlace1(ScreenText.SelectPickuplocation);
@@ -644,6 +645,8 @@ const BookingScreen = ({ route, navigation }) => {
 
                 }
 
+                // TODO : 27
+
                 if (route.params.itemPin === undefined) {
                     setUserLocationPin('');
                 } else if (route.params.itemPin === '') {
@@ -658,6 +661,8 @@ const BookingScreen = ({ route, navigation }) => {
                     PickUpLocationPin(PinPickUp);
 
                 }
+
+                // TODO : 27
 
                 if (route.params.itemDropName === undefined) {
                     setPickPlace2(ScreenText.SelectDropofflocation);
@@ -686,6 +691,9 @@ const BookingScreen = ({ route, navigation }) => {
                     StorePickLongAsUser();
 
                 }
+
+                // TODO : 27
+
 
 
                 Geolocation.getCurrentPosition(
@@ -798,9 +806,9 @@ const BookingScreen = ({ route, navigation }) => {
             const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
             console.log('ErrorrestoredPreviousPickName :', storedPickPrev);
             if (storedPickPrev !== null) {
-                setPickPlace1(JSON.parse(storedPickPrev));
+                setPickPlace1(JSON.parse(storedPickPrev)); //27
             } else {
-                setPickPlace1(ScreenText.SelectPickuplocation);
+                setPickPlace1(ScreenText.SelectPickuplocation); //27
             }
         } catch (error) {
 
@@ -812,9 +820,9 @@ const BookingScreen = ({ route, navigation }) => {
             const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
             console.log('ErrorrestoredPreviousPickName :', storedDropPrev);
             if (storedDropPrev !== null) {
-                setPickPlace1(JSON.parse(storedDropPrev));
+                setPickPlace2(JSON.parse(storedDropPrev));
             } else {
-                setPickPlace1(ScreenText.SelectPickuplocation);
+                setPickPlace2(ScreenText.SelectPickuplocation);
             }
         } catch (error) {
 

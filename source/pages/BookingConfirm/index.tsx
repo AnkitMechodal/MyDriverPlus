@@ -1,13 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
+import Modal from 'react-native-modal';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../components/Button/index';
-import ConfirmBookingListComponent from '../../components/ConfirmBookingList/index';
+import ListEmptyComponent from '../../components/ListEmptyComponent';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
 import TextInputComponent from '../../components/TextInput/index';
@@ -77,13 +78,17 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
 
     // const [BookingVehicleList, SetBookingVehicleList] = useState<any>([]);
+
+    // TODO : 27-02
     const [vehicles, setVehicles] = useState<any>([]);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [modalVisiblee, setModalVisiblee] = useState<boolean[]>([]); // Initialize as empty array
+    // TODO : 27-02
 
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible1, setModalVisible1] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
-
 
     const mapViewRef = useRef<any>(null);
 
@@ -255,8 +260,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
             }
 
             // This function will run every 5 seconds
-            requestRideNowData();
-            axiosPostSetVehicalDataBooking();
+            // requestRideNowData();
+            // axiosPostSetVehicalDataBooking();
 
         }, 5000); // 5000 milliseconds = 5 seconds
 
@@ -288,6 +293,87 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
 
     }
+
+    useEffect(() => {
+        axiosPostSetVehicalDataBooking();
+    }, []);
+
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         if (mapViewRef.current) {
+    //             const coordinates = [markerCoordinates1, markerCoordinates2];
+
+    //             mapViewRef.current?.fitToCoordinates(coordinates, {
+    //                 edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+    //                 animated: true,
+    //             });
+    //         }
+
+    //         // Get Lat & Long :
+    //         //2 :
+    //         const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+    //         const user_drop_long = await AsyncStorage.getItem('user_drop_long');
+
+    //         //1:
+    //         const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+    //         const user_pick_long = await AsyncStorage.getItem('user_pick_long');
+
+    //         console.log("DROP----->1", user_drop_lat);
+    //         console.log("DROP----->1", user_drop_long);
+
+    //         console.log("PICK----->1", user_pick_lat);
+    //         console.log("PICK----->1", user_pick_long);
+
+    //         // Check for null or undefined values
+    //         if (user_pick_lat !== null && user_pick_long !== null) {
+    //             // Set Lat Long As Marker
+    //             setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+    //         }
+
+    //         if (user_drop_lat !== null && user_drop_long !== null) {
+    //             // Set Lat Long As Marker
+    //             setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+    //         }
+
+    //         // This function will run every 5 seconds
+    //         requestRideNowData();
+    //     };
+
+    //     const interval = setInterval(fetchData, 1000); // Call fetchData every 1 second
+
+    //     return () => clearInterval(interval); // Cleanup function to clear the interval
+
+    // }, []); // Empty dependency array ensures the effect runs only once
+
+
+    const onPressItemModal = ({ index }) => {
+        setModalVisiblee(prevVisibility => {
+            const newVisibility = [...prevVisibility];
+            newVisibility[index] = !newVisibility[index];
+            return newVisibility;
+        });
+    }
+
+    const handleItemClick = ({ item, index }) => {
+        const updatedData = [...vehicles];
+        if (selectedItem !== null) {
+
+            // Deselect the previously selected item
+            updatedData[selectedItem].border = item.border;
+            updatedData[selectedItem].width = item.width;
+        }
+
+        // Select the new item
+        updatedData[index].border = !item.border; // true
+        updatedData[index].width = !item.width; // true
+
+        setSelectedItem(index);
+        // setData(updatedData);
+        // Open the modal when the item is clicked
+        // setModalVisibilities((prevVisibilities) => prevVisibilities.map((vis, i) => i === index));
+
+    };
 
     const axiosPostSetVehicalDataBooking = async () => {
         try {
@@ -995,6 +1081,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                         JSON.stringify(response?.data?.matchingVehicles, null, 2));
 
                     setVehicles(response.data.matchingVehicles);
+                    setModalVisiblee(new Array(response.data.matchingVehicles.length).fill(false));
 
                     // Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
 
@@ -1358,22 +1445,273 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
 
                             <View style={{
-                                justifyContent: 'center',
-                                // flex: 1
+                                justifyContent: 'center', // TODOD :27
                             }}>
                                 <ScrollView>
-                                    {/* <FlatList
-                                        bounces={true} -- VehicleData
-                                        data={dummyData}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        renderItem={renderItem} // Custom renderItem function
-                                    /> */}
+                                    <View style={{ flex: 1, backgroundColor: 'black' }}>
+                                        <FlatList
+                                            data={vehicles}
+                                            windowSize={1}
+                                            showsVerticalScrollIndicator={true}
+                                            bounces={true}
+                                            renderItem={({ item, index }) => {
+                                                return (
+                                                    <View>
 
-                                    <ConfirmBookingListComponent
-                                        handleGetItemDetails={(item) => handlePress({ item })}
-                                        data={vehicles}
-                                    // data={BookingVehicleList}
-                                    />
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                backgroundColor: Colors.circleGray,
+                                                                borderRadius: wp(3),
+                                                                borderColor: !item.border ? Colors.transparent : Colors.blue,
+                                                                // marginHorizontal: wp(5),
+                                                                marginVertical: wp(2),
+                                                                height: "auto",
+                                                                borderWidth: !item.width ? ConstValue.value0 : ConstValue.value1,
+                                                                flexDirection: "row",
+                                                            }}
+
+                                                            onPress={() => {
+                                                                handleItemClick({ item, index });
+                                                                handlePress({ item });//08888
+                                                            }}
+                                                        >
+
+                                                            <View style={{ flex: 1 }}>
+                                                                <Image
+                                                                    style={{
+                                                                        width: wp(25),
+                                                                        height: wp(25),
+                                                                        borderRadius: wp(3)
+                                                                    }}
+                                                                    resizeMode="cover" // item?.vehicleImage - Images.carIcon
+                                                                    source={{ uri: item?.image }} />
+                                                            </View>
+
+                                                            <View style={{
+                                                                flex: 1,
+                                                                justifyContent: 'center',
+                                                                flexDirection: "row"
+                                                            }}>
+                                                                <View style={{ justifyContent: 'center' }}>
+                                                                    <TextComponent
+                                                                        color={Colors.white}
+                                                                        title={item?.vehicle_name} // vehicleName
+                                                                        textDecorationLine={'none'}
+                                                                        fontWeight="600"
+                                                                        fontSize={wp(4)}
+                                                                        fontFamily={Fonts.PoppinsRegular}
+                                                                        textAlign="left"
+                                                                    // marginHorizontal={wp(5)}
+                                                                    />
+                                                                    <TextComponent
+                                                                        color={Colors.gray}
+                                                                        title={item?.number_of_sheet} // vehicleSeatNo
+                                                                        textDecorationLine={'none'}
+                                                                        fontWeight="600"
+                                                                        fontSize={wp(3)}
+                                                                        fontFamily={Fonts.PoppinsRegular}
+                                                                        textAlign="left"
+                                                                    // marginHorizontal={wp(5)} - item?.vehicleInfoImage
+                                                                    />
+                                                                </View>
+
+                                                                <View style={{ marginTop: hp(3.5) }}>
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            onPressItemModal({ index });
+                                                                        }}
+                                                                    >
+
+                                                                        <View>
+                                                                            <Image
+                                                                                style={{
+                                                                                    width: wp(4),
+                                                                                    height: wp(4),
+                                                                                    borderRadius: wp(3),
+                                                                                    tintColor: Colors.gray,
+                                                                                    marginHorizontal: wp(2)
+                                                                                }}
+                                                                                resizeMode="contain"
+                                                                                source={Images.infoIcon} />
+
+                                                                        </View>
+                                                                    </TouchableOpacity>
+                                                                </View>
+
+                                                            </View>
+
+
+                                                            <Modal
+                                                                animationType="slide"
+                                                                onBackButtonPress={() => onPressItemModal({ index })}
+                                                                onBackdropPress={() => onPressItemModal({ index })}
+                                                                style={{
+                                                                    backgroundColor: Colors.blackLight,
+                                                                    margin: 0
+                                                                }}
+                                                                transparent={true}
+                                                                // visible={modalVisible}
+                                                                visible={modalVisiblee[index]}
+                                                            >
+                                                                <View style={{
+                                                                    flex: 1,
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                }}>
+
+                                                                    <View style={{ borderRadius: 10 }}>
+
+                                                                        <View style={{
+                                                                            backgroundColor: Colors.grayDrawerBg,
+                                                                            height: "auto",
+                                                                            width: wp(80),
+                                                                            padding: wp(3),
+                                                                            borderBottomLeftRadius: wp(5),
+                                                                            borderBottomRightRadius: wp(5),
+                                                                            borderRadius: wp(3)
+                                                                        }}>
+
+                                                                            <Image
+                                                                                style={{
+                                                                                    width: wp(25),
+                                                                                    height: wp(25),
+                                                                                    borderRadius: wp(3),
+                                                                                    alignSelf: "center",
+                                                                                    marginTop: wp(-15)
+                                                                                }}
+                                                                                resizeMode="cover"
+                                                                                source={{ uri: item?.image }} />
+
+
+                                                                            <View style={{
+                                                                                flexDirection: "row",
+                                                                                justifyContent: 'space-between'
+                                                                            }}>
+
+                                                                                <View style={{ marginTop: wp(-5) }}>
+                                                                                    <TextComponent
+                                                                                        color={Colors.white}
+                                                                                        title={item?.vehicle_name} // As HTML Contain
+                                                                                        textDecorationLine={'none'}
+                                                                                        fontWeight="600"
+                                                                                        fontSize={wp(4)}
+                                                                                        fontFamily={Fonts.PoppinsRegular}
+                                                                                        textAlign="left"
+                                                                                        marginHorizontal={wp(5)}
+                                                                                    />
+                                                                                    <TextComponent
+                                                                                        color={Colors.gray}
+                                                                                        title={item?.number_of_sheet} // As HTML Contain
+                                                                                        textDecorationLine={'none'}
+                                                                                        fontWeight="600"
+                                                                                        fontSize={wp(3)}
+                                                                                        fontFamily={Fonts.PoppinsRegular}
+                                                                                        textAlign="left"
+                                                                                        marginHorizontal={wp(5)}
+                                                                                    />
+
+                                                                                    <TextComponent
+                                                                                        color={Colors.white}
+                                                                                        title={item?.Info} // As HTML Contain
+                                                                                        textDecorationLine={'none'}
+                                                                                        fontWeight="600"
+                                                                                        fontSize={wp(4)}
+                                                                                        fontFamily={Fonts.PoppinsSemiBold}
+                                                                                        textAlign="left"
+                                                                                        marginHorizontal={wp(5)}
+                                                                                    />
+
+
+
+                                                                                </View>
+
+                                                                                <View style={{ marginTop: wp(-5) }}>
+                                                                                    <TextComponent
+                                                                                        color={Colors.white}
+                                                                                        title={item?.charge} // As HTML Contain
+                                                                                        textDecorationLine={'none'}
+                                                                                        fontWeight="600"
+                                                                                        fontSize={wp(4)}
+                                                                                        fontFamily={Fonts.PoppinsSemiBold}
+                                                                                        textAlign="left"
+                                                                                        marginHorizontal={wp(3)}
+                                                                                    />
+                                                                                </View>
+
+                                                                            </View>
+
+                                                                            <View>
+                                                                                <TextComponent
+                                                                                    color={Colors.gray}
+                                                                                    title={item?.detail} // As HTML Contain
+                                                                                    textDecorationLine={'none'}
+                                                                                    fontWeight="600"
+                                                                                    fontSize={wp(3.5)}
+                                                                                    fontFamily={Fonts.PoppinsRegular}
+                                                                                    textAlign="left"
+                                                                                    marginHorizontal={wp(5)}
+                                                                                />
+                                                                            </View>
+
+
+                                                                        </View>
+
+                                                                    </View>
+
+                                                                </View>
+
+                                                            </Modal>
+
+                                                            <View style={{
+                                                                flex: 1,
+                                                                justifyContent: 'center'
+                                                            }}>
+                                                                <View style={{ flexDirection: 'row' }}>
+
+                                                                    <View style={{
+                                                                        marginHorizontal: wp(5),
+                                                                        flex: 1,
+                                                                        justifyContent: 'center'
+                                                                    }}>
+                                                                        <TextComponent
+                                                                            color={Colors.white}
+                                                                            title={"$ " + item?.charge} // As HTML Contain - vehicleDollor
+                                                                            textDecorationLine={'none'}
+                                                                            fontWeight="600"
+                                                                            fontSize={wp(4)}
+                                                                            fontFamily={Fonts.PoppinsRegular}
+                                                                            textAlign="right"
+                                                                        // marginHorizontal={wp(4)}
+                                                                        />
+                                                                    </View>
+
+                                                                </View>
+                                                            </View>
+
+
+                                                        </TouchableOpacity>
+
+
+
+                                                    </View >
+                                                );
+                                            }}
+
+                                            keyExtractor={(item: any) => item?._id?.toString()}
+                                            ListEmptyComponent={() => (
+                                                <ListEmptyComponent
+                                                    color={Colors.black}
+                                                    textDecorationLine={'none'}
+                                                    fontWeight="600"
+                                                    fontSize={wp(5)}
+                                                    fontFamily={Fonts.PoppinsRegular}
+                                                    alignSelf='center'
+                                                    textAlign='center'
+                                                    title={ScreenText.NoDataAvailable}
+                                                />
+                                            )}
+                                        />
+                                    </View>
 
 
                                 </ScrollView>
