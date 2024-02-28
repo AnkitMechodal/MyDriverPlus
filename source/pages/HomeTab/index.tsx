@@ -483,7 +483,11 @@ const HomeTabScreen = ({ route, navigation }) => {
                 const userId = JSON.parse(storedLinkedId);
                 const url = `https://rideshareandcourier.graphiglow.in/api/HomeScreenStatus/checkRide/${userId}`;
 
-                console.log("urlurlurlurl", url);
+                console.log("urlurlurlurl-1", url);
+                console.log("urlurlurlurl-2", url);
+                console.log("urlurlurlurl-3", url);
+                console.log("urlurlurlurl-4", url);
+                console.log("urlurlurlurl-5", url);
 
                 //  const url = `https://rideshareandcourier.graphiglow.in/api/HomeScreenStatus/checkRide/65b1df2e398f6beb9542e992`;
 

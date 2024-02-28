@@ -143,6 +143,47 @@ const CourierPickupScreen = (props: Props) => {
         }
     }, [markerCoordinates]);
 
+    // TODO : COUIER - CUSTOMER CURRENT LOCATION SHOW
+    useEffect(() => {
+
+        const fetchDataMap = () => {
+            // Get Current Lat And Long
+            Geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+
+                    user_latitude_map = position.coords.latitude;
+                    user_longitude_map = position.coords.longitude;
+
+                    console.log("User-fetchData_PICK==>", user_latitude_map);
+                    console.log("User-fetchData_PICK==>", user_longitude_map);
+
+                    let newCoordinate = {
+                        latitude: user_latitude_map,
+                        longitude: user_longitude_map
+                    };
+                    setMarkerCoordinates(newCoordinate);
+
+                },
+                error => {
+                    console.log(`Error getting location: ${error.message}`);
+                },
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
+            );
+        }
+
+        fetchDataMap();
+
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchDataMap, 10 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+    }, []);
+
+
     const handleAccountRefCode = (userpass: any) => {
         setPassRef(userpass);
     }

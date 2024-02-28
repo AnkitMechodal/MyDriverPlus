@@ -108,6 +108,94 @@ const CourierDropupScreen = (props: Props) => {
     let PassongLat;
     let PassingLong;
 
+    let user_latitude_map;
+    let user_longitude_map;
+
+    const [markerCoordinate, setMarkerCoordinate] =
+        useState({ latitude: 37.78825, longitude: -122.4324 });
+
+    const [markerCoordinates, setMarkerCoordinates] = useState({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
+
+
+    // Auto Zoom Added
+    useEffect(() => {
+        // Zoom to the marker using animateToRegion when markerCoordinate changes
+        if (mapViewRef.current) {
+            mapViewRef.current.animateToRegion({
+                latitude: markerCoordinates.latitude,
+                longitude: markerCoordinates.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }, 1000); // Adjust duration as needed
+        }
+    }, [markerCoordinates]);
+
+    // TODO : COUIER - CUSTOMER CURRENT LOCATION SHOW
+    useEffect(() => {
+
+        const fetchDataMap = () => {
+            // Get Current Lat And Long
+            Geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+
+                    user_latitude_map = position.coords.latitude;
+                    user_longitude_map = position.coords.longitude;
+
+                    console.log("User-fetchData_PICK==>", user_latitude_map);
+                    console.log("User-fetchData_PICK==>", user_longitude_map);
+
+                    let newCoordinate = {
+                        latitude: user_latitude_map,
+                        longitude: user_longitude_map
+                    };
+                    setMarkerCoordinates(newCoordinate);
+
+                },
+                error => {
+                    console.log(`Error getting location: ${error.message}`);
+                },
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
+            );
+        }
+
+        fetchDataMap();
+
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchDataMap, 10 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+    }, []);
+
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            try {
+                await axiosPostGetListLocation();
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+
+        // Set interval to refresh every 10 seconds
+        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Cleanup function
+        return () => {
+            // Clear the interval when the component unmounts
+            clearInterval(intervalId);
+        };
+    }, []);
+
+
     const handleAccountRefCode = (userpass: any) => {
         setPassRef(userpass);
     }
@@ -156,14 +244,6 @@ const CourierDropupScreen = (props: Props) => {
     const handleMarkerPress = () => {
         setPickVisible(true)
     };
-
-    const [markerCoordinate, setMarkerCoordinate] =
-        useState({ latitude: 37.78825, longitude: -122.4324 });
-
-    const [markerCoordinates, setMarkerCoordinates] = useState({
-        latitude: 37.78825,
-        longitude: -122.4324,
-    });
 
 
 
@@ -214,80 +294,6 @@ const CourierDropupScreen = (props: Props) => {
 
     };
 
-    let user_latitude_map;
-    let user_longitude_map;
-
-    useEffect(() => {
-
-        const fetchDataMap = () => {
-            // Get Current Lat And Long
-            Geolocation.getCurrentPosition(
-                position => {
-                    const { latitude, longitude } = position.coords;
-
-                    user_latitude_map = position.coords.latitude;
-                    user_longitude_map = position.coords.longitude;
-
-                    console.log("User-fetchData_PICK==>", user_latitude_map);
-                    console.log("User-fetchData_PICK==>", user_longitude_map);
-
-                    let newCoordinate = {
-                        latitude: user_latitude_map,
-                        longitude: user_longitude_map
-                    };
-                    setMarkerCoordinates(newCoordinate);
-
-                },
-                error => {
-                    console.log(`Error getting location: ${error.message}`);
-                },
-                { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
-            );
-        }
-
-        fetchDataMap();
-
-        // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(fetchDataMap, 10 * 1000);
-        // // Cleanup function
-        // return () => {
-        //     // Clear the interval when the component unmounts
-        //     clearInterval(intervalId);
-        // };
-    }, []);
-
-    // Auto Zoom Added
-    useEffect(() => {
-        // Zoom to the marker using animateToRegion when markerCoordinate changes
-        if (mapViewRef.current) {
-            mapViewRef.current.animateToRegion({
-                latitude: markerCoordinate.latitude,
-                longitude: markerCoordinate.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            }, 1000); // Adjust duration as needed
-        }
-    }, [markerCoordinate]);
-
-    useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-                await axiosPostGetListLocation();
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
-
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
-    }, []);
 
 
     const getCurrentLocationAddress = async (user_latitude, user_longitude) => {

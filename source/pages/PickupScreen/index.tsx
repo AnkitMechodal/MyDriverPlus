@@ -847,7 +847,6 @@ const PickUpLocationScreen = ({ route, navigation }) => {
         }
     }, [markerCoordinates]);
 
-    // }, [markerCoordinates]);
 
 
     useEffect(() => {
