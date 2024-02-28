@@ -20,7 +20,7 @@ type Props = {
 
 const PreferredDriverDrawer = ({ route, navigation }) => {
 
-    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
     const [defaultRating, setDefaultRating] = useState(0);
 
 

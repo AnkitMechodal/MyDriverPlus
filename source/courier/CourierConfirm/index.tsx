@@ -214,52 +214,52 @@ const CourierConfirmScreen = ({ route, navigation }) => {
     }, []);
 
 
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            if (mapViewRef.current) {
-                const coordinates = [markerCoordinates1, markerCoordinates2];
+    // useEffect(() => {
+    //     const interval = setInterval(async () => {
+    //         if (mapViewRef.current) {
+    //             const coordinates = [markerCoordinates1, markerCoordinates2];
 
-                mapViewRef.current?.fitToCoordinates(coordinates, {
-                    edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                    animated: true,
-                });
-            }
+    //             mapViewRef.current?.fitToCoordinates(coordinates, {
+    //                 edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+    //                 animated: true,
+    //             });
+    //         }
 
-            // Get Lat & Long :
-            //2 :
-            const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
-            const user_drop_long = await AsyncStorage.getItem('user_drop_long');
+    //         // Get Lat & Long :
+    //         //2 :
+    //         const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+    //         const user_drop_long = await AsyncStorage.getItem('user_drop_long');
 
-            //1:
-            const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
-            const user_pick_long = await AsyncStorage.getItem('user_pick_long');
+    //         //1:
+    //         const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+    //         const user_pick_long = await AsyncStorage.getItem('user_pick_long');
 
-            console.log("DROP----->drop", user_drop_lat);
-            console.log("DROP----->drop", user_drop_long);
+    //         console.log("DROP----->drop", user_drop_lat);
+    //         console.log("DROP----->drop", user_drop_long);
 
-            console.log("PICK----->pick", user_pick_lat);
-            console.log("PICK----->pick", user_pick_long);
+    //         console.log("PICK----->pick", user_pick_lat);
+    //         console.log("PICK----->pick", user_pick_long);
 
-            // Check for null or undefined values
-            if (user_pick_lat !== null && user_pick_long !== null) {
-                // Set Lat Long As Marker
-                setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
-            }
+    //         // Check for null or undefined values
+    //         if (user_pick_lat !== null && user_pick_long !== null) {
+    //             // Set Lat Long As Marker
+    //             setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+    //         }
 
-            if (user_drop_lat !== null && user_drop_long !== null) {
-                // Set Lat Long As Marker
-                setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
-            }
+    //         if (user_drop_lat !== null && user_drop_long !== null) {
+    //             // Set Lat Long As Marker
+    //             setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+    //         }
 
-            // This function will run every 5 seconds
-            // requestRideNowData();
-            // axiosPostSetVehicalDataBooking();
+    //         // This function will run every 5 seconds
+    //         // requestRideNowData();
+    //         // axiosPostSetVehicalDataBooking();
 
-        }, 5000); // 5000 milliseconds = 5 seconds
+    //     }, 5000); // 5000 milliseconds = 5 seconds
 
-        // Clear the interval on component unmount to prevent memory leaks
-        return () => clearInterval(interval);
-    }, [markerCoordinates1, markerCoordinates2]);
+    //     // Clear the interval on component unmount to prevent memory leaks
+    //     return () => clearInterval(interval);
+    // }, [markerCoordinates1, markerCoordinates2]);
 
 
 
@@ -415,6 +415,77 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                 Toast.show('Enabel To Request Booking List!', Toast.SHORT);
             });
     };
+
+
+
+
+    useEffect(() => {
+        const initializeMarkerCoordinates = async () => {
+
+            // TODO :
+            console.log("initializeMarkerCoordinates-1");
+            console.log("initializeMarkerCoordinates-2");
+            console.log("initializeMarkerCoordinates-3");
+            console.log("initializeMarkerCoordinates-4");
+            console.log("initializeMarkerCoordinates-5");
+            // TODO :
+
+            const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+            const user_drop_long = await AsyncStorage.getItem('user_drop_long');
+
+            const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+            const user_pick_long = await AsyncStorage.getItem('user_pick_long');
+
+            console.log("user_pick_lat--->", user_pick_lat);
+            console.log("user_pick_long--->", user_pick_long);
+            console.log("user_pick_lat--->", user_pick_lat);
+            console.log("user_pick_long--->", user_pick_long);
+            console.log("user_pick_lat--->", user_pick_lat);
+            console.log("user_pick_long--->", user_pick_long);
+
+
+            if (user_pick_lat !== null && user_pick_long !== null) {
+                setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+            }
+
+            if (user_drop_lat !== null && user_drop_long !== null) {
+                setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+            }
+        };
+
+        initializeMarkerCoordinates();
+
+        // No need to clear any interval since we removed it
+    }, []);
+
+
+    // Auto Zoom Added - 1
+    useEffect(() => {
+        // Zoom to the marker using animateToRegion when markerCoordinate changes
+        if (mapViewRef.current) {
+            mapViewRef.current.animateToRegion({
+                latitude: markerCoordinates1.latitude,
+                longitude: markerCoordinates1.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }, 1000); // Adjust duration as needed
+        }
+    }, [markerCoordinates1]);
+
+
+    // Auto Zoom Added - 2
+    useEffect(() => {
+        // Zoom to the marker using animateToRegion when markerCoordinate changes
+        if (mapViewRef.current) {
+            mapViewRef.current.animateToRegion({
+                latitude: markerCoordinates2.latitude,
+                longitude: markerCoordinates2.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }, 1000); // Adjust duration as needed
+        }
+    }, [markerCoordinates2]);
+
 
     const requestRideNowData = () => {
         console.log("itemTypeConfrim_CO", route?.params?.itemTypeConfrim);
@@ -652,15 +723,16 @@ const CourierConfirmScreen = ({ route, navigation }) => {
 
 
                         } else {
-                            Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                            // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                            Toast.show('Booking Confirmation Process Inomplete!', Toast.SHORT);
                         }
                     })
                     .catch(error => {
                         // Handle errors
-                        Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                        // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
                     });
             } else {
-                Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
             }
         } catch (error) {
 
@@ -919,15 +991,16 @@ const CourierConfirmScreen = ({ route, navigation }) => {
                             Toast.show('Booking Confirm Successfully!', Toast.SHORT);
 
                         } else {
-                            Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                            // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                            Toast.show('Booking Confirmation Process Inomplete!', Toast.SHORT);
                         }
                     })
                     .catch(error => {
                         // Handle errors
-                        Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                        // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
                     });
             } else {
-                Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
             }
         } catch (error) {
 

@@ -22,7 +22,7 @@ type Props = {
 
 const CourierPreferredDriverPast = ({ route, navigation }) => {
 
-    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
     const [defaultRating, setDefaultRating] = useState(0);
 
     const [isSeats, setSeats] = useState("0");

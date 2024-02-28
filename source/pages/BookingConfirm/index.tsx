@@ -610,15 +610,15 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                             // NAVIAGTE TO STATUS
                             navigation.navigate("BookingStatus");
                         } else {
-                            Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                            Toast.show('Booking Confirmation Process Inomplete!', Toast.SHORT);
                         }
                     })
                     .catch(error => {
                         // Handle errors
-                        Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                        // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
                     });
             } else {
-                Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
             }
         } catch (error) {
 
@@ -895,15 +895,18 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                             // NAVIAGTE TO STATUS
                             navigation.navigate("BookingStatus");
                         } else {
-                            Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+
+                            Toast.show('Booking Confirmation Process Inomplete!', Toast.SHORT);
+
+                            // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
                         }
                     })
                     .catch(error => {
                         // Handle errors
-                        Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                        // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
                     });
             } else {
-                Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
             }
         } catch (error) {
 
@@ -1073,15 +1076,16 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                             // NAVIAGTE TO STATUS
                             // navigation.navigate("BookingStatus");
                         } else {
-                            Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                            // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                            Toast.show('Booking Confirmation Process Inomplete!', Toast.SHORT);
                         }
                     })
                     .catch(error => {
                         // Handle errors
-                        Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                        // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
                     });
             } else {
-                Toast.show('Booking Credentials Invalid!', Toast.SHORT);
+                // Toast.show('Booking Credentials Invalid!', Toast.SHORT);
             }
         } catch (error) {
 

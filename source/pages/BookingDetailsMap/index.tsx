@@ -22,7 +22,7 @@ type Props = {
 const BookingDetailsMap = ({ route, navigation }) => {
 
     const [defaultRating, setDefaultRating] = useState(0);
-    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
     const [isGETPERCENTAGE, setGETPERCENTAGE] = useState("0");
     const [isCHARGE, setCHARGE] = useState("20");

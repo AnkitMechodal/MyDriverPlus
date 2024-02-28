@@ -18,7 +18,7 @@ const PreferredListComponent = (props: PreferredListProps) => {
 
     const [data, setData] = useState(props.data);
 
-    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
     const starImageFilled =
         Images.fillStarIcon;
