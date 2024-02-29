@@ -290,7 +290,7 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                                 color={isMobileColorText ? Colors.red : Colors.greenDark}
                                 title={isMobileType ? ScreenText.Verify : ScreenText.Verified}
                                 onPress={() => {
-                                    if (isMobileColorText) {
+                                    if (isMobileType) {
                                         navigation.navigate('MobileVerfication', {
                                             itemOTPNumber: isGetMobile,
                                         });
@@ -350,7 +350,7 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                                 color={isEmailColorText ? Colors.red : Colors.greenDark}
                                 title={isEmailType ? ScreenText.Verify : ScreenText.Verified}
                                 onPress={() => {
-                                    if (isMobileColorText) {
+                                    if (isEmailType) {
                                         navigation.navigate('EmailVerfication', {
                                             itemSentEmail: isGetEmail,
                                         });

@@ -11,5 +11,4 @@ module.exports = {
       },
     },
   },
-  plugins: ["react-native-fbsdk-next"],
 };

@@ -1,6 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
-apply plugin: 'com.google.gms.google-services'
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -119,17 +119,6 @@ dependencies {
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'
     }
- 
-    // implementation project(':react-native-geocoder')
-
-    //  implementation project(path: ":@react-native-firebase_auth")
-
-    implementation ('com.facebook.android:facebook-android-sdk:[8,9)')
-
-    implementation project(':react-native-fbsdk-next')
-
-     implementation platform('com.google.firebase:firebase-bom:32.6.0')
-     implementation 'com.google.firebase:firebase-analytics'
 
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
     if (hermesEnabled.toBoolean()) {

@@ -7,9 +7,8 @@ import React, { useEffect } from 'react';
 import { Alert, Image, ImageBackground, SafeAreaView, View } from 'react-native';
 // import { AccessToken, GraphRequest, GraphRequestManager, LoginButton } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import auth from '@react-native-firebase/auth';
 import axios from 'axios';
-import { AccessToken } from 'react-native-fbsdk-next';
+// import { AccessToken } from 'react-native-fbsdk-next';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../../components/Button';
@@ -239,25 +238,25 @@ const LoginSignUpScreen = (props: Props) => {
     const handleButtonClick = async () => {
         console.log("cred==>");
 
-        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+        // const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
-        if (result.isCancelled) {
-            throw 'User cancelled the login process';
-        }
+        // if (result.isCancelled) {
+        //     throw 'User cancelled the login process';
+        // }
 
-        // Once signed in, get the users AccessToken
-        const data = await AccessToken.getCurrentAccessToken();
+        // // Once signed in, get the users AccessToken
+        // const data = await AccessToken.getCurrentAccessToken();
 
-        if (!data) {
-            console.log("DATA==>", data);
-            throw 'Something went wrong obtaining access token';
-        }
+        // if (!data) {
+        //     console.log("DATA==>", data);
+        //     throw 'Something went wrong obtaining access token';
+        // }
 
-        // Create a Firebase credential with the AccessToken
-        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+        // // Create a Firebase credential with the AccessToken
+        // const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
-        // Sign-in the user with the credential
-        return auth().signInWithCredential(facebookCredential);
+        // // Sign-in the user with the credential
+        // return auth().signInWithCredential(facebookCredential);
     };
 
     // const SignInWithGoogle = async () => { // working !
@@ -287,27 +286,27 @@ const LoginSignUpScreen = (props: Props) => {
 
     /// FB - 23
 
-    const handleLogin = async () => {
-        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+    // const handleLogin = async () => { // 00 - not working
+    //     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
-        if (result.isCancelled) {
-            throw 'User cancelled the login process';
-        }
+    //     if (result.isCancelled) {
+    //         throw 'User cancelled the login process';
+    //     }
 
-        // Once signed in, get the users AccessToken
-        const data = await AccessToken.getCurrentAccessToken();
+    //     // Once signed in, get the users AccessToken
+    //     const data = await AccessToken.getCurrentAccessToken();
 
-        if (!data) {
-            console.log("DATA==>", data);
-            throw 'Something went wrong obtaining access token';
-        }
+    //     if (!data) {
+    //         console.log("DATA==>", data);
+    //         throw 'Something went wrong obtaining access token';
+    //     }
 
-        // Create a Firebase credential with the AccessToken
-        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+    //     // Create a Firebase credential with the AccessToken
+    //     const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
-        // Sign-in the user with the credential
-        return auth().signInWithCredential(facebookCredential);
-    }
+    //     // Sign-in the user with the credential
+    //     return auth().signInWithCredential(facebookCredential);
+    // }
 
     // const handleLogin = async () => {
     //     try {
@@ -439,27 +438,27 @@ const LoginSignUpScreen = (props: Props) => {
     //     }
     // };
 
-    class LoginManager {
-        static async logInWithPermissions(permissions: any) {
-            // Simulate a delay to mimic the asynchronous nature of the login process
-            await new Promise(resolve => setTimeout(resolve, 1000));
+    // class LoginManager {
+    //     static async logInWithPermissions(permissions: any) {
+    //         // Simulate a delay to mimic the asynchronous nature of the login process
+    //         await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Simulate a random result
-            const isCancelled = Math.random() < 0.5;
+    //         // Simulate a random result
+    //         const isCancelled = Math.random() < 0.5;
 
-            if (isCancelled) {
-                return { isCancelled: true, errorMessage: "Login was cancelled" };
-            } else {
-                // return { isCancelled: false, userId: "123456", accessToken: "abc123" };
+    //         if (isCancelled) {
+    //             return { isCancelled: true, errorMessage: "Login was cancelled" };
+    //         } else {
+    //             // return { isCancelled: false, userId: "123456", accessToken: "abc123" };
 
-                const userId = Math.floor(Math.random() * 1000000).toString();
-                const accessToken = generateRandomToken();
-                Alert.alert(accessToken)
+    //             const userId = Math.floor(Math.random() * 1000000).toString();
+    //             const accessToken = generateRandomToken();
+    //             Alert.alert(accessToken)
 
-                return { isCancelled: false, userId, accessToken };
-            }
-        }
-    }
+    //             return { isCancelled: false, userId, accessToken };
+    //         }
+    //     }
+    // }
 
     function generateRandomToken() {
         // Implement your logic to generate a random or dynamic access token

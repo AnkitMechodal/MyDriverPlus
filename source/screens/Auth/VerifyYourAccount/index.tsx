@@ -291,7 +291,7 @@ const VerifyYourScreen = ({ route, navigation }) => {
                                 //     itemOTPNumber: isGetMobile,
                                 // })} //09
                                 onPress={() => {
-                                    if (isMobileColorText) {
+                                    if (isMobileType) {
                                         navigation.navigate('MobileVerfication', {
                                             itemOTPNumber: isGetMobile,
                                         });
@@ -354,7 +354,7 @@ const VerifyYourScreen = ({ route, navigation }) => {
                                 //     itemSentEmail: isGetEmail,
                                 // })} //09
                                 onPress={() => {
-                                    if (isMobileColorText) {
+                                    if (isEmailType) {
                                         navigation.navigate('EmailVerfication', {
                                             itemSentEmail: isGetEmail,
                                         });

@@ -9,26 +9,23 @@ buildscript {
 
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
         ndkVersion = "23.1.7779620"
-        googlePlayServicesAuthVersion = "16.0.1"
-        // facebookSdkVersion = "13.1.0"
     }
 
     repositories {
         google()
-        mavenCentral() // FB
-        jcenter() // 
+        mavenCentral() //TODO : 29-02
+        jcenter() //TODO : 29-02
         maven { url "$rootDir/../node_modules/react-native/android" }
 
         // ADD THIS
-        maven { url 'https://maven.google.com' }
+        // maven { url 'https://maven.google.com' } //TODO : 29-02
 
         // ADD THIS
-        maven { url "https://www.jitpack.io" }
+        // maven { url "https://www.jitpack.io" } //TODO : 29-02
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("com.google.gms:google-services:4.3.5")
+        classpath("com.android.tools.build:gradle");
+        classpath("com.facebook.react:react-native-gradle-plugin");
     }
 }
