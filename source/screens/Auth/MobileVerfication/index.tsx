@@ -1,6 +1,7 @@
-import auth, { PhoneAuthState } from '@react-native-firebase/auth';
+// import { PhoneAuthState } from '@react-native-firebase/auth';
 import axios from "axios";
-import React, { useRef, useState } from 'react';
+import { encode } from 'base-64';
+import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -16,7 +17,6 @@ import NetworkUtils from '../../../utils/commonfunction';
 import { ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
-
 type Props = {
     navigation: any
 }
@@ -30,6 +30,8 @@ const MobileVerficationScreen = ({ route, navigation }) => {
     const refnumber4 = useRef<any>(null);
     const refnumber5 = useRef<any>(null);
     const refnumber6 = useRef<any>(null);
+
+
 
     const [email, setEmail] = useState('')
     const [isValidEmail, setValidEmail] = useState(true);
@@ -53,7 +55,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
 
 
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
-    const [confirm, setConfirm] = useState<PhoneAuthState | null>(null);
+    // const [confirm, setConfirm] = useState<PhoneAuthState | null>(null);
 
     const { isDarkMode, toggleTheme } = useTheme();
 
@@ -107,36 +109,124 @@ const MobileVerficationScreen = ({ route, navigation }) => {
         setSix(useremail);
     }
 
-    const sendOTPFromFirebase = async () => {
+    // const sendOTPFromFirebase = async () => {
+    //     try {
+    //         // Send a verification code to the provided phone number
+    //         const confirmation = await auth().signInWithPhoneNumber
+    //             (route?.params?.itemOTPNumber);
+    //         setConfirm(confirmation);
+    //         Toast.show("'Verification Code Sent", Toast.SHORT);
+    //     } catch (error) {
+    //         Toast.show("Failed To Send Verification Code", Toast.SHORT);
+    //     }
+    // }
+
+
+    useEffect(() => {
+        axiosPostRequestTwilo(); // Call Once!
+    }, []);
+
+    const onPressResend = () => {
+
+        // Resend OTP From Firebase :
+        // Get Or Not :
+        // sendOTPFromFirebase();
+
+        // Resend Twilo OTP 
+        axiosPostRequestTwilo();
+    }
+
+    const generateOTP = () => {
+        // Generate a random 6-digit OTP
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    };
+
+    const axiosPostRequestTwilo = async () => {
         try {
-            // Send a verification code to the provided phone number
-            const confirmation = await auth().signInWithPhoneNumber
-                (route?.params?.itemOTPNumber);
-            setConfirm(confirmation);
-            Toast.show("'Verification Code Sent", Toast.SHORT);
+            const accountSid = 'AC3eeea2ca15bd40955c7038e68591a61d';
+            const authToken = '243bdee128556828dc85cab7cba1444a';
+            const fromNumber = '+17123723643';
+            const toNumber = '+916356526597';
+
+            const generatedOTP = generateOTP();
+
+            const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+            const response = await axios.post(
+                twilioUrl,
+                {
+                    Body: `Your OTP is: ${generatedOTP}`,
+                    From: fromNumber,
+                    To: route?.params?.itemOTPNumber
+                },
+                {
+                    headers: {
+                        Authorization: 'Basic ' + encode(`${accountSid}:${authToken}`),
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            );
+
+            console.log('Message sent successfully:', response.data);
+            console.log('Generated OTP:', generatedOTP);
+
+            Toast.show("OTP Sent Successfully", Toast.SHORT);
+
+            // Now OTP Update In Database
+            axiosPostRequestTwiloUpdate(generatedOTP);
+
+
         } catch (error) {
-            Toast.show("Failed To Send Verification Code", Toast.SHORT);
+            console.error('Error sending message:', error);
         }
     }
 
-    const onPressResend = () => {
-        // Resend OTP From Firebase :
-        // Get Or Not :
-        sendOTPFromFirebase();
-    }
+
+    const axiosPostRequestTwiloUpdate = async (generatedOTP: any) => {
+        try {
+            const newUrl = `https://rideshareandcourier.graphiglow.in/api/UpdateMobileNumberVerify/otp-update`;
+
+            const data = {
+                mobilenumber: route?.params?.itemOTPNumber,
+                mobilenumberOTP: generatedOTP
+            };
+
+            const response = await axios.post(newUrl, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 200 && response?.data?.message === 'Otp Update Success') {
+                // Handle success response here
+                // Toast.show('OTP Update Successfully!', Toast.SHORT);
+            } else {
+                // Handle other response cases here
+                // ERROR!
+            }
+        } catch (error) {
+            // Handle error here
+            // ERROR!
+        }
+    };
+
+
 
     const onPressOTPSMS = async () => {
         // mobilenumber & mobilenumberOTP success
         try {
             const isConnected = await NetworkUtils.isNetworkAvailable()
             if (isConnected) {
-                // Check OTP Coorect Or Not 
-                if (confirm) {
-                    await confirm.confirm(one + two + three + four + five + six);
-                } else {
-                    Toast.show("Invalid Verification Code.", Toast.SHORT);
-                    axiosPostRequestOTPSMS();
-                }
+
+                axiosPostRequestOTPSMS(); // as new api!
+
+                // // Check OTP Coorect Or Not 
+                // if (confirm) {
+                //     await confirm.confirm(one + two + three + four + five + six);
+                // } else {
+                //     Toast.show("Invalid Verification Code.", Toast.SHORT);
+                //     axiosPostRequestOTPSMS();
+                // }
             } else {
                 Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
             }
@@ -144,6 +234,11 @@ const MobileVerficationScreen = ({ route, navigation }) => {
             Toast.show("axios error", Toast.SHORT);
         }
     }
+
+
+    // const axiosPostRequestTwiloOTP = () => {
+    //     console.log("axiosPostRequestTwiloOTP")
+    // }
 
     const axiosPostRequestOTPSMS = async () => {
 
@@ -167,7 +262,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
                     response?.data?.message === 'Mobile Number Verify') {
                     // Handle API response here
                     Toast.show("OTP Verification Successfully!", Toast.SHORT);
-                    // navigation.goBack();
+                    navigation.goBack();
                 } else {
                     Toast.show('OTP Verification Failed!', Toast.SHORT);
                 }

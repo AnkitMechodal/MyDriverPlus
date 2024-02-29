@@ -63,8 +63,8 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 1  seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Cleanup function
         return () => {
@@ -149,13 +149,14 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                         }
 
                         if (user_mobilenumberStatus === "Verify"
-                            && user_emailStatus === "Verify") {
+                            && user_emailStatus === "Verify") { //01
                             setIsClick(!isClick)
                             setIsDisabled(!isDisabled)
                         } else {
                             setIsClick(isClick)
                             setIsDisabled(isDisabled)
                         }
+
 
                         // Set Data 
                         setMobile(user_mobilenumber);
@@ -288,9 +289,13 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                             <TextComponent
                                 color={isMobileColorText ? Colors.red : Colors.greenDark}
                                 title={isMobileType ? ScreenText.Verify : ScreenText.Verified}
-                                onPress={() => navigation.navigate('MobileVerfication', {
-                                    itemOTPNumber: isGetMobile,
-                                })}
+                                onPress={() => {
+                                    if (isMobileColorText) {
+                                        navigation.navigate('MobileVerfication', {
+                                            itemOTPNumber: isGetMobile,
+                                        });
+                                    }
+                                }}
                                 textDecorationLine={'none'}
                                 fontWeight="600"
                                 fontSize={wp(3)}
@@ -344,9 +349,13 @@ const VerifyYourScreenMobile = ({ route, navigation }) => {
                             <TextComponent
                                 color={isEmailColorText ? Colors.red : Colors.greenDark}
                                 title={isEmailType ? ScreenText.Verify : ScreenText.Verified}
-                                onPress={() => navigation.navigate('EmailVerfication', {
-                                    itemSentEmail: isGetEmail,
-                                })}
+                                onPress={() => {
+                                    if (isMobileColorText) {
+                                        navigation.navigate('EmailVerfication', {
+                                            itemSentEmail: isGetEmail,
+                                        });
+                                    }
+                                }}
                                 textDecorationLine={'none'}
                                 fontWeight="600"
                                 fontSize={wp(3)}
