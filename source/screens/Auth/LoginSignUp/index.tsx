@@ -1,14 +1,11 @@
-// import {
-//     GoogleSignin,
-//     statusCodes
-// } from '@react-native-community/google-signin';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import React, { useEffect } from 'react';
-import { Alert, Image, ImageBackground, SafeAreaView, View } from 'react-native';
-// import { AccessToken, GraphRequest, GraphRequestManager, LoginButton } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firebase from '@react-native-firebase/app'; // todo
+import auth from '@react-native-firebase/auth'; // todo
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import axios from 'axios';
-// import { AccessToken } from 'react-native-fbsdk-next';
+import React, { useEffect } from 'react';
+import { Image, ImageBackground, SafeAreaView, View } from 'react-native';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next'; // todo
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../../components/Button';
@@ -33,6 +30,23 @@ const LoginSignUpScreen = (props: Props) => {
     const { isDarkMode, toggleTheme } = useTheme();
 
     useEffect(() => {
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                // Your Firebase configuration
+                apiKey: "AIzaSyCyvLIfzdGJy7CgBFt59OPwXpleRT_yhsk",
+                authDomain: "ride-share-bca91.firebaseapp.com",
+                projectId: "ride-share-bca91",
+                storageBucket: "ride-share-bca91.appspot.com",
+                messagingSenderId: "751449154638",
+                appId: "1:751449154638:android:aca811b53e237297120f1f"
+            });
+        }
+
+    }, []);
+
+
+    useEffect(() => {
         const checkAutoLogin = async () => {
             // Initialize GoogleSignin when the component mounts
 
@@ -53,26 +67,8 @@ const LoginSignUpScreen = (props: Props) => {
         };
         checkAutoLogin();
 
-        // // Set interval to refresh every 10 seconds
-        // const intervalId = setInterval(checkAutoLogin, 5 * 1000);
-
-        // // Cleanup function
-        // return () => {
-        //     // Clear the interval when the component unmounts
-        //     clearInterval(intervalId);
-        // };
-
     }, []);
 
-
-    // useEffect(() => {
-    //     // Initialize GoogleSignin when the component mounts 
-    //     GoogleSignin.configure({
-    //         scopes: ['email', 'profile'],
-    //         webClientId: 'YOUR_WEB_CLIENT_ID',
-    //         // Replace with your web client ID
-    //     });
-    // }, []);
 
 
     let GoogleEmail;
@@ -105,6 +101,7 @@ const LoginSignUpScreen = (props: Props) => {
                         await AsyncStorage.clear();
                         await GoogleSignin.revokeAccess();
                         await GoogleSignin.signOut();
+                        await auth().signOut(); // FACEBOOK
 
                         // TODO : REG EMAIL IS ALREADY OR NOT API
                         // YES - GoogleSignUp
@@ -130,6 +127,7 @@ const LoginSignUpScreen = (props: Props) => {
     };
 
 
+   
     const axiosPostRequestGoogleEmail = async (GoogleEmail) => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
@@ -230,243 +228,80 @@ const LoginSignUpScreen = (props: Props) => {
         }
     }
 
-    async function fb_login() {
-        let cred = await handleButtonClick();
-        console.log("cred==>", cred);
+    // working - fb - 01-03-2024
+    const onFacebookButtonPress = async () => {
+        try {
+            const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+            if (result.isCancelled) {
+                throw new Error('User cancelled the login process');
+            }
+
+            // Once signed in, get the user's AccessToken
+            const data = await AccessToken.getCurrentAccessToken();
+
+            if (!data) {
+                throw new Error('Something went wrong obtaining access token');
+            }
+
+            // Create a Firebase credential with the AccessToken
+            const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+
+            // Sign-in the user with the credential
+            const userCredential = await auth().signInWithCredential(facebookCredential);
+            console.log(JSON.stringify(userCredential, null, 2));
+
+
+            console.log("userCredential-NAME", userCredential.additionalUserInfo?.profile?.name);
+            console.log("userCredential-EMAIL", userCredential.user?.email);
+            console.log("userCredential-NUMBER", userCredential.user?.phoneNumber);
+
+            Toast.show("Logged In Via Facebook!", Toast.SHORT);
+
+            // try {
+            //     const isConnected = await NetworkUtils.isNetworkAvailable()
+            //     if (isConnected) {
+
+            //         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+            //         if (storedLinkedId === null || storedLinkedId === '' || storedLinkedId === undefined) {
+
+            //             await AsyncStorage.clear();
+            //             await GoogleSignin.revokeAccess();
+            //             await GoogleSignin.signOut();
+            //             await auth().signOut(); // FACEBOOK
+
+            //             // TODO : REG EMAIL IS ALREADY OR NOT API
+            //             // YES - GoogleSignUp
+            //             // NO - API CALL MESSAGE - IS ALREADY REGISTER PLEASE USE OTHER
+
+            //             // axiosPostRequestGoogleEmail(GoogleEmail);
+            //             // axiosPostRequestFacebookEmail(userCredential.user?.email);
+
+            //         } else {
+            //             props.navigation.navigate('Home1');
+            //         }
+
+
+            //     } else {
+            //         Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            //     }
+            // } catch (error) {
+            //     Toast.show("axios error", Toast.SHORT);
+            // }
+
+
+            props.navigation.navigate('FacebookSignUp', {
+                itemGoogleEmail: userCredential.user?.email,
+                itemGoogleName: userCredential.additionalUserInfo?.profile?.name
+            });
+
+
+        } catch (error: any) {
+            console.error(error.message);
+        }
     }
 
-    const handleButtonClick = async () => {
-        console.log("cred==>");
-
-        // const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-
-        // if (result.isCancelled) {
-        //     throw 'User cancelled the login process';
-        // }
-
-        // // Once signed in, get the users AccessToken
-        // const data = await AccessToken.getCurrentAccessToken();
-
-        // if (!data) {
-        //     console.log("DATA==>", data);
-        //     throw 'Something went wrong obtaining access token';
-        // }
-
-        // // Create a Firebase credential with the AccessToken
-        // const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-
-        // // Sign-in the user with the credential
-        // return auth().signInWithCredential(facebookCredential);
-    };
-
-    // const SignInWithGoogle = async () => { // working !
-    //     try {
-    //         await GoogleSignin.revokeAccess();
-    //         await GoogleSignin.signOut();
-    //         // setUserInfo(null);
-    //     } catch (error: any) {
-    //         console.log("error===>", error);
-    //     }
-    // };
-
-    // const SignInWithGoogle = async () => {
-    //     try {
-    //         await GoogleSignin.hasPlayServices();
-    //         const userInfo = await GoogleSignin.signIn();
-    //         console.log(userInfo); // You can now use userInfo to authenticate the user in your app.
-    //     } catch (error: any) {
-    //         if (error.code === statusCodes.SIGN_IN_CANCELLED) { // The user canceled the sign-in process 
-    //         } else if (error.code === statusCodes.IN_PROGRESS) { // A sign-in process is already in progress
-    //         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) { // Play services are not available } else { // Some other error occurred console.error(error); } }
-
-    //         }
-    //     }
-    // }
-
-
-    /// FB - 23
-
-    // const handleLogin = async () => { // 00 - not working
-    //     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-
-    //     if (result.isCancelled) {
-    //         throw 'User cancelled the login process';
-    //     }
-
-    //     // Once signed in, get the users AccessToken
-    //     const data = await AccessToken.getCurrentAccessToken();
-
-    //     if (!data) {
-    //         console.log("DATA==>", data);
-    //         throw 'Something went wrong obtaining access token';
-    //     }
-
-    //     // Create a Firebase credential with the AccessToken
-    //     const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-
-    //     // Sign-in the user with the credential
-    //     return auth().signInWithCredential(facebookCredential);
-    // }
-
-    // const handleLogin = async () => {
-    //     try {
-    //         // Attempt to log in with Facebook
-    //         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-
-    //         if (result.isCancelled) {
-    //             Alert.alert('Login Cancelled', 'Login with Facebook was cancelled.');
-    //         } else {
-    //             // Get the access token after successful login
-    //             const data = await AccessToken.getCurrentAccessToken();
-    //             if (data) {
-    //                 const accessToken = data.accessToken.toString();
-    //                 Alert.alert('Access Token', accessToken);
-
-    //                 // Use the accessToken to make a request for user information
-    //                 const responseInfoCallback = (error, result) => {
-    //                     if (error) {
-    //                         console.log(error);
-    //                         Alert.alert('Error Fetching Data', 'Error fetching data: ' + error.toString());
-    //                     } else {
-    //                         console.log(result);
-    //                         Alert.alert(
-    //                             'Success Fetching Data',
-    //                             'Success fetching data: ' + JSON.stringify(result)
-    //                         );
-    //                     }
-    //                 };
-
-    //                 const infoRequest = new GraphRequest(
-    //                     '/me',
-    //                     {
-    //                         accessToken: accessToken,
-    //                         parameters: {
-    //                             fields: {
-    //                                 string: 'email,name,first_name,middle_name,last_name',
-    //                             },
-    //                         },
-    //                     },
-    //                     responseInfoCallback
-    //                 );
-
-    //                 // Start the graph request.
-    //                 new GraphRequestManager().addRequest(infoRequest).start();
-    //             } else {
-    //                 Alert.alert('Error', 'Failed to get access token.');
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error('Error during Facebook login:', error);
-    //         // const newUUID = uuidv4();
-    //         // console.log('Generated UUID:', newUUID);
-    //     }
-    // };
-
-    // const handleLogin = (error, result) => {
-    //     if (error) {
-    //         Alert.alert("Login Error", "Login has error: " + result.error);
-    //     } else if (result.isCancelled) {
-    //         Alert.alert("Login Cancelled", "Login is cancelled.");
-    //     } else {
-    //         AccessToken.getCurrentAccessToken().then((data) => {
-    //             let accessToken = data.accessToken;
-    //             Alert.alert("Access Token", accessToken.toString());
-
-    //             const responseInfoCallback = (error, result) => {
-    //                 if (error) {
-    //                     console.log(error);
-    //                     Alert.alert('Error Fetching Data', 'Error fetching data: ' + error.toString());
-    //                 } else {
-    //                     console.log(result);
-    //                     Alert.alert('Success Fetching Data', 'Success fetching data: ' + JSON.stringify(result));
-    //                 }
-    //             };
-
-    //             const infoRequest = new GraphRequest(
-    //                 '/me',
-    //                 {
-    //                     accessToken: accessToken,
-    //                     parameters: {
-    //                         fields: {
-    //                             string: 'email,name,first_name,middle_name,last_name'
-    //                         }
-    //                     }
-    //                 },
-    //                 responseInfoCallback
-    //             );
-
-    //             // Start the graph request.
-    //             new GraphRequestManager().addRequest(infoRequest).start();
-    //         });
-    //     }
-    // };
-
-
-    // const handleLogin = async () => {
-    //     try {
-    //         // Perform Facebook login
-    //         const loginResult = await LoginManager.logInWithPermissions(["public_profile", "email"]);
-
-    //         if (loginResult.isCancelled) {
-    //             Alert.alert("Login Cancelled " + JSON.stringify(loginResult));
-    //         } else {
-    //             // If login was successful, fetch user data including email
-    //             const accessToken = loginResult.accessToken?.toString();
-
-    //             if (accessToken) {
-    //                 // Simulate fetching user data from an API
-    //                 const response = await fetch(`https://api.example.com/user/${loginResult.userId}`, {
-    //                     headers: {
-    //                         Authorization: `Bearer ${accessToken}`,
-    //                     },
-    //                 });
-    //                 const userData = await response.json();
-
-    //                 // Extract email from user data
-    //                 const userEmail = userData.email;
-
-    //                 // Display success alerts
-    //                 Alert.alert("Login Success with permissions");
-    //                 Alert.alert("Login Success " + JSON.stringify(loginResult));
-    //                 Alert.alert("User Email: " + userEmail);
-    //             } else {
-    //                 Alert.alert("Error fetching access token");
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error("Login Error: ", error);
-    //     }
-    // };
-
-    // class LoginManager {
-    //     static async logInWithPermissions(permissions: any) {
-    //         // Simulate a delay to mimic the asynchronous nature of the login process
-    //         await new Promise(resolve => setTimeout(resolve, 1000));
-
-    //         // Simulate a random result
-    //         const isCancelled = Math.random() < 0.5;
-
-    //         if (isCancelled) {
-    //             return { isCancelled: true, errorMessage: "Login was cancelled" };
-    //         } else {
-    //             // return { isCancelled: false, userId: "123456", accessToken: "abc123" };
-
-    //             const userId = Math.floor(Math.random() * 1000000).toString();
-    //             const accessToken = generateRandomToken();
-    //             Alert.alert(accessToken)
-
-    //             return { isCancelled: false, userId, accessToken };
-    //         }
-    //     }
-    // }
-
-    function generateRandomToken() {
-        // Implement your logic to generate a random or dynamic access token
-        // For simplicity, you can use a library like uuid to generate a unique token
-        // npm install uuid
-        const uuid = require('uuid');
-        return uuid.v4();
-    }
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -694,7 +529,7 @@ const LoginSignUpScreen = (props: Props) => {
                                 title={ScreenText.Facebook}
                                 backgroundColor={Colors.facebookBackground}
                                 marginLeft={wp(2)}
-                                onPress={fb_login}
+                                onPress={onFacebookButtonPress}
                                 fontFamily={Fonts.InterRegular}
                             />
                         </View>

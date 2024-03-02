@@ -123,7 +123,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
 
 
     useEffect(() => {
-        axiosPostRequestTwilo(); // Call Once!
+        axiosPostRequestTwilo(); // Call Once! - W - A
     }, []);
 
     const onPressResend = () => {
@@ -133,7 +133,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
         // sendOTPFromFirebase();
 
         // Resend Twilo OTP 
-        axiosPostRequestTwilo();
+        axiosPostRequestTwilo(); // - WORK-A
     }
 
     const generateOTP = () => {
@@ -141,12 +141,14 @@ const MobileVerficationScreen = ({ route, navigation }) => {
         return Math.floor(100000 + Math.random() * 900000).toString();
     };
 
+
+    // WORK - A
     const axiosPostRequestTwilo = async () => {
         try {
             const accountSid = 'AC3eeea2ca15bd40955c7038e68591a61d';
             const authToken = 'f4bf3e3d9639096c5636aaa052879176';
             const fromNumber = '+17123723643';
-            const toNumber = '+916356526597';
+            // const toNumber = '+916356526597';
 
             const generatedOTP = generateOTP();
 
@@ -182,6 +184,7 @@ const MobileVerficationScreen = ({ route, navigation }) => {
     }
 
 
+    // WORK - A
     const axiosPostRequestTwiloUpdate = async (generatedOTP: any) => {
         try {
             const newUrl = `https://rideshareandcourier.graphiglow.in/api/UpdateMobileNumberVerify/otp-update`;

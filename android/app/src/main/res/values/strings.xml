@@ -1,16 +1,11 @@
 <resources>
     <string name="app_name">MyDriverPlus</string>
 
-    <!-- 415988837549792 -->
+   <string name="facebook_app_id">1433091127607923</string>
+   <string name="fb_login_protocol_scheme">fb1433091127607923</string>
+   <string name="facebook_client_token">f9961e9d2395318f9cd31a45a511f42f</string>
 
-    <!-- 7246147988736757 -->  
 
-    <!-- 1754059218338203 -->
 
-    <!-- a --> 
-
-    <!-- 17cbe98aa1fd77114156dae044f9ce4d - a  -->
-
-    <!-- 93617ae02d2705454e305fff57b258f4 -->
 
 </resources>

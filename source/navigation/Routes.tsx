@@ -16,6 +16,7 @@ import VerifiedScreen from '../screens/Auth/Verified';
 import VerifyYourScreen from '../screens/Auth/VerifyYourAccount';
 import VerifyYourScreenMail from '../screens/Auth/VerifyYourScreenMail';
 import VerifyYourScreenMobile from '../screens/Auth/VerifyYourScreenMobile';
+import FacebookSignUpScreen from '../screens/Auth/FacebookSignUpScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -97,6 +98,7 @@ const Routes = () => {
             animation: 'slide_from_right'
           }}
         />
+
         <Stack.Screen
           name="GoogleSignUp"
           component={GoogleSignUpScreen}
@@ -106,6 +108,17 @@ const Routes = () => {
             animation: 'slide_from_right'
           }}
         />
+
+        <Stack.Screen
+          name="FacebookSignUp"
+          component={FacebookSignUpScreen}
+          options={{
+            headerShown: false,
+            gestureEnabled: true,
+            animation: 'slide_from_right'
+          }}
+        />
+
         <Stack.Screen
           name="VerifyYourAccount"
           component={VerifyYourScreen}

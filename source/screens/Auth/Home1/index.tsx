@@ -77,6 +77,7 @@ import NetworkUtils from '../../../utils/commonfunction';
 import { ScreenText } from '../../../utils/index';
 import PreferredDriverDrawer from '../PreferredDriverDrawer';
 import Styles from './style';
+import auth from '@react-native-firebase/auth';
 
 
 type Props = {
@@ -106,6 +107,7 @@ const MyComponent = ({ navigation }) => {
             await AsyncStorage.clear();
             await GoogleSignin.revokeAccess();
             await GoogleSignin.signOut();
+            await auth().signOut();
             // setUserInfo(null);
         } catch (error: any) {
             console.log("error===>", error);
