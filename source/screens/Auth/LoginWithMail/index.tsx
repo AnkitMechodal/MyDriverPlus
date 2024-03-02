@@ -188,7 +188,7 @@ const LoginWithMailScreen = (props: Props) => {
                     // Handle API response here
 
                     // Get User ID :
-                    // user_register_id = response?.data?.user?._id;
+                    user_register_id = response?.data?.user?._id;
                     // storeLoginMobileId(user_register_id);
 
                     // not auto login with these process and step
@@ -197,6 +197,9 @@ const LoginWithMailScreen = (props: Props) => {
                     props.navigation.navigate("Home1");
                 } else if (response?.data?.error === 'Please verify email and mobile number before logging in') {
                     Toast.show('Login Failed!', Toast.SHORT);
+
+                    // Reg Id For verify account
+                    storeLoginMobileId(user_register_id);
 
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMail', {
@@ -245,6 +248,10 @@ const LoginWithMailScreen = (props: Props) => {
                     props.navigation.navigate("Home1");
                 } else if (response?.data?.error === 'Please verify email and mobile number before logging in') {
                     Toast.show('Login Failed!', Toast.SHORT);
+
+
+                    // Reg Id For verify account
+                    storeLoginMobileId(user_register_id);
 
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMail', {

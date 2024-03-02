@@ -127,7 +127,7 @@ const LoginSignUpScreen = (props: Props) => {
     };
 
 
-   
+
     const axiosPostRequestGoogleEmail = async (GoogleEmail) => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
@@ -200,6 +200,9 @@ const LoginSignUpScreen = (props: Props) => {
                 } else if (response?.data?.error === 'Please verify email and mobile number before logging in') {
                     Toast.show('Google Login Failed!', Toast.SHORT);
 
+                    // Reg Id For verify account
+                    storeLoginMobileId(user_register_id);
+
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMail', {
                         itemEmailMail: GoogleEmail
@@ -253,9 +256,11 @@ const LoginSignUpScreen = (props: Props) => {
             console.log(JSON.stringify(userCredential, null, 2));
 
 
-            console.log("userCredential-NAME", userCredential.additionalUserInfo?.profile?.name);
-            console.log("userCredential-EMAIL", userCredential.user?.email);
-            console.log("userCredential-NUMBER", userCredential.user?.phoneNumber);
+            console.log("user NAME", userCredential.additionalUserInfo?.profile?.name);
+            console.log("user EMAIL", userCredential.user?.email);
+            console.log("user NUMBER", userCredential.user?.phoneNumber);
+            console.log("user UID", userCredential.user?.uid);
+
 
             Toast.show("Logged In Via Facebook!", Toast.SHORT);
 
