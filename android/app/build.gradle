@@ -131,6 +131,10 @@ dependencies {
     // 01-03
 
 
+    // Google One-Tab 
+    implementation ('com.google.android.gms:play-services-auth:21.0.0')
+
+
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

@@ -114,15 +114,16 @@ const SettingScreen = (props: Props) => {
   const axiosPostSetProfileData = async () => {
 
     const storedLinkedId = await AsyncStorage.getItem('user_register_id');
-    if (storedLinkedId !== null) {
+
+    const type = await AsyncStorage.getItem('user_type');
+
+    if (type !== null && storedLinkedId !== null) {
+
       const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
-      // Prepare data in JSON format
       const data = {
-        id: JSON.parse(storedLinkedId),
+        facebook_id: JSON.parse(storedLinkedId)
       };
-
-      // console.log("axiosPostSetDataGetInfo==>", data);
 
       await axios.post(url, data, {
         headers: {
@@ -156,12 +157,68 @@ const SettingScreen = (props: Props) => {
           } else {
             // Toast.show('User Information Credentials Invalid', Toast.SHORT);
           }
+
         })
         .catch(error => {
           // Handle errors
           // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
         });
+
     } else {
+
+      const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+      const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+      if (storedLinkedId !== null && type == null) {
+        const data = {
+          id: JSON.parse(storedLinkedId)
+        };
+
+        await axios.post(url, data, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(response => {
+            if (response.status === 200 &&
+              response?.data?.message === 'User Information') {
+
+              user_mobilenumber = response?.data?.matchingUsers[0]?.mobilenumber;
+              user_email = response?.data?.matchingUsers[0]?.email;
+              user_name = response?.data?.matchingUsers[0]?.username;
+              user_img = response?.data?.matchingUsers[0]?.profile_image;
+
+              user_password = response?.data?.matchingUsers[0]?.password;
+
+              StoreOldPassword(user_password);
+              // Example 
+              // user_total = response?.data?.matchingUsers[0]?.username;
+
+              setProfileName(user_name);
+              setProfileEmail(user_email);
+              setProfileNumber(user_mobilenumber);
+              setProfileImage(user_img);
+
+              // setRatedPerson("(" + user_name + ")");
+
+              // Handle API response here
+              // Toast.show("User Information Get Successfully!", Toast.SHORT);
+            } else {
+              // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+            }
+
+          })
+          .catch(error => {
+            // Handle errors
+            // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+          });
+
+      } else {
+
+      }
+
+
 
     }
   }

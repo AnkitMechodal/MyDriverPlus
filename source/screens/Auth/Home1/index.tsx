@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -77,7 +78,6 @@ import NetworkUtils from '../../../utils/commonfunction';
 import { ScreenText } from '../../../utils/index';
 import PreferredDriverDrawer from '../PreferredDriverDrawer';
 import Styles from './style';
-import auth from '@react-native-firebase/auth';
 
 
 type Props = {
@@ -1116,12 +1116,15 @@ function CustomDrawerContent(props) {
     const axiosPostSetProfileData = async () => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
-        if (storedLinkedId !== null) {
+
+        const type = await AsyncStorage.getItem('user_type');
+
+        if (type !== null && storedLinkedId !== null) {
+
             const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
-            // Prepare data in JSON format
             const data = {
-                id: JSON.parse(storedLinkedId),
+                facebook_id: JSON.parse(storedLinkedId)
             };
 
             await axios.post(url, data, {
@@ -1142,18 +1145,68 @@ function CustomDrawerContent(props) {
                         setProfileEmail(user_email);
                         setProfileImage(user_img);
 
+                        // setRatedPerson("(" + user_name + ")");
 
                         // Handle API response here
                         // Toast.show("User Information Get Successfully!", Toast.SHORT);
                     } else {
                         // Toast.show('User Information Credentials Invalid', Toast.SHORT);
                     }
+
                 })
                 .catch(error => {
                     // Handle errors
                     // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
                 });
+
         } else {
+
+            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+            const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            if (storedLinkedId !== null && type == null) {
+                const data = {
+                    id: JSON.parse(storedLinkedId)
+                };
+
+                await axios.post(url, data, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200 &&
+                            response?.data?.message === 'User Information') {
+
+                            user_email = response?.data?.matchingUsers[0]?.email;
+                            user_name = response?.data?.matchingUsers[0]?.username;
+                            user_img = response?.data?.matchingUsers[0]?.profile_image;
+
+
+                            setProfileName(user_name);
+                            setProfileEmail(user_email);
+                            setProfileImage(user_img);
+
+                            // setRatedPerson("(" + user_name + ")");
+
+                            // Handle API response here
+                            // Toast.show("User Information Get Successfully!", Toast.SHORT);
+                        } else {
+                            // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                        }
+
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                    });
+
+            } else {
+
+            }
+
+
 
         }
     }

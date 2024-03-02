@@ -199,7 +199,7 @@ const LoginWithMailScreen = (props: Props) => {
                     Toast.show('Login Failed!', Toast.SHORT);
 
                     // Reg Id For verify account
-                    storeLoginMobileId(user_register_id);
+                    // storeLoginMobileId(user_register_id);
 
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMail', {
@@ -251,7 +251,7 @@ const LoginWithMailScreen = (props: Props) => {
 
 
                     // Reg Id For verify account
-                    storeLoginMobileId(user_register_id);
+                    // storeLoginMobileId(user_register_id);
 
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMail', {

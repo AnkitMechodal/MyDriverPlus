@@ -423,7 +423,7 @@ const LoginWithMobileScreen = (props: Props) => {
 
 
                     // Reg Id For verify account
-                    storeLoginMobileId(user_register_id);
+                    // storeLoginMobileId(user_register_id);
 
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMobile', {
@@ -471,7 +471,7 @@ const LoginWithMobileScreen = (props: Props) => {
 
 
                     // Reg Id For verify account
-                    storeLoginMobileId(user_register_id);
+                    // storeLoginMobileId(user_register_id);
 
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMobile', {

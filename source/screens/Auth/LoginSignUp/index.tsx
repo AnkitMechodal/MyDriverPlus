@@ -27,6 +27,11 @@ const LoginSignUpScreen = (props: Props) => {
 
     let user_register_id;
 
+
+    let user_emailStatus;
+    let user_mobilenumberStatus;
+
+
     const { isDarkMode, toggleTheme } = useTheme();
 
     useEffect(() => {
@@ -78,9 +83,11 @@ const LoginSignUpScreen = (props: Props) => {
         try {
             await GoogleSignin.hasPlayServices();
             await GoogleSignin.configure({
-                webClientId: '794495424305-lp5pu88oltmglilm5sv31qhi869jocr6.apps.googleusercontent.com',
+                webClientId: '751449154638-4l0hp1istthela2ecfcbg4214vt1fcf4.apps.googleusercontent.com',
             });
             const user = await GoogleSignin.signIn();
+
+            // console.log("userInfo", JSON.stringify(user, null, 2));
 
             GoogleEmail = user?.user?.email;
             GoogleName = user?.user?.name;
@@ -101,7 +108,7 @@ const LoginSignUpScreen = (props: Props) => {
                         await AsyncStorage.clear();
                         await GoogleSignin.revokeAccess();
                         await GoogleSignin.signOut();
-                        await auth().signOut(); // FACEBOOK
+                        // await auth().signOut(); // FACEBOOK
 
                         // TODO : REG EMAIL IS ALREADY OR NOT API
                         // YES - GoogleSignUp
@@ -118,7 +125,7 @@ const LoginSignUpScreen = (props: Props) => {
                     Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
                 }
             } catch (error) {
-                Toast.show("axios error", Toast.SHORT);
+                Toast.show("axios error-1", Toast.SHORT);
             }
 
         } catch (error: any) {
@@ -173,6 +180,114 @@ const LoginSignUpScreen = (props: Props) => {
 
     };
 
+
+
+    const axiosPostRequestID = async (FacebookUID, FacebookEMAIL) => {
+        const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+        // Prepare data in JSON format
+        const data = {
+            facebook_id: FacebookUID, // AS API PARA
+        };
+
+
+        console.log("11111111===>", data);
+        console.log("1111122111===>", data);
+        console.log("11111111===>", data);
+        console.log("1111122111===>", data);
+
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async response => {
+                if (response.status == 200
+                    &&
+                    response?.data?.message === "User Information") {
+
+                    // Get User ID :
+                    user_register_id = response?.data?.matchingUsers[0]?.facebook_id;
+
+                    console.log("user?._id222===>", user_register_id);
+                    console.log("user?._id===>", user_register_id);
+                    console.log("user?._id==22=>", user_register_id);
+                    console.log("user?._id===>", user_register_id);
+                    console.log("user?._id===>", user_register_id);
+                    console.log("user?._i55d===>", user_register_id);
+                    console.log("user?._id===>", user_register_id);
+                    console.log("user?._id===>", user_register_id);
+
+                    storeLoginMobileId(user_register_id);
+
+                    // pass type of fb
+                    storeLoginTypeFacebook();
+
+                    user_emailStatus = response?.data?.matchingUsers[0]?.emailStatus;
+                    user_mobilenumberStatus = response?.data?.matchingUsers[0]?.mobilenumberStatus;
+
+                    console.log("user_emailStatus", user_emailStatus);
+                    console.log("user_mobilenumberStatus", user_mobilenumberStatus);
+                    console.log("user_emailStatus", user_emailStatus);
+                    console.log("user_mobilenumberStatus", user_mobilenumberStatus);
+
+                    if (user_emailStatus == "Deactive" || user_mobilenumberStatus == "Deactive") {
+
+                        // Toast.show('TEST-1', Toast.SHORT);
+                        // email passing 
+                        props.navigation.navigate('VerifyYourAccountMail', {
+                            itemEmailMail: FacebookEMAIL
+                        });
+                    } else {
+                        // storeLoginMobileId(user_register_id);
+                        props.navigation.navigate("Home1");
+                        // Toast.show('TEST-2', Toast.SHORT);
+
+                    }
+
+                    // props.navigation.navigate("Home1");
+
+                } else if (response?.data?.error === 'Please verify email and mobile number before logging in') {
+                    Toast.show('Facebook Login Failed!', Toast.SHORT);
+
+                    // Reg Id For verify account
+                    // storeLoginMobileId(user_register_id);
+
+                    // MAIL AS FACEBOOK
+
+                    // email passing 
+                    props.navigation.navigate('VerifyYourAccountMail', {
+                        itemEmailMail: FacebookEMAIL
+                    });
+
+                } else {
+                    Toast.show('Login Credentials Invalid!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Login Credentials Invalid!', Toast.SHORT);
+            });
+
+    }
+
+
+    const storeLoginTypeFacebook = async () => {
+        try {
+            await AsyncStorage.setItem('user_type', "user_fb");
+
+            console.log('user_type===>', JSON.stringify(user_register_id));
+            console.log('user_type===>', JSON.stringify(user_register_id));
+            console.log('user_type===>', JSON.stringify(user_register_id));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error user_register_id :', error);
+        }
+    }
+
     const axiosPostRequestEmail = async (GoogleEmail) => {
         const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
 
@@ -201,7 +316,7 @@ const LoginSignUpScreen = (props: Props) => {
                     Toast.show('Google Login Failed!', Toast.SHORT);
 
                     // Reg Id For verify account
-                    storeLoginMobileId(user_register_id);
+                    // storeLoginMobileId(user_register_id);
 
                     // email passing 
                     props.navigation.navigate('VerifyYourAccountMail', {
@@ -224,7 +339,13 @@ const LoginSignUpScreen = (props: Props) => {
     const storeLoginMobileId = async (user_register_id: any) => {
         try {
             await AsyncStorage.setItem('user_register_id', JSON.stringify(user_register_id));
-            console.log('user_register_id===>', JSON.stringify(user_register_id));
+
+            console.log('fb===>', JSON.stringify(user_register_id));
+            console.log('fb===>', JSON.stringify(user_register_id));
+            console.log('fb===>', JSON.stringify(user_register_id));
+            console.log('fb===>', JSON.stringify(user_register_id));
+            console.log('fb===>', JSON.stringify(user_register_id));
+            console.log('fb===>', JSON.stringify(user_register_id));
         } catch (error) {
             // Handle any errors that might occur during the storage operation
             console.log('Error user_register_id :', error);
@@ -262,50 +383,133 @@ const LoginSignUpScreen = (props: Props) => {
             console.log("user UID", userCredential.user?.uid);
 
 
-            Toast.show("Logged In Via Facebook!", Toast.SHORT);
+            // Toast.show("Logged In Via Facebook!", Toast.SHORT);
+            try {
+                const isConnected = await NetworkUtils.isNetworkAvailable()
+                if (isConnected) {
 
-            // try {
-            //     const isConnected = await NetworkUtils.isNetworkAvailable()
-            //     if (isConnected) {
+                    const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
-            //         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
-            //         if (storedLinkedId === null || storedLinkedId === '' || storedLinkedId === undefined) {
-
-            //             await AsyncStorage.clear();
-            //             await GoogleSignin.revokeAccess();
-            //             await GoogleSignin.signOut();
-            //             await auth().signOut(); // FACEBOOK
-
-            //             // TODO : REG EMAIL IS ALREADY OR NOT API
-            //             // YES - GoogleSignUp
-            //             // NO - API CALL MESSAGE - IS ALREADY REGISTER PLEASE USE OTHER
-
-            //             // axiosPostRequestGoogleEmail(GoogleEmail);
-            //             // axiosPostRequestFacebookEmail(userCredential.user?.email);
-
-            //         } else {
-            //             props.navigation.navigate('Home1');
-            //         }
+                    console.log("FB_USER===>", storedLinkedId);
+                    console.log("FB_USER===>", storedLinkedId);
+                    console.log("FB_USER===>", storedLinkedId);
+                    console.log("FB_USER===>", storedLinkedId);
 
 
-            //     } else {
-            //         Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
-            //     }
-            // } catch (error) {
-            //     Toast.show("axios error", Toast.SHORT);
-            // }
+                    if (storedLinkedId === null || storedLinkedId === '' || storedLinkedId === undefined) {
 
+                        // await AsyncStorage.clear();
+                        // await GoogleSignin.revokeAccess();
+                        // await GoogleSignin.signOut();
+                        // await auth().signOut(); // FACEBOOK
 
-            props.navigation.navigate('FacebookSignUp', {
-                itemGoogleEmail: userCredential.user?.email,
-                itemGoogleName: userCredential.additionalUserInfo?.profile?.name
-            });
+                        // TODO : REG EMAIL IS ALREADY OR NOT API
+                        // YES - GoogleSignUp
+                        // NO - API CALL MESSAGE - IS ALREADY REGISTER PLEASE USE OTHER
+
+                        // CHECK WITH UID OF USER
+                        axiosPostRequestFacebookEmail(userCredential.user?.uid,
+                            userCredential.additionalUserInfo?.profile?.name,
+                            userCredential.user?.email
+                        )
+
+                        // Toast.show("Hello-0", Toast.SHORT);
+
+                    } else {
+                        // props.navigation.navigate('Home1');
+                        Toast.show("Hello-1", Toast.SHORT);
+
+                    }
+                } else {
+                    Toast.show("axios error-444", Toast.SHORT);
+                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+                }
+            } catch (error) {
+                // props.navigation.navigate('Home1');
+                // Toast.show("axios error-111", Toast.SHORT);
+            }
+
+            // props.navigation.navigate('FacebookSignUp', {
+            //     itemGoogleEmail: userCredential.user?.email,
+            //     itemGoogleName: userCredential.additionalUserInfo?.profile?.name,
+            //     // UID AS Facebook
+            //     itemGoogleUID: userCredential.user?.uid
+            // });
 
 
         } catch (error: any) {
             console.error(error.message);
         }
     }
+
+    const axiosPostRequestFacebookEmail = async (FacebookUID, FacebookNAME, FacebookEMAIL) => {
+
+        console.log("FacebookUID", FacebookUID);
+        console.log("FacebookUID", FacebookUID);
+        console.log("FacebookUID", FacebookUID);
+        console.log("FacebookUID", FacebookUID);
+
+        const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+        // Prepare data in JSON format
+        const data = {
+            facebook_id: FacebookUID, // AS API PARA
+        };
+
+        console.log("FacebookData===>", data);
+        console.log("FacebookData===>", data);
+        console.log("FacebookData===>", data);
+        console.log("FacebookData===>", data);
+        console.log("FacebookData===>", data);
+        console.log("FacebookData===>", data);
+
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async response => {
+                if (response.status == 200
+                    &&
+                    response?.data?.message === "User Information") {
+
+                    //  Welcome! Signed in successfully.
+                    // Toast.show('Facebook Account is Already Registered!', Toast.SHORT);
+                    // props.navigation.navigate('Home1');
+
+                    // LOGIN  API CALL FOR REG USER
+                    // axiosPostRequestEmail(FacebookUID);
+
+                    axiosPostRequestID(FacebookUID, FacebookEMAIL);
+
+                } else {
+                    // props.navigation.navigate('FacebookSignUp', {
+                    //     itemGoogleEmail: GoogleEmail,
+                    //     itemGoogleName: GoogleName
+                    // });
+
+                    props.navigation.navigate('FacebookSignUp', {
+                        itemGoogleEmail: FacebookEMAIL,
+                        itemGoogleName: FacebookNAME,
+                        // UID AS Facebook
+                        itemGoogleUID: FacebookUID
+                    });
+
+
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                props.navigation.navigate('FacebookSignUp', {
+                    itemGoogleEmail: FacebookEMAIL,
+                    itemGoogleName: FacebookNAME,
+                    // UID AS Facebook
+                    itemGoogleUID: FacebookUID
+                });
+            });
+
+    };
 
 
     return (

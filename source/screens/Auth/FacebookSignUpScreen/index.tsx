@@ -120,6 +120,12 @@ const FacebookSignUpScreen = ({ route, navigation }) => {
         setEmail(route?.params?.itemGoogleEmail);
         setName(route?.params?.itemGoogleName);
 
+        // test 
+
+        console.log("route?.params?.itemGoogleUID", route?.params?.itemGoogleUID);
+
+        // test 
+
         // setName(route?.params?.itemProfileName);
         // setNameMail(route?.params?.itemProfileEmail);
         // setNumber(route?.params?.itemProfileNumber);
@@ -563,7 +569,8 @@ const FacebookSignUpScreen = ({ route, navigation }) => {
             mobilenumberOTP: "000000",
             password: pass,
             // refercode: passRef ? passRef : ''
-            refercode: passRef !== null ? passRef : ''
+            refercode: passRef !== null ? passRef : '',
+            facebook_id: route?.params?.itemGoogleUID
         };
 
         console.log("axiosPostRequestCreateAccount-Google==>", JSON.stringify(data, null, 2));
@@ -649,7 +656,7 @@ const FacebookSignUpScreen = ({ route, navigation }) => {
                     Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
                 }
             } catch (error) {
-                Toast.show("axios error", Toast.SHORT);
+                // Toast.show("axios error", Toast.SHORT);
             }
         }
     }
