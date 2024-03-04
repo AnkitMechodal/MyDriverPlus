@@ -1354,6 +1354,10 @@ const HomeOneScreen = (props: Props) => {
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] ===
                     PermissionsAndroid.RESULTS.GRANTED &&
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.SEND_SMS] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] ===
                     PermissionsAndroid.RESULTS.GRANTED
 
                 ) {

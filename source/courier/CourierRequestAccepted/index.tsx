@@ -3,7 +3,8 @@ import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, Linking, SafeAreaView, TouchableOpacity, View } from 'react-native';
-import MapView, { Circle, Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -17,7 +18,6 @@ import { ConstValue, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
-
 
 type Props = {
     navigation: any
@@ -791,11 +791,33 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                         icon={Images.mapBlueIcon}
                     />
 
-                    <Polyline
+                    <MapViewDirections
+                        origin={markerCoordinates1}
+                        destination={markerCoordinates2}
+                        strokeWidth={2} // Width of the direction line
+                        strokeColor="blue" // Color of the direction line
+                        // lineDashPattern={[30]} // Pattern for creating a dotted line
+                        apikey={'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE'} // Replace 'Your-API-Key' with your actual Google Maps API key
+                        mode="DRIVING" // Mode of transportation (DRIVING, BICYCLING, TRANSIT, or WALKING)
+                        language="en" // Language for response
+                        optimizeWaypoints={true} // Optimize waypoints for the most efficient route
+                        resetOnChange={true} // Reset route when origin or destination changes
+                        onStart={(params) => { }} // Callback when directions fetching starts
+                        onReady={(result) => { }} // Callback when the route is ready
+                        onError={(errorMessage) => { }} // Callback when an error occurs
+                        region="us" // Country region for which direction results are biased
+                        timePrecision="now" // Time precision for time in directions
+                    />
+
+                    {/* PICK && DROP JOIN LINE */}
+
+                    {/* <Polyline
                         coordinates={[markerCoordinates1, markerCoordinates2]}
                         strokeColor="#0040FF" // Line color
                         strokeWidth={2} // Line width
-                    />
+                    /> */}
+
+                    {/* PICK && DROP JOIN LINE */}
 
                     <Circle
                         center={markerCoordinates2}

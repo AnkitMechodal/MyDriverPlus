@@ -546,25 +546,15 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
-        console.log("storedLinkedId=====>", storedLinkedId);
-        console.log("storedLinkedId=====>", storedLinkedId);
-        console.log("storedLinkedId=====>", storedLinkedId);
-        console.log("storedLinkedId=====>", storedLinkedId);
+        const type = await AsyncStorage.getItem('user_type');
 
-        if (storedLinkedId !== null) {
+        if (type !== null && storedLinkedId !== null) {
+
             const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
-            // Prepare data in JSON format
             const data = {
-                id: JSON.parse(storedLinkedId), //0909
-                // id: "65c4bf726e435ad32b0e86ca"
+                facebook_id: JSON.parse(storedLinkedId)
             };
-
-            console.log("axiosPostSetProfileData....==>", data);
-            console.log("axiosPostSetProfileData==>", data);
-            console.log("axiosPostSetProfileData==>", data);
-            console.log("axiosPostSetProfileData==>", data);
-            console.log("axiosPostSetProfileData==>", data);
 
             await axios.post(url, data, {
                 headers: {
@@ -578,21 +568,61 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                         user_point = response?.data?.matchingUsers[0]?.Point;
                         setLoyalPoints(user_point);
 
-                        // Toast.show('Done' + user_point, Toast.SHORT);
-
                     } else {
                         // Toast.show('User Information Credentials Invalid', Toast.SHORT);
                     }
+
                 })
                 .catch(error => {
                     // Handle errors
                     // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
                 });
+
         } else {
+
+            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+            const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            if (storedLinkedId !== null && type == null) {
+                const data = {
+                    id: JSON.parse(storedLinkedId)
+                };
+
+                await axios.post(url, data, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200 &&
+                            response?.data?.message === 'User Information') {
+
+                            user_point = response?.data?.matchingUsers[0]?.Point;
+                            setLoyalPoints(user_point);
+
+                            // setRatedPerson("(" + user_name + ")");
+
+                            // Handle API response here
+                            // Toast.show("User Information Get Successfully!", Toast.SHORT);
+                        } else {
+                            // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                        }
+
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                    });
+
+            } else {
+
+            }
+
+
 
         }
     }
-
 
     // const axiosPostRideDetailsRequest = async () => {
     //     const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';

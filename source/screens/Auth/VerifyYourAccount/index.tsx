@@ -98,15 +98,16 @@ const VerifyYourScreen = ({ route, navigation }) => {
     const axiosPostSetDataGetInfo = async () => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_id');
-        if (storedLinkedId !== null) {
+
+        const type = await AsyncStorage.getItem('user_type');
+
+        if (type !== null && storedLinkedId !== null) {
+
             const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
 
-            // Prepare data in JSON format
             const data = {
-                id: JSON.parse(storedLinkedId),
+                facebook_id: JSON.parse(storedLinkedId)
             };
-
-            console.log("axiosPostSetDataGetInfo==>", data);
 
             await axios.post(url, data, {
                 headers: {
@@ -160,15 +161,94 @@ const VerifyYourScreen = ({ route, navigation }) => {
 
                         // Handle API response here
                         // Toast.show("User Information Get Successfully!", Toast.SHORT);
+
                     } else {
                         // Toast.show('User Information Credentials Invalid', Toast.SHORT);
                     }
+
                 })
                 .catch(error => {
                     // Handle errors
                     // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
                 });
+
         } else {
+
+            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+
+            const storedLinkedId = await AsyncStorage.getItem('user_id');
+
+            if (storedLinkedId !== null && type == null) {
+                const data = {
+                    id: JSON.parse(storedLinkedId)
+                };
+
+                await axios.post(url, data, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200 &&
+                            response?.data?.message === 'User Information') {
+                            user_mobilenumber = response?.data?.matchingUsers[0]?.mobilenumber;
+                            user_email = response?.data?.matchingUsers[0]?.email;
+
+                            // Set Status 
+                            user_mobilenumberStatus =
+                                response?.data?.matchingUsers[0]?.mobilenumberStatus;
+                            console.log("user_mobilenumberStatus", user_mobilenumberStatus);
+
+                            user_emailStatus =
+                                response?.data?.matchingUsers[0]?.emailStatus;
+                            console.log("user_emailStatus", user_emailStatus);
+
+                            if (user_mobilenumberStatus === "Deactive") {
+                                setMobileColorText(true);
+                                setMobileType(true);
+                            } else {
+                                setMobileColorText(false);
+                                setMobileType(false);
+                            }
+
+                            if (user_emailStatus === "Deactive") {
+                                setEmailColorText(true);
+                                setEmailType(true);
+                            } else {
+                                setEmailColorText(false);
+                                setEmailType(false);
+                            }
+
+                            if (user_mobilenumberStatus === "Verify"
+                                && user_emailStatus === "Verify") {
+                                setIsClick(!isClick)
+                                setIsDisabled(!isDisabled)
+                            } else {
+                                setIsClick(isClick)
+                                setIsDisabled(isDisabled)
+                            }
+
+                            // Set Data 
+                            setMobile(user_mobilenumber);
+                            setEmail(user_email);
+
+                            // Handle API response here
+                            // Toast.show("User Information Get Successfully!", Toast.SHORT);
+                        } else {
+                            // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                        }
+
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                    });
+
+            } else {
+
+            }
+
+
 
         }
     }
