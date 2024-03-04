@@ -10,7 +10,7 @@ import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ConstValue, ScreenText } from '../../utils';
+import { API, ConstValue, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail, validateIsPhoneNumber } from '../../utils/commonfunction';
 import Styles from './style';
@@ -211,7 +211,7 @@ const ModalContactUsScreen = (props: Props) => {
         // Add more options as needed
 
     };
-    
+
     const data = [
         { label: '+91 ', value: '1', img: Images1.flagIcon },
         { label: '+93 ', value: '3', img: Images1.flag19 },
@@ -552,7 +552,8 @@ const ModalContactUsScreen = (props: Props) => {
 
 
     const axiosUserContactUsPostRequest = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/contact/contact';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/contact/contact';
+        const url = `${API.BASE_URL}/contact/contact`;
 
         // Prepare data in JSON format
         const data = {

@@ -19,7 +19,7 @@ import TextComponent from '../../components/Text/index';
 import TextInputComponent from '../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../themes';
 import CommonStyle from '../../utils/commonStyle';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 
@@ -467,6 +467,7 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
         const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
         const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
+
 
         try {
             const response = await axios.get(url);

@@ -1,7 +1,8 @@
 import { ScreenText } from "../utils/screenText";
+import { API } from "./baseurl";
 import { ConstValue } from "./constValue";
 
-export { ScreenText, ConstValue };
+export { API, ConstValue, ScreenText };
 
 
 // import { LogBox } from 'react-native';

@@ -9,7 +9,7 @@ import HeaderComponent from '../../../components/Header/index';
 import StatusBarComponent from '../../../components/StatusBar';
 import TextComponent from '../../../components/Text';
 import { Colors, Fonts, Images } from '../../../themes/index';
-import { ScreenText } from '../../../utils';
+import { API, ScreenText } from '../../../utils';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
 import Styles from './style';
@@ -131,7 +131,8 @@ const PreferredDriverDrawer = ({ route, navigation }) => {
 
 
     const axiosPostRideDetailsRequest = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
 
         // Prepare data in JSON format
         const data = {
@@ -424,7 +425,8 @@ const PreferredDriverDrawer = ({ route, navigation }) => {
         const storedDriverLinkedId = await AsyncStorage.getItem('store_ride_id');
 
         if (storedLinkedId !== null && storedDriverLinkedId != null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/preferredDriverAdd/add';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/preferredDriverAdd/add';
+            const url = `${API.BASE_URL}/preferredDriverAdd/add`;
 
             // Prepare data in JSON format
             const data = {

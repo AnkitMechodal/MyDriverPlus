@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 export const BookingRequestScreenUser = ({ route, navigation }) => {
@@ -129,7 +129,8 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
 
 
     const axiosPostFeedBackSend = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        const url = `${API.BASE_URL}/userFeedBack/feedback`;
 
         // Get Register id
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
@@ -325,8 +326,8 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
-
+            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
+            const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
 
@@ -626,7 +627,8 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
     const axiosCancelBookingSurePostRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`;
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
 
             console.log("axiosCancelBookingSurePostRequest===>", url);
 

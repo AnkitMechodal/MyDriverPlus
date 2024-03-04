@@ -11,7 +11,7 @@ import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ConstValue, ScreenText } from '../../utils';
+import { API, ConstValue, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail, validateIsPhoneNumber } from '../../utils/commonfunction';
 import Styles from './style';
@@ -590,7 +590,8 @@ const ModalPaymentScreen = (props: Props) => {
 
 
     const axiosUserPaymentSupportPostRequest = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/paymentSupport/add';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/paymentSupport/add';
+        const url = `${API.BASE_URL}/paymentSupport/add`;
 
         // Prepare data in JSON format
         const data = {

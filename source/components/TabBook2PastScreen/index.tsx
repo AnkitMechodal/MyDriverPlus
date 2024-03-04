@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Colors, Fonts, Images } from "../../themes";
+import { API } from '../../utils';
 import TextComponent from '../Text';
 import Styles from "./style";
 
@@ -33,8 +34,10 @@ const TabBook2UpScreen = ({ route, navigation }) => {
 
                     console.log("requestData===>", JSON.stringify(requestData, null, 2));
 
+                    const url = `${API.BASE_URL}/CourierDriverHistory/courierdriverhistory`;
+
                     const response = await axios.post(
-                        'https://rideshareandcourier.graphiglow.in/api/CourierDriverHistory/courierdriverhistory',
+                        url,
                         requestData
                     );
 

@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -140,7 +140,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
 
     const axiosPostFeedBackSend = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        const url = `${API.BASE_URL}/userInfo/userInfo`;
 
         // Get Register id
 

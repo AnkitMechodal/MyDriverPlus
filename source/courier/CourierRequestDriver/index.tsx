@@ -9,7 +9,7 @@ import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ScreenText } from '../../utils';
+import { API, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -135,7 +135,8 @@ const CourierRequestDriverScreen = ({ route, navigation }) => {
 
 
     const axiosPostRideDetailsOfMap = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
 
         // Prepare data in JSON format
         const data = {
@@ -299,8 +300,8 @@ const CourierRequestDriverScreen = ({ route, navigation }) => {
 
         const storedLinkedId = await AsyncStorage.getItem('store_driver_id'); // store_ride_id
         if (storedLinkedId !== null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
-
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            const url = `${API.BASE_URL}/driverInfo/driverInfo`;
 
             // Prepare data in JSON format
             const data = {
@@ -386,7 +387,8 @@ const CourierRequestDriverScreen = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                // const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${userId}`;
 
                 console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 

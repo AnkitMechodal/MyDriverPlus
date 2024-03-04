@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -484,7 +484,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
                 console.log("get_last_pricerrrrrrrr===>", JSON.parse(get_last_price));
 
-                const url = 'https://rideshareandcourier.graphiglow.in/api/booking/booking';
+                // const url = 'https://rideshareandcourier.graphiglow.in/api/booking/booking';
+                const url = `${API.BASE_URL}/booking/booking`;
 
                 // Prepare data in JSON format
                 const data = {
@@ -767,7 +768,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
                 console.log("get_last_pricerrrrrrrr===>", JSON.parse(get_last_price));
 
-                const url = 'https://rideshareandcourier.graphiglow.in/api/booking/booking';
+                // const url = 'https://rideshareandcourier.graphiglow.in/api/booking/booking';
+                const url = `${API.BASE_URL}/booking/booking`;
 
                 // Prepare data in JSON format
                 const data = {

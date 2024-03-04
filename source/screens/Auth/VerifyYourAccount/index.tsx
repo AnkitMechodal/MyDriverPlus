@@ -12,7 +12,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
-import { ScreenText } from '../../../utils/index';
+import { API, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -174,7 +174,8 @@ const VerifyYourScreen = ({ route, navigation }) => {
 
         } else {
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
 
             const storedLinkedId = await AsyncStorage.getItem('user_id');
 

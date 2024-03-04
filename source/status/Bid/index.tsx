@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -178,7 +178,8 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
 
 
     const axiosPostFeedBackSend = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        const url = `${API.BASE_URL}/userFeedBack/feedback`;
 
         // Get Register id
 
@@ -424,7 +425,8 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
     const axiosCancelBiddingSurePostRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/AdjustBidAmount/AdjustAmount`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/AdjustBidAmount/AdjustAmount`
+            const url = `${API.BASE_URL}/AdjustBidAmount/AdjustAmount`;
 
             console.log("axiosCancelBiddingSurePostRequest===>", url);
 
@@ -469,8 +471,8 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
-
+            // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
 

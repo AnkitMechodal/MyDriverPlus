@@ -14,7 +14,7 @@ import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
 import TextInputComponent from '../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ConstValue, ScreenText } from '../../utils';
+import { API, ConstValue, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -350,7 +350,8 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
 
 
     const axiosPostRideDetailsRequest = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
 
         // Prepare data in JSON format
         const data = {
@@ -419,7 +420,8 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
         const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
 
         if (storedLinkedId !== null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            const url = `${API.BASE_URL}/driverInfo/driverInfo`;
 
             // GET DRIVER ID 
 
@@ -502,7 +504,8 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                //const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${userId}`;
 
                 console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 
@@ -720,7 +723,7 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                         />
 
                         {/* PICK && DROP JOIN LINE */}
-                        
+
                         {/* 
                         <Polyline
                             coordinates={[markerCoordinates1, markerCoordinates2]}

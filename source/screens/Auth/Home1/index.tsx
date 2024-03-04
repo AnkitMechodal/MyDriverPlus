@@ -75,7 +75,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
-import { ScreenText } from '../../../utils/index';
+import { API, ScreenText } from '../../../utils/index';
 import PreferredDriverDrawer from '../PreferredDriverDrawer';
 import Styles from './style';
 
@@ -1121,7 +1121,8 @@ function CustomDrawerContent(props) {
 
         if (type !== null && storedLinkedId !== null) {
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
 
             const data = {
                 facebook_id: JSON.parse(storedLinkedId)
@@ -1161,7 +1162,8 @@ function CustomDrawerContent(props) {
 
         } else {
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
 
             const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
@@ -1334,7 +1336,10 @@ const HomeOneScreen = (props: Props) => {
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.SEND_SMS,
-                    PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED,
                 ];
 
                 const grantedPermissions = await PermissionsAndroid.requestMultiple(permissionsToRequest);
@@ -1358,8 +1363,11 @@ const HomeOneScreen = (props: Props) => {
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
                     PermissionsAndroid.RESULTS.GRANTED &&
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED] ===
                     PermissionsAndroid.RESULTS.GRANTED
-
                 ) {
                     console.log('Both permissions are already granted.');
                 } else {

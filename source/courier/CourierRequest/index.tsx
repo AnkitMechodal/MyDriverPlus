@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -266,7 +266,8 @@ const CourierRequestScreen = ({ route, navigation }) => {
     }
 
     const axiosPostFeedBackSend = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        const url = `${API.BASE_URL}/userFeedBack/feedback`;
 
         // Get Register id
 
@@ -340,7 +341,8 @@ const CourierRequestScreen = ({ route, navigation }) => {
     const axiosCancelCourierSurePostRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
 
             console.log("axiosCancelCourierSurePostRequest===>", url);
 
@@ -723,7 +725,8 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
     const axiosGetOTPPostRequestSend = async () => {
         try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+            const url = `${API.BASE_URL}/otpGenerate/generateOTP`;
 
             console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 
