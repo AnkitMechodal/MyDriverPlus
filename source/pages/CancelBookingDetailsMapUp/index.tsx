@@ -10,7 +10,7 @@ import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ScreenText } from '../../utils';
+import { API, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from "../../utils/commonfunction";
 import Styles from './style';
@@ -156,7 +156,8 @@ const CancelBookingDetailsMapUp = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                // const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${userId}`;
 
                 console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 
@@ -202,7 +203,8 @@ const CancelBookingDetailsMapUp = ({ route, navigation }) => {
 
 
     const axiosPostRideDetailsOfMap = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
 
         // Prepare data in JSON format
         const data = {

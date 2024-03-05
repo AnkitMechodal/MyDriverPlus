@@ -19,7 +19,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail } from '../../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../../utils/index';
+import { API, ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 
@@ -166,7 +166,8 @@ const LoginWithMailScreen = (props: Props) => {
 
 
     const axiosPostRequestLoginMailOff = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+        const url = `${API.BASE_URL}/login/login`;
 
         // Prepare data in JSON format
         const data = {
@@ -219,7 +220,10 @@ const LoginWithMailScreen = (props: Props) => {
 
 
     const axiosPostRequestLoginMail = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+
+        const url = `${API.BASE_URL}/login/login`;
+        console.log("url=====>", url);
 
         // Prepare data in JSON format
         const data = {
@@ -300,9 +304,7 @@ const LoginWithMailScreen = (props: Props) => {
                     if (toggleCheckBox) {
                         axiosPostRequestLoginMail();
 
-
                     } else {
-
 
                         axiosPostRequestLoginMailOff();
                     }

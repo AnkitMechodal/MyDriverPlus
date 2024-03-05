@@ -386,7 +386,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const axiosCancelBiddingSurePostRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/AdjustBidAmount/AdjustAmount`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/AdjustBidAmount/AdjustAmount`
+            const url = `${API.BASE_URL}/AdjustBidAmount/AdjustAmount`;
 
             console.log("axiosCancelBiddingSurePostRequest===>", url);
 
@@ -428,8 +429,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
-
+            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
 

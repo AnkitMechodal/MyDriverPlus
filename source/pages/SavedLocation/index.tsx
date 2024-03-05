@@ -9,7 +9,7 @@ import ListEmptyComponent from '../../components/ListEmptyComponent';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ScreenText } from '../../utils';
+import { API, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -62,7 +62,8 @@ const SavedLocationScreen = (props: Props) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/saveLocations/fetchlocations`;
+                // const url = `https://rideshareandcourier.graphiglow.in/api/saveLocations/fetchlocations`;
+                const url = `${API.BASE_URL}/saveLocations/fetchlocations`;
 
                 // Prepare data in JSON format //
                 const data = {
@@ -128,7 +129,8 @@ const SavedLocationScreen = (props: Props) => {
     const axiosPostRemovedSelected = async (item) => {
 
         try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/saveLocationsRemove/locations/${item?._id}`;
+            //const url = `https://rideshareandcourier.graphiglow.in/api/saveLocationsRemove/locations/${item?._id}`;
+            const url = `${API.BASE_URL}/saveLocationsRemove/locations/${item?._id}`;
 
             await axios.delete(url, {
                 headers: {

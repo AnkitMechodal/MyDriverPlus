@@ -330,7 +330,8 @@ const CourierRequestPast = ({ route, navigation }) => {
     const axiosCancelCourierSurePostRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
 
             console.log("axiosCancelCourierSurePostRequest===>", url);
 
@@ -401,8 +402,9 @@ const CourierRequestPast = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
 
+            const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
             // AS COUIER 
             //const url = `https://rideshareandcourier.graphiglow.in/api/CourierStatus/checkCourier/${route.params.itemRIDEID_SENT}`
             // Y314WAGVFRKV

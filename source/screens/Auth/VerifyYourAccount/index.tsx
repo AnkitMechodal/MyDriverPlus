@@ -103,7 +103,8 @@ const VerifyYourScreen = ({ route, navigation }) => {
 
         if (type !== null && storedLinkedId !== null) {
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
 
             const data = {
                 facebook_id: JSON.parse(storedLinkedId)

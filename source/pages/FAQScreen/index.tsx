@@ -1,14 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Toast from "react-native-simple-toast";
 import FAQListComponent from '../../components/FAQList/index';
 import HeaderComponent from '../../components/Header';
 import StatusBarComponent from '../../components/StatusBar';
 import { Colors, Fonts, Images } from '../../themes/index';
+import { API } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
-import { FAQData } from '../../utils/dummyArray';
+import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
+
 
 type Props = {
     navigation: any
@@ -16,6 +20,72 @@ type Props = {
 
 const FAQScreen = (props: Props) => {
     const navigation = useNavigation();
+
+    const [FAQ, setFAQ] = useState<any>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const isConnected = await NetworkUtils.isNetworkAvailable();
+                if (isConnected) {
+                    axiosPostRequestFAQ();
+                } else {
+                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+                }
+            } catch (error) {
+                Toast.show("axios error", Toast.SHORT);
+            }
+        };
+
+        fetchData();
+
+        // Clear the interval when the component unmounts
+        return () => { };
+    }, []);
+
+
+
+    const axiosPostRequestFAQ = async () => {
+        const url = `${API.BASE_URL}/admin/show-faq`;
+
+        const data = {
+            type: "User"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+
+                    console.log("ALL_DATA===>", JSON.stringify(response?.data?.data, null, 2));
+                    setFAQ(response?.data?.data);
+
+                } else {
+                    // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                }
+
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+            });
+    }
+
+    const toggleAnswer = (index) => {
+        const newFAQ = FAQ.map((item, i) => {
+            if (i === index) {
+                return {
+                    ...item,
+                    selected: !item.selected
+                };
+            }
+            return item;
+        });
+        setFAQ(newFAQ);
+    }
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>
@@ -62,10 +132,11 @@ const FAQScreen = (props: Props) => {
 
                     <View style={Styles.viewDesc}>
                         <Text style={Styles.viewDescrition}>{ScreenText.Loreum}</Text>
-                    </View> */}
+                    </View> - FAQ */}
 
                     <FAQListComponent
-                        data={FAQData}
+                        changeLayout={(index) => toggleAnswer(index)}
+                        data={FAQ}
                     />
 
                 </View>

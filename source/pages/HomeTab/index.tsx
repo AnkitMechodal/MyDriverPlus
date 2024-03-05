@@ -12,7 +12,7 @@ import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes';
-import { ConstValue, ScreenText } from '../../utils';
+import { API, ConstValue, ScreenText } from '../../utils';
 import { useTheme } from '../../utils/ThemeContext';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
@@ -382,8 +382,8 @@ const HomeTabScreen = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/UserlocationsUpdate/updatelocations/${userId}`;
-
+                //const url = `https://rideshareandcourier.graphiglow.in/api/UserlocationsUpdate/updatelocations/${userId}`;
+                const url = `${API.BASE_URL}/UserlocationsUpdate/updatelocations/${userId}`;
 
                 console.log("current_latitude", user_latitude);
                 console.log("current_longitude", user_longitude);
@@ -443,7 +443,9 @@ const HomeTabScreen = ({ route, navigation }) => {
 
     const axiosBannerPostRequestList = async () => {
         try {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/banner/banner';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/banner/banner';
+            const url = `${API.BASE_URL}/banner/banner`;
+
             const response = await axios.post(url, null, {
             });
 
@@ -481,7 +483,8 @@ const HomeTabScreen = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/HomeScreenStatus/checkRide/${userId}`;
+                //const url = `https://rideshareandcourier.graphiglow.in/api/HomeScreenStatus/checkRide/${userId}`;
+                const url = `${API.BASE_URL}/HomeScreenStatus/checkRide/${userId}`;
 
                 console.log("urlurlurlurl-1", url);
                 console.log("urlurlurlurl-2", url);
@@ -601,7 +604,8 @@ const HomeTabScreen = ({ route, navigation }) => {
         // const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
         // if (storedLinkedId !== null) {
 
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
 
         // Prepare data in JSON format
         const data = {

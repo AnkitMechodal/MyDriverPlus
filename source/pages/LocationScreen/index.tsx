@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -360,7 +360,8 @@ const LocationScreen = (props: Props) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/saveLocations/fetchlocations`;
+                // const url = `https://rideshareandcourier.graphiglow.in/api/saveLocations/fetchlocations`;
+                const url = `${API.BASE_URL}/saveLocations/fetchlocations`;
 
                 // Prepare data in JSON format //
                 const data = {
@@ -426,7 +427,8 @@ const LocationScreen = (props: Props) => {
     const axiosPostRemovedSelected = async (item) => {
 
         try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/saveLocationsRemove/locations/${item?._id}`;
+            //const url = `https://rideshareandcourier.graphiglow.in/api/saveLocationsRemove/locations/${item?._id}`;
+            const url = `${API.BASE_URL}/saveLocationsRemove/locations/${item?._id}`;
 
             await axios.delete(url, {
                 headers: {
@@ -471,7 +473,8 @@ const LocationScreen = (props: Props) => {
     const axiosPostSaveFullLocationUpdate = async () => {
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
-        const url = 'https://rideshareandcourier.graphiglow.in/api/locations/locations';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/locations/locations';
+        const url = `${API.BASE_URL}/locations/locations`;
 
         try {
             if (storedLinkedId !== null) {

@@ -9,7 +9,7 @@ import ListEmptyComponent from '../../components/ListEmptyComponent';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ScreenText } from '../../utils';
+import { API, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -79,7 +79,8 @@ const PreferredScreen = (props: Props) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/preferredDriverShow/show`;
+                // const url = `https://rideshareandcourier.graphiglow.in/api/preferredDriverShow/show`;
+                const url = `${API.BASE_URL}/preferredDriverShow/show`;
 
                 // Prepare data in JSON format //
                 const data = {
@@ -139,8 +140,10 @@ const PreferredScreen = (props: Props) => {
     const axiosPostRemovedSelected = async (item) => {
 
         try {
-            const url
-                = `https://rideshareandcourier.graphiglow.in/api/preferredDriverRemove/remove/${item?.ObjectId}`;
+            // const url
+            //     = `https://rideshareandcourier.graphiglow.in/api/preferredDriverRemove/remove/${item?.ObjectId}`;
+
+            const url = `${API.BASE_URL}/preferredDriverRemove/remove/${item?.ObjectId}`;
 
             await axios.delete(url, {
                 headers: {

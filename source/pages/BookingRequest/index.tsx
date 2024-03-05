@@ -696,7 +696,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const axiosCancelBookingSurePostRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
 
             console.log("axiosCancelBookingSurePostRequest===>", url);
 

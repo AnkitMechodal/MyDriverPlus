@@ -15,7 +15,7 @@ import TextComponent from '../../components/Text';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ScreenText } from '../../utils/index';
+import { API, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -119,7 +119,8 @@ const SettingScreen = (props: Props) => {
 
     if (type !== null && storedLinkedId !== null) {
 
-      const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+      // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+      const url = `${API.BASE_URL}/userInfo/userInfo`;
 
       const data = {
         facebook_id: JSON.parse(storedLinkedId)
@@ -166,7 +167,8 @@ const SettingScreen = (props: Props) => {
 
     } else {
 
-      const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+      // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+      const url = `${API.BASE_URL}/userInfo/userInfo`;
 
       const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
@@ -243,7 +245,8 @@ const SettingScreen = (props: Props) => {
     if (storedLinkedId !== null) {
 
 
-      const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculate/calculateRating/${JSON.parse(storedLinkedId)}`;
+      // const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculate/calculateRating/${JSON.parse(storedLinkedId)}`;
+      const url = `${API.BASE_URL}/rattingCalculate/calculateRating/${JSON.parse(storedLinkedId)}`;
 
       await axios.get(url, {
         headers: {
@@ -304,7 +307,8 @@ const SettingScreen = (props: Props) => {
       if (storedLinkedId !== null) {
         const userId = JSON.parse(storedLinkedId);
 
-        const url = `https://rideshareandcourier.graphiglow.in/api/userAccountDelete/user/${userId}`
+        // const url = `https://rideshareandcourier.graphiglow.in/api/userAccountDelete/user/${userId}`
+        const url = `${API.BASE_URL}/userAccountDelete/user/${userId}`;
 
         console.log('DELETE:', url);
         console.log('DELETE:', url);

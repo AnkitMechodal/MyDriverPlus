@@ -15,7 +15,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail } from '../../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../../utils/index';
+import { API, ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -60,7 +60,8 @@ const ForgotPasswordScreen = (props: Props) => {
 
 
     const axiosPostRequestEmailOTPSent = async (email: any) => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/usersEmailOTP/sendOTP';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/usersEmailOTP/sendOTP';
+        const url = `${API.BASE_URL}/usersEmailOTP/sendOTP`;
 
         // Prepare data in JSON format
         const data = {
@@ -129,7 +130,8 @@ const ForgotPasswordScreen = (props: Props) => {
     }
 
     const axiosPostRequestEmailRegCheck = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+        const url = `${API.BASE_URL}/userInfo/userInfo`;
 
         // Prepare data in JSON format
         const data = {

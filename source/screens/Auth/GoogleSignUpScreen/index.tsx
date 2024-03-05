@@ -15,7 +15,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail, validateIsPhoneNumber } from '../../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../../utils/index';
+import { API, ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -549,7 +549,8 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
     }
 
     const axiosPostRequestCreateAccount = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/users/register';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/users/register';
+        const url = `${API.BASE_URL}/users/register`;
 
         // Prepare data in JSON format
         const data = {

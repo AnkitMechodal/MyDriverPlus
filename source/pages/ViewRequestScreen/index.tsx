@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, FlatList, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../components/Button';
@@ -9,7 +9,7 @@ import ListEmptyComponent from '../../components/ListEmptyComponent';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ScreenText } from '../../utils';
+import { API, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -85,7 +85,7 @@ const ViewRequestScreen = ({ route, navigation }) => {
     }
 
 
-   
+
 
     const axiosPostGetRequestDriverList = async () => {
         try {
@@ -93,7 +93,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // if (storedLinkedId !== null) {
             // const userId = JSON.parse(storedLinkedId);
-            const url = `https://rideshareandcourier.graphiglow.in/api/BiddingRide/bidding`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BiddingRide/bidding`;
+            const url = `${API.BASE_URL}/BiddingRide/bidding`;
 
             // Prepare data in JSON format
             const data = {
@@ -235,7 +236,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // if (storedLinkedId !== null) {
             // const userId = JSON.parse(storedLinkedId);
-            const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            const url = `${API.BASE_URL}/BinddingStatus/status`;
 
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
@@ -307,7 +309,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // if (storedLinkedId !== null) {
             // const userId = JSON.parse(storedLinkedId);
-            const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            const url = `${API.BASE_URL}/BinddingStatus/status`;
 
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
@@ -373,7 +376,8 @@ const ViewRequestScreen = ({ route, navigation }) => {
 
             // if (storedLinkedId !== null) {
             // const userId = JSON.parse(storedLinkedId);
-            const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            const url = `${API.BASE_URL}/BinddingStatus/status`;
 
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {

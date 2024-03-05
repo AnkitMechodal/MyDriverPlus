@@ -19,7 +19,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsPhoneNumber } from '../../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../../utils/index';
+import { API, ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -390,7 +390,8 @@ const LoginWithMobileScreen = (props: Props) => {
 
 
     const axiosPostRequestLoginMobileOff = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+        const url = `${API.BASE_URL}/login/login`;
 
         // Prepare data in JSON format
         const data = {
@@ -440,7 +441,8 @@ const LoginWithMobileScreen = (props: Props) => {
     };
 
     const axiosPostRequestLoginMobile = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/login/login';
+        const url = `${API.BASE_URL}/login/login`;
 
         // Prepare data in JSON format
         const data = {

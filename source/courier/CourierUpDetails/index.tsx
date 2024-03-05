@@ -339,7 +339,8 @@ const CourierUpDetails = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                //const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${userId}`;
 
                 console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 

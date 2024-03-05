@@ -13,7 +13,7 @@ import TextInputComponent from '../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail, validateIsPhoneNumber } from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -547,7 +547,8 @@ const ContactUsScreen = (props: Props) => {
     }
 
     const axiosUserContactUsPostRequest = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/contact/contact';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/contact/contact';
+        const url = `${API.BASE_URL}/contact/contact`;
 
         // Prepare data in JSON format
         const data = {

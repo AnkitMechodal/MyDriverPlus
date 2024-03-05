@@ -12,7 +12,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../../utils/index';
+import { API, ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -125,7 +125,8 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
 
 
     const axiosPostRequestEmailChecked = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/usersEmailVerify/emailVerify';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/usersEmailVerify/emailVerify';
+        const url = `${API.BASE_URL}/usersEmailVerify/emailVerify`;
 
         // Prepare data in JSON format
         const data = {
@@ -226,7 +227,8 @@ const OTPFromEmailScreen = ({ route, navigation }) => {
     }
 
     const axiosPostRequestEmailOTPSent = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/usersEmailOTP/sendOTP';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/usersEmailOTP/sendOTP';
+        const url = `${API.BASE_URL}/usersEmailOTP/sendOTP`;
 
         // Prepare data in JSON format
         const data = {

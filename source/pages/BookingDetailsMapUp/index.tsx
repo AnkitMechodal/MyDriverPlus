@@ -178,7 +178,8 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
 
         const storedLinkedId = await AsyncStorage.getItem('store_driver_id');
         if (storedLinkedId !== null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            const url = `${API.BASE_URL}/driverInfo/driverInfo`;
 
             // Prepare data in JSON format
             const data = {

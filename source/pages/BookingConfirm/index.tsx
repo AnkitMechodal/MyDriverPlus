@@ -514,7 +514,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
                     // DriverID: "65b265d1e96ba17261218f34",      
-                    DriverID: "0000",      // When Any Doctor Accept Booking   // How to Get
+                    // DriverID: "0000",      // When Any Doctor Accept Booking   // How to Get
                     status: "Pending"
                 };
 
@@ -797,7 +797,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
                     // DriverID: "65b265d1e96ba17261218f34",    
-                    DriverID: "0000",        // When Any Doctor Accept Booking   // How to Get
+                    // DriverID: "0000",        // When Any Doctor Accept Booking   // How to Get
                     // status: "Accept",
                     status: "Pending"
                 };
@@ -942,7 +942,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
                 console.log("get_last_pricerrrrrrrr===>", JSON.parse(get_last_price));
 
-                const url = 'https://rideshareandcourier.graphiglow.in/api/booking/booking';
+                // const url = 'https://rideshareandcourier.graphiglow.in/api/booking/booking';
+                const url = `${API.BASE_URL}/booking/booking`;
 
                 // Prepare data in JSON format
                 const data = {
@@ -970,7 +971,7 @@ const BookingConfirmScreen = ({ route, navigation }) => {
                     current_latitude: route?.params?.itemGetCurrentLatitudeConfrim,     // User Current Locations
                     current_longitude: route?.params?.itemGetCurrentLongitudeConfrim,    // User Current Locations
                     // DriverID: "65b265d1e96ba17261218f34",    
-                    DriverID: "0000",        // When Any Doctor Accept Booking   // How to Get
+                    // DriverID: "0000",        // When Any Doctor Accept Booking   // How to Get
                     status: "Pending"
                 };
 
@@ -1097,7 +1098,8 @@ const BookingConfirmScreen = ({ route, navigation }) => {
 
 
     const axiosPostSetDataBooking = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/fetchVehical/Vehical';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/fetchVehical/Vehical';
+        const url = `${API.BASE_URL}/fetchVehical/Vehical`;
 
         // Prepare data in JSON format
         const data = {

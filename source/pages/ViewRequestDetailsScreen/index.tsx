@@ -10,7 +10,7 @@ import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ScreenText } from '../../utils';
+import { API, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -155,7 +155,8 @@ const ViewRequestDetailsScreen = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                //const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${userId}`;
 
                 console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 
@@ -209,7 +210,8 @@ const ViewRequestDetailsScreen = ({ route, navigation }) => {
 
     const axiosUserPostDriverInfoRequest = async () => {
 
-        const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+        const url = `${API.BASE_URL}/driverInfo/driverInfo`;
 
         // GET DRIVER ID 
 
@@ -330,7 +332,8 @@ const ViewRequestDetailsScreen = ({ route, navigation }) => {
 
             // if (storedLinkedId !== null) {
             // const userId = JSON.parse(storedLinkedId);
-            const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            const url = `${API.BASE_URL}/BinddingStatus/status`;
 
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
@@ -423,7 +426,8 @@ const ViewRequestDetailsScreen = ({ route, navigation }) => {
 
             // if (storedLinkedId !== null) {
             // const userId = JSON.parse(storedLinkedId);
-            const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            const url = `${API.BASE_URL}/BinddingStatus/status`;
 
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {

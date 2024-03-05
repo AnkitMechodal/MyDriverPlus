@@ -14,7 +14,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../../utils/index';
+import { API, ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -187,7 +187,8 @@ const MobileVerficationScreen = ({ route, navigation }) => {
     // WORK - A
     const axiosPostRequestTwiloUpdate = async (generatedOTP: any) => {
         try {
-            const newUrl = `https://rideshareandcourier.graphiglow.in/api/UpdateMobileNumberVerify/otp-update`;
+            // const newUrl = `https://rideshareandcourier.graphiglow.in/api/UpdateMobileNumberVerify/otp-update`;
+            const newUrl = `${API.BASE_URL}/UpdateMobileNumberVerify/otp-update`;
 
             const data = {
                 mobilenumber: route?.params?.itemOTPNumber,
@@ -245,7 +246,8 @@ const MobileVerficationScreen = ({ route, navigation }) => {
 
     const axiosPostRequestOTPSMS = async () => {
 
-        const url = 'https://rideshareandcourier.graphiglow.in/api/usersMobileVerify/numberVerify';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/usersMobileVerify/numberVerify';
+        const url = `${API.BASE_URL}/usersMobileVerify/numberVerify`;
 
         // Prepare data in JSON format
         const data = {

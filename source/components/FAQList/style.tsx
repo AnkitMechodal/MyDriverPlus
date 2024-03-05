@@ -12,7 +12,7 @@ const Styles = StyleSheet.create({
     },
     viewItemImage1: {
         width: wp(5),
-        alignSelf: 'center',
+        flex: 1,
         color: Colors.white,
     },
     viewItemImage2: {
@@ -29,7 +29,8 @@ const Styles = StyleSheet.create({
         marginTop: wp(5),
         marginHorizontal: wp(4),
         opacity: 0.8,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     descExapnd: {
         height: "auto",
@@ -42,7 +43,7 @@ const Styles = StyleSheet.create({
         fontFamily: Fonts.PoppinsRegular,
         fontWeight: "600",
         fontSize: wp(3.5),
-        marginHorizontal: wp(2),
+        marginHorizontal: wp(3),
         color: Colors.white
     }
 });

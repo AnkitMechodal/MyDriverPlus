@@ -14,7 +14,7 @@ import TextInputComponent from '../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail, validateIsPhoneNumber } from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -769,7 +769,8 @@ const ProfileUpdateScreen = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/updateProfile/updateProfile/${userId}`;
+                //const url = `https://rideshareandcourier.graphiglow.in/api/updateProfile/updateProfile/${userId}`;
+                const url = `${API.BASE_URL}/updateProfile/updateProfile/${userId}`;
 
                 const data = new FormData();
                 data.append('username', name || '');

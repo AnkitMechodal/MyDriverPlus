@@ -12,7 +12,7 @@ import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text';
 import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ConstValue, ScreenText } from '../../utils';
+import { API, ConstValue, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -253,7 +253,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
         if (type !== null && storedLinkedId !== null) {
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
 
             const data = {
                 facebook_id: JSON.parse(storedLinkedId)
@@ -283,7 +284,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
         } else {
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
 
             const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
@@ -327,10 +329,11 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
         }
     }
-    
+
 
     const axiosPostRideDetailsRequest1 = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
 
         // Prepare data in JSON format
         const data = {
@@ -405,7 +408,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
 
     const axiosPostRideDetailsRequest = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
 
         // Prepare data in JSON format
         const data = {
@@ -589,7 +593,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
             console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
             console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/redeem/coin';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/redeem/coin';
+            const url = `${API.BASE_URL}/redeem/coin`;
 
             await axios.post(url, data, {
                 headers: {
@@ -660,7 +665,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
         };
         console.log("CouponCodeData==>", JSON.stringify(data, null, 2));
 
-        const url = 'https://rideshareandcourier.graphiglow.in/api/couponCode/checkCoupon';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/couponCode/checkCoupon';
+        const url = `${API.BASE_URL}/couponCode/checkCoupon`;
 
         await axios.post(url, data, {
             headers: {
@@ -786,7 +792,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
     const axiosPostRideStatusAccepted1 = async () => {
 
-        const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        const url = `${API.BASE_URL}/bookingPaymentStatus/bookingPayment`;
 
         // Prepare data in JSON format
         const data = {
@@ -821,7 +828,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
     const axiosPostRideStatusAccepted = async () => {
 
-        const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        const url = `${API.BASE_URL}/bookingPaymentStatus/bookingPayment`;
 
         // Prepare data in JSON format
         const data = {
@@ -887,7 +895,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
         if (storedLinkedId !== null) {
 
-            const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
+            const url = `${API.BASE_URL}/ratting/rateDriver`;
 
             // Prepare data in JSON format
             const data = {
@@ -965,7 +974,8 @@ const PaymentCompleteUp = ({ route, navigation }) => {
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
         if (storedLinkedId !== null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
+            const url = `${API.BASE_URL}/webStriperedirect/stripeWeb`;
 
             // Prepare data in JSON format
             const data = {

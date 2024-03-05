@@ -12,7 +12,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils from '../../../utils/commonfunction';
-import { ScreenText } from '../../../utils/index';
+import { API, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -101,7 +101,8 @@ const VerifyYourScreenMail = ({ route, navigation }) => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_id_mail');
         if (storedLinkedId !== null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/email_detail/details';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/email_detail/details';
+            const url = `${API.BASE_URL}/email_detail/details`;
 
             // Prepare data in JSON format
             const data = {

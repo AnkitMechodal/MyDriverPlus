@@ -12,7 +12,7 @@ import { Colors, Fonts, Images } from '../../../themes/index';
 import { useTheme } from '../../../utils/ThemeContext';
 import CommonStyle from '../../../utils/commonStyle';
 import NetworkUtils, { validateIsEmail } from '../../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../../utils/index';
+import { API, ConstValue, ScreenText } from '../../../utils/index';
 import Styles from './style';
 
 
@@ -134,7 +134,8 @@ const CreateNewPasswordScreen = ({ route, navigation }) => {
 
 
     const axiosPostRequestSubmitConfirm = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/forgetPassword/resetPassword';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/forgetPassword/resetPassword';
+        const url = `${API.BASE_URL}/forgetPassword/resetPassword`;
 
         // Prepare data in JSON format
         const data = {

@@ -6,7 +6,7 @@ import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import ListEmptyComponent from '../../components/ListEmptyComponent';
 import TextComponent from '../../components/Text';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { ScreenText } from '../../utils';
+import { API, ScreenText } from '../../utils';
 import Styles from './style';
 
 type Props = {
@@ -39,8 +39,10 @@ const Tab4CourierScreen = (props: Props) => {
 
                     console.log("requestData===>", JSON.stringify(requestData, null, 2));
 
+                    const url = `${API.BASE_URL}/CourierDriverHistory/courierdriverhistory`;
+
                     const response = await axios.post(
-                        'https://rideshareandcourier.graphiglow.in/api/CourierDriverHistory/courierdriverhistory',
+                        url,
                         requestData
                     );
 
