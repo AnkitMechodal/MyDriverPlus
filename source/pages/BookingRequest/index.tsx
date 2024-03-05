@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 type Props = {
@@ -130,7 +130,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
 
     const axiosPostFeedBackSend = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        const url = `${API.BASE_URL}/userFeedBack/feedback`;
 
         // Get Register id
 
@@ -300,8 +301,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
-
+            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
 
@@ -518,7 +519,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
     const axiosPendingPaymentRequestArrived = async () => {
         try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment`
+            const url = `${API.BASE_URL}/bookingPaymentStatus/bookingPayment`;
 
             // Prepare data in JSON format
             const data = {
@@ -572,7 +574,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const axiosRideArrivedOTPStatusRequestCheck = async (OTPGenerated) => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/verifyOTP/verifyOTP`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/verifyOTP/verifyOTP`
+            const url = `${API.BASE_URL}/verifyOTP/verifyOTP`;
 
             console.log("TruePostRequestOTP===>", url);
 
@@ -630,7 +633,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
     const axiosGetOTPPostRequestSend = async () => {
         try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+            // const url = `https://rideshareandcourier.graphiglow.in/api/otpGenerate/generateOTP`;
+            const url = `${API.BASE_URL}/otpGenerate/generateOTP`;
 
             console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 

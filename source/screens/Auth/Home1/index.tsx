@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import auth from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth'; // todo
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -101,16 +101,34 @@ const MyComponent = ({ navigation }) => {
     const SignInWithGoogle = async () => {
         // BackHandler.exitApp();
         // navigation.navigate("LoginSignUp");
+
+        // await AsyncStorage.clear();
         try {
+            // await AsyncStorage.removeItem('user_register_id');
+            // await AsyncStorage.clear();
+
+            // setModalVisible(false);
+
+            // Navigate to "LoginSignUp" screen
+            // navigation.navigate("LoginSignUp");
+
+            // Exit the app (optional)
             BackHandler.exitApp();
+            // navigation.navigate("LoginSignUp");
+
+            // Alert.alert('Success', 'Data cleared successfully');
+
+            // const keys = await AsyncStorage.getAllKeys();
+            // await AsyncStorage.multiRemove(keys);
 
             await AsyncStorage.clear();
             await GoogleSignin.revokeAccess();
             await GoogleSignin.signOut();
             await auth().signOut();
-            // setUserInfo(null);
+
         } catch (error: any) {
-            console.log("error===>", error);
+
+            console.log("error11111===>", error);
         }
     };
 
@@ -147,7 +165,6 @@ const MyComponent = ({ navigation }) => {
         </View >
     );
 }
-
 
 
 const EditProfileStack = () => {
@@ -1313,17 +1330,66 @@ const HomeOneScreen = (props: Props) => {
         }
     }
 
-    // Auto Check Permission
+    // Auto Check Permission // other 
     useEffect(() => {
         // Zoom to the marker using animateToRegion when markerCoordinate changes
         console.log("backAction==>" + "backAction");
         requestPermissions();
     }, []);
 
+    // 13
+    useEffect(() => {
+        if (Platform.OS === 'android' && Platform.Version >= 30) {
+            try {
+                requestAllPermissions();
+            } catch (error) {
+                console.log('errorerrorerrorerror:', error);
+            }
+        }
+    }, []);
+
     const requestPermissions = async () => {
         const permissions = await GetAllPermissions();
         console.log('Permissions:', permissions);
     };
+
+    const requestAllPermissions = async () => {
+        try {
+            const permissions = [
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
+                PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                PermissionsAndroid.PERMISSIONS.SEND_SMS,
+                PermissionsAndroid.PERMISSIONS.MANAGE_EXTERNAL_STORAGE,
+                // Add more permissions as needed
+            ];
+
+            for (const permission of permissions) {
+                const granted = await PermissionsAndroid.request(permission, {
+                    title: 'Permission Request',
+                    message: 'This app needs access to your storage to function properly.',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                });
+
+                if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+                    console.log(`Permission ${permission} denied`);
+                    // Handle denial of permission for each permission accordingly
+                } else {
+                    console.log(`Permission ${permission} granted`);
+                    // Permission granted, you can proceed with your app logic here
+                }
+            }
+        } catch (err) {
+            console.warn(err);
+            // Handle errors here
+        }
+    }
 
     const GetAllPermissions = async () => {
         try {
@@ -1336,10 +1402,11 @@ const HomeOneScreen = (props: Props) => {
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.SEND_SMS,
-                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
-                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
-                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED,
+                    // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+                    // PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+                    // PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+                    // PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED,
+                    // PermissionsAndroid.PERMISSIONS.MANAGE_EXTERNAL_STORAGE,
                 ];
 
                 const grantedPermissions = await PermissionsAndroid.requestMultiple(permissionsToRequest);
@@ -1359,15 +1426,18 @@ const HomeOneScreen = (props: Props) => {
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] ===
                     PermissionsAndroid.RESULTS.GRANTED &&
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.SEND_SMS] ===
-                    PermissionsAndroid.RESULTS.GRANTED &&
-                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
-                    PermissionsAndroid.RESULTS.GRANTED &&
-                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] ===
-                    PermissionsAndroid.RESULTS.GRANTED &&
-                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
-                    PermissionsAndroid.RESULTS.GRANTED &&
-                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED] ===
                     PermissionsAndroid.RESULTS.GRANTED
+                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
+                    // PermissionsAndroid.RESULTS.GRANTED &&
+                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] ===
+                    // PermissionsAndroid.RESULTS.GRANTED &&
+                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
+                    // PermissionsAndroid.RESULTS.GRANTED &&
+                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED] ===
+                    // PermissionsAndroid.RESULTS.GRANTED &&
+                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.MANAGE_EXTERNAL_STORAGE] ===
+                    // PermissionsAndroid.RESULTS.GRANTED
+
                 ) {
                     console.log('Both permissions are already granted.');
                 } else {

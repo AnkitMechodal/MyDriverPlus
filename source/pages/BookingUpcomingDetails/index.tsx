@@ -9,6 +9,7 @@ import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
 import { Colors, Fonts, Images } from '../../themes/index';
+import { API } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
 import Styles from './style';
@@ -133,7 +134,8 @@ const BookingUpDetails = ({ route, navigation }) => {
 
         const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
         if (storedLinkedId !== null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            const url = `${API.BASE_URL}/driverInfo/driverInfo`;
 
             // Prepare data in JSON format
             const data = {

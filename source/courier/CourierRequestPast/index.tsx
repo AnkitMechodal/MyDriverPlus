@@ -662,7 +662,7 @@ const CourierRequestPast = ({ route, navigation }) => {
 
     const axiosRequestArrivedPICKOTP = async () => {
         try {
-            const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
+            //const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
 
             const data = {
                 id: route?.params?.itemRIDER_ID_SENT

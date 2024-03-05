@@ -15,7 +15,7 @@ import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from '../../utils/commonfunction';
-import { ConstValue, ScreenText } from '../../utils/index';
+import { API, ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 
@@ -674,7 +674,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
         const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
         if (storedLinkedId !== null) {
-            const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
+            const url = `${API.BASE_URL}/driverInfo/driverInfo`;
 
             // Prepare data in JSON format
             const data = {
@@ -760,7 +761,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
-                const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                //const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
+                const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${userId}`;
 
                 console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
 
@@ -833,7 +835,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const axiosCancelBookingSurePostRequest = async () => {
         try {
 
-            const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
 
             console.log("axiosCancelBookingSurePostRequest===>", url);
 
@@ -926,10 +929,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         }
     }
     const axiosPostFeedBackSend = async () => {
-        const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/userFeedBack/feedback';
+        const url = `${API.BASE_URL}/userFeedBack/feedback`;
 
         // Get Register id
-
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
         if (storedLinkedId !== null) {
             // Prepare data in JSON format
