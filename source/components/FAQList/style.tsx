@@ -22,7 +22,7 @@ const Styles = StyleSheet.create({
         transform: [{ rotate: '180deg' }]
     },
     viewMainConatiner: {
-        height: wp(15),
+        height: "auto", // wp(15)
         backgroundColor: "#00008b",
         borderTopRightRadius: wp(3),
         borderTopLeftRadius: wp(3),

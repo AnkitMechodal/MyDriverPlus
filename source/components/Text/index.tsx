@@ -20,8 +20,9 @@ type TextProps = {
     isTextEnd: boolean
     colorEnd: any,
     sizeEnd: any,
-    numberOfLines: any
+    numberOfLines: number
     marginRight: any
+    ellipsizeMode:any
 
 }
 const TextComponent = (props: TextProps) => {
@@ -45,7 +46,8 @@ const TextComponent = (props: TextProps) => {
         marginHorizontal,
         marginTop,
         marginRight,
-        numberOfLines
+        numberOfLines,
+        ellipsizeMode
     } = props
 
     return (
@@ -62,12 +64,14 @@ const TextComponent = (props: TextProps) => {
             marginVertical: marginVertical,
             marginHorizontal: marginHorizontal,
             marginTop: marginTop,
-            marginRight: marginRight
+            marginRight: marginRight,
 
         }}
             // numberOfLines={numberOfLines || 2}
             // ellipsizeMode='tail' // other use in screen
-            onPress={onPress}>{title}
+            onPress={onPress}
+            numberOfLines={numberOfLines}
+            ellipsizeMode={ellipsizeMode}>{title}
 
             {props.isTextEnd ?
                 <Text style={{

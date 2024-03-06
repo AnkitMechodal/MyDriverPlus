@@ -30,6 +30,10 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
     const [toggleFeedBack, setToggleFeedBack] = useState(false);
 
 
+    const [isPaynow, setPaynow] = useState(true);
+    const [isFeedback, setFeedback] = useState(true);
+
+
     // All Date Status Date
     // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
     // TODO : Modal 
@@ -326,7 +330,7 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
+            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
             const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
@@ -340,6 +344,7 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                     if (response.status === 200
                         && response?.data?.message === 'Ride Status Derived Successful') {
                         // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+
                         statusCheack = response?.data?.matchingUsers?.Status;
                         dateCheack = response?.data?.matchingUsers?.date;
 
@@ -387,8 +392,9 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKOTP(OTPStatus);
+
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -398,12 +404,15 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                         // if (OTPStatus !== null) {
                         //     setPICKOTP(OTPStatus);
                         //     setToggleArrived(true);
+
                         //     // Driver arrived your location
                         //     setDRIVERSTATUS("Driver Arrived Your Location");
                         // } else {
                         //     setPICKOTP("");
                         //     setToggleArrived(false);
                         // }
+
+
                         if (OTPVerify === "Pending") {
                             setToggleOTP(false);
 
@@ -436,16 +445,20 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                             setTogglePaymentCompleted(false);
                         } else {
                             setTogglePaymentCompleted(true);
+                            setPaynow(false)
                         }
 
                         if (RideStatusArrived === "Complete") {
                             setToggleRideCompleted(true);
+                            setFeedback(false);
+
                             setDRIVERSTATUS("Ride Complete");
                         } else {
                             setToggleRideCompleted(false);
                         }
 
                         // TODO :
+
                         console.log("paymentStatus****===>", paymentStatus);
 
                         // 1
@@ -467,6 +480,7 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
 
                             //  Arrived OTP  
                             // axiosGetOTPPostRequest(); - CALL 15SEC - WORKING TEST
+
                             // Ride Started , Enjoy your ride
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
@@ -475,11 +489,13 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
-                        } else if (statusCheack === "RideStart") {
+                        } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
                             // setDRIVERSTATUS("Ride Complete");
+
                             // Call Booking Complete API As Pending
                             // axiosPendingPaymentPostRequest();
+
                         } else {
                             setToggleAccepted(false);
                             // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
@@ -491,14 +507,19 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                         // } else {
                         //     setTogglePaymentCompleted(false);
                         // }
+
                         // 3 
                         // if (rideStatus === "Completed") {
                         //     setToggleRideCompleted(true);
                         //     setDRIVERSTATUS("Ride Complete");
+
                         //     // setToggleFeedBack(true);
                         // } else {
                         //     setToggleRideCompleted(false);
                         // }
+
+
+
                     } else {
                         setToggleAccepted(false);
                         // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
@@ -722,7 +743,6 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                         fontSizeRight={wp(3.5)}
                         marginTopRight={wp(3)}
                         onPressRightEnd={toggleModalCancel}
-
                         title={"Booking Status"}
                         fontSize={wp(4)}
                         onPress={() => navigation.goBack()} />
@@ -977,7 +997,7 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.PayNow}
+                                title={isPaynow ? "" : ScreenText.PayNow}
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() => navigation.navigate("BookingDetailsMap", {
                                     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
@@ -1107,7 +1127,7 @@ export const BookingRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.Feedback}
+                                title={isFeedback ? "" : ScreenText.Feedback}
                                 textDecorationLine={'underline'}
                                 onPress={toggleModalFeedback}
                                 fontWeight="400"

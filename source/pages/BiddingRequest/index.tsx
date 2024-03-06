@@ -72,6 +72,10 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const [currentTime, setCurrentTime] = useState(moment().format('HH:mm:ss'));
 
 
+    const [isPaynow, setPaynow] = useState(false);
+    const [isFeedback, setFeedback] = useState(false);
+
+
     //QUICK
     const [viewRequest, setViewRequest] = useState(ScreenText.ViewRequest);
 
@@ -491,8 +495,9 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKOTP(OTPStatus);
+
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -532,6 +537,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                                 setIsArriedTrueOTPDate(OTPVerifyTimeArrived);
                             }
 
+
                         } else {
                             setToggleOTP(false);
                             setDRIVERSTATUS("Driver Started Waiting Timer");
@@ -542,10 +548,13 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             setTogglePaymentCompleted(false);
                         } else {
                             setTogglePaymentCompleted(true);
+                            setPaynow(false)
                         }
 
                         if (RideStatusArrived === "Complete") {
                             setToggleRideCompleted(true);
+                            setFeedback(false);
+
                             setDRIVERSTATUS("Ride Complete");
                         } else {
                             setToggleRideCompleted(false);
@@ -583,7 +592,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
-                        } else if (statusCheack === "RideStart") {
+                        } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
                             // setDRIVERSTATUS("Ride Complete");
 
@@ -1016,7 +1025,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.PayNow}
+                                title={isPaynow ? "" : ScreenText.PayNow}
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("BookingDetailsMap", {

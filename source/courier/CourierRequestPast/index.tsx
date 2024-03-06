@@ -494,8 +494,8 @@ const CourierRequestPast = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKOTP(OTPStatus);
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -618,7 +618,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setToggleDropOTP(true); // other  CALL TO CHECK
 
-                        } else if (statusCheack === "RideStart") {
+                        } else if (statusCheack === "Complete") {
 
                         } else {
                             setToggleAccepted(false);

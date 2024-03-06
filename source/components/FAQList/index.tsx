@@ -29,52 +29,58 @@ const FAQListComponent = (props: FAQListProps) => {
             renderItem={({ item, index }) => {
                 return (
                     <View>
-                        <View style={Styles.viewMainConatiner}>
+                        <TouchableOpacity
+                            onPress={() => changeLayout(index)}
+                        >
+                            <View style={Styles.viewMainConatiner}>
+                                <View>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={item.question}
+                                        textDecorationLine={'none'}
+                                        fontWeight="600"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        marginHorizontal={wp(5)}
+                                        numberOfLines={3}
+                                        ellipsizeMode={"tail"}
+                                        textAlign='left'
+                                        marginVertical={hp(2)}
+                                    />
+                                </View>
 
-                            <View>
-                                <TextComponent
-                                    color={Colors.white}
-                                    title={item.question}
-                                    textDecorationLine={'none'}
-                                    fontWeight="600"
-                                    fontSize={wp(4)}
-                                    fontFamily={Fonts.PoppinsSemiBold}
-                                    marginHorizontal={wp(5)}
-                                    textAlign='left'
-                                    marginVertical={hp(2)}
-                                />
+                                <View>
+                                    <TouchableOpacity
+                                        style={{
+                                            flex: 1,
+                                            justifyContent: 'center',
+                                            marginHorizontal: wp(5)
+                                        }}
+                                        onPress={() => changeLayout(index)}
+                                    >
+                                        {item?.selected ? <Image
+                                            source={Images.downArrow}
+                                            resizeMode="contain"
+                                            style={Styles.viewItemImage1}
+                                        /> : <Image
+                                            source={Images.downArrow}
+                                            resizeMode="contain"
+                                            style={Styles.viewItemImage1}
+                                        />}
+
+                                    </TouchableOpacity>
+                                </View>
+
+
+
                             </View>
-
-                            <View>
-                                <TouchableOpacity
-                                    style={{
-                                        flex: 1,
-                                        justifyContent: 'center',
-                                        marginHorizontal: wp(5)
-                                    }}
-                                    onPress={() => changeLayout(index)}
-                                >
-                                    {item?.selected ? <Image
-                                        source={Images.downArrow}
-                                        resizeMode="contain"
-                                        style={Styles.viewItemImage1}
-                                    /> : <Image
-                                        source={Images.downArrow}
-                                        resizeMode="contain"
-                                        style={Styles.viewItemImage1}
-                                    />}
-
-                                </TouchableOpacity>
+                            <View style={{ height: item?.selected ? null : 0, overflow: 'hidden' }}>
+                                <View style={Styles.descExapnd}>
+                                    <Text style={Styles.descText}>{item.answer}</Text>
+                                </View>
                             </View>
+                        </TouchableOpacity>
 
-
-
-                        </View>
-                        <View style={{ height: item?.selected ? null : 0, overflow: 'hidden' }}>
-                            <View style={Styles.descExapnd}>
-                                <Text style={Styles.descText}>{item.answer}</Text>
-                            </View>
-                        </View>
                     </View>
 
                 );

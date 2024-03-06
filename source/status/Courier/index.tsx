@@ -70,6 +70,11 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
 
 
+
+    const [isPaynow, setPaynow] = useState(true);
+    const [isFeedback, setFeedback] = useState(true);
+
+
     // TODO :
     const [isFocusedFeedBack, setIsFocusedFeedBack] = useState(false);
     const refFeedBack = useRef<any>(null);
@@ -423,7 +428,6 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
             Toast.show("axios error", Toast.SHORT);
         }
     }
-
     const axiosCheckGetRideStatusRequest = async () => { //010101
         try {
 
@@ -506,7 +510,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             setDROPOTP("");
                             // setToggleArrivedDrop(false); //00
                         } else {
-                            setDROPOTP(DropOTPArrived);
+                            setDROPOTP(DropOTPArrived); //last
                             // setToggleArrivedDrop(true); //00
 
                             // Driver arrived your location
@@ -519,8 +523,8 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKOTP(OTPStatus);
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -596,11 +600,13 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             setTogglePaymentCompleted(false);
                         } else {
                             setTogglePaymentCompleted(true);
+                            setPaynow(false);
                         }
 
 
                         if (RideStatusArrived === "Complete") {
                             setToggleDelivered(true);
+                            setFeedback(false);
                             setDRIVERSTATUS("Ride Complete");
                         } else {
                             setToggleDelivered(false);
@@ -638,14 +644,15 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
-                        } else if (statusCheack === "Completed") {
-                            setToggleAccepted(true);
-                            setToggleDropOTP(true); // other  CALL TO CHECK
-
                         } else if (statusCheack === "RideStart") {
+                            setToggleAccepted(true);
+                            // setToggleDropOTP(true); // other  CALL TO CHECK
+
+                        } else if (statusCheack === "Complete") {
+                            setToggleAccepted(true);
 
                         } else {
-                            setToggleAccepted(false);
+                            // setToggleAccepted(false);
                             // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                         }
 
@@ -686,10 +693,11 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     };
 
 
+
     const axiosRequestArrivedPICKOTP = async () => {
         try {
             const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
-            
+
             const data = {
                 id: route?.params?.itemRIDER_ID_SENT
             }
@@ -814,7 +822,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
     const axiosRequestArrivedDROPOTP = async () => {
         try {
             const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
-            
+
             const data = {
                 id: route?.params?.itemRIDER_ID_SENT
             }
@@ -1400,7 +1408,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.PayNow}
+                                title={isPaynow ? "" : ScreenText.PayNow}
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("CourierDetailsMap", {
@@ -1529,7 +1537,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.Feedback}
+                                title={isFeedback ? "" : ScreenText.Feedback}
                                 textDecorationLine={'underline'}
                                 onPress={toggleModalFeedback}
                                 fontWeight="400"

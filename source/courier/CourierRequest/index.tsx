@@ -36,6 +36,16 @@ const CourierRequestScreen = ({ route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(true);
 
 
+    // TODO :
+    const [isPaynow, setPaynow] = useState(true);
+    const [isFeedback, setFeedback] = useState(true);
+
+    const [isPICKSHARE, setPICKSHARE] = useState(true);
+    const [isDROPSHARE, setDROPSHARE] = useState(true);
+
+    // TODO :
+
+
     // Drop
     const [toggleArrivedDrop, setToggleArrivedDrop] = useState(false);
 
@@ -204,7 +214,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
             console.log(toggleONE);
             console.log(toggleONE);
 
-            setToggleArrivedDrop(true);
+            // setToggleArrivedDrop(true);
             // axiosRequestArrivedDROPOTP(); // 15 SEC CALL - WORKING TEST
 
         } else {
@@ -491,10 +501,11 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                         if (DropOTPArrived == '') {
                             setDROPOTP("");
-                            // setToggleArrivedDrop(false); //00
+                            setToggleArrivedDrop(false); //00 - 1
                         } else {
                             setDROPOTP(DropOTPArrived); //last
-                            // setToggleArrivedDrop(true); //00
+                            setDROPSHARE(false);
+                            setToggleArrivedDrop(true); //00 - 2
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -506,8 +517,10 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKSHARE(false)
+                            setPICKOTP(OTPStatus);
+                            // SHOW SHARE TEXT WITH
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -523,6 +536,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             // OTP DROP VERFIFICATION :
                             setToggleDropOTP(true);
                             setToggleAccepted(true);
+                            setPaynow(false);
 
                             // SET OTP GenerateTimeArrived
                             if (DropOTPGenerateTimeArrived !== null) {
@@ -539,6 +553,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                         } else {
                             setToggleDropOTP(false);
+                            setPaynow(true);
                             setDRIVERSTATUS("Driver Started Waiting Timer");
                         }
 
@@ -553,7 +568,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             setToggleOTP(true);
                             setToggleAccepted(true);
 
-                            setToggleArrivedDrop(true); // DROP 
+                            // setToggleArrivedDrop(true); // DROP 
                             setToggleONE(true);
 
                             // CALL DROP OTP - 2 API
@@ -583,11 +598,13 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             setTogglePaymentCompleted(false);
                         } else {
                             setTogglePaymentCompleted(true);
+                            setPaynow(false);
                         }
 
 
                         if (RideStatusArrived === "Complete") {
                             setToggleDelivered(true);
+                            setFeedback(false);
                             setDRIVERSTATUS("Ride Complete");
                         } else {
                             setToggleDelivered(false);
@@ -625,14 +642,15 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
-                        } else if (statusCheack === "Completed") {
-                            setToggleAccepted(true);
-                            setToggleDropOTP(true); // other  CALL TO CHECK
-
                         } else if (statusCheack === "RideStart") {
+                            setToggleAccepted(true);
+                            // setToggleDropOTP(true); // other  CALL TO CHECK
+
+                        } else if (statusCheack === "Complete") {
+                            setToggleAccepted(true);
 
                         } else {
-                            setToggleAccepted(false);
+                            // setToggleAccepted(false);
                             // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
                         }
 
@@ -675,7 +693,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
     const axiosRequestArrivedDROPOTP = async () => {
         try {
             const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
-            
+
 
             const data = {
                 id: route?.params?.itemRIDER_ID_SENT
@@ -1217,7 +1235,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.OTPShareWithCourierBoy}
+                                title={isPICKSHARE ? "" : ScreenText.OTPShareWithCourierBoy}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1328,7 +1346,8 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.OTPShareWithCourierBoy}
+                                // title={ScreenText.OTPShareWithCourierBoy}
+                                title={isDROPSHARE ? "" : ScreenText.OTPShareWithCourierBoy}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1435,7 +1454,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.PayNow}
+                                title={isPaynow ? "" : ScreenText.PayNow}
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("CourierDetailsMap", {
@@ -1552,7 +1571,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route?.params?.itemDateBookingSent}
+                                title={toggleFeedBack ? route?.params?.itemDateBookingSent : ""}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}
@@ -1565,7 +1584,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.Feedback}
+                                title={isFeedback ? "" : ScreenText.Feedback}
                                 textDecorationLine={'underline'}
                                 onPress={toggleModalFeedback}
                                 fontWeight="400"

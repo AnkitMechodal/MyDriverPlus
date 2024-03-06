@@ -39,12 +39,14 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
 
     const [isValidAdjut, setValidAdjust] = useState(true);
 
+
+    const [isPaynow, setPaynow] = useState(true);
+    // const [isFeedback, setFeedback] = useState(true);
+
+
     // All Date Status Date
 
     // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
-
-
-
 
     let OTPGenerateTimeArrived;
     let OTPVerifyTimeArrived;
@@ -467,11 +469,10 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
         }
     };
 
-
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
             const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
@@ -533,8 +534,9 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKOTP(OTPStatus);
+
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -585,10 +587,13 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                             setTogglePaymentCompleted(false);
                         } else {
                             setTogglePaymentCompleted(true);
+                            setPaynow(false)
                         }
 
                         if (RideStatusArrived === "Complete") {
                             setToggleRideCompleted(true);
+                            // setFeedback(false);
+
                             setDRIVERSTATUS("Ride Complete");
                         } else {
                             setToggleRideCompleted(false);
@@ -626,7 +631,7 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
-                        } else if (statusCheack === "RideStart") {
+                        } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
                             // setDRIVERSTATUS("Ride Complete");
 
@@ -671,6 +676,7 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
             // Handle any errors that occur during AsyncStorage operations
         }
     };
+
 
     // const axiosGetOTPPostRequest = async () => {
     //     try {
@@ -1058,7 +1064,7 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.PayNow}
+                                title={isPaynow ? "" : ScreenText.PayNow}
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("BookingDetailsMap", {

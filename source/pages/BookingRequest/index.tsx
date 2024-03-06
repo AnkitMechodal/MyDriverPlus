@@ -34,6 +34,9 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const [toggleFeedBack, setToggleFeedBack] = useState(false);
 
 
+    const [isPaynow, setPaynow] = useState(true);
+    const [isFeedback, setFeedback] = useState(true);
+
     // All Date Status Date
 
     // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
@@ -363,8 +366,9 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKOTP(OTPStatus);
+
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -415,10 +419,13 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             setTogglePaymentCompleted(false);
                         } else {
                             setTogglePaymentCompleted(true);
+                            setPaynow(false)
                         }
 
                         if (RideStatusArrived === "Complete") {
                             setToggleRideCompleted(true);
+                            setFeedback(false);
+
                             setDRIVERSTATUS("Ride Complete");
                         } else {
                             setToggleRideCompleted(false);
@@ -456,7 +463,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
-                        } else if (statusCheack === "RideStart") {
+                        } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
                             // setDRIVERSTATUS("Ride Complete");
 
@@ -1060,7 +1067,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.PayNow}
+                                title={isPaynow ? "" : ScreenText.PayNow}
                                 textDecorationLine={'underline'} // BookingDetailsMap
                                 onPress={() =>
                                     navigation.navigate("BookingDetailsMap", {
@@ -1190,7 +1197,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={ScreenText.Feedback}
+                                title={isFeedback ? "" : ScreenText.Feedback}
                                 textDecorationLine={'underline'}
                                 onPress={toggleModalFeedback}
                                 fontWeight="400"

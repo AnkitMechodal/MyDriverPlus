@@ -75,6 +75,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [toggleFeedBack, setToggleFeedBack] = useState(false);
 
 
+    const [isPaynow, setPaynow] = useState(true);
+    const [isFeedback, setFeedback] = useState(true);
+
+
     // is ArrivedOTP
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
@@ -259,7 +263,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
-            // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
+            //const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
             const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`;
 
             console.log("axiosCheckGetRideStatusRequest===>", url);
@@ -321,8 +325,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             setToggleArrived(false);
 
                         } else {
-                            setPICKOTP(OTPStatus);
                             setToggleArrived(true);
+                            setPICKOTP(OTPStatus);
+
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -373,10 +378,13 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             setTogglePaymentCompleted(false);
                         } else {
                             setTogglePaymentCompleted(true);
+                            setPaynow(false)
                         }
 
                         if (RideStatusArrived === "Complete") {
                             setToggleRideCompleted(true);
+                            setFeedback(false);
+
                             setDRIVERSTATUS("Ride Complete");
                         } else {
                             setToggleRideCompleted(false);
@@ -414,7 +422,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
-                        } else if (statusCheack === "RideStart") {
+                        } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
                             // setDRIVERSTATUS("Ride Complete");
 
@@ -1295,7 +1303,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <View style={{ flex: 1 }}>
                                         <TextComponent
                                             color={Colors.orange}
-                                            title={ScreenText.PayNow}
+                                            title={isPaynow ? "" : ScreenText.PayNow}
                                             textDecorationLine={'underline'} // BookingDetailsMap
                                             onPress={() =>
                                                 navigation.navigate("BookingDetailsMapUp", {
@@ -1423,7 +1431,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <View style={{ flex: 1 }}>
                                         <TextComponent
                                             color={Colors.orange}
-                                            title={ScreenText.Feedback}
+                                            title={isFeedback ? "" : ScreenText.Feedback}
                                             textDecorationLine={'underline'}
                                             onPress={toggleModalFeedback}
                                             fontWeight="400"
