@@ -62,6 +62,9 @@ const BookingRequestScreen = ({ route, navigation }) => {
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
 
+    const [isPICKSHARE, setPICKSHARE] = useState(true);
+
+
     // Driver Started Waiting Timer
     // Booking Request Sent
 
@@ -164,10 +167,9 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         console.log("FeedbackDataResponse==>",
                             JSON.stringify(response?.data?.matchingVehicles, null, 2));
 
-
                         Toast.show('Feedback Sent Successfully!', Toast.SHORT);
-                        setToggleFeedBack(true);
 
+                        setToggleFeedBack(true);
                         setModalFeedBack(false);
 
                     } else {
@@ -367,6 +369,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
                         } else {
                             setToggleArrived(true);
+                            setPICKSHARE(false);
                             setPICKOTP(OTPStatus);
 
 
@@ -394,6 +397,9 @@ const BookingRequestScreen = ({ route, navigation }) => {
                         } else if (OTPVerify === "Verify") {
                             setToggleOTP(true);
                             setToggleAccepted(true);
+
+                            // Show Paynow
+                            setPaynow(false)
 
                             // SET OTPGenerateTimeArrived
                             if (OTPGenerateTimeArrived !== null) {
@@ -459,9 +465,21 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
 
-                        } else if (statusCheack === "Arrived") {
+                        } else if (statusCheack === "Arrived") { //////01101todo
                             setToggleAccepted(true);
+
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            } else {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            }
+
+
                             setDRIVERSTATUS("Driver Arrived Your Location");
+
+                        } else if (statusCheack === "RideStart") {
+                            setToggleAccepted(true);
 
                         } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
@@ -964,7 +982,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.OTPShareWithDriver}
+                                // title={ScreenText.OTPShareWithDriver}
+                                title={isPICKSHARE ? "" : ScreenText.OTPShareWithDriver}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(2)}
@@ -1184,7 +1203,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={route.params.itemDateBookingSent}
+                                title={toggleFeedBack ? route.params.itemDateBookingSent : ""}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(3)}

@@ -47,7 +47,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
 
     // Drop
-    const [toggleArrivedDrop, setToggleArrivedDrop] = useState(false);
+    const [toggleArrivedDrop, setToggleArrivedDrop] = useState(false); // false
 
 
     const [toggleOTP, setToggleOTP] = useState(false);
@@ -151,7 +151,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                 // itemRIDER_ID_SENT
 
-                console.log("RIDER_USER_ID_REQUEST===>", route.params.itemRIDER_ID_SENT);
+                console.log("RIDER_USER_ID_REQUEST--->===>", route.params.itemRIDER_ID_SENT);
 
                 // Pay Now
                 console.log("itemRIDER_DISTANCE_SENT===>", route.params.itemRIDER_DISTANCE_SENT);
@@ -184,7 +184,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
         fetchData();
 
         // Set interval to refresh every 15 seconds
-        const intervalId = setInterval(fetchData, 15 * 1000);
+        const intervalId = setInterval(fetchData, 5 * 1000);
 
         // Cleanup function
         return () => {
@@ -499,6 +499,21 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         }
                         // DROP 
 
+
+                        // if (DropOTPArrived == '') {
+                        //     setDROPOTP("");
+                        //     setToggleArrivedDrop(false);
+
+                        // } else {
+                        //     setDROPSHARE(false)
+                        //     setDROPOTP(DropOTPArrived);
+                        //     setToggleArrivedDrop(true);
+                        //     // SHOW SHARE TEXT WITH
+
+                        //     // Driver arrived your location
+                        //     setDRIVERSTATUS("Driver Arrived Your Location");
+                        // }
+
                         if (DropOTPArrived == '') {
                             setDROPOTP("");
                             setToggleArrivedDrop(false); //00 - 1
@@ -569,7 +584,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                             setToggleAccepted(true);
 
                             // setToggleArrivedDrop(true); // DROP 
-                            setToggleONE(true);
+                            // setToggleONE(true);
 
                             // CALL DROP OTP - 2 API
                             // axiosRequestArrivedDROPOTP(); // todo...
@@ -640,6 +655,14 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                         } else if (statusCheack === "Arrived") {
                             setToggleAccepted(true);
+
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            } else {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            }
+
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
                         } else if (statusCheack === "RideStart") {
@@ -689,6 +712,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
             // Handle any errors that occur during AsyncStorage operations
         }
     };
+
 
     const axiosRequestArrivedDROPOTP = async () => {
         try {
@@ -1171,7 +1195,11 @@ const CourierRequestScreen = ({ route, navigation }) => {
                                 // title={ScreenText.ViewCourierboy} // View courier boy
                                 title={isAccepted ? "" : ScreenText.ViewCourierboy} //99
                                 textDecorationLine={'underline'}
-                                onPress={() => navigation.navigate("CourierPreferredDriver")}
+                                onPress={() =>
+                                    navigation.navigate("CourierPreferredDriver", {
+                                        itemRider_ID_: route.params.itemRIDER_ID_SENT
+                                    })
+                                }//111107
                                 fontWeight="400"
                                 fontSize={wp(3.5)}
                                 marginVertical={wp(0)}

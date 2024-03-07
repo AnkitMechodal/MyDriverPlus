@@ -100,6 +100,11 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     let fullAddress;
 
 
+    let mark1;
+    let mark2;
+    let mark3;
+    let mark4;
+
     // USER
     let secondPartOfAddress;
     let remainingAddress;
@@ -782,13 +787,13 @@ const PickUpLocationScreen = ({ route, navigation }) => {
                 // console.log("02-00003==>==>", secondPartOfAddress_);
                 // console.log("02-00004==>==>", postalCode_);
 
-
-
-
             } catch (error) {
 
             }
 
+            // STORE PICK ADDRESS IN LOCAL 
+            mark1 = JSON.parse(secondPartOfAddress_);
+            STOARE_LOCAL_LANDMARK1(mark1);
 
 
             navigation.navigate('BookingScreen', {
@@ -818,6 +823,9 @@ const PickUpLocationScreen = ({ route, navigation }) => {
 
             }
 
+            // STORE PICK ADDRESS IN LOCAL 
+            mark2 = locationNearByRef
+            STOARE_LOCAL_LANDMARK2(mark2);
 
             navigation.navigate('BookingScreen', {
                 itemPickName: locationNearByRef,
@@ -913,6 +921,21 @@ const PickUpLocationScreen = ({ route, navigation }) => {
     }, []);
 
 
+    const STOARE_LOCAL_LANDMARK1 = async (mark1: any) => {
+        try {
+            await AsyncStorage.setItem('mark1_pick', JSON.stringify(mark1));
+        } catch (error) {
+            console.error('Error mark1_pick:', error);
+        }
+    }
+
+    const STOARE_LOCAL_LANDMARK2 = async (mark2: any) => {
+        try {
+            await AsyncStorage.setItem('mark1_pick', JSON.stringify(mark2));
+        } catch (error) {
+            console.error('Error mark1_pick:', error);
+        }
+    }
 
     return (
         <SafeAreaView style={CommonStyle.commonFlex}>

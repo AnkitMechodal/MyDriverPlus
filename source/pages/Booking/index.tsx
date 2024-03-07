@@ -7,6 +7,7 @@ import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import {
+    BackHandler,
     Image, SafeAreaView, ScrollView, Text,
     TouchableOpacity, View
 } from 'react-native';
@@ -137,8 +138,8 @@ const BookingScreen = ({ route, navigation }) => {
     const [PickPlace1, setPickPlace1] = useState(ScreenText.SelectPickuplocation);
     const [PickPlace2, setPickPlace2] = useState(ScreenText.SelectDropofflocation);
 
-    const [UserLocationPin, setUserLocationPin] = useState('000000');
 
+    const [UserLocationPin, setUserLocationPin] = useState('000000');
 
     const [selectedImage, setSelectedImage] = useState(undefined);
 
@@ -574,9 +575,74 @@ const BookingScreen = ({ route, navigation }) => {
 
 
     useEffect(() => {
+        console.log('Component mounted');
 
-        const fetchData = () => { // itemPin
+        // Function to clear specific data from storage on back press
+        const clearSpecificDataOnBackPress = async () => {
             try {
+                // Clearing specific data with the keys
+                await AsyncStorage.removeItem('mark1_pick');
+                await AsyncStorage.removeItem('mark2_drop');
+                console.log('Specific data cleared successfully.');
+            } catch (error) {
+                console.error('Error clearing specific data:', error);
+                navigation.goBack();
+            }
+        };
+
+        // Add event listener for hardware back button press
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            () => {
+                console.log('Back button pressed');
+                // Call the function to clear specific data before navigating back
+                clearSpecificDataOnBackPress();
+                navigation.goBack();
+                // Return true to indicate that we've handled the back press
+                return true;
+            }
+        );
+
+        // Clean up event listener when component unmounts
+        return () => {
+            console.log('Component unmounted');
+            backHandler.remove();
+        };
+    }, []); // Run this effect only once
+
+
+    useEffect(() => {
+
+        const fetchData = async () => { // itemPin
+            try {
+
+
+                // PICK GET AS PREVIOUS STOARGE
+                try {
+                    const storedPickPrev = await AsyncStorage.getItem('mark1_pick');
+                    console.log('mark1_pick :', storedPickPrev);
+                    if (storedPickPrev !== null) {
+                        setPickPlace1(JSON.parse(storedPickPrev)); // 07-03-2024
+                    } else {
+                        setPickPlace1(ScreenText.SelectPickuplocation);
+                    }
+                } catch (error) {
+
+                }
+
+                // DROP GET AS PREVIOUS STOARGE
+                try {
+                    const storedPickPrev = await AsyncStorage.getItem('mark2_drop');
+                    console.log('mark2_drop :', storedPickPrev);
+                    if (storedPickPrev !== null) {
+                        setPickPlace2(JSON.parse(storedPickPrev)); // 07-03-2024
+                    } else {
+                        setPickPlace2(ScreenText.SelectDropofflocation);
+                    }
+                } catch (error) {
+
+                }
+
 
                 // 1 : PICK
                 console.log("USER_LONG_PICK", route.params.itemPicklat);
@@ -614,38 +680,7 @@ const BookingScreen = ({ route, navigation }) => {
                 // // StoreDropLatAsUser();
                 // // StoreDropLongAsUser();
 
-                // TODO : 27
 
-                if (route.params.itemPickName === undefined) {
-                    setPickPlace1(ScreenText.SelectPickuplocation);
-                } else if (route.params.itemPickName === '') {
-                    setPickPlace1(ScreenText.SelectPickuplocation);
-                } else {
-                    setPickPlace1(route.params.itemPickName);
-
-                    console.log("setPickPlace1ERROR==>", route.params.itemPickName);
-
-                    // PickName Stored
-                    itemPickNameGet = route.params.itemPickName;
-                    storedPreviousPickName(itemPickNameGet);
-
-                    // DropName ReStored
-                    restoredPreviousDropName(); // WE1
-
-                    // PICK TO STORE
-                    itemPICKLAT = route?.params?.itemPicklat;
-                    itemPICKLONG = route?.params?.itemPicklong;
-
-                    StorePick1(itemPICKLAT);
-                    StorePick2(itemPICKLONG);
-
-                    // DROP TO RESTORE - GET
-                    StoreDropLatAsUser();
-                    StoreDropLongAsUser();
-
-                }
-
-                // TODO : 27
 
                 if (route.params.itemPin === undefined) {
                     setUserLocationPin('');
@@ -662,37 +697,6 @@ const BookingScreen = ({ route, navigation }) => {
 
                 }
 
-                // TODO : 27
-
-                if (route.params.itemDropName === undefined) {
-                    setPickPlace2(ScreenText.SelectDropofflocation);
-                } else if (route.params.itemDropName === '') {
-                    setPickPlace2(ScreenText.SelectDropofflocation);
-                } else {
-                    setPickPlace2(route.params.itemDropName); // WA
-                    console.log("setPickPlace2ERROR==>", route.params.itemDropName);
-
-                    // DropName Stored
-                    itemDropNameGet = route.params.itemDropName;
-                    storedPreviousDropName(itemDropNameGet);
-
-                    // PickName ReStored
-                    restoredPreviousPickName(); // WE1
-
-                    // DROP TO STORE
-                    itemDROPLAT = route?.params?.itemDroplat;
-                    itemDROPLONG = route?.params?.itemDroplong;
-
-                    StoreDrop1(itemDROPLAT);
-                    StoreDrop2(itemDROPLONG);
-
-                    // PICK TO RESTORE - GET
-                    StorePickLatAsUser();
-                    StorePickLongAsUser();
-
-                }
-
-                // TODO : 27
 
 
 
@@ -806,9 +810,9 @@ const BookingScreen = ({ route, navigation }) => {
             const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
             console.log('ErrorrestoredPreviousPickName :', storedPickPrev);
             if (storedPickPrev !== null) {
-                setPickPlace1(JSON.parse(storedPickPrev)); //27
+                // setPickPlace1(JSON.parse(storedPickPrev)); //27 ---- WORKING !
             } else {
-                setPickPlace1(ScreenText.SelectPickuplocation); //27
+                // setPickPlace1(ScreenText.SelectPickuplocation); //27 ---  WORKING !
             }
         } catch (error) {
 
@@ -820,9 +824,9 @@ const BookingScreen = ({ route, navigation }) => {
             const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
             console.log('ErrorrestoredPreviousPickName :', storedDropPrev);
             if (storedDropPrev !== null) {
-                setPickPlace2(JSON.parse(storedDropPrev));
+                // setPickPlace2(JSON.parse(storedDropPrev)); ---- WORKING
             } else {
-                setPickPlace2(ScreenText.SelectPickuplocation);
+                // setPickPlace2(ScreenText.SelectPickuplocation); ---- WORKING
             }
         } catch (error) {
 
@@ -848,6 +852,17 @@ const BookingScreen = ({ route, navigation }) => {
         } catch (error) {
             // Handle any errors that might occur during the storage operation
             console.log('Error user_pick_long :', error);
+        }
+    }
+
+    const clearSpecificData = async () => {
+        try {
+            // Clearing specific data with the key 'parsedData'
+            await AsyncStorage.removeItem('mark1_pick');
+            await AsyncStorage.removeItem('mark2_drop');
+            console.log('Specific data cleared successfully.');
+        } catch (error) {
+            console.error('Error clearing specific data:', error);
         }
     }
 
@@ -1799,7 +1814,10 @@ const BookingScreen = ({ route, navigation }) => {
                         renderDropdown={renderDropdown}
                         isArrow={true}
                         isArrowLeft={false}
-                        onPress={() => navigation.goBack()}
+                        onPress={() => {
+                            clearSpecificData();
+                            navigation.goBack();
+                        }}
                     />
 
                 </View>
@@ -1843,6 +1861,9 @@ const BookingScreen = ({ route, navigation }) => {
                                                         isVisibleMail={false}
                                                         isVisibleCloseIcon={true} // As Text Available To Show !
                                                         isVisibleLockWhite={false}
+                                                        onPressClose={() =>
+                                                            setPickPlace1(ScreenText.SelectPickuplocation)
+                                                        }
                                                         marginVertical={hp(1)}
                                                         marginHorizontal={wp(2)}
                                                         width={wp(90)}
@@ -1854,7 +1875,7 @@ const BookingScreen = ({ route, navigation }) => {
                                                         textlineHeight={ConstValue.value0}
                                                         ref={refPickUp}
                                                         placeholder={PickPlace1}
-                                                        editable={false}
+                                                        editable={true}
                                                         multiline={false}
                                                         secureTextEntry={false}
                                                         isPadding={true}
@@ -1912,6 +1933,10 @@ const BookingScreen = ({ route, navigation }) => {
                                                             textfontSize={ConstValue.value15}
                                                             textfontFamily={Fonts.PoppinsRegular}
                                                             textlineHeight={ConstValue.value0}
+                                                            onPressClose={() =>
+                                                                setPickPlace2(ScreenText.SelectDropofflocation)
+                                                            }
+
                                                             ref={refDropUp}
                                                             placeholder={PickPlace2}
                                                             editable={false}
@@ -2564,6 +2589,9 @@ const BookingScreen = ({ route, navigation }) => {
                                                         selectionColor={Colors.white}
                                                         isVisibleDropDown={false}
                                                         isVisibleLock={false}
+                                                        onPressClose={() =>
+                                                            setPickPlace1(ScreenText.SelectPickuplocation)
+                                                        }
                                                         isVisibleMail={false}
                                                         isVisibleCloseIcon={true} // As Text Available To Show !
                                                         isVisibleLockWhite={false}
@@ -2627,6 +2655,9 @@ const BookingScreen = ({ route, navigation }) => {
                                                             isVisibleCloseIcon={true} // As Text Available To Show !
                                                             isVisibleLockWhite={false}
                                                             // marginHorizontal={wp(10)}
+                                                            onPressClose={() =>
+                                                                setPickPlace2(ScreenText.SelectDropofflocation)
+                                                            }
                                                             width={wp(90)}
                                                             // marginTop={wp(2)}
                                                             height={hp(7)}

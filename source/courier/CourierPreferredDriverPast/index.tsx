@@ -114,13 +114,13 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
         };
 
         fetchData();
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // // Set interval to refresh every 0 seconds
+        // const intervalId = setInterval(fetchData, 0 * 1000);
 
-        // Clean up the interval when the component is unmounted
+        // // Clean up the interval when the component is unmounted
 
 
-        return () => clearInterval(intervalId);
+        // return () => clearInterval(intervalId);
     }, []);
 
 
@@ -226,6 +226,8 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
                 const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${userId}`;
 
                 console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+                console.log("URL_RATTING==>", JSON.stringify(url, null, 2));
+
 
                 await axios.get(url, {
                     headers: {

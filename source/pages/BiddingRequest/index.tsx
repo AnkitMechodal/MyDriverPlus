@@ -61,6 +61,10 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
     const [isModalCancel, setModalCancel] = useState(false);
 
+    const [isPICKSHARE, setPICKSHARE] = useState(true);
+
+
+
     // TODO :
     const [isFocusedFeedBack, setIsFocusedFeedBack] = useState(false);
     const refFeedBack = useRef<any>(null);
@@ -178,6 +182,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         // setVehicles(response.data.matchingVehicles);
 
                         Toast.show('Feedback Sent Successfully!', Toast.SHORT);
+
+                        setToggleFeedBack(true);
                         setModalFeedBack(false);
 
                     } else {
@@ -429,7 +435,6 @@ const BiddingRequestScreen = ({ route, navigation }) => {
         }
     };
 
-
     const axiosCheckGetRideStatusRequest = async () => {
         try {
 
@@ -496,8 +501,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
 
                         } else {
                             setToggleArrived(true);
+                            setPICKSHARE(false);
                             setPICKOTP(OTPStatus);
-
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -523,6 +528,9 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                         } else if (OTPVerify === "Verify") {
                             setToggleOTP(true);
                             setToggleAccepted(true);
+
+                            // Show Paynow
+                            setPaynow(false)
 
                             // SET OTPGenerateTimeArrived
                             if (OTPGenerateTimeArrived !== null) {
@@ -588,9 +596,21 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             setDRIVERSTATUS("Ride Started , Enjoy your ride");
 
 
-                        } else if (statusCheack === "Arrived") {
+                        } else if (statusCheack === "Arrived") { //////01101todo
                             setToggleAccepted(true);
+
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            } else {
+                                setIsArriedOTPDate(OTPGenerateTimeArrived);
+                            }
+
+
                             setDRIVERSTATUS("Driver Arrived Your Location");
+
+                        } else if (statusCheack === "RideStart") {
+                            setToggleAccepted(true);
 
                         } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
@@ -923,7 +943,8 @@ const BiddingRequestScreen = ({ route, navigation }) => {
                             />
                             <TextComponent
                                 color={Colors.gray}
-                                title={ScreenText.OTPShareWithDriver}
+                                // title={ScreenText.OTPShareWithDriver}
+                                title={isPICKSHARE ? "" : ScreenText.OTPShareWithDriver}
                                 textDecorationLine={'none'}
                                 fontWeight="400"
                                 fontSize={wp(2)}

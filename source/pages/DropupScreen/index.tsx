@@ -29,6 +29,12 @@ const DropUpLocationScreen = (props: Props) => {
     const refDesc = useRef<any>(null);
     // refMobileCode
 
+
+
+    let mark1;
+    let mark2;
+
+
     const mapViewRef = useRef<any>(null);
 
 
@@ -612,6 +618,9 @@ const DropUpLocationScreen = (props: Props) => {
 
             }
 
+            mark1 = JSON.parse(secondPartOfAddress_);
+            STOARE_LOCAL_LANDMARK1(mark1);
+
             props.navigation.navigate('BookingScreen', {
                 itemDropName: JSON.parse(secondPartOfAddress_),
                 itemType: 'Taxi Booking',
@@ -640,6 +649,10 @@ const DropUpLocationScreen = (props: Props) => {
 
             }
 
+            mark2 = locationNearByRef;
+            STOARE_LOCAL_LANDMARK2(mark2);
+
+
             props.navigation.navigate('BookingScreen', {
                 itemDropName: locationNearByRef,
                 itemType: 'Taxi Booking',
@@ -651,6 +664,26 @@ const DropUpLocationScreen = (props: Props) => {
             });
         }
     }
+
+
+    const STOARE_LOCAL_LANDMARK1 = async (mark1: any) => {
+        try {
+            await AsyncStorage.setItem('mark2_drop', JSON.stringify(mark1));
+        } catch (error) {
+            console.error('Error mark2_drop:', error);
+        }
+    }
+
+
+    const STOARE_LOCAL_LANDMARK2 = async (mark2: any) => {
+        try {
+            await AsyncStorage.setItem('mark2_drop', JSON.stringify(mark2));
+        } catch (error) {
+            console.error('Error mark2_drop:', error);
+        }
+    }
+
+
 
     const SelectedLocation = (item) => {
         try {
