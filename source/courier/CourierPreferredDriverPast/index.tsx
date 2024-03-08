@@ -101,12 +101,13 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
 
         const fetchData = async () => {
             try {
-                // axios
-                await axiosPostRideDetailsRequest();
 
-                // Get User In User Info
-                await axiosPostDriverInfoRequest();
-                await axiosGetRideRattingRequest();
+                // Execute requests concurrently using axios.all()
+                await axios.all([
+                    axiosPostRideDetailsRequest(),
+                    axiosPostDriverInfoRequest(),
+                    axiosGetRideRattingRequest()
+                ]);
 
             } catch (error) {
                 console.error('Error fetching data:', error);

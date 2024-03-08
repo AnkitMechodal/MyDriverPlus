@@ -286,17 +286,18 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
 
                 console.log("itemMapId==>", route.params.itemBokingDetailsMapId);
                 //itemMapDropStation
-                console.log("itemMapPickStation**==>", route.params.itemMapPickStation);
-                console.log("itemMapDropStation**==>", route.params.itemMapDropStation);
+                console.log("itemMapPickStation***1111****==>", route.params.itemMapPickStation);
+                console.log("itemMapDropStation***11111***==>", route.params.itemMapDropStation);
 
+                // TODO : 08
+                console.log("itemMapKmStation**", route?.params?.itemMapKmStation);
+                console.log("itemMapMinStation**", route?.params?.itemMapMinStation);
+                // TODO : 08
 
-                // console.log("itemMapKmStation**", route?.params?.itemMapKmStation);
-                // console.log("itemMapMinStation**", route?.params?.itemMapMinStation);
-
-                // TODO :
-                console.log("itemMapKmStation000000000000==>", route?.params?.itemBokingDetailsMapDistance);
-                console.log("itemMapMinStation00000000000==>", route?.params?.itemBokingDetailsMapDuration);
-                // TODO :
+                // // TODO :
+                // console.log("itemMapKmStation000000000000==>", route?.params?.itemBokingDetailsMapDistance);
+                // console.log("itemMapMinStation00000000000==>", route?.params?.itemBokingDetailsMapDuration);
+                // // TODO :
 
                 console.log("PayRideCharge**", route?.params?.itemMapRideCharge);
                 console.log("PayBookingsFees**", route?.params?.itemMapRideFeesCon);
@@ -329,7 +330,8 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
     }, [
         route.params.itemMapPickStation,
         route.params.itemMapDropStation,
-        route?.params?.itemBokingDetailsMapDistance,
+        route?.params?.itemMapKmStation,
+        route?.params?.itemMapMinStation,
         route?.params?.itemBokingDetailsMapDuration,
         route?.params?.itemMapRideCharge,
         route?.params?.itemMapRideFeesCon,
@@ -1249,7 +1251,7 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                                 <View>
                                     <TextComponent
                                         color={Colors.blue}
-                                        title={route?.params?.itemBokingDetailsMapDuration}
+                                        title={route?.params?.itemMapMinStation} // itemBokingDetailsMapDuration
                                         textDecorationLine={'none'}
                                         fontWeight="700"
                                         fontSize={wp(3)} // 3
@@ -1267,12 +1269,12 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                             <View style={Styles.marginRight}>
                                 <TextComponent
                                     color={Colors.white}
-                                    title={route?.params?.itemBokingDetailsMapDistance}
+                                    title={route?.params?.itemMapKmStation} // itemBokingDetailsMapDuration
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3)} // 3
                                     fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
+                                    textAlign='center'
                                     numberOfLines={2}
                                     marginVertical={wp(1)}
                                 />

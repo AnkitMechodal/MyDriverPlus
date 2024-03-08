@@ -169,6 +169,7 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
 
                 console.log("itemMapId==>", route.params.itemBokingDetailsMapId);
 
+
                 console.log("itemMapPickStation==>", route.params.itemMapPickStation);
                 console.log("itemMapDropStation==>", route.params.itemMapDropStation);
 
@@ -1269,9 +1270,15 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                         <View style={Styles.bottamUserConatin}>
 
                             <TouchableOpacity
-                                onPress={() => navigation.navigate("PreferredDriver")}
+                                activeOpacity={0.1}
+                                onPress={() =>
+                                    navigation.navigate("PreferredDriver", {
+                                        itemRider_ID_: route.params.itemBokingDetailsMapId
+                                    }) //todo - 0803
+                                }
                                 style={Styles.bottamClickContain}
                             >
+
                                 <View style={CommonStyle.justifyContent}>
                                     <Image
                                         style={Styles.imageStop}
@@ -1348,6 +1355,7 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                     </TouchableOpacity>
 
                                 </View>
+
                             </TouchableOpacity>
                         </View>
 

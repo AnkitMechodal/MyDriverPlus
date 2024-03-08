@@ -76,14 +76,15 @@ const Styles = StyleSheet.create({
         width: wp(15),
         height: wp(15),
         borderRadius: wp(50),
-        marginHorizontal: wp(3), // 3 //10
+        marginHorizontal: wp(9), // 3 //10
         justifyContent: 'center',
-        alignSelf: "flex-end",
+        // alignSelf: "flex-end",
     },
     marginRight: {
-        alignSelf: "flex-end",
-        // marginHorizontal: wp(5), // 3 //10
-        marginRight: wp(12)
+        // alignSelf: "flex-end",
+        // marginHorizontal: wp(10), // 3 //10 todooooo1
+        // marginRight: wp(12)
+        justifyContent: 'center',
     },
     marginVertical: {
         marginVertical: wp(115),

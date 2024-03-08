@@ -52,6 +52,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
     let USER_DRIVEID;
 
     let USER_TOTAL;
+    let DISCOUNT;
 
 
     // const [isModalVisible, setModalVisible] = useState(true);
@@ -128,7 +129,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
 
         fetchData();
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Clean up the interval when the component is unmounted
 
@@ -281,6 +282,12 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                     USER_TOTAL = parseInt(USER_RIDE_CHARGE) + parseInt(USER_CON_CHARGE) +
                         parseInt(USER_WATTING_CHARGES);
 
+
+                    // USER_DISCOUNT - NO USE
+                    DISCOUNT = USER_TOTAL - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(DISCOUNT);
+
+
                     console.log("USER_TOTAL1==>", parseInt(USER_RIDE_CHARGE));
                     console.log("USER_TOTAL2==>", parseInt(USER_CON_CHARGE));
                     console.log("USER_TOTAL3==>", parseInt(USER_WATTING_CHARGES));
@@ -288,7 +295,8 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
+                    // setTOTAL_AMOUNT(USER_TOTAL); //0001144555
+
 
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED

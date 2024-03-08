@@ -76,7 +76,7 @@ const BiddingRequestScreen = ({ route, navigation }) => {
     const [currentTime, setCurrentTime] = useState(moment().format('HH:mm:ss'));
 
 
-    const [isPaynow, setPaynow] = useState(false);
+    const [isPaynow, setPaynow] = useState(true);
     const [isFeedback, setFeedback] = useState(false);
 
 

@@ -530,10 +530,19 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         if (DropOTPArrived == '') {
                             setDROPOTP("");
                             setToggleArrivedDrop(false); //00 - 1
+
+                            console.log("1-EMPTY");
+                            console.log("1-EMPTY");
+                            console.log("1-EMPTY");
+
                         } else {
                             setDROPOTP(DropOTPArrived); //last
                             setDROPSHARE(false);
                             setToggleArrivedDrop(true); //00 - 2
+
+                            console.log("2-EMPTY");
+                            console.log("2-EMPTY");
+                            console.log("2-EMPTY");
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");

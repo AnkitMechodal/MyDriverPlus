@@ -109,12 +109,13 @@ const PreferredDriverUp = ({ route, navigation }) => {
 
                 console.error('ID_BOOKING_USE_BID--->TO==>', route?.params?.itemRider_ID_);
 
-                // axios
-                await axiosPostRideDetailsRequest();
 
-                // axios
-                await axiosPostDriverInfoRequest();
-                await axiosGetRideRattingRequest();
+                // Execute requests concurrently using axios.all()
+                await axios.all([
+                    axiosPostRideDetailsRequest(),
+                    axiosPostDriverInfoRequest(),
+                    axiosGetRideRattingRequest()
+                ]);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -122,13 +123,13 @@ const PreferredDriverUp = ({ route, navigation }) => {
         };
 
         fetchData();
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchData, 10 * 1000);
 
-        // Clean up the interval when the component is unmounted
+        // // Clean up the interval when the component is unmounted
 
 
-        return () => clearInterval(intervalId);
+        // return () => clearInterval(intervalId);
     }, []);
 
 
