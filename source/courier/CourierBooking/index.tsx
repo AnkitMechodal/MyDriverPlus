@@ -6,6 +6,7 @@ import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import {
+    BackHandler,
     Image, SafeAreaView, ScrollView, Text,
     TouchableOpacity, View
 } from 'react-native';
@@ -19,7 +20,7 @@ import TextComponent from '../../components/Text/index';
 import TextInputComponent from '../../components/TextInput/index';
 import { Colors, Fonts, Images } from '../../themes';
 import CommonStyle from '../../utils/commonStyle';
-import { API, ConstValue, ScreenText } from '../../utils/index';
+import { ConstValue, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 
@@ -325,8 +326,22 @@ const CourierBookingScreen = ({ route, navigation }) => {
         console.log("item==>", item);
         if (item === "1") {
             setIsSelectedViewFirst(true)
+
+            clearSpecificData();
+
+            setPickPlace1(ScreenText.SelectPickuplocation);
+            setPickPlace2(ScreenText.SelectDropofflocation);
+
+            console.log("1");
+
         } else {
             setIsSelectedViewFirst(false)
+
+            clearSpecificData();
+
+            setPickPlace1(ScreenText.SelectPickuplocation);
+            setPickPlace2(ScreenText.SelectDropofflocation);
+            console.log("2");
         }
         // if (value.label === "Taxi Booking") {
         //     // setIsSelectedViewFirst(false)
@@ -461,6 +476,19 @@ const CourierBookingScreen = ({ route, navigation }) => {
         }
     }
 
+
+    const clearSpecificData = async () => {
+        try {
+            // Clearing specific data with the key 'parsedData'
+            await AsyncStorage.removeItem('mark3_pick');
+            await AsyncStorage.removeItem('mark4_drop');
+            console.log('Specific data cleared successfully.');
+        } catch (error) {
+            console.error('Error clearing specific data:', error);
+        }
+    }
+
+
     const getCurrentLocationDistnaceDurationBookNow = async (GetUserAsPickLat: any
         , GetUserAsPickLong: any, GetUserAsDropLat: any,
         GetUserAsDropLong: any) => {
@@ -554,58 +582,130 @@ const CourierBookingScreen = ({ route, navigation }) => {
         setShedulePickerVisible(true);
     }
 
+
+    useEffect(() => {
+        console.log('Component mounted');
+
+        // Function to clear specific data from storage on back press
+        const clearSpecificDataOnBackPress = async () => {
+            try {
+                // Clearing specific data with the keys
+                await AsyncStorage.removeItem('mark3_pick');
+                await AsyncStorage.removeItem('mark4_drop');
+                console.log('Specific data cleared successfully.');
+            } catch (error) {
+                console.error('Error clearing specific data:', error);
+                navigation.goBack();
+            }
+        };
+
+        // Add event listener for hardware back button press
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            () => {
+                console.log('Back button pressed');
+                // Call the function to clear specific data before navigating back
+                clearSpecificDataOnBackPress();
+                navigation.goBack();
+                // Return true to indicate that we've handled the back press
+                return true;
+            }
+        );
+
+        // Clean up event listener when component unmounts
+        return () => {
+            console.log('Component unmounted');
+            backHandler.remove();
+        };
+    }, []); // Run this effect only once
+
+
+
     useEffect(() => {
 
-        const fetchData = () => { // itemPin
+        const fetchData = async () => { // itemPin
             try {
 
-                // 1 : PICK
-                console.log("USER_LONG_PICK-CO", route.params.itemPicklat);
-                console.log("USER_LONG_PICK-CO", route.params.itemPicklat);
-                console.log("USER_LONG_PICK-CO", route.params.itemPicklat);
+                // PICK GET AS PREVIOUS STOARGE
+                try {
+                    const storedPickPrev = await AsyncStorage.getItem('mark3_pick');
+                    console.log('mark3_pick :', storedPickPrev);
+                    if (storedPickPrev !== null) {
+                        setPickPlace1(JSON.parse(storedPickPrev)); // 07-03-2024
 
-                // 2 : PICK
-                console.log("USER_LONG_PICK-CO", route.params.itemPicklong);
-                console.log("USER_LONG_PICK-CO", route.params.itemPicklong);
-                console.log("USER_LONG_PICK-CO", route.params.itemPicklong);
+                        // PICK TO STORE
+                        itemPICKLAT = route?.params?.itemPicklat;
+                        itemPICKLONG = route?.params?.itemPicklong;
 
+                        StorePick1(itemPICKLAT);
+                        StorePick2(itemPICKLONG);
 
-                // 1 : DROP
-                console.log("USER_LAT_DROP-CO", route.params.itemDroplat);
-                console.log("USER_LAT_DROP-CO", route.params.itemDroplat);
-                console.log("USER_LAT_DROP-CO", route.params.itemDroplat);
+                        // DROP TO RESTORE - GET
+                        StoreDropLatAsUser();
+                        StoreDropLongAsUser();
+                        // PICK TO STORE
 
-                // 2 : DROP
-                console.log("USER_LONG_DROP-CO", route.params.itemDroplong);
-                console.log("USER_LONG_DROP-CO", route.params.itemDroplong);
-                console.log("USER_LONG_DROP-CO", route.params.itemDroplong);
+                    } else {
+                        setPickPlace1(ScreenText.SelectPickuplocation);
+                    }
+                } catch (error) {
 
-
-                if (route.params.itemPickName === undefined) {
-                    setPickPlace1(ScreenText.SelectPickuplocation);
-                } else if (route.params.itemPickName === '') {
-                    setPickPlace1(ScreenText.SelectPickuplocation);
-                } else {
-                    setPickPlace1(route.params.itemPickName);
-
-                    // PickName Stored
-                    itemPickNameGet = route.params.itemPickName;
-                    storedPreviousPickName(itemPickNameGet);
-
-                    // DropName ReStored
-                    restoredPreviousDropName();
-
-                    // PICK TO STORE
-                    itemPICKLAT = route?.params?.itemPicklat;
-                    itemPICKLONG = route?.params?.itemPicklong;
-
-                    StorePick1(itemPICKLAT);
-                    StorePick2(itemPICKLONG);
-
-                    // DROP TO RESTORE - GET
-                    StoreDropLatAsUser();
-                    StoreDropLongAsUser();
                 }
+
+                // DROP GET AS PREVIOUS STOARGE
+                try {
+                    const storedPickPrev = await AsyncStorage.getItem('mark4_drop');
+                    console.log('mark4_drop :', storedPickPrev);
+                    if (storedPickPrev !== null) {
+                        setPickPlace2(JSON.parse(storedPickPrev)); // 07-03-2024
+
+                        // DROP TO STORE
+                        itemDROPLAT = route?.params?.itemDroplat;
+                        itemDROPLONG = route?.params?.itemDroplong;
+
+                        StoreDrop1(itemDROPLAT);
+                        StoreDrop2(itemDROPLONG);
+
+                        // PICK TO RESTORE - GET
+                        StorePickLatAsUser();
+                        StorePickLongAsUser();
+                        // DROP TO STORE
+
+                    } else {
+                        setPickPlace2(ScreenText.SelectDropofflocation);
+                    }
+                } catch (error) {
+
+                }
+
+
+
+
+                // if (route.params.itemPickName === undefined) {
+                //     setPickPlace1(ScreenText.SelectPickuplocation);
+                // } else if (route.params.itemPickName === '') {
+                //     setPickPlace1(ScreenText.SelectPickuplocation);
+                // } else {
+                //     setPickPlace1(route.params.itemPickName);
+
+                //     // PickName Stored
+                //     itemPickNameGet = route.params.itemPickName;
+                //     storedPreviousPickName(itemPickNameGet);
+
+                //     // DropName ReStored
+                //     restoredPreviousDropName();
+
+                //     // PICK TO STORE
+                //     itemPICKLAT = route?.params?.itemPicklat;
+                //     itemPICKLONG = route?.params?.itemPicklong;
+
+                //     StorePick1(itemPICKLAT);
+                //     StorePick2(itemPICKLONG);
+
+                //     // DROP TO RESTORE - GET
+                //     StoreDropLatAsUser();
+                //     StoreDropLongAsUser();
+                // }
 
                 if (route.params.itemPin === undefined) {
                     setUserLocationPin('');
@@ -622,32 +722,32 @@ const CourierBookingScreen = ({ route, navigation }) => {
                     PickUpLocationPin(PinPickUp);
                 }
 
-                if (route.params.itemDropName === undefined) {
-                    setPickPlace2(ScreenText.SelectDropofflocation);
-                } else if (route.params.itemDropName === '') {
-                    setPickPlace2(ScreenText.SelectDropofflocation);
-                } else {
-                    setPickPlace2(route.params.itemDropName);
+                // if (route.params.itemDropName === undefined) {
+                //     setPickPlace2(ScreenText.SelectDropofflocation);
+                // } else if (route.params.itemDropName === '') {
+                //     setPickPlace2(ScreenText.SelectDropofflocation);
+                // } else {
+                //     setPickPlace2(route.params.itemDropName);
 
-                    // DropName Stored
-                    itemDropNameGet = route.params.itemDropName;
-                    storedPreviousDropName(itemDropNameGet);
+                //     // DropName Stored
+                //     itemDropNameGet = route.params.itemDropName;
+                //     storedPreviousDropName(itemDropNameGet);
 
-                    // PickName ReStored
-                    restoredPreviousPickName();
+                //     // PickName ReStored
+                //     restoredPreviousPickName();
 
-                    // DROP TO STORE
-                    itemDROPLAT = route?.params?.itemDroplat;
-                    itemDROPLONG = route?.params?.itemDroplong;
+                //     // DROP TO STORE
+                //     itemDROPLAT = route?.params?.itemDroplat;
+                //     itemDROPLONG = route?.params?.itemDroplong;
 
-                    StoreDrop1(itemDROPLAT);
-                    StoreDrop2(itemDROPLONG);
+                //     StoreDrop1(itemDROPLAT);
+                //     StoreDrop2(itemDROPLONG);
 
-                    // PICK TO RESTORE - GET
-                    StorePickLatAsUser();
-                    StorePickLongAsUser();
+                //     // PICK TO RESTORE - GET
+                //     StorePickLatAsUser();
+                //     StorePickLongAsUser();
 
-                }
+                // }
 
                 Geolocation.getCurrentPosition(
                     position => {
@@ -689,15 +789,15 @@ const CourierBookingScreen = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
-        // Cleanup function
-        return () => {
-            // Clear the interval when the component unmounts
-            clearInterval(intervalId);
-        };
-    }, [route.params.itemPickName, route.params.itemDropName,
-    route.params.itemPin, route.params.itemDropPin]);
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchData, 10 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+
+    }, [route.params.itemPin, route.params.itemDropPin]);
 
 
 
@@ -805,9 +905,9 @@ const CourierBookingScreen = ({ route, navigation }) => {
             const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
             console.log('ErrorrestoredPreviousPickName :', storedPickPrev);
             if (storedPickPrev !== null) {
-                setPickPlace1(JSON.parse(storedPickPrev));
+                // setPickPlace1(JSON.parse(storedPickPrev));
             } else {
-                setPickPlace1(ScreenText.SelectPickuplocation);
+                // setPickPlace1(ScreenText.SelectPickuplocation);
             }
         } catch (error) {
 
@@ -850,9 +950,9 @@ const CourierBookingScreen = ({ route, navigation }) => {
             const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
             console.log('ErrorrestoredPreviousPickName :', storedDropPrev);
             if (storedDropPrev !== null) {
-                setPickPlace2(JSON.parse(storedDropPrev));
+                // setPickPlace2(JSON.parse(storedDropPrev));
             } else {
-                setPickPlace2(ScreenText.SelectPickuplocation);
+                // setPickPlace2(ScreenText.SelectPickuplocation);
             }
         } catch (error) {
 
@@ -1518,7 +1618,10 @@ const CourierBookingScreen = ({ route, navigation }) => {
                         renderDropdown={renderDropdown}
                         isArrow={true}
                         isArrowLeft={false}
-                        onPress={() => navigation.goBack()}
+                        onPress={() => {
+                            clearSpecificData();
+                            navigation.goBack();
+                        }}
                     />
 
                 </View>
@@ -1561,6 +1664,9 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                         isVisibleMail={false}
                                                         isVisibleCloseIcon={true} // As Text Available To Show !
                                                         isVisibleLockWhite={false}
+                                                        onPressClose={() =>
+                                                            setPickPlace1(ScreenText.SelectPickuplocation)
+                                                        }
                                                         marginVertical={hp(1)}
                                                         marginHorizontal={wp(2)}
                                                         width={wp(90)}
@@ -1573,12 +1679,12 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                         ref={refPickUp}
                                                         placeholder={PickPlace1}
                                                         editable={false}
-                                                        multiline={false}
+                                                        multiline={true}
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
                                                         textAlign='left'
-                                                        numberOfLines={null}
+                                                        numberOfLines={2}
                                                         color={Colors.white}
                                                         borderRadius={wp(2)}
                                                         onChangeText={handleAccountPassword}
@@ -1625,6 +1731,9 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                             width={wp(90)}
                                                             // marginTop={wp(2)}
                                                             height={hp(7)}
+                                                            onPressClose={() =>
+                                                                setPickPlace2(ScreenText.SelectPickuplocation)
+                                                            }
                                                             isUserHide={false}
                                                             textfontSize={ConstValue.value15}
                                                             textfontFamily={Fonts.PoppinsRegular}
@@ -1632,12 +1741,12 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                             ref={refDropUp}
                                                             placeholder={PickPlace2}
                                                             editable={false}
-                                                            multiline={false}
+                                                            multiline={true}
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
                                                             textAlign='left'
-                                                            numberOfLines={null}
+                                                            numberOfLines={2}
                                                             color={Colors.white}
                                                             borderRadius={wp(2)}
                                                             onChangeText={handleAccountPasswordDrop}
@@ -2298,13 +2407,16 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                         textlineHeight={ConstValue.value0}
                                                         ref={refPickUp}
                                                         placeholder={PickPlace1} //01
+                                                        onPressClose={() =>
+                                                            setPickPlace1(ScreenText.SelectPickuplocation)
+                                                        }
                                                         editable={false}
-                                                        multiline={false}
+                                                        multiline={true}
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
                                                         textAlign='left'
-                                                        numberOfLines={null}
+                                                        numberOfLines={2}
                                                         color={Colors.white}
                                                         borderRadius={wp(2)}
                                                         onChangeText={handleAccountPassword}
@@ -2354,15 +2466,18 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                             textfontSize={ConstValue.value15}
                                                             textfontFamily={Fonts.PoppinsRegular}
                                                             textlineHeight={ConstValue.value0}
+                                                            onPressClose={() =>
+                                                                setPickPlace2(ScreenText.SelectPickuplocation)
+                                                            }
                                                             ref={refDropUp}
                                                             placeholder={PickPlace2} //02
                                                             editable={false}
-                                                            multiline={false}
+                                                            multiline={true}
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
                                                             textAlign='left'
-                                                            numberOfLines={null}
+                                                            numberOfLines={2}
                                                             color={Colors.white}
                                                             borderRadius={wp(2)}
                                                             onChangeText={handleAccountPasswordDrop}

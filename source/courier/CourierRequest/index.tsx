@@ -456,6 +456,12 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         // TODO :
                         OTPStatus = response?.data?.matchingUsers?.OTP;
 
+                        console.log("OTPStatus-1", OTPStatus);
+                        console.log("OTPStatus-1", OTPStatus);
+                        console.log("OTPStatus-1", OTPStatus);
+                        console.log("OTPStatus-1", OTPStatus);
+
+
                         // TODO :
                         OTPGenerateTimeArrived = response?.data?.matchingUsers?.OTPGenerateTime;
                         OTPVerifyTimeArrived = response?.data?.matchingUsers?.OTPVerifyTime;
@@ -487,6 +493,13 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
                         // DROP 1 -2 - 3
                         DropOTPArrived = response?.data?.matchingUsers?.DropOTP;
+
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+
+
                         DropOTPStatusArrived = response?.data?.matchingUsers?.DropOTPStatus;
                         DropOTPGenerateTimeArrived = response?.data?.matchingUsers?.DropOTPGenerateTime;
 

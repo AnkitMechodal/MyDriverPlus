@@ -63,6 +63,10 @@ const CourierPickupScreen = (props: Props) => {
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
 
+
+    let mark3;
+    let mark4;
+
     const handleFocusPassRefCode = () => {
         setIsFocusedPasswordRef(true)
     }
@@ -811,6 +815,11 @@ const CourierPickupScreen = (props: Props) => {
 
             }
 
+            // STORE PICK ADDRESS IN LOCAL 
+            mark3 = JSON.parse(secondPartOfAddress_);
+            STOARE_LOCAL_LANDMARK3(mark3);
+            
+
             props.navigation.navigate('CourierBooking', {
                 itemPickName: JSON.parse(secondPartOfAddress_),
                 itemType: 'Courier Delivery',
@@ -838,6 +847,9 @@ const CourierPickupScreen = (props: Props) => {
 
             }
 
+            // STORE PICK ADDRESS IN LOCAL 
+            mark4 = locationNearByRef
+            STOARE_LOCAL_LANDMARK4(mark4);
 
             props.navigation.navigate('CourierBooking', {
                 itemPickName: locationNearByRef,
@@ -851,20 +863,23 @@ const CourierPickupScreen = (props: Props) => {
         }
     }
 
-    // const onPressLocationToPickUp = () => {
-    //     // Check Validation : locationNearByRef
-    //     if (locationNearByRef === null ||
-    //         locationNearByRef === '' ||
-    //         locationNearByRef === undefined) {
-    //         Toast.show("Nearby Landmark Field Is Required !", Toast.SHORT);
-    //     } else {
-    //         props.navigation.navigate('CourierBooking', {
-    //             itemPickName: locationNearByRef,
-    //             itemType: 'Courier Delivery',
-    //             itemPin: pin,
-    //         });
-    //     }
-    // }
+
+    const STOARE_LOCAL_LANDMARK3 = async (mark3: any) => {
+        try {
+            await AsyncStorage.setItem('mark3_pick', JSON.stringify(mark3));
+        } catch (error) {
+            console.error('Error mark3_pick:', error);
+        }
+    }
+
+    const STOARE_LOCAL_LANDMARK4 = async (mark4: any) => {
+        try {
+            await AsyncStorage.setItem('mark3_pick', JSON.stringify(mark4));
+        } catch (error) {
+            console.error('Error mark4_drop:', error);
+        }
+    }
+
 
     // TODO : 
     const handleFavouriteChange = async ({ item, index }) => {

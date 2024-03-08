@@ -102,8 +102,7 @@ const PickUpLocationScreen = ({ route, navigation }) => {
 
     let mark1;
     let mark2;
-    let mark3;
-    let mark4;
+   
 
     // USER
     let secondPartOfAddress;

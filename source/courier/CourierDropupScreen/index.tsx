@@ -29,6 +29,11 @@ const CourierDropupScreen = (props: Props) => {
     const refDesc = useRef<any>(null);
     // refMobileCode
 
+
+    let mark3;
+    let mark4;
+
+
     const refLocation = useRef<any>(null);
 
     const [pin, setLocationPin] = useState('')
@@ -594,22 +599,6 @@ const CourierDropupScreen = (props: Props) => {
     }
 
 
-    // const onPressLocationToPickUp = () => {
-    //     // Check Validation : locationNearByRef
-    //     if (locationNearByRef === null ||
-    //         locationNearByRef === '' ||
-    //         locationNearByRef === undefined) {
-    //         Toast.show("Nearby Landmark Field Is Required !", Toast.SHORT);
-    //     } else {
-    //         props.navigation.navigate('CourierBooking', {
-    //             itemDropName: locationNearByRef,
-    //             itemType: 'Courier Delivery',
-    //             itemDropPin: pin,
-    //         });
-    //     }
-    // }
-
-
     // TODO : 
     const handleFavouriteChange = async ({ item, index }) => {
 
@@ -669,6 +658,10 @@ const CourierDropupScreen = (props: Props) => {
 
             }
 
+            // STORE PICK ADDRESS IN LOCAL 
+            mark3 = JSON.parse(secondPartOfAddress_);
+            STOARE_LOCAL_LANDMARK3(mark3);
+
             props.navigation.navigate('CourierBooking', {
                 itemDropName: JSON.parse(secondPartOfAddress_),
                 itemType: 'Courier Delivery',
@@ -696,6 +689,11 @@ const CourierDropupScreen = (props: Props) => {
 
             }
 
+
+            // STORE PICK ADDRESS IN LOCAL 
+            mark4 = JSON.parse(secondPartOfAddress_);
+            STOARE_LOCAL_LANDMARK4(mark4);
+
             props.navigation.navigate('CourierBooking', {
                 itemDropName: locationNearByRef,
                 itemType: 'Courier Delivery',
@@ -705,6 +703,23 @@ const CourierDropupScreen = (props: Props) => {
                 itemDroplong: JSON.parse(PassingLong) !== '' ? JSON.parse(PassingLong) :
                     markerCoordinates.longitude,
             });
+        }
+    }
+
+
+    const STOARE_LOCAL_LANDMARK3 = async (mark3: any) => {
+        try {
+            await AsyncStorage.setItem('mark4_drop', JSON.stringify(mark3));
+        } catch (error) {
+            console.error('Error mark4_drop:', error);
+        }
+    }
+
+    const STOARE_LOCAL_LANDMARK4 = async (mark4: any) => {
+        try {
+            await AsyncStorage.setItem('mark4_drop', JSON.stringify(mark4));
+        } catch (error) {
+            console.error('Error mark4_drop:', error);
         }
     }
 

@@ -599,6 +599,19 @@ const HomeTabScreen = ({ route, navigation }) => {
     }
 
 
+    const clearSpecificData = async () => {
+        try {
+            // Clearing specific data with the key 'parsedData'
+            await AsyncStorage.removeItem('mark1_pick');
+            await AsyncStorage.removeItem('mark2_drop');
+            await AsyncStorage.removeItem('mark3_pick');
+            await AsyncStorage.removeItem('mark4_drop');
+            console.log('Specific data cleared successfully.');
+        } catch (error) {
+            console.error('Error clearing specific data:', error);
+        }
+    }
+
     const axiosPostNavigationStatusRequest = async (RideObjectIDUser: any) => {
 
         // const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
@@ -1191,12 +1204,13 @@ const HomeTabScreen = ({ route, navigation }) => {
                             <View style={Styles.viewModalFixed}>
                                 <View>
                                     <TouchableOpacity
-                                        onPress={() =>
+                                        onPress={() => {
                                             navigation.navigate('BookingScreen', {
                                                 itemType: 'Taxi Booking'
-                                            })
-                                        }
-                                    >
+                                            });
+                                            clearSpecificData();
+                                        }}>
+
                                         <View style={Styles.viewItem1}>
                                             <Image
                                                 source={Images.whiteCardIcon}
@@ -1209,11 +1223,13 @@ const HomeTabScreen = ({ route, navigation }) => {
                                 </View>
 
                                 <TouchableOpacity
-                                    onPress={() =>
+
+                                    onPress={() => {
                                         navigation.navigate('CourierBooking', {
                                             itemType: 'Courier Delivery'
-                                        })
-                                    }>
+                                        });
+                                        clearSpecificData();
+                                    }}>
 
                                     <View>
                                         <View style={Styles.viewItem1}>

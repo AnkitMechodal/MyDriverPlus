@@ -442,8 +442,21 @@ const BookingScreen = ({ route, navigation }) => {
         console.log("item==>", item);
         if (item === "1") {
             setIsSelectedViewFirst(false)
+
+            setPickPlace1(ScreenText.SelectPickuplocation);
+            setPickPlace2(ScreenText.SelectDropofflocation);
+
+            clearSpecificData();
+
+            console.log("1");
         } else {
             setIsSelectedViewFirst(true)
+
+            clearSpecificData();
+
+            setPickPlace1(ScreenText.SelectPickuplocation);
+            setPickPlace2(ScreenText.SelectDropofflocation);
+            console.log("2");
         }
         // if (value.label === "Taxi Booking") {
         //     // setIsSelectedViewFirst(false)
@@ -611,6 +624,7 @@ const BookingScreen = ({ route, navigation }) => {
     }, []); // Run this effect only once
 
 
+
     useEffect(() => {
 
         const fetchData = async () => { // itemPin
@@ -623,6 +637,19 @@ const BookingScreen = ({ route, navigation }) => {
                     console.log('mark1_pick :', storedPickPrev);
                     if (storedPickPrev !== null) {
                         setPickPlace1(JSON.parse(storedPickPrev)); // 07-03-2024
+
+                        //  PICK TO STORE
+                        itemPICKLAT = route?.params?.itemPicklat;
+                        itemPICKLONG = route?.params?.itemPicklong;
+
+                        StorePick1(itemPICKLAT);
+                        StorePick2(itemPICKLONG);
+
+                        // DROP TO RESTORE - GET
+                        StoreDropLatAsUser();
+                        StoreDropLongAsUser();
+                        //  PICK TO STORE
+
                     } else {
                         setPickPlace1(ScreenText.SelectPickuplocation);
                     }
@@ -636,12 +663,31 @@ const BookingScreen = ({ route, navigation }) => {
                     console.log('mark2_drop :', storedPickPrev);
                     if (storedPickPrev !== null) {
                         setPickPlace2(JSON.parse(storedPickPrev)); // 07-03-2024
+
+
+                        // DROP TO STORE
+                        itemDROPLAT = route?.params?.itemDroplat;
+                        itemDROPLONG = route?.params?.itemDroplong;
+
+                        StoreDrop1(itemDROPLAT);
+                        StoreDrop2(itemDROPLONG);
+
+                        // PICK TO RESTORE - GET
+                        StorePickLatAsUser();
+                        StorePickLongAsUser();
+                        // DROP TO STORE
+
                     } else {
                         setPickPlace2(ScreenText.SelectDropofflocation);
                     }
                 } catch (error) {
 
                 }
+
+
+
+
+
 
 
                 // 1 : PICK
@@ -679,7 +725,6 @@ const BookingScreen = ({ route, navigation }) => {
 
                 // // StoreDropLatAsUser();
                 // // StoreDropLongAsUser();
-
 
 
                 if (route.params.itemPin === undefined) {
@@ -750,8 +795,7 @@ const BookingScreen = ({ route, navigation }) => {
         //     clearInterval(intervalId);
         // };
 
-    }, [route.params.itemPickName, route.params.itemDropName,
-    route.params.itemPin, route.params.itemDropPin]);
+    }, [route.params.itemPin, route.params.itemDropPin]);
 
 
     const PickUpLocationPin = async (StorePinPickUp: any) => {
@@ -1875,13 +1919,13 @@ const BookingScreen = ({ route, navigation }) => {
                                                         textlineHeight={ConstValue.value0}
                                                         ref={refPickUp}
                                                         placeholder={PickPlace1}
-                                                        editable={true}
-                                                        multiline={false}
+                                                        editable={false}
+                                                        multiline={true}
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
                                                         textAlign='left'
-                                                        numberOfLines={null}
+                                                        numberOfLines={2}
                                                         color={Colors.white}
                                                         borderRadius={wp(2)}
                                                         onChangeText={handleAccountPassword}
@@ -1940,12 +1984,12 @@ const BookingScreen = ({ route, navigation }) => {
                                                             ref={refDropUp}
                                                             placeholder={PickPlace2}
                                                             editable={false}
-                                                            multiline={false}
+                                                            multiline={true}
                                                             secureTextEntry={false}
                                                             isPadding={true}
                                                             keyboardType='default'
                                                             textAlign='left'
-                                                            numberOfLines={null}
+                                                            numberOfLines={2}
                                                             color={Colors.white}
                                                             borderRadius={wp(2)}
                                                             onChangeText={handleAccountPasswordDrop}
@@ -2607,12 +2651,12 @@ const BookingScreen = ({ route, navigation }) => {
                                                         ref={refPickUp}
                                                         placeholder={PickPlace1}
                                                         editable={false}
-                                                        multiline={false}
+                                                        multiline={true}
                                                         secureTextEntry={false}
                                                         isPadding={true}
                                                         keyboardType='default'
                                                         textAlign='left'
-                                                        numberOfLines={null}
+                                                        numberOfLines={2}
                                                         color={Colors.white}
                                                         borderRadius={wp(2)}
                                                         onChangeText={handleAccountPassword}

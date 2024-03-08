@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateNewPasswordScreen from '../screens/Auth/CreateNewPassword/index';
 import EmailVerficationScreen from '../screens/Auth/EmailVerfication/index';
+import FacebookSignUpScreen from '../screens/Auth/FacebookSignUpScreen';
 import ForgotPasswordScreen from '../screens/Auth/ForgotPassword';
 import GoogleSignUpScreen from '../screens/Auth/GoogleSignUpScreen';
 import Home1Screen from '../screens/Auth/Home1';
@@ -16,7 +17,6 @@ import VerifiedScreen from '../screens/Auth/Verified';
 import VerifyYourScreen from '../screens/Auth/VerifyYourAccount';
 import VerifyYourScreenMail from '../screens/Auth/VerifyYourScreenMail';
 import VerifyYourScreenMobile from '../screens/Auth/VerifyYourScreenMobile';
-import FacebookSignUpScreen from '../screens/Auth/FacebookSignUpScreen';
 
 const Stack = createNativeStackNavigator();
 
