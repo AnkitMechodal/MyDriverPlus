@@ -78,13 +78,14 @@ const Styles = StyleSheet.create({
         borderRadius: wp(50),
         marginHorizontal: wp(9), // 3 //10
         justifyContent: 'center',
-        // alignSelf: "flex-end",
+        alignSelf: "flex-end",
     },
     marginRight: {
         // alignSelf: "flex-end",
         // marginHorizontal: wp(10), // 3 //10 todooooo1
-        // marginRight: wp(12)
+        marginRight: wp(10),
         justifyContent: 'center',
+        alignSelf: "flex-end",
     },
     marginVertical: {
         marginVertical: wp(115),

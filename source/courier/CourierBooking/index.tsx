@@ -900,19 +900,19 @@ const CourierBookingScreen = ({ route, navigation }) => {
         }
     }
 
-    const restoredPreviousPickName = async () => {
-        try {
-            const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
-            console.log('ErrorrestoredPreviousPickName :', storedPickPrev);
-            if (storedPickPrev !== null) {
-                // setPickPlace1(JSON.parse(storedPickPrev));
-            } else {
-                // setPickPlace1(ScreenText.SelectPickuplocation);
-            }
-        } catch (error) {
+    // const restoredPreviousPickName = async () => {
+    //     try {
+    //         const storedPickPrev = await AsyncStorage.getItem('user_name_pick');
+    //         console.log('ErrorrestoredPreviousPickName :', storedPickPrev);
+    //         if (storedPickPrev !== null) {
+    //             // setPickPlace1(JSON.parse(storedPickPrev));
+    //         } else {
+    //             // setPickPlace1(ScreenText.SelectPickuplocation);
+    //         }
+    //     } catch (error) {
 
-        }
-    }
+    //     }
+    // }
 
     const store_user_latitude = async (current_latitude: any) => {
         try {
@@ -925,15 +925,15 @@ const CourierBookingScreen = ({ route, navigation }) => {
     }
 
 
-    const storedPreviousDropName = async (storeiddrop: any) => {
-        try {
-            await AsyncStorage.setItem('user_name_drop', JSON.stringify(storeiddrop));
-            console.log('user_name_drop===>', JSON.stringify(storeiddrop));
-        } catch (error) {
-            // Handle any errors that might occur during the storage operation
-            console.log('Error user_name_drop :', error);
-        }
-    }
+    // const storedPreviousDropName = async (storeiddrop: any) => {
+    //     try {
+    //         await AsyncStorage.setItem('user_name_drop', JSON.stringify(storeiddrop));
+    //         console.log('user_name_drop===>', JSON.stringify(storeiddrop));
+    //     } catch (error) {
+    //         // Handle any errors that might occur during the storage operation
+    //         console.log('Error user_name_drop :', error);
+    //     }
+    // }
 
     const PickUpLocationPin = async (StorePinPickUp: any) => {
         try {
@@ -945,29 +945,29 @@ const CourierBookingScreen = ({ route, navigation }) => {
         }
     }
 
-    const restoredPreviousDropName = async () => {
-        try {
-            const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
-            console.log('ErrorrestoredPreviousPickName :', storedDropPrev);
-            if (storedDropPrev !== null) {
-                // setPickPlace2(JSON.parse(storedDropPrev));
-            } else {
-                // setPickPlace2(ScreenText.SelectPickuplocation);
-            }
-        } catch (error) {
+    // const restoredPreviousDropName = async () => {
+    //     try {
+    //         const storedDropPrev = await AsyncStorage.getItem('user_name_drop');
+    //         console.log('ErrorrestoredPreviousPickName :', storedDropPrev);
+    //         if (storedDropPrev !== null) {
+    //             // setPickPlace2(JSON.parse(storedDropPrev));
+    //         } else {
+    //             // setPickPlace1(ScreenText.SelectPickuplocation);
+    //         }
+    //     } catch (error) {
 
-        }
-    }
+    //     }
+    // }
 
-    const storedPreviousPickName = async (storeidpick: any) => {
-        try {
-            await AsyncStorage.setItem('user_name_pick', JSON.stringify(storeidpick));
-            console.log('user_name_pick===>', JSON.stringify(storeidpick));
-        } catch (error) {
-            // Handle any errors that might occur during the storage operation
-            console.log('Error user_name_pick :', error);
-        }
-    }
+    // const storedPreviousPickName = async (storeidpick: any) => {
+    //     try {
+    //         await AsyncStorage.setItem('user_name_pick', JSON.stringify(storeidpick));
+    //         console.log('user_name_pick===>', JSON.stringify(storeidpick));
+    //     } catch (error) {
+    //         // Handle any errors that might occur during the storage operation
+    //         console.log('Error user_name_pick :', error);
+    //     }
+    // }
 
 
     // 1 //
@@ -1362,17 +1362,22 @@ const CourierBookingScreen = ({ route, navigation }) => {
     const getCurrentLocationDistnaceDurationHourly = async (GetUserAsPickLat, GetUserAsPickLong,
         GetUserAsDropLat, GetUserAsDropLong) => {
 
-        // TODO : GET 2 LAT - 2 LONG
-        GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
-        GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
+        try {
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
 
-        GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
-        GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
 
-        console.log("1:=======>", JSON.parse(GetUserAsPickLat));
-        console.log("2:=======>", JSON.parse(GetUserAsPickLong));
-        console.log("3:=======>", JSON.parse(GetUserAsDropLat));
-        console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+            console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+
+        } catch (error) {
+
+        }
 
         const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
         const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;
@@ -1732,7 +1737,7 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                             // marginTop={wp(2)}
                                                             height={hp(7)}
                                                             onPressClose={() =>
-                                                                setPickPlace2(ScreenText.SelectPickuplocation)
+                                                                setPickPlace2(ScreenText.SelectDropofflocation)
                                                             }
                                                             isUserHide={false}
                                                             textfontSize={ConstValue.value15}
@@ -2467,7 +2472,7 @@ const CourierBookingScreen = ({ route, navigation }) => {
                                                             textfontFamily={Fonts.PoppinsRegular}
                                                             textlineHeight={ConstValue.value0}
                                                             onPressClose={() =>
-                                                                setPickPlace2(ScreenText.SelectPickuplocation)
+                                                                setPickPlace2(ScreenText.SelectDropofflocation)
                                                             }
                                                             ref={refDropUp}
                                                             placeholder={PickPlace2} //02

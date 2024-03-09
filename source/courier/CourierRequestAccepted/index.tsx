@@ -320,7 +320,7 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
         fetchData();
 
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Cleanup function
         return () => {
@@ -473,8 +473,11 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                     // stored id : todo
                     StoredRideID(USER_RIDEID);
 
-                    console.log("RideDetails101===>",
+                    console.log("RideDetails108888===>",
                         JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+                    console.log("RideDetails102222===>",
+                        JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+
 
                 } else {
                     // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
@@ -520,6 +523,11 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
             // const url = 'https://rideshareandcourier.graphiglow.in/api/driverInfo/driverInfo';
             const url = `${API.BASE_URL}/driverInfo/driverInfo`;
 
+            console.log("GET DRIVER ID1 ---", url);
+            console.log("GET DRIVER ID2 ---", url);
+            console.log("GET DRIVER ID3 ---", url);
+            console.log("GET DRIVER ID4 ---", url);
+
             // GET DRIVER ID 
 
             // Prepare data in JSON format
@@ -541,6 +549,19 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                         // Handle API response here
 
                         DriverBookingName = response?.data?.matchingUsers[0]?.username;
+
+
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+                        console.log("DriverBookingName---", DriverBookingName);
+
+
 
                         DriverBookingImage1 = response?.data?.matchingUsers[0]?.vehicle_pictures1_Url;
                         DriverBookingImage2 = response?.data?.matchingUsers[0]?.vehicle_pictures2_Url;
@@ -599,6 +620,12 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
         try {
             const storedLinkedId = await AsyncStorage.getItem('store_star_id');
 
+            console.log("storedLinkedId-1", storedLinkedId);
+            console.log("storedLinkedId-2", storedLinkedId);
+            console.log("storedLinkedId-3", storedLinkedId);
+            console.log("storedLinkedId-4", storedLinkedId);
+
+
             if (storedLinkedId !== null) {
                 const userId = JSON.parse(storedLinkedId);
                 // const url = `https://rideshareandcourier.graphiglow.in/api/rattingCalculateDriver/calculateRating/${userId}`;
@@ -617,6 +644,9 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
 
                             averageRating = response?.data?.ratings?.averageRating;
                             // avg_username = response?.data?.ratings?.username;
+
+
+                            // setDriverName(response?.data?.ratings?.username);
 
                             console.log("AVG_username*****===>", response?.data);
 
@@ -1246,7 +1276,7 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                             />
                         </View>
 
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: 1, justifyContent: "center" }}>
                             <View style={Styles.textKMConatiner}>
                                 <View>
                                     <TextComponent

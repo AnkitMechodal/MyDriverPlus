@@ -795,6 +795,7 @@ const HomeTabScreen = ({ route, navigation }) => {
         if (RidetypeUser = "Taxi Booking") {
             if (service_stypeUser = "Bidding Ride") {
 
+
                 let LastRideIdIUser_ = await AsyncStorage.getItem('store_get_last_id_user');
 
                 let RideObjectIDUser_ = await AsyncStorage.getItem('store_get_last_id_object');
@@ -1181,7 +1182,9 @@ const HomeTabScreen = ({ route, navigation }) => {
                                     title={isDRIVERSTATUS == "Ride Complete" ? "View Booking" : "View Booking"}
                                     textDecorationLine={'underline'} //USER
                                     // onPress={onPressViewBooking}
-                                    onPress={() => onPressViewBookingLast()}
+                                    onPress={() =>
+                                        onPressViewBookingLast()
+                                    }
                                     // onPress={() => Alert.alert("Booking Status")}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}

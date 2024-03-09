@@ -1471,17 +1471,22 @@ const BookingScreen = ({ route, navigation }) => {
     const getCurrentLocationDistnaceDurationHourly = async (GetUserAsPickLat, GetUserAsPickLong,
         GetUserAsDropLat, GetUserAsDropLong) => {
 
-        // TODO : GET 2 LAT - 2 LONG
-        GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
-        GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
+        try {
+            // TODO : GET 2 LAT - 2 LONG
+            GetUserAsPickLat = await AsyncStorage.getItem('user_pick_lat');
+            GetUserAsPickLong = await AsyncStorage.getItem('user_pick_long');
 
-        GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
-        GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
+            GetUserAsDropLat = await AsyncStorage.getItem('user_drop_lat');
+            GetUserAsDropLong = await AsyncStorage.getItem('user_drop_long');
 
-        console.log("1:=======>", JSON.parse(GetUserAsPickLat));
-        console.log("2:=======>", JSON.parse(GetUserAsPickLong));
-        console.log("3:=======>", JSON.parse(GetUserAsDropLat));
-        console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+            console.log("1:=======>", JSON.parse(GetUserAsPickLat));
+            console.log("2:=======>", JSON.parse(GetUserAsPickLong));
+            console.log("3:=======>", JSON.parse(GetUserAsDropLat));
+            console.log("4:=======>", JSON.parse(GetUserAsDropLong));
+        } catch (error) {
+
+        }
+
 
         const apiKey = 'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE';
         const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${GetUserAsPickLat},${GetUserAsPickLong}&destinations=${GetUserAsDropLat},${GetUserAsDropLong}&key=${apiKey}`;

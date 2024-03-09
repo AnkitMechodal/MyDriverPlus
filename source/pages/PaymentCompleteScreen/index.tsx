@@ -249,6 +249,12 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
+        console.log("storedLinkedId===>", storedLinkedId);
+        console.log("storedLinkedId===>", storedLinkedId);
+        console.log("storedLinkedId===>", storedLinkedId);
+        console.log("storedLinkedId===>", storedLinkedId);
+
+
         const type = await AsyncStorage.getItem('user_type');
 
         if (type !== null && storedLinkedId !== null) {

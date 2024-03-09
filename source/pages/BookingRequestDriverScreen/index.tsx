@@ -297,7 +297,6 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                     // USER_DISCOUNT - NO USE
                     // setTOTAL_AMOUNT(USER_TOTAL); //0001144555
 
-
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
                     setSERVICE_TYPE(USER_SERVICE_TYPE);
@@ -650,7 +649,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                             marginHorizontal={wp(2)}
                                             marginVertical={wp(1)}
                                             fontFamily={Fonts.PoppinsSemiBold}
-                                            textAlign='left'
+                                            textAlign='center'
                                         />
                                         <TextComponent
                                             color={Colors.gray}
@@ -658,7 +657,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
-                                            // marginHorizontal={wp(2)} // itemCompleteDuration
+                                            marginHorizontal={wp(2)} // itemCompleteDuration
                                             marginVertical={wp(1)}
                                             fontFamily={Fonts.PoppinsRegular}
                                             textAlign='center'
@@ -678,7 +677,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                             marginHorizontal={wp(2)}
                                             marginVertical={wp(1)}
                                             fontFamily={Fonts.PoppinsSemiBold}
-                                            textAlign='left'
+                                            textAlign='center'
                                         />
                                         <TextComponent
                                             color={Colors.gray}
@@ -689,7 +688,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                             marginHorizontal={wp(2)}
                                             marginVertical={wp(1)}
                                             fontFamily={Fonts.PoppinsRegular}
-                                            textAlign='left'
+                                            textAlign='center'
                                         />
                                     </View>
 
@@ -934,7 +933,7 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                     color={Colors.white}
                                     title={ScreenText.PayNow}
                                     onPress={() =>
-                                        navigation.navigate('PaymentComplete', {
+                                        navigation.navigate('PaymentComplete', { //todo0903
                                             itemCompleteDistance: route?.params?.itemCompleteDistance,
                                             itemCompleteDuration: route?.params?.itemCompleteDuration,
                                             itemCompletePickStation: route?.params?.itemCompletePickStation,
@@ -943,7 +942,9 @@ const BookingRequestDriverScreen = ({ route, navigation }) => {
                                             itemCompleteRideFeesCon: route?.params?.itemCompleteRideFeesCon,
                                             itemCompleteRideWattingCharges: route?.params?.itemCompleteRideWattingCharges,
                                             itemCompleteRideDiscount: route?.params?.itemCompleteRideDiscount,
-                                            itemCompleteTotalAmount: route?.params?.itemCompleteTotalAmount
+                                            // itemCompleteTotalAmount: route?.params?.itemCompleteTotalAmount
+                                            itemCompleteTotalAmount: isTOTAL_AMOUNT
+
                                         })
                                     }
                                     marginHorizontal={wp(2)}
