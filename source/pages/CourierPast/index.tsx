@@ -24,6 +24,13 @@ const Tab3CourierScreen = (props: Props) => {
 
                 const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
+                console.log("REG_ID1====>", storedLinkedId);
+                console.log("REG_ID2====>", storedLinkedId);
+                console.log("REG_ID3====>", storedLinkedId);
+                console.log("REG_ID4====>", storedLinkedId);
+                console.log("REG_ID5====>", storedLinkedId);
+                console.log("REG_ID6====>", storedLinkedId);
+
                 if (storedLinkedId !== null) {
 
                     const requestData = {
@@ -38,6 +45,8 @@ const Tab3CourierScreen = (props: Props) => {
                         // RideStatusType: "upcoming"
                     };
 
+                    console.log("requestData===>", JSON.stringify(requestData, null, 2));
+                    console.log("requestData===>", JSON.stringify(requestData, null, 2));
                     console.log("requestData===>", JSON.stringify(requestData, null, 2));
 
                     const url = `${API.BASE_URL}/CourierDriverHistory/courierdriverhistory`;
@@ -131,6 +140,7 @@ const Tab3CourierScreen = (props: Props) => {
                                                     textAlign='left'
                                                 />
                                             </View>
+
                                             <View style={{ flex: 1, justifyContent: 'center' }}>
                                                 {item?.status == "Pending" ?
                                                     <TextComponent
@@ -207,14 +217,16 @@ const Tab3CourierScreen = (props: Props) => {
                                                     source={Images.orangeDot} />
                                             </View>
 
-                                            <View>
+                                            <View style={{ flex: 1 }}>
                                                 <TextComponent
                                                     color={Colors.white}
                                                     title={item?.pickup_locations}
                                                     textDecorationLine={'none'}
                                                     fontWeight="500"
+                                                    ellipsizeMode={"tail"}
                                                     fontSize={wp(3.5)}
                                                     marginVertical={wp(1)}
+                                                    numberOfLines={1}
                                                     marginHorizontal={wp(3)}
                                                     fontFamily={Fonts.PoppinsRegular}
                                                     textAlign='left'
@@ -222,6 +234,8 @@ const Tab3CourierScreen = (props: Props) => {
                                                 <TextComponent
                                                     color={Colors.white}
                                                     title={item?.drop_locations}
+                                                    numberOfLines={1}
+                                                    ellipsizeMode={"tail"}
                                                     textDecorationLine={'none'}
                                                     fontWeight="500"
                                                     fontSize={wp(3.5)}
@@ -230,6 +244,7 @@ const Tab3CourierScreen = (props: Props) => {
                                                     fontFamily={Fonts.PoppinsRegular}
                                                     textAlign='left'
                                                 />
+
                                             </View>
 
                                             <View style={{ flex: 1, justifyContent: 'center' }}>

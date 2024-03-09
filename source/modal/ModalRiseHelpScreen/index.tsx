@@ -536,7 +536,7 @@ const ModalRiseHelpScreen = (props: Props) => {
         } else if (descRef === '') {
             Toast.show("Description Field Is Required", Toast.SHORT);
         } else {
-            Toast.show("Done", Toast.SHORT);
+            // Toast.show("Done", Toast.SHORT);
             // props.navigation.goBack();
 
             axiosPostRequestRaiseDispute()

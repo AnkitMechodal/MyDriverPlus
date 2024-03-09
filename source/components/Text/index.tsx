@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 type TextProps = {
     title: string
@@ -22,7 +22,7 @@ type TextProps = {
     sizeEnd: any,
     numberOfLines: number
     marginRight: any
-    ellipsizeMode:any
+    ellipsizeMode: any
 
 }
 const TextComponent = (props: TextProps) => {
@@ -51,40 +51,43 @@ const TextComponent = (props: TextProps) => {
     } = props
 
     return (
-        <Text style={{
-            color: color,
-            fontFamily: fontFamily || null,
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-            alignSelf: alignSelf,
-            textAlign: textAlign,
-            textDecorationLine: textDecorationLine,
-            letterSpacing: letterSpacing,
-            marginLeft: marginLeft,
-            marginVertical: marginVertical,
-            marginHorizontal: marginHorizontal,
-            marginTop: marginTop,
-            marginRight: marginRight,
 
-        }}
-            // numberOfLines={numberOfLines || 2}
-            // ellipsizeMode='tail' // other use in screen
-            onPress={onPress}
-            numberOfLines={numberOfLines}
-            ellipsizeMode={ellipsizeMode}>{title}
+            <Text style={{
+                color: color,
+                fontFamily: fontFamily || null,
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+                alignSelf: alignSelf,
+                textAlign: textAlign,
+                textDecorationLine: textDecorationLine,
+                letterSpacing: letterSpacing,
+                marginLeft: marginLeft,
+                marginVertical: marginVertical,
+                marginHorizontal: marginHorizontal,
+                marginTop: marginTop,
+                marginRight: marginRight,
 
-            {props.isTextEnd ?
-                <Text style={{
-                    color: colorEnd,
-                    fontSize: sizeEnd,
-                }}
-                    numberOfLines={2}
-                    ellipsizeMode='tail'
-                >
-                    {" "}{endtext}</Text>
-                : null}
+            }}
+                // numberOfLines={numberOfLines || 2}
+                // ellipsizeMode='tail' // other use in screen
+                onPress={onPress}
+                numberOfLines={numberOfLines}
+                ellipsizeMode={ellipsizeMode}
+            >
+                {title}
 
-        </Text>
+                {props.isTextEnd ?
+                    <Text style={{
+                        color: colorEnd,
+                        fontSize: sizeEnd,
+                    }}
+                        numberOfLines={2}
+                        ellipsizeMode='tail'
+                    >
+                        {" "}{endtext}</Text>
+                    : null}
+
+            </Text>
 
     )
 }

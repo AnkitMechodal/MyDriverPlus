@@ -49,6 +49,8 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
     let USER_FARE_VALUE;
     let USER_TOTAL;
 
+    let _DISCOUNT;
+
 
     let averageRating;
     let avg_username;
@@ -70,7 +72,7 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
     const [isRIDEID, setRIDEID] = useState("");
     const [isDATE_OF_RIDE, setDATE_OF_RIDE] = useState("");
     const [isPAYMEMT_TYPE, setPAYMEMT_TYPE] = useState("");
-    const [isTOTAL_AMOUNT, setTOTAL_AMOUNT] = useState("");
+    const [isTOTAL_AMOUNT, setTOTAL_AMOUNT] = useState<any>("");
     const [isWATTING_CHARGES, setWATTING_CHARGES] = useState("");
     const [isPICK_UP_LOCATION, setPICK_UP_LOCATION] = useState("");
     const [isDROP_UP_LOCATION, setDROP_UP_LOCATION] = useState("");
@@ -105,6 +107,8 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                 console.log("ITEM8===>", route?.params?.itemMapRideDiscount);
                 console.log("ITEM9===>", route?.params?.itemMapRideTotalAmount);
 
+                // setTOTAL_AMOUNT(route?.params?.itemMapRideTotalAmount);
+
 
                 await axiosPostRideDetailsOfMap();
                 await axiosGetRideRattingRequest();
@@ -117,7 +121,7 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
         fetchData();
 
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Cleanup function
         return () => {
@@ -237,7 +241,6 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                     USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
                     USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
 
-
                     // BookingCurrentStatus 
                     USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
                     USER_CANCELLATION = response?.data?.matchingVehicle?.cancelationsAmount;
@@ -272,8 +275,8 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
-
+                    _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(_DISCOUNT);
 
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
@@ -353,7 +356,7 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                                         <View style={CommonStyle.justifyContent}>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={route?.params?.itemBokingDetailsMapDuration + " KM"}
+                                                title={route?.params?.itemBokingDetailsMapDistance}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
                                                 fontSize={wp(3.5)}
@@ -381,7 +384,7 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                                         <View>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={route?.params?.itemBokingDetailsMapDistance}
+                                                title={route?.params?.itemBokingDetailsMapDuration}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
                                                 fontSize={wp(3.5)}
@@ -609,7 +612,8 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.discount}
-                                            title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
+                                            title={USER_BOOKINGSTATUS === "Cancel" ? "-$" + isCHARGE : "-$ 20"}
+                                            // title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"} corerct for NaN
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
@@ -631,7 +635,8 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.white}
-                                            title={USER_BOOKINGSTATUS = "Cancel" ? "$ " + isGETPERCENTAGE : "$ " + "5"}
+                                            // title={USER_BOOKINGSTATUS = "Cancel" ? "$ " + isGETPERCENTAGE : "$ " + "5"}
+                                            title={USER_BOOKINGSTATUS === "Cancel" ? "$" + isGETPERCENTAGE : "$" + (isTOTAL_AMOUNT - 20)}
                                             marginVertical={wp(0)} // 3
                                             textDecorationLine={'none'}
                                             fontWeight="400"

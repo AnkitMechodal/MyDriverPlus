@@ -26,15 +26,15 @@ const Tab4CourierScreen = (props: Props) => {
                 if (storedLinkedId !== null) {
 
                     const requestData = {
-                        // UserID: JSON.parse(storedLinkedId),
-                        // type: "Courier Delivery",
-                        // RideStatusType: "past" //04
+                        UserID: JSON.parse(storedLinkedId),
+                        type: "Courier Delivery",
+                        RideStatusType: "past" // TODO : 0903
 
-                        "type": "Courier Delivery",
-                        // "service_stype": "Ride Now",
-                        "UserID": "65214aec906807c5544fb29b",
-                        // "schedule_date": "04-10-2023"
-                        "RideStatusType": "past"
+                        // "type": "Courier Delivery",
+                        // // "service_stype": "Ride Now",
+                        // "UserID": "65214aec906807c5544fb29b",
+                        // // "schedule_date": "04-10-2023"
+                        // "RideStatusType": "past"
                     };
 
                     console.log("requestData===>", JSON.stringify(requestData, null, 2));

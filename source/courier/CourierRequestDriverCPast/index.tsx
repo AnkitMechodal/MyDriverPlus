@@ -50,6 +50,8 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
     let USER_FARE_VALUE;
     let USER_TOTAL;
 
+    let _DISCOUNT;
+
 
     // RIDEID
     const [isRIDEID, setRIDEID] = useState("");
@@ -120,7 +122,7 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
 
         fetchData();
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Clean up the interval when the component is unmounted
 
@@ -190,8 +192,9 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
 
+                    _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(_DISCOUNT);
 
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
@@ -664,7 +667,7 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
                                                 marginHorizontal={wp(2)}
                                                 marginVertical={wp(1)}
                                                 fontFamily={Fonts.PoppinsSemiBold}
-                                                textAlign='left'
+                                                textAlign='center'
                                             />
                                             <TextComponent
                                                 color={Colors.gray}

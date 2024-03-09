@@ -98,6 +98,10 @@ const CourierRequestDriverScreen = ({ route, navigation }) => {
                 // Duration & Distnace
                 console.log("ITEM11**===>", route?.params?.itemCompleteDistance);
                 console.log("ITEM22**===>", route?.params?.itemCompleteDuration);
+                // Duration & Distnace
+                console.log("ITEM11**===>", route?.params?.itemCompleteDistance);
+                console.log("ITEM22**===>", route?.params?.itemCompleteDuration);
+
 
                 console.log("ITEM33**===>", route?.params?.itemCompletePickStation);
                 console.log("ITEM44**===>", route?.params?.itemCompleteDropStation);
@@ -124,8 +128,8 @@ const CourierRequestDriverScreen = ({ route, navigation }) => {
         };
 
         fetchData();
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Clean up the interval when the component is unmounted
 

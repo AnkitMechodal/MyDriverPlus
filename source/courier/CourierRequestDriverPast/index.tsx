@@ -128,7 +128,7 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
 
         fetchData();
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Clean up the interval when the component is unmounted
 

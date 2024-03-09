@@ -1448,12 +1448,11 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                                             navigation.navigate('CourierRequestDriver', {
                                                 itemCompleteMapId: route?.params?.itemBokingDetailsMapId,
 
-                                                itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
-                                                itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
+                                                // itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                                // itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
 
-
-                                                // itemCompleteDistance: route?.params?.itemMapKmStation,
-                                                // itemCompleteDuration: route?.params?.itemMapMinStation,
+                                                itemCompleteDistance: route?.params?.itemMapKmStation,
+                                                itemCompleteDuration: route?.params?.itemMapMinStation,
 
                                                 itemCompletePickStation: route?.params?.itemMapPickStation,
                                                 itemCompleteDropStation: route?.params?.itemMapDropStation,
