@@ -5,7 +5,6 @@ import { ThemeProvider } from './source/utils/ThemeContext';
 
 const App = () => {
   LogBox.ignoreAllLogs();
-  // test
 
   return (
     <>
