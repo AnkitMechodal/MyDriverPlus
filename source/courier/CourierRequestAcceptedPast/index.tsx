@@ -169,13 +169,13 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                 console.log("itemMapDropStation**==>", route.params.itemMapDropStation);
 
 
-                // console.log("itemMapKmStation**", route?.params?.itemMapKmStation);
-                // console.log("itemMapMinStation**", route?.params?.itemMapMinStation);
+                console.log("itemMapKmStation**", route?.params?.itemMapKmStation);
+                console.log("itemMapMinStation**", route?.params?.itemMapMinStation);
 
-                // TODO :
-                console.log("itemMapKmStation000000000000==>", route?.params?.itemBokingDetailsMapDistance);
-                console.log("itemMapMinStation00000000000==>", route?.params?.itemBokingDetailsMapDuration);
-                // TODO :
+                // // TODO :
+                // console.log("itemMapKmStation000000000000///==>", route?.params?.itemBokingDetailsMapDistance);
+                // console.log("itemMapMinStation00000000000////==>", route?.params?.itemBokingDetailsMapDuration);
+                // // TODO :
 
                 console.log("PayRideCharge**", route?.params?.itemMapRideCharge);
                 console.log("PayBookingsFees**", route?.params?.itemMapRideFeesCon);
@@ -208,8 +208,10 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
     }, [
         route.params.itemMapPickStation,
         route.params.itemMapDropStation,
-        route?.params?.itemBokingDetailsMapDuration,
-        route?.params?.itemBokingDetailsMapDistance,
+        // route?.params?.itemBokingDetailsMapDuration,
+        // route?.params?.itemBokingDetailsMapDistance,
+        route?.params?.itemMapKmStation,
+        route?.params?.itemMapMinStation,
         route?.params?.itemMapRideCharge,
         route?.params?.itemMapRideFeesCon,
         route?.params?.itemMapRideWattingCharges,
@@ -1161,7 +1163,8 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                                     <View>
                                         <TextComponent
                                             color={Colors.blue}
-                                            title={route?.params?.itemBokingDetailsMapDuration}
+                                            title={route?.params?.itemMapMinStation}
+                                            // title={route?.params?.itemRIDER_DURATUION_SENT}
                                             textDecorationLine={'none'}
                                             fontWeight="700"
                                             fontSize={wp(3)} // 3
@@ -1180,7 +1183,7 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                                 <View style={Styles.marginRight}>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={route?.params?.itemBokingDetailsMapDistance}
+                                        title={route?.params?.itemMapKmStation}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3)} // 3
@@ -1329,9 +1332,11 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                                                 navigation.navigate('CourierRequestDriverPast', {
                                                     itemCompleteMapId: route?.params?.itemBokingDetailsMapId,
 
-                                                    itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
-                                                    itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
+                                                    //itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                                    //itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
 
+                                                    itemCompleteDistance: route?.params?.itemMapKmStation,
+                                                    itemCompleteDuration: route?.params?.itemMapKmStation,
 
                                                     itemCompletePickStation: route?.params?.itemMapPickStation,
                                                     itemCompleteDropStation: route?.params?.itemMapDropStation,

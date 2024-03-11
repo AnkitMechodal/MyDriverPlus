@@ -104,6 +104,8 @@ const Tab00ScreenStack = () => {
                 component={CourierRequestPast}
             />
 
+            {/* CourierDetailsMap */}
+
             {/* // other */}
             <Stack.Screen
                 name="ModalHelp"

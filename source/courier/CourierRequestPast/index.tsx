@@ -28,7 +28,8 @@ const CourierRequestPast = ({ route, navigation }) => {
     const [toggleAccepted, setToggleAccepted] = useState(false);
     const [toggleArrived, setToggleArrived] = useState(false);
 
-    const [isModalVisible, setModalVisible] = useState(true);
+    const [isModalVisibleREQ] = useState(true);
+    // const [isInnerModalVisible, setInnerModalVisible] = useState(false);
 
     // TODO :
     const [toggleONE, setToggleONE] = useState(false);
@@ -97,6 +98,8 @@ const CourierRequestPast = ({ route, navigation }) => {
     // TODO :
 
 
+    let formattedDateLL;
+
     let statusCheack;
     let dateCheack;
 
@@ -132,6 +135,10 @@ const CourierRequestPast = ({ route, navigation }) => {
     let paymentStatus;
     let rideStatus;
     let OTPStatus;
+
+
+    // Get Current Date
+    const currentDate = moment();
 
 
     const toggleModalCancel = () => {
@@ -215,7 +222,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                         // setVehicles(response.data.matchingVehicles);
 
                         Toast.show('Feedback Sent Successfully!', Toast.SHORT);
-                        setToggleFeedBack(true);
+                        setToggleFeedBack(true);///modaltodo
                         setModalFeedBack(false);
 
 
@@ -263,6 +270,9 @@ const CourierRequestPast = ({ route, navigation }) => {
                 console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT===>",
                     route.params.itemRIDER_RIDE_TOTALAMOUNT);
 
+                // // Get Current Date
+                // const currentDate = moment();
+                // formattedDateLL = currentDate.format('LLL'); // SelectDropofflocation
 
                 // Get User In User Info
                 await axiosGetRideStatusRequest();
@@ -409,7 +419,7 @@ const CourierRequestPast = ({ route, navigation }) => {
         }
     }
 
-    const axiosCheckGetRideStatusRequest = async () => { //010101
+    const axiosCheckGetRideStatusRequest = async () => { //1103
         try {
 
             // const url = `https://rideshareandcourier.graphiglow.in/api/rideStatus/checkRide/${route.params.itemRIDEID_SENT}`
@@ -444,6 +454,12 @@ const CourierRequestPast = ({ route, navigation }) => {
                         // TODO :
                         OTPStatus = response?.data?.matchingUsers?.OTP;
 
+                        console.log("OTPStatus-1", OTPStatus);
+                        console.log("OTPStatus-1", OTPStatus);
+                        console.log("OTPStatus-1", OTPStatus);
+                        console.log("OTPStatus-1", OTPStatus);
+
+
                         // TODO :
                         OTPGenerateTimeArrived = response?.data?.matchingUsers?.OTPGenerateTime;
                         OTPVerifyTimeArrived = response?.data?.matchingUsers?.OTPVerifyTime;
@@ -475,6 +491,13 @@ const CourierRequestPast = ({ route, navigation }) => {
 
                         // DROP 1 -2 - 3
                         DropOTPArrived = response?.data?.matchingUsers?.DropOTP;
+
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+                        console.log("DropOTPArrived-1", DropOTPArrived);
+
+
                         DropOTPStatusArrived = response?.data?.matchingUsers?.DropOTPStatus;
                         DropOTPGenerateTimeArrived = response?.data?.matchingUsers?.DropOTPGenerateTime;
 
@@ -485,21 +508,39 @@ const CourierRequestPast = ({ route, navigation }) => {
                         } else {
                             setIsRequestAcceptTime('');
                         }
-
                         // DROP 
+
+
+                        // if (DropOTPArrived == '') {
+                        //     setDROPOTP("");
+                        //     setToggleArrivedDrop(false);
+
+                        // } else {
+                        //     setDROPSHARE(false)
+                        //     setDROPOTP(DropOTPArrived);
+                        //     setToggleArrivedDrop(true);
+                        //     // SHOW SHARE TEXT WITH
+
+                        //     // Driver arrived your location
+                        //     setDRIVERSTATUS("Driver Arrived Your Location");
+                        // }
+
                         if (DropOTPArrived == '') {
                             setDROPOTP("");
                             setToggleArrivedDrop(false); //00 - 1
 
-                            console.log("setDROPSHARE-1");
+                            console.log("1-EMPTY");
+                            console.log("1-EMPTY");
+                            console.log("1-EMPTY");
 
                         } else {
-                            setToggleArrivedDrop(true); //00 - 2
                             setDROPOTP(DropOTPArrived); //last
                             setDROPSHARE(false);
+                            setToggleArrivedDrop(true); //00 - 2
 
-                            console.log("setDROPSHARE-2")
-
+                            console.log("2-EMPTY");
+                            console.log("2-EMPTY");
+                            console.log("2-EMPTY");
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -532,8 +573,6 @@ const CourierRequestPast = ({ route, navigation }) => {
                             setToggleAccepted(true);
                             setPaynow(false);
 
-
-
                             // SET OTP GenerateTimeArrived
                             if (DropOTPGenerateTimeArrived !== null) {
                                 setIsArriedOTPDropDate(OTPGenerateTimeArrived);
@@ -565,7 +604,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                             setToggleAccepted(true);
 
                             // setToggleArrivedDrop(true); // DROP 
-                            setToggleONE(true);
+                            // setToggleONE(true);
 
                             // CALL DROP OTP - 2 API
                             // axiosRequestArrivedDROPOTP(); // todo...
@@ -636,6 +675,8 @@ const CourierRequestPast = ({ route, navigation }) => {
 
                         } else if (statusCheack === "Arrived") {
                             setToggleAccepted(true);
+                            setIsAccepted(false);
+
 
                             // SET OTPGenerateTimeArrived
                             if (OTPGenerateTimeArrived !== null) {
@@ -649,9 +690,11 @@ const CourierRequestPast = ({ route, navigation }) => {
                         } else if (statusCheack === "RideStart") {
                             setToggleAccepted(true);
                             // setToggleDropOTP(true); // other  CALL TO CHECK
+                            setIsAccepted(false);
 
                         } else if (statusCheack === "Complete") {
                             setToggleAccepted(true);
+                            setIsAccepted(false);
 
                         } else {
                             // setToggleAccepted(false);
@@ -979,7 +1022,8 @@ const CourierRequestPast = ({ route, navigation }) => {
                 backgroundColor={Colors.black} />
 
             <Modal
-                isVisible={isModalVisible}
+                isVisible={isModalVisibleREQ}
+
                 swipeDirection={[]} // Disables swiping
                 style={Styles.viewModalMargin}>
 
@@ -1045,7 +1089,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                                 />
                                 <TextComponent
                                     color={Colors.gray}
-                                    title={ScreenText.Date}
+                                    title={currentDate.format('LLL')} // as request accept
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3)}
@@ -1114,7 +1158,7 @@ const CourierRequestPast = ({ route, navigation }) => {
 
                             <View style={{ flex: 1 }}>
                                 <TextComponent
-                                    color={Colors.orange}
+                                    color={Colors.orange} /******///1
                                     title={isAccepted ? "" : ScreenText.ViewCourierboy} //99
                                     // title={ScreenText.ViewCourierboy} // View courier boy
                                     textDecorationLine={'underline'}
@@ -1123,6 +1167,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                                             itemRider_ID_: route.params.itemRIDER_ID_SENT
                                         })
                                     }
+                                    //onPress={() => setInnerModalVisible(true)}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
                                     marginVertical={wp(0)}
@@ -1421,16 +1466,17 @@ const CourierRequestPast = ({ route, navigation }) => {
                                     title={isPaynow ? "" : ScreenText.PayNow}
                                     textDecorationLine={'underline'} // BookingDetailsMap
                                     onPress={() =>
-                                        navigation.navigate("CourierDetailsMap", {
+                                        navigation.navigate("CancelCourierDetailsMapPast", {////////001
                                             itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+
                                             itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
                                             itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
 
-                                            itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                            itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                                            // itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                            // itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
-                                            // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                                            // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+                                            itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                                            itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
 
                                             itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
                                             itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
@@ -1536,7 +1582,8 @@ const CourierRequestPast = ({ route, navigation }) => {
                                 />
                                 <TextComponent
                                     color={Colors.gray}
-                                    title={ScreenText.Date}
+                                    // title={ScreenText.Date}
+                                    title={toggleFeedBack ? currentDate.format('LLL') : ""}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3)}
@@ -1859,7 +1906,29 @@ const CourierRequestPast = ({ route, navigation }) => {
 
                     </View>
 
+
+                    {/* <View style={{ margin: 0 }}>
+                        <Modal
+                            isVisible={isInnerModalVisible}
+                            onBackButtonPress={() => setInnerModalVisible(false)}
+                            onBackdropPress={() => setInnerModalVisible(false)}>
+                            <View style={{
+                                flex: 1,
+                                backgroundColor: 'white',
+                            }}>
+                                <Text style={{
+                                    color: 'white',
+                                    fontSize: 15
+                                }}>This is the Inner Modal</Text>
+                            </View>
+                        </Modal>
+                    </View> */}
+
+
+
                 </View>
+
+
 
             </Modal>
 

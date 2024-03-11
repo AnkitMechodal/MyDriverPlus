@@ -79,7 +79,7 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
     let averageRating;
     let avg_username;
 
-    const [isModalVisible, setModalVisible] = useState(true);
+    const [isModalVisible] = useState(true);
 
 
     let DISCOUNT;
@@ -446,7 +446,7 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
 
             <Modal
                 isVisible={isModalVisible}
-                swipeDirection={[]} // Disables swiping
+                // swipeDirection={[]} // Disables swiping
                 style={Styles.viewModalMargin}>
 
                 <View style={Styles.container}>
@@ -1024,6 +1024,7 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
 
                     </ScrollView>
                 </View>
+
             </Modal>
 
 

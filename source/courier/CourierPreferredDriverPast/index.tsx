@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from 'react';
 import { Image, Linking, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Modal from 'react-native-modal';
+import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../components/Button';
@@ -73,7 +73,7 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
     let Driver_id;
 
 
-    const [isModalVisible, setModalVisible] = useState(true);
+    const [isModalVisible, setIsModalVisible] = useState(true);
 
     const [isURL1, setURL1] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
     const [isURL2, setURL2] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
@@ -97,6 +97,16 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
 
     const [isRated, setRated] = useState("0");
 
+
+    // useEffect(() => {
+    //     const timeoutId = setTimeout(() => {
+    //         setIsModalVisible(true);
+    //     }, 15 * 60 * 1000); // 15 minutes
+
+    //     // Cleanup function to clear the timeout when the component unmounts
+    //     return () => clearTimeout(timeoutId);
+    // }, []);
+
     useEffect(() => {
 
         const fetchData = async () => {
@@ -107,21 +117,24 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
                     axiosPostRideDetailsRequest(),
                     axiosPostDriverInfoRequest(),
                     axiosGetRideRattingRequest()
+
+
                 ]);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
+
             }
         };
 
         fetchData();
-        // // Set interval to refresh every 0 seconds
-        // const intervalId = setInterval(fetchData, 0 * 1000);
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
-        // // Clean up the interval when the component is unmounted
+        // Clean up the interval when the component is unmounted
 
 
-        // return () => clearInterval(intervalId);
+        return () => clearInterval(intervalId);
     }, []);
 
 
@@ -494,7 +507,6 @@ const CourierPreferredDriverPast = ({ route, navigation }) => {
 
             <Modal
                 isVisible={isModalVisible}
-                swipeDirection={[]} // Disables swiping
                 style={Styles.viewModalMargin}>
 
                 <ScrollView style={Styles.container}
