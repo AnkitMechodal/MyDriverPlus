@@ -616,15 +616,15 @@ const CourierRequestDriverCPast = ({ route, navigation }) => {
                                         fontFamily={Fonts.PoppinsRegular}
                                         textAlign='left'
                                     />
-                                    {/* <TextComponent
-                                    color={Colors.grayFull}
-                                    title={"Pay by Cash"}
-                                    textDecorationLine={'none'}
-                                    fontWeight="400"
-                                    fontSize={wp(3.5)}
-                                    fontFamily={Fonts.PoppinsRegular}
-                                    textAlign='left'
-                                /> */}
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isPAYMEMT_TYPE}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
                                 </View>
 
                                 <View style={Styles.viewKMConatiner}>

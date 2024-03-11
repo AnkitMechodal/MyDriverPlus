@@ -253,13 +253,15 @@ const Tab4CourierScreen = (props: Props) => {
                                                     source={Images.orangeDot} />
                                             </View>
 
-                                            <View>
+                                            <View style={{ flex: 1 }}>
                                                 <TextComponent
                                                     color={Colors.white}
                                                     title={item?.pickup_locations}
                                                     textDecorationLine={'none'}
                                                     fontWeight="500"
                                                     fontSize={wp(3.5)}
+                                                    numberOfLines={1}
+                                                    ellipsizeMode={"tail"}
                                                     marginVertical={wp(1)}
                                                     marginHorizontal={wp(3)}
                                                     fontFamily={Fonts.PoppinsRegular}
@@ -269,6 +271,8 @@ const Tab4CourierScreen = (props: Props) => {
                                                     color={Colors.white}
                                                     title={item?.drop_locations}
                                                     textDecorationLine={'none'}
+                                                    numberOfLines={1}
+                                                    ellipsizeMode={"tail"}
                                                     fontWeight="500"
                                                     fontSize={wp(3.5)}
                                                     marginHorizontal={wp(3)}

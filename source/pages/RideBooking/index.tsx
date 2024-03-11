@@ -168,11 +168,11 @@ const Tab4ScreenStack = () => {
 
             <Stack.Screen
                 name="BookingDetailsMapPayNow"
-                component={BookingDetailsMapPayNow}
+                component={BookingDetailsMapPayNow} //todooo
             />
 
-             {/* // other */}
-             <Stack.Screen
+            {/* // other */}
+            <Stack.Screen
                 name="ModalHelp"
                 component={ModalHelpScreen} />
 

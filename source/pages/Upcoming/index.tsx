@@ -31,7 +31,7 @@ const Tab3Screen = (props: Props) => {
                     const requestData = {
                         UserID: JSON.parse(storedLinkedId),
                         type: "Taxi Booking",
-                        RideStatusType: "upcoming" //01
+                        RideStatusType: "upcoming" //01 //todotdo
 
                         // type: "Taxi Booking",
                         // // "service_stype": "Ride Now",
@@ -215,8 +215,10 @@ const Tab3Screen = (props: Props) => {
                                                     textDecorationLine={'none'}
                                                     fontWeight="500"
                                                     fontSize={wp(3.5)}
+                                                    numberOfLines={1}
                                                     marginVertical={wp(1)}
                                                     marginHorizontal={wp(3)}
+                                                    ellipsizeMode={"tail"}
                                                     fontFamily={Fonts.PoppinsRegular}
                                                     textAlign='left'
                                                 />
@@ -224,9 +226,11 @@ const Tab3Screen = (props: Props) => {
                                                     color={Colors.white}
                                                     title={item?.drop_locations}
                                                     textDecorationLine={'none'}
+                                                    ellipsizeMode={"tail"}
                                                     fontWeight="500"
                                                     fontSize={wp(3.5)}
                                                     marginHorizontal={wp(3)}
+                                                    numberOfLines={1}
                                                     marginVertical={wp(3)}
                                                     fontFamily={Fonts.PoppinsRegular}
                                                     textAlign='left'

@@ -3,7 +3,7 @@ import CheckBox from '@react-native-community/checkbox';
 import axios from "axios";
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -492,7 +492,6 @@ const CourierRequestPast = ({ route, navigation }) => {
                             setToggleArrivedDrop(false); //00 - 1
 
                             console.log("setDROPSHARE-1");
-                            Alert.alert("1");
 
                         } else {
                             setToggleArrivedDrop(true); //00 - 2
@@ -501,7 +500,6 @@ const CourierRequestPast = ({ route, navigation }) => {
 
                             console.log("setDROPSHARE-2")
 
-                            Alert.alert("2");
 
                             // Driver arrived your location
                             setDRIVERSTATUS("Driver Arrived Your Location");
@@ -699,7 +697,7 @@ const CourierRequestPast = ({ route, navigation }) => {
 
     const axiosRequestArrivedPICKOTP = async () => {
         try {
-            //const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
+            const url = `https://rideshareandcourier.graphiglow.in/api/ArrivedOTPGenerate/ArrivedOTPgenerate`;
 
             const data = {
                 id: route?.params?.itemRIDER_ID_SENT

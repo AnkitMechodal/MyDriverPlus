@@ -39,7 +39,9 @@ const Tab4Screen = (props: Props) => {
 
                     };
 
-                    console.log("requestData===>", JSON.stringify(requestData, null, 2));
+                    console.log("requestData///////////===>", JSON.stringify(requestData, null, 2));
+                    console.log("requestData///////////===>", JSON.stringify(requestData, null, 2));
+
 
                     const url = `${API.BASE_URL}/CourierDriverHistory/courierdriverhistory`;
 
@@ -257,7 +259,7 @@ const Tab4Screen = (props: Props) => {
                                                     source={Images.orangeDot} />
                                             </View>
 
-                                            <View>
+                                            <View style={{ flex: 1 }}>
                                                 <TextComponent
                                                     color={Colors.white}
                                                     title={item?.pickup_locations}
@@ -266,6 +268,8 @@ const Tab4Screen = (props: Props) => {
                                                     fontSize={wp(3.5)}
                                                     marginVertical={wp(1)}
                                                     marginHorizontal={wp(3)}
+                                                    ellipsizeMode={"tail"}
+                                                    numberOfLines={1}
                                                     fontFamily={Fonts.PoppinsRegular}
                                                     textAlign='left'
                                                 />
@@ -273,6 +277,8 @@ const Tab4Screen = (props: Props) => {
                                                     color={Colors.white}
                                                     title={item?.drop_locations}
                                                     textDecorationLine={'none'}
+                                                    numberOfLines={1}
+                                                    ellipsizeMode={"tail"}
                                                     fontWeight="500"
                                                     fontSize={wp(3.5)}
                                                     marginHorizontal={wp(3)}

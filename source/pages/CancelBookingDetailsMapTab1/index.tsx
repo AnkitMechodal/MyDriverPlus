@@ -52,6 +52,7 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
     let USER_FARE_VALUE;
 
     let USER_TOTAL;
+    let _DISCOUNT;
 
     let PER;
     let CAN;
@@ -82,7 +83,7 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
     const [isRIDEID, setRIDEID] = useState("");
     const [isDATE_OF_RIDE, setDATE_OF_RIDE] = useState("");
     const [isPAYMEMT_TYPE, setPAYMEMT_TYPE] = useState("");
-    const [isTOTAL_AMOUNT, setTOTAL_AMOUNT] = useState("");
+    const [isTOTAL_AMOUNT, setTOTAL_AMOUNT] = useState<any>("");
     const [isWATTING_CHARGES, setWATTING_CHARGES] = useState("");
     const [isPICK_UP_LOCATION, setPICK_UP_LOCATION] = useState("");
     const [isDROP_UP_LOCATION, setDROP_UP_LOCATION] = useState("");
@@ -352,7 +353,7 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
                     USER_FARE_VALUE = response?.data?.matchingVehicle?.farValues;
 
 
-                    console.log("PER_USER_CANCELLATION==>", USER_BOOKINGSTATUS);
+                    console.log("PER_USER_CANCELLATION==>", USER_BOOKINGSTATUS); //todo1103
 
 
                     // GET TOTAL :
@@ -366,7 +367,11 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
+                    _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(_DISCOUNT);
+
+                    // USER_DISCOUNT - NO USE
+                    // setTOTAL_AMOUNT(USER_TOTAL);
 
 
                     setRIDEID(USER_RIDEID);
@@ -711,7 +716,8 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.discount}
-                                            title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
+                                            // title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
+                                            title={USER_BOOKINGSTATUS === "Cancel" ? "-$" + isCHARGE : "-$ 20"}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
@@ -733,7 +739,8 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.white}
-                                            title={USER_BOOKINGSTATUS = "Cancel" ? "$ " + isGETPERCENTAGE : "$ " + "5"}
+                                            //title={USER_BOOKINGSTATUS = "Cancel" ? "$ " + isGETPERCENTAGE : "$ " + "5"}
+                                            title={USER_BOOKINGSTATUS === "Cancel" ? "$" + isGETPERCENTAGE : "$" + (isTOTAL_AMOUNT - 20)}
                                             marginVertical={wp(0)}
                                             textDecorationLine={'none'}
                                             fontWeight="400"

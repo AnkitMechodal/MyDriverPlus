@@ -56,6 +56,7 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
     let USER_FARE_VALUE;
 
     let USER_TOTAL;
+    let _DISCOUNT;
 
 
     let USER_BOOKINGSTATUS;
@@ -383,9 +384,11 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
 
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
-                    // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
+                    _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(_DISCOUNT);
 
+                    // USER_DISCOUNT - NO USE
+                    // setTOTAL_AMOUNT(USER_TOTAL); ///----
 
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
@@ -658,7 +661,7 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
                                     />
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={"Paid by " + isPAYMEMT_TYPE}
+                                        title={isPAYMEMT_TYPE}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
