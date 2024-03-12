@@ -245,29 +245,29 @@ const CourierRequestPast = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
 
-                console.log("RIDE_ID_REQUEST===>", route.params.itemRIDEID_SENT);
+                console.log("RIDE_ID_REQUEST00000.===>", route.params.itemRIDEID_SENT);
 
                 // itemRIDER_ID_SENT
 
-                console.log("RIDER_USER_ID_REQUEST===>", route.params.itemRIDER_ID_SENT);
+                console.log("RIDER_USER_ID_REQUEST1111.===>", route.params.itemRIDER_ID_SENT);
 
                 // Pay Now
-                console.log("itemRIDER_DISTANCE_SENT===>", route.params.itemRIDER_DISTANCE_SENT);
-                console.log("itemRIDER_DURATUION_SENT===>", route.params.itemRIDER_DURATUION_SENT);
+                console.log("itemRIDER_DISTANCE_SENT0000.===>", route.params.itemRIDER_DISTANCE_SENT);
+                console.log("itemRIDER_DURATUION_SENT0000.===>", route.params.itemRIDER_DURATUION_SENT);
 
                 // Added MapData
-                console.log("itemPICK_STATION_SENT===>", route.params.itemRIDER_PICKSTATION);
-                console.log("itemDROP_STATION_SENT===>", route.params.itemRIDER_DROPSTATION);
+                console.log("itemPICK_STATION_SENT0000.===>", route.params.itemRIDER_PICKSTATION);
+                console.log("itemDROP_STATION_SENT0000.===>", route.params.itemRIDER_DROPSTATION);
 
                 // Payment
-                console.log("itemRIDER_RIDE_CHARGE_SENT===>", route.params.itemRIDER_RIDE_CHARGE);
-                console.log("itemRIDER_RIDE_FEES_CON_SENT===>",
+                console.log("itemRIDER_RIDE_CHARGE_SENT0000.===>", route.params.itemRIDER_RIDE_CHARGE);
+                console.log("itemRIDER_RIDE_FEES_CON_SENT0000.===>",
                     route.params.itemRIDER_RIDE_FEES_CON);
-                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENT===>",
+                console.log("itemRIDER_RIDE_WAITING_CHARGES_SENT0000.===>",
                     route.params.itemRIDER_RIDE_WAITING_CHARGES);
-                console.log("itemRIDER_RIDE_DICOUNT_SENT===>",
+                console.log("itemRIDER_RIDE_DICOUNT_SENT000.===>",
                     route.params.itemRIDER_RIDE_DICOUNT);
-                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT===>",
+                console.log("itemRIDER_RIDE_TOTAL_AMOUNT_SENT000.===>",
                     route.params.itemRIDER_RIDE_TOTALAMOUNT);
 
                 // // Get Current Date
@@ -1464,27 +1464,33 @@ const CourierRequestPast = ({ route, navigation }) => {
                                 <TextComponent
                                     color={Colors.orange}
                                     title={isPaynow ? "" : ScreenText.PayNow}
-                                    textDecorationLine={'underline'} // BookingDetailsMap
-                                    onPress={() =>
-                                        navigation.navigate("CancelCourierDetailsMapPast", {////////001
+                                    textDecorationLine={'underline'} // BookingDetailsMap---1
+                                    onPress={() => {
+                                        console.log({
                                             itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-
                                             itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
                                             itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
-
-                                            // itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                            // itemMapDropStation: route.params.itemRIDER_DROPSTATION,
-
-                                            itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                                            itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
-
+                                            itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                            itemMapDropStation: route.params.itemRIDER_DROPSTATION,
                                             itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
                                             itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
                                             itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
                                             itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
                                             itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-                                        })
-                                    }
+                                        });
+                                        navigation.navigate("BookingDetailsMapUp", {
+                                            itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                            itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                            itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+                                            itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                            itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                                            itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                            itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                            itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                            itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                            itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                                        });
+                                    }}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
                                     marginVertical={wp(0)}

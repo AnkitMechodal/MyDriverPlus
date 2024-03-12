@@ -57,7 +57,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
     let USER_FARE_VALUE;
     let USER_TOTAL;
 
-    let DISCOUNT;
+    let _DISCOUNT;
 
 
     let USER_BOOKINGSTATUS;
@@ -103,22 +103,25 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
 
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = async () => { //todo1203
             try {
                 // RIDER_MAP_ID
-                console.log("RIDER_MAP_ID===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID///===>", route.params.itemBokingDetailsMapId);
 
                 // Duration & Distnace
-                console.log("ITEM1===>", route?.params?.itemBokingDetailsMapDistance);
-                console.log("ITEM2===>", route?.params?.itemBokingDetailsMapDuration);
+                console.log("ITEM1===>//", route?.params?.itemBokingDetailsMapDistance);
+                console.log("ITEM2===>/", route?.params?.itemBokingDetailsMapDuration);
 
-                console.log("ITEM3===>", route?.params?.itemMapPickStation);
-                console.log("ITEM4===>", route?.params?.itemMapDropStation);
-                console.log("ITEM5===>", route?.params?.itemMapRideCharge);
-                console.log("ITEM6===>", route?.params?.itemMapRideFeesCon);
-                console.log("ITEM7===>", route?.params?.itemMapRideWattingCharges);
-                console.log("ITEM8===>", route?.params?.itemMapRideDiscount);
-                console.log("ITEM9===>", route?.params?.itemMapRideTotalAmount);
+                console.log("ITEM3===>////", route?.params?.itemMapPickStation);
+                console.log("ITEM4===>//", route?.params?.itemMapDropStation);
+
+                console.log("ITEM5===>////////", route?.params?.itemMapRideCharge);
+                console.log("ITEM6===>/////", route?.params?.itemMapRideFeesCon);
+
+                console.log("ITEM7===>////", route?.params?.itemMapRideWattingCharges);
+                console.log("ITEM8===>////", route?.params?.itemMapRideDiscount);
+
+                console.log("ITEM9===>////", route?.params?.itemMapRideTotalAmount);
 
                 // axios
                 await axiosPostRideDetailsOfMap();
@@ -138,7 +141,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
         fetchData();
 
         // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Cleanup function
         return () => {
@@ -348,7 +351,6 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     USER_DRIVER_ID = response?.data?.matchingVehicle?.DriverID;
                     USER_RIDE_ID_ = response?.data?.matchingVehicle?._id;
 
-
                     // BookingCurrentStatus 
                     USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
                     USER_CANCELLATION = response?.data?.matchingVehicle?.cancelationsAmount;
@@ -359,7 +361,6 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     setGETPERCENTAGE(PER);
 
                     CAN = USER_TOTAL_AMOUNT - PER
-
                     setCHARGE(CAN)
 
                     // RideCharge
@@ -383,7 +384,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
+                    // setTOTAL_AMOUNT(USER_TOTAL);
 
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
@@ -403,8 +404,8 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     StorePayType(USER_PAYMEMT_TYPE);
 
                     // USER_DISCOUNT - NO USE
-                    DISCOUNT = USER_TOTAL - USER_DISCOUNT;
-                    setTOTAL_AMOUNT(DISCOUNT);
+                    _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(_DISCOUNT); // ---- // 
 
 
                     setFARE(USER_FARE_VALUE); // ADDED 
@@ -704,7 +705,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                                     />
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={"Paid by " + isPAYMEMT_TYPE}
+                                        title={isPAYMEMT_TYPE}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}

@@ -92,19 +92,19 @@ const CancelCourierDetailsMapPast = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
                 // RIDER_MAP_ID
-                console.log("RIDER_MAP_ID===>", route.params.itemBokingDetailsMapId);
+                console.log("RIDER_MAP_ID..===>", route.params.itemBokingDetailsMapId);
 
                 // Duration & Distnace
-                console.log("ITEM1===>", route?.params?.itemBokingDetailsMapDistance);
-                console.log("ITEM2===>", route?.params?.itemBokingDetailsMapDuration);
+                console.log("ITEM1..===>", route?.params?.itemBokingDetailsMapDistance);
+                console.log("ITEM2..===>", route?.params?.itemBokingDetailsMapDuration);
 
-                console.log("ITEM3===>", route?.params?.itemMapPickStation);
-                console.log("ITEM4===>", route?.params?.itemMapDropStation);
-                console.log("ITEM5===>", route?.params?.itemMapRideCharge);
-                console.log("ITEM6===>", route?.params?.itemMapRideFeesCon);
-                console.log("ITEM7===>", route?.params?.itemMapRideWattingCharges);
-                console.log("ITEM8===>", route?.params?.itemMapRideDiscount);
-                console.log("ITEM9===>", route?.params?.itemMapRideTotalAmount);
+                console.log("ITEM3..===>", route?.params?.itemMapPickStation);
+                console.log("ITEM4..===>", route?.params?.itemMapDropStation);
+                console.log("ITEM5..===>", route?.params?.itemMapRideCharge);
+                console.log("ITEM6..===>", route?.params?.itemMapRideFeesCon);
+                console.log("ITEM7..===>", route?.params?.itemMapRideWattingCharges);
+                console.log("ITEM8..===>", route?.params?.itemMapRideDiscount);
+                console.log("ITEM9..===>", route?.params?.itemMapRideTotalAmount);
 
 
                 await axiosPostRideDetailsOfMap();
@@ -117,8 +117,8 @@ const CancelCourierDetailsMapPast = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Cleanup function
         return () => {
@@ -360,7 +360,7 @@ const CancelCourierDetailsMapPast = ({ route, navigation }) => {
                                         <View style={CommonStyle.justifyContent}>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={route?.params?.itemBokingDetailsMapDuration + " KM"}
+                                                title={route?.params?.itemBokingDetailsMapDuration}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
                                                 fontSize={wp(3.5)}

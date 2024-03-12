@@ -465,7 +465,6 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                         setDriverName(DriverBookingName);
                         setPhoneNumber(DriverVehiclePhone);
 
-
                         setDRIVERPROFILE(DriverProfileImage);
 
                         // Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);

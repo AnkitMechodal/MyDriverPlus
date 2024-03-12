@@ -39,7 +39,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
 
     // All Date Status Date
 
-    // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date);
+    // const [requestSentDate, setRequestSentDate] = useState(ScreenText.Date)
 
 
     // TODO : Modal 

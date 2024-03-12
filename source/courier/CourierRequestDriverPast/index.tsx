@@ -49,6 +49,8 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
     let USER_FARE_VALUE;
     let USER_TOTAL;
 
+    let _DISCOUNT;
+
 
 
     let USER_DRIVER_ID;
@@ -203,7 +205,7 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
+                    // setTOTAL_AMOUNT(USER_TOTAL);
 
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
@@ -216,10 +218,12 @@ const CourierRequestDriverPast = ({ route, navigation }) => {
                     // setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
 
 
+                    _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(_DISCOUNT); // ---- // 
 
                     // USER_DISCOUNT - NO USE
-                    DISCOUNT = USER_TOTAL - USER_DISCOUNT;
-                    setTOTAL_AMOUNT(DISCOUNT);
+                    // DISCOUNT = USER_TOTAL - USER_DISCOUNT;
+                    // setTOTAL_AMOUNT(DISCOUNT);
 
                     setFARE(USER_FARE_VALUE); // ADDED 
 

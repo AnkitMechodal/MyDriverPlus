@@ -39,6 +39,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isPICKSHARE, setPICKSHARE] = useState(true);
 
 
+    // Get Current Date
+    const currentDate = moment();
+
 
     const starImageFilled =
         Images.fillStarIcon;
@@ -430,6 +433,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         } else if (statusCheack === "Arrived") { //////01101todo
                             setToggleAccepted(true);
 
+                            setIsAccepted(false);
+
                             // SET OTPGenerateTimeArrived
                             if (OTPGenerateTimeArrived !== null) {
                                 setIsArriedOTPDate(OTPGenerateTimeArrived);
@@ -437,15 +442,19 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                 setIsArriedOTPDate(OTPGenerateTimeArrived);
                             }
 
-
                             setDRIVERSTATUS("Driver Arrived Your Location");
 
                         } else if (statusCheack === "RideStart") {
                             setToggleAccepted(true);
 
+                            setIsAccepted(false);
+
+
                         } else if (statusCheack === "Complete") {  // Complete - RideStart
                             // setToggleRideCompleted(true);
                             // setDRIVERSTATUS("Ride Complete");
+
+                            setIsAccepted(false);
 
                             // Call Booking Complete API As Pending
                             // axiosPendingPaymentPostRequest();
@@ -1082,10 +1091,12 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                             fontFamily={Fonts.PoppinsRegular}
                                             textAlign='center'
                                         />
+
                                         <TextComponent
                                             color={Colors.gray}
-                                            title={requestSentDate} // title={ScreenText.Date}
+                                            // title={requestSentDate} // title={ScreenText.Date}----00000
                                             textDecorationLine={'none'}
+                                            title={currentDate.format('LLL')} // as request accept
                                             fontWeight="400"
                                             fontSize={wp(3)}
                                             marginVertical={wp(0)}
@@ -1326,25 +1337,33 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                             color={Colors.orange}
                                             title={isPaynow ? "" : ScreenText.PayNow}
                                             textDecorationLine={'underline'} // BookingDetailsMap
-                                            onPress={() =>
-                                                navigation.navigate("BookingDetailsMapUp", {
+                                            onPress={() => {
+                                                console.log({
                                                     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
                                                     itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
                                                     itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
-
                                                     itemMapPickStation: route.params.itemRIDER_PICKSTATION,
                                                     itemMapDropStation: route.params.itemRIDER_DROPSTATION,
-
-                                                    // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                                                    // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
-
                                                     itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
                                                     itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
                                                     itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
                                                     itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
                                                     itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-                                                })
-                                            }
+                                                });
+                                                navigation.navigate("BookingDetailsMapUp", {
+                                                    itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                                    itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                                    itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+                                                    itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                                    itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                                                    itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                    itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                    itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                    itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                    itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                                                });
+                                            }}
+
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
                                             marginVertical={wp(0)}
@@ -1384,7 +1403,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.gray}
-                                            title={requestSentDate}
+                                            // title={requestSentDate}
+                                            title={isRequestPayAcceptTime}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3)}
@@ -1439,7 +1459,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.gray}
-                                            title={requestSentDate}
+                                            // title={requestSentDate}
+                                            title={toggleFeedBack ? currentDate.format('LLL') : ""}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3)}
