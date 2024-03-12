@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React, { useEffect, useState } from 'react';
-import { Image, Modal, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
 import ButtonComponent from '../../components/Button';
@@ -480,17 +481,19 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
             <StatusBarComponent
                 backgroundColor={Colors.black} />
             <Modal
-                isVisible={isModalVisible}
-                swipeDirection={[]} // Disables swiping
-                style={Styles.viewModalMargin}>
+                // isVisible={true}
+                // animationType="slide"
+                // transparent={true}
+                isVisible={true}
+                propagateSwipe={true}
+                // swipeDirection={[]} // Disables swiping
+                style={Styles.viewModalMargin}
+            >
                 <View style={Styles.container}>
-                    {/* <Modal
-                    isVisible={isModalVisible}
-                    swipeDirection={[]} // Disables swiping
-                    style={Styles.viewModalMargin}> */}
                     <ScrollView
                         bounces={true}
-                        overScrollMode="always">
+                        overScrollMode="always"
+                    >
                         <View style={CommonStyle.commonFlex}>
                             <View style={Styles.viewHeader}>
                                 <HeaderComponent
@@ -1081,8 +1084,6 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                         </View>
 
                     </ScrollView>
-
-                    {/* </Modal> */}
                 </View>
             </Modal>
         </SafeAreaView>

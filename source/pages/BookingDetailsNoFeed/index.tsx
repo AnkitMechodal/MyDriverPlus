@@ -1026,9 +1026,15 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                 backgroundColor={Colors.black} />
             <View style={Styles.container}>
                 <Modal
+                    // animationType="slide"
+                    // transparent={true}
+                    // visible={true}
+                    // coverScreen={true}
                     isVisible={isModalVisible}
                     swipeDirection={[]} // Disables swiping
-                    style={Styles.viewModalMargin}>
+                    // visible={isModalVisible}
+                    style={Styles.viewModalMargin}
+                >
                     <ScrollView
                         bounces={true}
                         overScrollMode="always">
@@ -1336,7 +1342,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         <TextComponent
                                             color={Colors.orange}
                                             title={isPaynow ? "" : ScreenText.PayNow}
-                                            textDecorationLine={'underline'} // BookingDetailsMap
+                                            textDecorationLine={'underline'} // BookingDetailsMapUp
                                             onPress={() => {
                                                 console.log({
                                                     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
@@ -1488,9 +1494,13 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                             </View>
 
-                            <Modal isVisible={isModalCancel}
+                            <Modal
+                                // isVisible={isModalCancel}
+                                isVisible={isModalCancel}
+
                                 onBackButtonPress={() => setModalCancel(false)}
-                                onBackdropPress={() => setModalCancel(false)}>
+                                onBackdropPress={() => setModalCancel(false)}
+                            >
                                 <View
                                     style={Styles.modalCancelConatiner}>
                                     <View>
@@ -1572,9 +1582,12 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                             </Modal>
 
-                            <Modal isVisible={isModalFeedBack}
+                            <Modal
+                                // isVisible={isModalFeedBack}
+                                isVisible={isModalFeedBack}
                                 onBackButtonPress={() => setModalFeedBack(false)}
-                                onBackdropPress={() => setModalFeedBack(false)}>
+                                onBackdropPress={() => setModalFeedBack(false)}
+                            >
                                 <View
                                     style={Styles.modalCancelConatiner}>
 
