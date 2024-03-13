@@ -20,7 +20,7 @@ const Styles = StyleSheet.create({
         height: wp(8),
         borderRadius: wp(50),
         alignSelf: 'center',
-        marginHorizontal: wp(2)
+        // marginHorizontal: wp(2)
     },
     imageUser: {
         width: wp(20),
@@ -192,6 +192,14 @@ const Styles = StyleSheet.create({
         padding: wp(3),
         marginVertical: wp(3),
     },
+    viewKMConatinerGray: {
+        height: "auto",
+        backgroundColor: Colors.grayBox,
+        borderRadius: wp(3),
+        padding: wp(3),
+        margin: wp(3),
+        marginVertical: wp(3),
+    },
     rowSpace: {
         flexDirection: "row",
         justifyContent: "space-evenly"
@@ -343,6 +351,33 @@ const Styles = StyleSheet.create({
     viewSecondConatiner: {
         flex: 1,
         justifyContent: 'flex-end'
+    },
+    viewStationConatiner: {
+        justifyContent: 'center',
+        margin: wp(3)
+    },
+    viewModalDriverStripe: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+    },
+    viewModalDriver: {
+        height: wp(70),
+        backgroundColor: Colors.grayBox,
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+    },
+    viewHeaderComplete: {
+        height: wp(20), // wp(30)
+        backgroundColor: Colors.black,
+        borderBottomLeftRadius: wp(5),
+        borderBottomRightRadius: wp(5),
+        justifyContent: 'center',
     },
 
 });

@@ -7,7 +7,9 @@ import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
+import WebView from 'react-native-webview';
 import ButtonComponent from '../../components/Button';
+import CustomSelectOrder from '../../components/CustomSelectOrder';
 import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
@@ -35,9 +37,687 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [defaultRating, setDefaultRating] = useState(4);
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
+    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
+
+    const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
+
+
+    const starImageFilled1 =
+        Images.fillstarIcon; // fillStarIcon
+    const starImageCorner1 =
+        Images.unfillstarIcon;
+
+
+
+    let USER_PAY_STATUS;
+    let USER_PAY_CARD;
+
+
+
 
     const [isPICKSHARE, setPICKSHARE] = useState(true);
     const [isFocusedPasswordDesc, setIsFocusedPasswordDesc] = useState(false);
+    const refSubject = useRef<any>(null);
+
+
+    const [couponcode, setCouponcode] = useState('');
+    const [redeem, setCouponRedeem] = useState<any>('');
+
+
+    const [isValidRedeem, setValidRedeem] = useState(true);
+
+
+    //
+    let CouponDiscount;
+    let GetAsDiscount;
+    let GetNewAmoount;
+    //
+
+
+    const dataSeat = [
+        { labelSeat: 'Type1', value: '1' },
+        { labelSeat: 'Type2', value: '2' },
+        { labelSeat: 'Type3', value: '3' },
+        { labelSeat: 'Type4', value: '4' },
+        { labelSeat: 'Type5', value: '5' },
+        // Add more options as needed
+    ];
+    const [selectedOption, setSelectedOption] = useState<any>('Select Order type');
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const [isLoyalPointsDefault, setLoyalPointsDeafult] = useState<any>('');
+    const [Default, setDefault] = useState("");
+    const [isAmount, setIsAmount] = useState<any>("");
+
+
+    const [isFocusedApplyNow, setIsFocusedApplyNow] = useState(false);
+    const [isFocusedRedeem, setIsFocusedRedeem] = useState(false);
+
+
+    const refRedeem = useRef<any>(null);
+
+
+    const [isValidCode, setValidCode] = useState(true);
+
+
+    const [isApplyNowBG, setApplyNowBG] = useState(true);
+    const [isRedeemBG, setRedeemBG] = useState(true);
+
+    const [isApplyEdit, setApplyEdit] = useState(true);
+    const [isApplyRedeem, setApplyRedeem] = useState(true);
+
+    const [isApplyNowBtn, setisApplyNowBtn] = useState(true);
+    const [isRedeemBtn, setisRedeemBtn] = useState(true);
+
+
+    const [isRedeemText, setisRedeemText] = useState(false);
+
+
+    const [isApplyNowText, setisApplyNowText] = useState(false);
+
+
+    // PAY COMPLETE
+    const refApplyNow = useRef<any>(null);
+
+
+    // STRIPE :
+    const [isSTRIPEModal, setSTRIPEModal] = useState(false);
+    const [isModalDriver, setModalDriver] = useState(false);
+
+
+
+    const onPressCrossPoints = () => {
+        setIsAmount(isAmount);
+        setLoyalPointsDeafult("");
+
+        setRedeemBG(true);
+        setApplyRedeem(true);
+        // setisApplyNowBtn(true);
+        setisRedeemText(false);
+        setIsFocusedRedeem(true);
+    }
+
+
+    const onPressModalCheckPayment = () => {
+
+        // Check Payment Status - Yes To Next
+        // PaymentStatus : TODO
+
+        // payment_type
+
+        // Payment Status Addded !
+        axiosPostRideStatusAccepted();
+
+        // axiosPostRideDetailsRequest();
+
+        // setModalDriver(true);
+        // navigation.navigate('PaymentSuccessful', {
+        // itemSuccessfulAmount: isAmount,
+        // });
+    }
+
+    const axiosPostRideStatusAccepted = async () => {
+
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        const url = `${API.BASE_URL}/bookingPaymentStatus/bookingPayment`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+                    // Handle API response here
+
+                    // console.log("BookingDataResponse==>",
+                    //     JSON.stringify(response?.data?.matchingVehicles, null, 2));
+
+                    // console.log("RateDriverData...==>", JSON.stringify(response, null, 2));
+
+                    // Toast.show('Status Completed!', Toast.SHORT);
+
+                    axiosPostRideDetailsRequest();
+
+                    // setModalDriver(false);
+
+                    // Working !
+
+                    // AFTER STRIPE :
+                    // SET STRIPE MODAL :
+                    // setSTRIPEModal(true)
+
+                    // axiosPostRequestStripe();
+
+                    // navigation.navigate('PaymentSuccessful', {
+                    //     itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
+                    // });  **no use**
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                // setModalDriver(false);
+                // setSTRIPEModal(true);
+            });
+
+    }
+
+
+    const onPressSubmit = () => {
+        axiosPostRateDriverRequest(defaultRatingSubmit);
+    }
+
+    // working !
+    const axiosPostRateDriverRequest = async (defaultRatingSubmit: any) => {
+
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+        console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);
+
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostRateDriverRequestConfirm(defaultRatingSubmit);
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    // working !
+    const axiosPostRateDriverRequestConfirm = async (defaultRatingSubmit: any) => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        if (storedLinkedId !== null) {
+
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
+            const url = `${API.BASE_URL}/ratting/rateDriver`;
+
+            // Prepare data in JSON format
+            const data = {
+                UserID: JSON.parse(storedLinkedId),
+                DriverID: route.params.itemCompleteDriverId,
+                rating: defaultRatingSubmit
+            };
+
+            console.log("RateDriverData***********==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 201
+                        &&
+                        response?.data?.message === 'Rating recorded successfully') {
+                        // Handle API response here
+                        // Vehicles Are
+
+                        // console.log("BookingDataResponse==>",
+                        //     JSON.stringify(response?.data?.matchingVehicles, null, 2));
+
+                        // console.log("RateDriverData...==>", JSON.stringify(response, null, 2));
+
+                        Toast.show('Rating Submitted Successfully!', Toast.SHORT);
+                        // setModalDriver(false);
+
+                        // Working !
+
+                        // AFTER STRIPE :
+                        // SET STRIPE MODAL :
+                        // setSTRIPEModal(true)
+
+                        // axiosPostRequestStripe();
+
+                        navigation.navigate('PaymentSuccessfulUp', {
+                            itemSuccessfulAmount: isAmount,
+                        });
+
+                    } else {
+                        Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                        // setModalDriver(false);
+                        // setSTRIPEModal(true);
+                        //  Welcome! Signed in successfully.
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
+                });
+
+        } else {
+            Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+            // setModalDriver(false);
+            // setSTRIPEModal(true);
+
+            // Payment Getway
+            // id - amount
+            // axiosPostRequestStripe();
+        }
+    };
+
+    const axiosPostRideDetailsRequest = async () => {
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId //quick
+        };
+
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    && response?.data?.message === "Ride Details") {
+
+                    console.log("Ride Details====>", JSON.stringify(response?.data, null, 2));
+
+                    // Handle API response here
+                    // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
+
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_PAY_CARD = response?.data?.matchingVehicle?.payment_type;
+
+                    // USER_PAY_ID_ID = response?.data?.matchingVehicle?._id;
+
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+
+
+                    if (USER_PAY_STATUS == "Complete" && USER_PAY_CARD == "Card") {
+                        // Alert.alert("Yes");
+
+                        setSTRIPEModal(false);
+                        setModalDriver(true);
+
+                    } else {
+
+                        Toast.show('Unable to Process Payment!', Toast.SHORT);
+                    }
+
+
+                    // stored id : todo
+                    // StoredRideID(USER_RIDEID);
+
+                    // console.log("RideDetails101===>",
+                    //     JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+
+                } else {
+                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+            });
+    };
+
+    const onPressCompletePayment = () => {
+        // setModalDriver(true)
+        if (route.params.itemCompletePayType == "Cash Payment"
+            || route.params.itemCompletePayType == "Wallet") {
+            // Payment Status Addded !
+            axiosPostRideStatusAccepted1();
+        } else {
+            setSTRIPEModal(true);
+            axiosPostRequestStripe();
+        }
+        // setSTRIPEModal(true);
+        // axiosPostRequestStripe();
+    }
+
+
+    const axiosPostRequestStripe = async () => {
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        if (storedLinkedId !== null) {
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
+            const url = `${API.BASE_URL}/webStriperedirect/stripeWeb`;
+
+            // Prepare data in JSON format
+            const data = {
+                userId: JSON.parse(storedLinkedId),
+                amount: isAmount,
+                rideId: route.params.itemCompleteRideIDID // RIDE ID 
+            };
+
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'URL constructed successfully') {
+
+                        console.log("ALLL----***RES===>",
+                            JSON.stringify(response?.data?.data?.apiUrl, null, 2));
+
+                        console.log("ALLL----***RES===>",
+                            JSON.stringify(response?.data?.data?.apiUrl, null, 2));
+
+                        // Get Payment URL :
+                        apiUrlPAY = response?.data?.data?.apiUrl;
+
+                        // setSTRIPEModal(true);
+                        setISURLPAY(apiUrlPAY);
+
+                        // Check Payment Complete OR Not ! - API CALL
+                        // setModalDriver(true);
+
+                        // axiosPostRequestBookingPaymentStatus()
+
+                        // Get Link And Set In WebView
+
+                    } else {
+                        // Handle errors
+                        Toast.show('Payment Failed!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Payment Failed!', Toast.SHORT);
+                });
+
+        } else {
+            Toast.show('Payment Failed!', Toast.SHORT);
+        }
+    }
+
+    const axiosPostRideStatusAccepted1 = async () => {
+
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        const url = `${API.BASE_URL}/bookingPaymentStatus/bookingPayment`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+
+                    axiosPostRideDetailsRequest1();
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+
+            });
+
+    }
+
+
+    const axiosPostRideDetailsRequest1 = async () => {
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemCompleteRideId //quick
+        };
+
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+        console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
+
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    && response?.data?.message === "Ride Details") {
+
+
+                    console.log("Ride Details====>", JSON.stringify(response?.data, null, 2));
+
+                    // Handle API response here
+                    // Toast.show('Ride Details Get Successfully!', Toast.SHORT);
+
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_PAY_CARD = response?.data?.matchingVehicle?.payment_type;
+
+                    // USER_PAY_ID_ID = response?.data?.matchingVehicle?._id;
+
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+                    console.log("USER_PAY_STATUS", USER_PAY_STATUS);
+
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+                    console.log("USER_PAY_CARD", USER_PAY_CARD);
+
+                    // && USER_PAY_CARD == "Card"
+
+                    if (USER_PAY_STATUS == "Complete") {
+                        setModalDriver(true);
+
+                        // Alert.alert("Yes");
+                        // setSTRIPEModal(false);
+                        // setModalDriver(true);
+
+                    } else {
+
+                        Toast.show('Unable to Process Payment!', Toast.SHORT);
+                    }
+
+
+                    // stored id : todo
+                    // StoredRideID(USER_RIDEID);
+
+                    // console.log("RideDetails101===>",
+                    //     JSON.stringify(response?.data?.matchingVehicle?.RideId, null, 2));
+
+                } else {
+                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+            });
+    };
+
+
+    // 02
+    const handleRedeem = (userredeem: any) => {
+        setCouponRedeem(userredeem);
+        if (userredeem.length < 1) {
+            setIsFocusedRedeem(true);
+            setValidRedeem(false)
+        } else {
+            setValidRedeem(true);
+            setIsFocusedRedeem(false)
+        }
+    }
+
+
+    const handleFocusRedeem = () => {
+        setIsFocusedRedeem(true)
+    }
+
+    const onPressRedeem = () => {
+        if (redeem.length < 1) {
+            Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+        } else {
+            // Call Redeem API :
+            axiosGetRedeemRequest();
+        }
+
+        // setRedeemBG(false);
+        // setApplyRedeem(false);
+        // setisRedeemBtn(true);
+        // setisRedeemText(true);
+    }
+
+    const axiosGetRedeemRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosGetRedeemRequestCalculation();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosGetRedeemRequestCalculation = async () => {
+
+        // GET REG ID
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        if (storedLinkedId !== null) {
+
+            // Prepare data in JSON format
+            const data = {
+                userId: JSON.parse(storedLinkedId), // 65c4bf726e435ad32b0e86ca
+                // userId: "65c4bf726e435ad32b0e86ca",
+                point: redeem, // USED
+                amount: isAmount, // USER
+                totalPoint: isLoyalPoints // TOTAL // //0909
+            };
+
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+            console.log("RedeemCodeData***==>", JSON.stringify(data, null, 2));
+
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/redeem/coin';
+            const url = `${API.BASE_URL}/redeem/coin`;
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'You can use points') {
+
+                        // Now Your Current Point 
+                        // NowYourCurrentPoint = response?.data?.NowYourCurrentPoint;
+
+                        // Toast.show('Redeem Points Applied Successfully!' + NowYourCurrentPoint, Toast.SHORT);
+
+                        // Set Loyal Points - working !
+                        // setLoyalPointsDeafult(isLoyalPoints * 0.10)
+
+                        setLoyalPointsDeafult(redeem);
+
+                        // Re Set Total Amount as Redeem - working !
+                        // setIsAmount(isAmount - (isLoyalPoints * 0.10));
+                        // isLoyalPointsDefault
+
+                        setIsAmount(isAmount - (redeem * 0.10));
+
+                        setRedeemBG(false);
+                        setApplyRedeem(false);
+                        setisRedeemBtn(true);
+                        setisRedeemText(true);
+
+                    } else {
+                        Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Submit Redeem!', Toast.SHORT);
+                });
+        } else {
+
+        }
+
+
+    }
+
+
+
+    const handleOptionSelect = (option) => {
+        setSelectedOption(option);
+        // Perform any other actions with the selected option
+    };
+
+    const onRequestClose = () => {
+        setModalVisible(true);
+        // console.log('Modal Closed');
+        // Perform any other actions when the modal is closed
+    };
 
 
     // Get Current Date
@@ -104,6 +784,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isModalPAY, setModalPAY] = useState(false);
     const [isModalOTHER, setModalOTHER] = useState(false);
 
+    const [isModalPAYCOMPLETE, setModalPAYCOMPLETE] = useState(false);
+
 
     const [isValidNumber, setValidNumber] = useState(true);
 
@@ -116,11 +798,14 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const refDesc = useRef<any>(null);
 
 
-
     const [isFocusedPasswordRef, setIsFocusedPasswordRef] = useState(false);
     const [passRef, setPassRef] = useState('');
     const [isValidRefCode, setValidRefCode] = useState(true);
     const [isValidDescCode, setValidDescCode] = useState(true);
+
+
+    // MODLA - Support
+    const refPassword = useRef<any>(null);
 
 
     const Images1 = {
@@ -416,6 +1101,12 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isDRIVERPROFILe, setDRIVERPROFILE] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo"); // USER_RIDE_CHARGE
 
 
+    const [isURLPAY, setISURLPAY] = useState<any>("https://rideshareandcourier.graphiglow.in/app/StripeWeb.php?userId=65b9e2f0eb9e0db05a70bb0b&amount=105");
+
+
+    let apiUrlPAY;
+
+
     // isDriverOnTheWay
     const [isDriverOnTheWay, setDriverOnTheWay] = useState(false);
     const [isAccepted, setIsAccepted] = useState(true);
@@ -442,6 +1133,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     let PER;
     let CAN;
 
+
+    // PAY COMPLETE
+    const [isLoyalPoints, setLoyalPoints] = useState<any>('');
 
 
     const [isGETPERCENTAGE, setGETPERCENTAGE] = useState("0");
@@ -473,6 +1167,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
 
     let OTPStatus;
+
+
+    let user_point;
 
 
     useEffect(() => {
@@ -523,6 +1220,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                 await axiosPostDriverInfoRequest();
                 await axiosGetRideRattingRequest();
 
+                // LOYAL PONITS
+                await axiosPostProfilDataGetInfo();
+
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -551,6 +1252,104 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     route.params.itemRIDER_RIDE_DICOUNT,
     route.params.itemRIDER_RIDE_TOTALAMOUNT
     ]);
+
+
+    const axiosPostProfilDataGetInfo = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostSetProfileData();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosPostSetProfileData = async () => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        const type = await AsyncStorage.getItem('user_type');
+
+        if (type !== null && storedLinkedId !== null) {
+
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
+
+            const data = {
+                facebook_id: JSON.parse(storedLinkedId)
+            };
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'User Information') {
+
+                        user_point = response?.data?.matchingUsers[0]?.Point;
+                        setLoyalPoints(user_point);
+
+                    } else {
+                        // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                    }
+
+                })
+                .catch(error => {
+                    // Handle errors
+                    // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                });
+
+        } else {
+
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/userInfo/userInfo';
+            const url = `${API.BASE_URL}/userInfo/userInfo`;
+
+            const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            if (storedLinkedId !== null && type == null) {
+                const data = {
+                    id: JSON.parse(storedLinkedId)
+                };
+
+                await axios.post(url, data, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200 &&
+                            response?.data?.message === 'User Information') {
+
+                            user_point = response?.data?.matchingUsers[0]?.Point;
+                            setLoyalPoints(user_point);
+
+                            // setRatedPerson("(" + user_name + ")");
+
+                            // Handle API response here
+                            // Toast.show("User Information Get Successfully!", Toast.SHORT);
+                        } else {
+                            // Toast.show('User Information Credentials Invalid', Toast.SHORT);
+                        }
+
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        // Toast.show('User Information Credentials Invalid!', Toast.SHORT);
+                    });
+
+            } else {
+
+            }
+
+
+
+        }
+    }
 
 
     const axiosGetRideStatusRequest = async () => {
@@ -932,6 +1731,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     setDURATION(USER_RIDEDURATION);
                     setDISTANCE(USER_RIDEDISTANCE);
 
+
+
                     // PASSING DATA TO PAYMENT SECTION :
                     USER_DRIVER_ID = response?.data?.matchingVehicle?.DriverID;
                     USER_RIDE_ID_ = response?.data?.matchingVehicle?._id;
@@ -991,6 +1792,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     // USER_DISCOUNT - NO USE
                     _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
                     setTOTAL_AMOUNT(_DISCOUNT); // ---- // 
+
+
+                    // Complete UI 
+                    setIsAmount(_DISCOUNT);
 
 
                     setFARE(USER_FARE_VALUE); // ADDED 
@@ -1207,6 +2012,92 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     }
 
 
+    const onPressPaymentSupport = () => {
+        if (name === '') {
+            Toast.show("Name Field Is Required", Toast.SHORT);
+        } else if (name.length < 3) {
+            Toast.show("Please Enter Must 3 Character Name", Toast.SHORT);
+        } else if (num === '') {
+            Toast.show("Mobile Number Field Is Required", Toast.SHORT);
+        } else if (num.length < 10) {
+            Toast.show("Please Enter Must 10 Digit Mobile Number", Toast.SHORT);
+        } else if (selected === 'Select') {
+            Toast.show("Please Select A Valid Country Code", Toast.SHORT);
+        } else if (email === '') {
+            Toast.show("Email Field Is Required", Toast.SHORT);
+        } else if (email !== '' && validateIsEmail(email) === false) {
+            Toast.show("Please Enter Valid Email Address", Toast.SHORT);
+        } else if (selectedOption === 'Select Order type') {
+            Toast.show("Please Select A Select Order Type", Toast.SHORT);
+        } else if (descRef === '') {
+            Toast.show("Description Field Is Required", Toast.SHORT);
+        } else {
+            // Toast.show("Done", Toast.SHORT);
+            // props.navigation.goBack();
+            axiosPaymentSupportPostRequest();
+        }
+    }
+
+    const axiosPaymentSupportPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosUserPaymentSupportPostRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosUserPaymentSupportPostRequest = async () => {
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/paymentSupport/add';
+        const url = `${API.BASE_URL}/paymentSupport/add`;
+
+        // Prepare data in JSON format
+        const data = {
+            type: "Driver",
+            username: name,
+            email: email,
+            mobilenumber: selected.label + num,
+            orderType: selectedOption.labelSeat,
+            descriptionsDispute: descRef
+        };
+
+        console.log("SupportData==>", JSON.stringify(data, null, 2));
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 201
+                    &&
+                    response?.data?.message === 'PaymentSupport created successfully') {
+                    // Handle API response here
+
+                    console.log("SupportDataResponse==>",
+                        JSON.stringify(response?.data, null, 2));
+
+                    Toast.show('Success! Payment Support Details Submitted!', Toast.SHORT);
+                    // props.navigation.goBack();
+                    setModalPAY(false);
+
+                } else {
+                    Toast.show('Enabel To Request Submitted!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Request Submitted!', Toast.SHORT);
+            });
+    };
+
+
+
     const handleAccountEmail = (useremail: any) => {
         setEmail(useremail);
         if (validateIsEmail(useremail) === false) {
@@ -1215,6 +2106,17 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         } else {
             setValidEmail(true)
             setIsFocusedEmail(false)
+        }
+    }
+
+    const handleAccountName1 = (userpass: any) => {
+        setName(userpass);
+        if (userpass.length < 3) {
+            setIsFocusedName(true);
+            setValidName(false)
+        } else {
+            setValidName(true);
+            setIsFocusedName(false)
         }
     }
 
@@ -1328,6 +2230,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         JSON.stringify(response?.data, null, 2));
 
                     Toast.show('Success! Raise Dispute Details Submitted!', Toast.SHORT);
+                    // navigation.goBack();
                     setModalRISE(false);
 
                 } else {
@@ -1356,6 +2259,118 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
     const handleFocusPassDesc = () => {
         setIsFocusedPasswordDesc(true)
+    }
+
+
+    const onPressCross = () => {
+        // setIsAmount(route.params.itemCompleteTotalAmount);
+        setIsAmount(isAmount);
+        setDefault("-5"); // ELSE
+
+        setApplyNowBG(true);
+        setApplyEdit(true);
+        // setisApplyNowBtn(true);
+        setisApplyNowText(false);
+        setIsFocusedApplyNow(true);
+    }
+
+    const handleApplyNow = (usercouponcode: any) => {
+        setCouponcode(usercouponcode);
+        if (usercouponcode.length < 5) {
+            setIsFocusedApplyNow(true);
+            setValidCode(false);
+        } else {
+            setValidCode(true);
+            setIsFocusedApplyNow(false)
+        }
+    }
+
+    const handleFocusApplyNow = () => {
+        setIsFocusedApplyNow(true)
+    }
+
+    const onPressApplyNow = () => {
+        if (couponcode.length < 1) {
+            Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+        } else {
+            // Call Coupon API :
+            axiosGetCouponRequest();
+        }
+
+        // setApplyNowBG(false);
+        // setApplyEdit(false);
+        // setisApplyNowBtn(true);
+        // setisApplyNowText(true);
+    }
+
+    const axiosGetCouponRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosGetCouponRequestCalculation();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosGetCouponRequestCalculation = async () => {
+
+        // Prepare data in JSON format
+        const data = {
+            CouponCode: couponcode,
+        };
+        console.log("CouponCodeData==>", JSON.stringify(data, null, 2));
+
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/couponCode/checkCoupon';
+        const url = `${API.BASE_URL}/couponCode/checkCoupon`;
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Matching records found') {
+
+                    console.log("CouponCodeDataAll==>", JSON.stringify(response?.data, null, 2));
+
+                    CouponDiscount = response?.data?.matchingCodes?.Discount;
+
+                    // CouponDiscount As Total 
+                    GetAsDiscount = route.params.itemCompleteTotalAmount * CouponDiscount / 100;
+
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    console.log("GetAsDiscount", GetAsDiscount);
+                    setDefault(GetAsDiscount);
+
+                    // SET AFTER AMOUNT
+                    GetNewAmoount = route.params.itemCompleteTotalAmount - GetAsDiscount
+                    setIsAmount(GetNewAmoount)
+
+                    // Handle API response here
+                    Toast.show('Coupon Applied Successfully!', Toast.SHORT);
+
+                    setApplyNowBG(false);
+                    setApplyEdit(false);
+                    setisApplyNowBtn(true);
+                    setisApplyNowText(true);
+
+                } else {
+                    Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Coupon!', Toast.SHORT);
+            });
+
     }
 
 
@@ -1595,6 +2610,89 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         }
 
 
+    };
+
+
+
+    const onPressContactUs = () => {
+        if (name === '') {
+            Toast.show("Name Field Is Required", Toast.SHORT);
+        } else if (name.length < 3) {
+            Toast.show("Please Enter Must 3 Character Name", Toast.SHORT);
+        } else if (num === '') {
+            Toast.show("Mobile Number Field Is Required", Toast.SHORT);
+        } else if (num.length < 10) {
+            Toast.show("Please Enter Must 10 Digit Mobile Number", Toast.SHORT);
+        } else if (selected === 'Select') {
+            Toast.show("Please Select A Valid Country Code", Toast.SHORT);
+        } else if (email === '') {
+            Toast.show("Email Field Is Required", Toast.SHORT);
+        } else if (email !== '' && validateIsEmail(email) === false) {
+            Toast.show("Please Enter Valid Email Address", Toast.SHORT);
+        } else if (passRef === '') {
+            Toast.show("Subject Field Is Required", Toast.SHORT);
+        } else if (descRef === '') {
+            Toast.show("Description Field Is Required", Toast.SHORT);
+        } else {
+            // Toast.show("Done", Toast.SHORT);
+            axiosContactUsPostRequest();
+        }
+    }
+
+    const axiosContactUsPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosUserContactUsPostRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosUserContactUsPostRequest = async () => {
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/contact/contact';
+        const url = `${API.BASE_URL}/contact/contact`;
+
+        // Prepare data in JSON format
+        const data = {
+            username: name,
+            email: email,
+            mobilenumber: selected.label + num,
+            descriptions: descRef
+        };
+
+        console.log("ContactData==>", JSON.stringify(data, null, 2));
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 201
+                    &&
+                    response?.data?.message === 'Contact created successfully') {
+                    // Handle API response here
+
+                    console.log("ContactDataResponse==>",
+                        JSON.stringify(response?.data, null, 2));
+
+                    Toast.show('Success! Contact Us Details Submitted!', Toast.SHORT);
+                    // props.navigation.goBack();
+                    setModalOTHER(false);
+
+                } else {
+                    Toast.show('Enabel To Request Submitted!', Toast.SHORT);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Request Submitted!', Toast.SHORT);
+            });
     };
 
 
@@ -1915,7 +3013,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <View style={{ flex: 1 }}>
                                         <TextComponent
                                             color={Colors.orange}
-                                            title={isPaynow ? "" : ScreenText.PayNow}
+                                            title={!isPaynow ? "" : ScreenText.PayNow}
                                             textDecorationLine={'underline'} // BookingDetailsMapUp
                                             onPress={() => setModalPAY1(true)}
                                             // onPress={() => {
@@ -2917,42 +4015,43 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                             heightBtn={hp(7)}
                                             widthBtn={wp(90)}
                                             isRightArrow={false}
-                                            onPress={async () => {
+                                            onPress={() => setModalPAYCOMPLETE(true)}
+                                            // onPress={async () => {
 
-                                                // GET DATA :
-                                                try {
-                                                    const USER_DRIVER_IDget = await AsyncStorage.getItem('store_driver_id');
-                                                    const USER_RIDE_ID_get = await AsyncStorage.getItem('store_ride_id_');
-                                                    const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
-                                                    const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
+                                            //     // GET DATA :
+                                            //     try {
+                                            //         const USER_DRIVER_IDget = await AsyncStorage.getItem('store_driver_id');
+                                            //         const USER_RIDE_ID_get = await AsyncStorage.getItem('store_ride_id_');
+                                            //         const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+                                            //         const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
 
 
-                                                    if (USER_DRIVER_IDget !== null && USER_RIDE_ID_get !==
-                                                        null && USER_RIDEIDID !== null && USER_PAY_TYPE !== null) {
-                                                        navigation.navigate('PaymentCompleteUp', {
-                                                            itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
-                                                            itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
-                                                            itemCompletePickStation: route?.params?.itemMapPickStation,
-                                                            itemCompleteDropStation: route?.params?.itemMapDropStation,
-                                                            itemCompleteRideCharge: route?.params?.itemMapRideCharge,
-                                                            itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
-                                                            itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
-                                                            itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
+                                            //         if (USER_DRIVER_IDget !== null && USER_RIDE_ID_get !==
+                                            //             null && USER_RIDEIDID !== null && USER_PAY_TYPE !== null) {
+                                            //             navigation.navigate('PaymentCompleteUp', {
+                                            //                 itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                            //                 itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
+                                            //                 itemCompletePickStation: route?.params?.itemMapPickStation,
+                                            //                 itemCompleteDropStation: route?.params?.itemMapDropStation,
+                                            //                 itemCompleteRideCharge: route?.params?.itemMapRideCharge,
+                                            //                 itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
+                                            //                 itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
+                                            //                 itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
 
-                                                            itemCompleteTotalAmount: isTOTAL_AMOUNT, // Note: This line might need correction
-                                                            itemCompleteDriverId: JSON.parse(USER_DRIVER_IDget),
-                                                            itemCompleteRideId: JSON.parse(USER_RIDE_ID_get),
-                                                            itemCompleteRideIDID: JSON.parse(USER_RIDEIDID),
-                                                            itemCompletePayType: JSON.parse(USER_PAY_TYPE)
-                                                        });
-                                                    } else {
+                                            //                 itemCompleteTotalAmount: isTOTAL_AMOUNT, // Note: This line might need correction
+                                            //                 itemCompleteDriverId: JSON.parse(USER_DRIVER_IDget),
+                                            //                 itemCompleteRideId: JSON.parse(USER_RIDE_ID_get),
+                                            //                 itemCompleteRideIDID: JSON.parse(USER_RIDEIDID),
+                                            //                 itemCompletePayType: JSON.parse(USER_PAY_TYPE)
+                                            //             });
+                                            //         } else {
 
-                                                    }
+                                            //         }
 
-                                                } catch (error) {
+                                            //     } catch (error) {
 
-                                                }
-                                            }}
+                                            //     }
+                                            // }}
                                             color={Colors.white}
                                             title={ScreenText.PayNow}
                                             marginHorizontal={wp(2)}
@@ -2982,7 +4081,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     onBackdropPress={() => setModalHELP(false)}
                     onBackButtonPress={() => setModalHELP(false)}>
 
-                    <View style={Styles.container}>
+                    <View style={Styles.container}
+                    >
                         <ScrollView
                             bounces={true}
                             overScrollMode="always">
@@ -3060,7 +4160,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <TouchableOpacity
                                         activeOpacity={0.2}
                                         style={Styles.helpConatiner}
-                                        onPress={() => navigation.navigate("ModalPaymentSupport")}>
+                                        onPress={() => setModalPAY(true)}>
                                         <View>
                                             <Image
                                                 style={Styles.imageStop}
@@ -3108,7 +4208,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <TouchableOpacity
                                         activeOpacity={0.2}
                                         style={Styles.helpConatiner}
-                                        onPress={() => navigation.navigate("ModalContactUs")}>
+                                        onPress={() => setModalOTHER(true)}>
                                         <View>
                                             <Image
                                                 style={Styles.imageStop}
@@ -3165,7 +4265,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     onBackButtonPress={() => setModalRISE(false)}>
                     <View style={Styles.container}>
 
-                        <ScrollView style={Styles.container}>
+                        <ScrollView style={Styles.container}
+                            bounces={true}
+                            overScrollMode="always"
+                        >
                             <View style={Styles.container}>
                                 <View style={Styles.viewRiseHeader}>
                                     <HeaderComponent
@@ -3463,6 +4566,15 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         title={ScreenText.Submit}
                                         marginVertical={wp(10)}
                                         onPress={onPressRaiseDispute}
+                                        // onPress={() => {
+                                        //     if (name === "") {
+                                        //         // Do something if condition is true
+                                        //         Alert.alert("tests" + name);
+                                        //     } else {
+                                        //         // Do something else if condition is false
+                                        //         Alert.alert("tests-error");
+                                        //     }
+                                        // }}
                                         marginHorizontal={wp(4)}
                                         fontWeight="600"
                                         fontSize={wp(4)}
@@ -3482,6 +4594,1238 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                     </View>
                 </Modal>
+
+                <Modal
+                    isVisible={isModalPAY}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalPAY(false)}
+                    onBackButtonPress={() => setModalPAY(false)}>
+                    <View style={Styles.container}>
+                        <ScrollView style={Styles.container}
+                            bounces={true}
+                            overScrollMode="always">
+                            <View style={Styles.container}>
+
+                                <View style={Styles.viewRiseHeader}>
+                                    <HeaderComponent
+                                        margin={wp(3)}
+                                        backgroundColorOpacity={Colors.circleGray}
+                                        borderRadiusOpacity={wp(10)}
+                                        transform={[{ rotate: '180deg' }]}
+                                        paddingOpacity={wp(2)}
+                                        textAlign={"left"}
+                                        source={Images.arrowRight}
+                                        marginTop={wp(2)}
+                                        width={wp(7)}
+                                        marginHorizontal={wp(5)}
+                                        height={wp(7)}
+                                        color={Colors.white}
+                                        fontFamily={Fonts.InterSemiBold}
+                                        fontWeight="500"
+                                        title={"Payment Support"}
+                                        fontSize={wp(4)}
+                                        onPress={() => setModalPAY(false)}
+                                    />
+                                </View>
+
+                                <View style={Styles.viewFirstConatiner}>
+                                    <View style={Styles.textCreateANewAccount}>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            isVisibleMail={false}
+                                            isVisibleMailGray={false}
+                                            isVisibleLockWhite={false}
+                                            marginVertical={hp(0)}
+                                            marginTop={wp(5)}
+                                            isVisibleUser={true}
+                                            width={wp(90)}
+                                            borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocused ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refPassword}
+                                            placeholder={ScreenText.EnterUserName}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocus}
+                                            onChangeText={handleAccountName1}
+                                            onSubmitEditing={() => {
+                                                refMobile?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidName ?
+                                            <TextComponent
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidUserName}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={true}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            selectedImage={selectedImage || Images1.downArrow}
+                                            selected={(!!selected && selected.label) || 'Select'}
+                                            toggleDropdown={toggleDropdown}
+                                            renderDropdown={renderDropdown}
+                                            isArrow={false}
+                                            isArrowLeft={true}
+                                            marginVertical={hp(0)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedMobile ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedMobile ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refMobile}
+                                            placeholder={ScreenText.EnterMobile}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='numeric'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            maxLength={10}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusMobile}
+                                            onChangeText={handleAccountNumber}
+                                            onSubmitEditing={() => {
+                                                refEmail?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidNumber ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidMobileNumber}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            isVisibleMail={false}
+                                            isVisibleMailGray={true}
+                                            isVisibleLockWhite={false}
+                                            marginVertical={hp(0)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedEmail ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedEmail ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            marginTop={hp(2)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refEmail}
+                                            placeholder={ScreenText.EnterEmail}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusEmail}
+                                            onChangeText={handleAccountEmail}
+                                            onSubmitEditing={() => {
+                                                refDesc?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidEmail ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidEmail}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View style={{
+                                        marginHorizontal: wp(2)
+                                        , marginVertical: wp(2)
+                                    }}>
+                                        <CustomSelectOrder
+                                            options={dataSeat}
+                                            selectedLabel={selectedOption ? selectedOption.labelSeat : "Select Order type"}
+                                            modalVisibleProp={modalVisible}
+                                            handleOptionSelectProp={handleOptionSelect}
+                                            onRequestCloseProp={onRequestClose}
+                                        />
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleLock={false}
+                                            isVisibleRef={false}
+                                            marginVertical={hp(1)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedPasswordDesc ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedPasswordDesc ? Colors.white : Colors.blue}
+                                            height={hp(15)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refDesc}
+                                            textAlignVertical="top"
+                                            placeholder={ScreenText.WritedescriptionHear}
+                                            editable={true}
+                                            multiline={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusPassDesc}
+                                            onChangeText={handleAccountDesc}
+                                            onSubmitEditing={() => {
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidDescCode ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidDesc}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+                                    </View>
+
+                                </View>
+
+                                <View style={Styles.viewSecondConatiner}>
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        heightBtn={hp(7)}
+                                        widthBtn={wp(90)}
+                                        isRightArrow={false}
+                                        color={Colors.white}
+                                        title={ScreenText.Submit}
+                                        onPress={onPressPaymentSupport}
+                                        marginVertical={wp(10)}
+                                        marginHorizontal={wp(4)}
+                                        fontWeight="600"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.blue}
+                                    />
+                                </View>
+
+                                <View>
+
+                                </View>
+                            </View>
+                        </ScrollView>
+
+                    </View>
+                </Modal>
+
+                <Modal
+                    isVisible={isModalOTHER}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalOTHER(false)}
+                    onBackButtonPress={() => setModalOTHER(false)}>
+                    <ScrollView
+                        bounces={true}
+                        overScrollMode="always"
+                    >
+                        <View style={Styles.container}>
+                            <View style={Styles.viewRiseHeader}>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={wp(10)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    paddingOpacity={wp(2)}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    marginHorizontal={wp(5)}
+                                    height={wp(7)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={"Contact Us"}
+                                    fontSize={wp(4)}
+                                    onPress={() => setModalOTHER(false)}
+                                />
+                            </View>
+                            <View style={Styles.viewFirstConatiner}>
+                                <View style={Styles.textCreateANewAccount}>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleEye={false}
+                                        isVisibleEye_={false}
+                                        isVisibleMail={false}
+                                        isVisibleMailGray={false}
+                                        isVisibleLockWhite={false}
+                                        marginVertical={hp(0)}
+                                        marginTop={wp(5)}
+                                        isVisibleUser={true}
+                                        width={wp(90)}
+                                        borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocused ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refPassword}
+                                        placeholder={ScreenText.EnterUserName}
+                                        editable={true}
+                                        multiline={false}
+                                        secureTextEntry={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocus}
+                                        onChangeText={handleAccountName}
+                                        onSubmitEditing={() => {
+                                            refMobile?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidName ?
+                                        <TextComponent
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidUserName}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            marginTop={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={true}
+                                        isVisibleEye={false}
+                                        isVisibleEye_={false}
+                                        selectedImage={selectedImage || Images1.downArrow}
+                                        selected={(!!selected && selected.label) || 'Select'}
+                                        toggleDropdown={toggleDropdown}
+                                        renderDropdown={renderDropdown}
+                                        isArrow={false}
+                                        isArrowLeft={true}
+                                        marginVertical={hp(0)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedMobile ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedMobile ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refMobile}
+                                        placeholder={ScreenText.EnterMobile}
+                                        editable={true}
+                                        multiline={false}
+                                        secureTextEntry={false}
+                                        isPadding={true}
+                                        keyboardType='numeric'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        maxLength={10}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusMobile}
+                                        onChangeText={handleAccountNumber}
+                                        onSubmitEditing={() => {
+                                            refEmail?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidNumber ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            marginTop={wp(1)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidMobileNumber}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleEye={false}
+                                        isVisibleEye_={false}
+                                        isVisibleMail={false}
+                                        isVisibleMailGray={true}
+                                        isVisibleLockWhite={false}
+                                        marginVertical={hp(0)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedEmail ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedEmail ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        marginTop={hp(2)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refEmail}
+                                        placeholder={ScreenText.EnterEmail}
+                                        editable={true}
+                                        multiline={false}
+                                        secureTextEntry={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusEmail}
+                                        onChangeText={handleAccountEmail}
+                                        onSubmitEditing={() => {
+                                            refSubject?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidEmail ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidEmail}
+                                            fontWeight="400"
+                                            marginTop={wp(1)}
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleLock={false}
+                                        isVisibleRef={false}
+                                        marginVertical={hp(1)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedPasswordRef ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedPasswordRef ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        marginTop={hp(2)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refSubject}
+                                        placeholder={ScreenText.Subject}
+                                        editable={true}
+                                        multiline={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusPassRefCode}
+                                        onChangeText={handleAccountRefCode}
+                                        onSubmitEditing={() => {
+                                            refDesc?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidRefCode ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidSubject}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleLock={false}
+                                        isVisibleRef={false}
+                                        marginVertical={hp(1)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedPasswordDesc ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedPasswordDesc ? Colors.white : Colors.blue}
+                                        height={hp(15)}
+                                        marginTop={hp(2)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refDesc}
+                                        textAlignVertical="top"
+                                        placeholder={ScreenText.WritedescriptionHear}
+                                        editable={true}
+                                        multiline={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusPassDesc}
+                                        onChangeText={handleAccountDesc}
+                                        onSubmitEditing={() => {
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidDescCode ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidDesc}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+                                </View>
+
+                            </View>
+
+                            <View style={Styles.viewSecondConatiner}>
+                                <ButtonComponent
+                                    isVisibleMobile={false}
+                                    isVisibleFaceBook={false}
+                                    heightBtn={hp(7)}
+                                    widthBtn={wp(90)}
+                                    isRightArrow={false}
+                                    marginVertical={wp(10)}
+                                    color={Colors.white}
+                                    title={ScreenText.Submit}
+                                    onPress={onPressContactUs}
+                                    marginHorizontal={wp(4)}
+                                    fontWeight="600"
+                                    fontSize={wp(4)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    alignSelf='center'
+                                    textAlign='center'
+                                    borderRadius={wp(2)}
+                                    backgroundColor={Colors.blue}
+                                />
+                            </View>
+
+                            <View>
+
+                            </View>
+                        </View>
+                    </ScrollView>
+
+                </Modal>
+
+                <Modal
+                    isVisible={isModalPAYCOMPLETE}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalPAYCOMPLETE(false)}
+                    onBackButtonPress={() => setModalPAYCOMPLETE(false)}>
+
+                    <ScrollView style={CommonStyle.commonFlex}>
+
+                        <View style={Styles.container}>
+
+                            <View style={Styles.viewHeaderComplete}>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={hp(8)}
+                                    paddingOpacity={wp(2.5)}
+                                    LoyalPonits={isLoyalPoints}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    height={wp(7)} // 7
+                                    marginHorizontal={wp(5)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={"Payment"}
+                                    isVisiblePayout={true} //0000
+                                    fontSize={wp(4)}
+                                    onPress={() => setModalPAYCOMPLETE(false)}
+                                />
+                            </View>
+
+                            <View style={Styles.viewKMConatinerGray}>
+                                <View style={Styles.rowSpace}>
+                                    <View style={CommonStyle.justifyContent}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            // title={route.params.itemCompleteDuration}
+                                            title={isDISTANCE}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='center'
+                                        />
+                                        <TextComponent
+                                            color={Colors.gray}
+                                            title={"Distance"}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='center'
+                                        />
+                                    </View>
+
+                                    <View style={Styles.viewSeprateLine}>
+                                    </View>
+
+                                    <View>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            // title={route.params.itemCompleteDistance}
+                                            title={isDURATION}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='center'
+                                        />
+                                        <TextComponent
+                                            color={Colors.gray}
+                                            title={"Duration"}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='center'
+                                        />
+                                    </View>
+
+                                </View>
+                            </View>
+
+
+                            <View>
+                                <View style={CommonStyle.commonRow}>
+                                    <View style={Styles.viewStationConatiner}>
+                                        <Image
+                                            style={Styles.viewOrangeDot}
+                                            resizeMode="contain"
+                                            source={Images.blueDot} />
+
+                                        <View style={Styles.lineVerticalLine1} />
+                                        <View style={Styles.lineVerticalLine4} />
+                                        <View style={Styles.lineVerticalLine3} />
+
+                                        <Image
+                                            style={Styles.viewOrangeDot}
+                                            resizeMode="contain"
+                                            source={Images.orangeDot} />
+                                    </View>
+                                    <View style={CommonStyle.justifyContent}>
+                                        <TextComponent
+                                            color={Colors.gray}
+                                            title={isPICK_UP_LOCATION}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                        />
+                                        <TextComponent
+                                            color={Colors.gray}
+                                            title={isDROP_UP_LOCATION}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View style={Styles.viewSeprateLine2}>
+                            </View>
+
+                            <View>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Payment"}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    marginVertical={wp(1)}
+                                    marginHorizontal={wp(5)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View style={Styles.viewSeprateLine3}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Ride Charge"}
+                                    marginVertical={wp(3)}
+                                    marginHorizontal={wp(3)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                                <TextComponent
+                                    color={Colors.grayFull}
+                                    // title={"$ " + route.params.itemCompleteRideCharge}
+                                    title={"$ " + isDRIVERIDECHARGE}
+                                    marginVertical={wp(3)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View style={Styles.viewSeprateLine3}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Bookings Fees & Convenience Charges"}
+                                    marginHorizontal={wp(3)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                                <TextComponent
+                                    color={Colors.grayFull}
+                                    // title={"$ " + route.params.itemCompleteRideFeesCon}
+                                    title={"$ " + isDRIVERCONCHARGE}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View style={Styles.viewSeprateLine3}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Waiting Charge"}
+                                    marginHorizontal={wp(3)}
+                                    marginVertical={wp(2)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                                <TextComponent
+                                    color={Colors.grayFull}
+                                    // title={"$ " + route.params.itemCompleteRideWattingCharges}
+                                    title={"$ " + isWATTING_CHARGES}
+                                    marginVertical={wp(2)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View style={Styles.viewSeprateLine3}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Loyalty Points"}
+                                    marginHorizontal={wp(3)}
+                                    marginVertical={wp(2)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+
+                                <TextComponent
+                                    color={Colors.grayFull}
+                                    title={"-$ " + isLoyalPointsDefault}
+                                    marginVertical={wp(2)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+
+                            <View style={Styles.viewSeprateLine3}>
+                                <TextComponent
+                                    color={Colors.greenDark}
+                                    title={"Discount"}
+                                    marginHorizontal={wp(3)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    marginVertical={wp(3)}
+                                    textAlign='left'
+                                />
+
+                                <TextComponent
+                                    color={Colors.greenDark}
+                                    title={"-$ " + Default}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    marginVertical={wp(3)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+
+                                {/* <TextComponent
+                                    color={Colors.greenDark}
+                                    title={"-$ " + Default}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    marginVertical={wp(3)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                /> */}
+
+                            </View>
+
+                            <View style={Styles.viewSeprateLine2}>
+                            </View>
+
+                            <View style={Styles.viewSeprateLine3}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Total Amount"}
+                                    marginHorizontal={wp(3)}
+                                    marginVertical={wp(1)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(4)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    textAlign='left'
+                                />
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"$ " + isAmount}
+                                    marginVertical={wp(1)} // 3
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(4)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View style={Styles.viewSeprateLine3}>
+                                <TextComponent
+                                    color={Colors.gray}
+                                    title={"Inclusive of Taxes"}
+                                    marginHorizontal={wp(3)}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Coupon Code"}
+                                    textDecorationLine={'none'}
+                                    fontWeight="500"
+                                    fontSize={wp(3.5)}
+                                    marginHorizontal={wp(5)}
+                                    marginTop={wp(5)}
+                                    marginVertical={wp(1)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+
+                                <TextInputComponent
+                                    selectionColor={Colors.white}
+                                    isVisibleDropDown={false}
+                                    isVisibleEye={false}
+                                    isVisibleEye_={false}
+                                    isVisibleMail={false}
+                                    isVisibleMailGray={false}
+                                    isVisibleLockWhite={false}
+                                    width={wp(90)}
+                                    borderWidth={isFocusedApplyNow ? ConstValue.value1 : ConstValue.value0}
+                                    borderColor={isFocusedApplyNow ? Colors.white : Colors.blue}
+                                    height={hp(7)}
+                                    marginHorizontal={wp(3.5)}
+                                    marginVertical={wp(1)}
+                                    isUserHide={false}
+                                    textfontSize={ConstValue.value15}
+                                    textfontFamily={Fonts.PoppinsRegular}
+                                    textlineHeight={ConstValue.value0}
+                                    ref={refApplyNow}
+                                    placeholder={ScreenText.ApplyCouponCode}
+                                    editable={isApplyEdit}
+                                    multiline={false}
+                                    secureTextEntry={false}
+                                    isPadding={true}
+                                    keyboardType='default'
+                                    textAlign='left'
+                                    numberOfLines={null}
+                                    isApplyNow={isApplyNowBtn}
+                                    isVisibleApplyNow={!isApplyNowText}
+                                    onPressApplyNow={onPressApplyNow}
+                                    color={Colors.white}
+                                    backgroundColor={isApplyNowBG ? Colors.grayDark : Colors.lightGreen}
+                                    borderRadius={wp(2)}
+                                    onFocus={handleFocusApplyNow}
+                                    onChangeText={handleApplyNow}
+                                    onPressCross={onPressCross}
+                                    onSubmitEditing={() => {
+                                    }}
+                                    placeholderTextColor={Colors.white}
+                                />
+                                {!isValidCode ?
+                                    <TextComponent
+                                        textDecorationLine={'none'}
+                                        color={Colors.red}
+                                        title={ScreenText.ValidCouponCode}
+                                        fontWeight="400"
+                                        fontSize={wp(4)}
+                                        marginLeft={wp(5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                    />
+                                    : null}
+
+                            </View>
+
+                            <View>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={"Redeem Loyalty points  ( Max 10% Of all Payment )"}
+                                    textDecorationLine={'none'}
+                                    fontWeight="500"
+                                    fontSize={wp(3.5)}
+                                    marginHorizontal={wp(5)}
+                                    marginVertical={wp(3)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <TextInputComponent
+                                selectionColor={Colors.white}
+                                isVisibleDropDown={false}
+                                isVisibleEye={false}
+                                isVisibleEye_={false}
+                                isVisibleMail={false}
+                                isVisibleMailGray={false}
+                                isVisibleLockWhite={false}
+                                width={wp(90)}
+                                borderWidth={isFocusedRedeem ? ConstValue.value1 : ConstValue.value0}
+                                borderColor={isFocusedRedeem ? Colors.white : Colors.blue}
+                                height={hp(7)}
+                                marginHorizontal={wp(3.5)}
+                                marginVertical={wp(1)}
+                                isUserHide={false}
+                                textfontSize={ConstValue.value15}
+                                textfontFamily={Fonts.PoppinsRegular}
+                                textlineHeight={ConstValue.value0}
+                                ref={refRedeem}
+                                placeholder={ScreenText.EnterPointsToRedeem}
+                                editable={isApplyRedeem}
+                                multiline={false}
+                                secureTextEntry={false}
+                                isPadding={false}
+                                paddingLeft={wp(2)}
+                                keyboardType='default'
+                                textAlign='left'
+                                numberOfLines={null}
+                                isApplyNowPoints={isRedeemBtn}
+                                isVisibleApplyNowPoints={!isRedeemText}
+                                onPressApplyNowRedeem={onPressRedeem}
+                                color={Colors.white}
+                                backgroundColor={isRedeemBG ? Colors.grayDark : Colors.lightGreen}
+                                borderRadius={wp(2)}
+                                onFocus={handleFocusRedeem}
+                                onChangeText={handleRedeem}
+                                onPressCrossPoints={onPressCrossPoints}
+                                onSubmitEditing={() => {
+
+                                }}
+                                placeholderTextColor={Colors.white}
+                            />
+                            {!isValidRedeem ?
+                                <TextComponent
+                                    textDecorationLine={'none'}
+                                    color={Colors.red}
+                                    title={ScreenText.ValidCouponRedeem}
+                                    fontWeight="400"
+                                    fontSize={wp(4)}
+                                    marginLeft={wp(5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                />
+                                : null}
+
+                            <View style={CommonStyle.commonContentAlign}>
+                                <ButtonComponent
+                                    isVisibleMobile={false}
+                                    isVisibleFaceBook={false}
+                                    heightBtn={hp(7)}
+                                    widthBtn={wp(90)}
+                                    marginTop={wp(10)}
+                                    marginVertical={wp(2)}
+                                    isRightArrow={false}
+                                    color={Colors.white}
+                                    title={ScreenText.CompletePayment}
+                                    onPress={onPressCompletePayment}
+                                    marginHorizontal={wp(2)}
+                                    fontWeight="600"
+                                    fontSize={wp(4)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    alignSelf='center'
+                                    textAlign='center'
+                                    borderRadius={wp(2)}
+                                    backgroundColor={Colors.blue}
+                                />
+                            </View>
+
+                            <View>
+                                <Modal isVisible={isSTRIPEModal}
+                                    onBackButtonPress={() => setSTRIPEModal(false)}>
+                                    <View style={Styles.viewModalDriverStripe}>
+
+                                        <WebView
+                                            source={{ uri: isURLPAY }}
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: 'center',
+                                            }}
+                                            javaScriptEnabled={true}
+                                            domStorageEnabled={true}
+                                        />
+
+                                        <ButtonComponent
+                                            isVisibleMobile={false}
+                                            isVisibleFaceBook={false}
+                                            marginVertical={hp(1)}
+                                            heightBtn={hp(6)}
+                                            widthBtn={wp(50)}
+                                            isRightArrow={false}
+                                            onPress={onPressModalCheckPayment}
+                                            color={Colors.white}
+                                            title={ScreenText.Next}
+                                            marginHorizontal={wp(15)}
+                                            fontWeight="500"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            alignSelf='center'
+                                            textAlign='center'
+                                            borderRadius={wp(2)}
+                                            backgroundColor={Colors.blue}
+                                        />
+
+                                    </View>
+                                </Modal>
+                            </View>
+
+                            <View>
+                                <Modal isVisible={isModalDriver}
+                                    onBackButtonPress={() => setModalDriver(false)}>
+                                    <View style={Styles.viewModalDriver}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={ScreenText.CustomerRating}
+                                            textDecorationLine={'none'}
+                                            fontWeight="700"
+                                            fontSize={wp(5)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='center'
+                                            marginVertical={wp(3)}
+                                            marginTop={wp(5)}
+                                        />
+                                        <TextComponent
+                                            color={Colors.modalGray}
+                                            title={ScreenText.Howtoknow}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='center'
+                                            marginVertical={wp(3)}
+                                        />
+
+                                        <View>
+                                            <View style={Styles.customRatingBarStyle}>
+                                                {maxRatingSubmit.map((item, key) => {
+                                                    return (
+                                                        <View style={CommonStyle.commonRow}>
+                                                            <TouchableOpacity
+                                                                activeOpacity={0.7}
+                                                                key={item}
+                                                                onPress={() => setDefaultRatingsubmit(item)}>
+
+                                                                <Image
+                                                                    style={Styles.starImageStyle}
+                                                                    source={
+                                                                        item <= defaultRatingSubmit
+                                                                            ? starImageFilled1
+                                                                            : starImageCorner1
+                                                                    }
+                                                                />
+
+                                                            </TouchableOpacity>
+                                                        </View>
+
+                                                    );
+                                                })}
+
+                                            </View>
+
+                                        </View>
+
+
+                                        <ButtonComponent
+                                            isVisibleMobile={false}
+                                            isVisibleFaceBook={false}
+                                            marginVertical={hp(1)}
+                                            heightBtn={hp(6)}
+                                            widthBtn={wp(50)}
+                                            isRightArrow={false}
+                                            onPress={onPressSubmit}
+                                            color={Colors.white}
+                                            title={ScreenText.Submit}
+                                            marginHorizontal={wp(15)}
+                                            fontWeight="500"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            alignSelf='center'
+                                            textAlign='center'
+                                            borderRadius={wp(2)}
+                                            backgroundColor={Colors.blue}
+                                        />
+                                    </View>
+                                </Modal>
+                            </View>
+
+                        </View>
+
+
+
+                    </ScrollView>
+                </Modal>
+
 
             </View>
         </SafeAreaView >

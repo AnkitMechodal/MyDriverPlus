@@ -748,7 +748,6 @@ const PaymentCompleteUp = ({ route, navigation }) => {
 
 
     // working !
-
     const axiosPostRateDriverRequest = async (defaultRatingSubmit: any) => {
 
         console.log("axiosPostRateDriverRequest/////", defaultRatingSubmit);

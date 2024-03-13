@@ -665,6 +665,7 @@ const ModalPaymentScreen = (props: Props) => {
                                     onPress={() => props.navigation.goBack()}
                                 />
                             </View>
+
                             <View style={Styles.viewFirstConatiner}>
                                 <View style={Styles.textCreateANewAccount}>
                                     <TextInputComponent

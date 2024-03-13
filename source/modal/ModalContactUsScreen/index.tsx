@@ -603,7 +603,10 @@ const ModalContactUsScreen = (props: Props) => {
                 <Modal
                     isVisible={isModalVisible}
                     style={Styles.viewModalMargin}>
-                    <ScrollView>
+                    <ScrollView
+                        bounces={true}
+                        overScrollMode="always"
+                    >
                         <View style={Styles.container}>
                             <View style={Styles.viewRiseHeader}>
                                 <HeaderComponent
