@@ -15,6 +15,13 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         width: "100%"
     },
+    imageArrow: {
+        width: wp(8),
+        height: wp(8),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+        marginHorizontal: wp(2)
+    },
     imageUser: {
         width: wp(20),
         height: wp(20),
@@ -277,6 +284,65 @@ const Styles = StyleSheet.create({
     ButtonYesNoConatiner: {
         flexDirection: "row",
         justifyContent: 'center'
+    },
+
+    // MODAL
+    helpConatiner: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        margin: wp(4)
+    },
+    ItemSeparatorComponent: {
+        width: '90%',
+        height: wp(0.1),
+        backgroundColor: Colors.grayDrawerBg,
+        marginHorizontal: wp(5)
+    },
+    imageStop: {
+        width: wp(6),
+        height: wp(6),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+    },
+    viewRiseHeader: {
+        marginBottom: wp(10)
+    },
+    viewFirstConatiner: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    textCreateANewAccount: {
+        margin: wp(3)
+    },
+
+    modalStyle: {
+        marginTop: wp(15)
+    },
+    dropdown: {
+        backgroundColor: Colors.grayDark,
+        width: wp(22),
+        marginLeft: wp(5),
+    },
+    onItemPress: {
+        flexDirection: 'row',
+        marginLeft: wp(4)
+    },
+    item: {
+        paddingVertical: wp(2),
+        borderBottomWidth: 1,
+        borderColor: Colors.white,
+    },
+    imageDefaultDownArrow: {
+        width: wp(5),
+        height: wp(5),
+        marginRight: wp(2),
+    },
+    textLabel: {
+        color: Colors.gray
+    },
+    viewSecondConatiner: {
+        flex: 1,
+        justifyContent: 'flex-end'
     },
 
 });

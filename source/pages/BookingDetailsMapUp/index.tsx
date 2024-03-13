@@ -286,10 +286,10 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                             averageRating = response?.data?.ratings?.averageRating;
                             avg_username = response?.data?.ratings?.username;
 
-                            console.log("AVG_username*****===>", response?.data);
+                            console.log("avg_username===>", avg_username);
 
                             setDefaultRating(averageRating);
-
+                            // setDRIVERNAME(avg_username);
                             //  PHOTO // ADDED 
 
                             console.log("RESDATA===>",
@@ -297,12 +297,12 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                             // Toast.show('Driver Ratings Get Success!', Toast.SHORT);
 
                         } else {
-                            // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                            Toast.show('Enabel To Get Ratings!', Toast.SHORT);
                         }
                     })
                     .catch(error => {
                         // Handle errors
-                        // Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                        Toast.show('Enabel To Get Ratings!', Toast.SHORT);
                     });
 
             } else {
@@ -312,6 +312,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
 
         }
     }
+
 
 
     const axiosPostRideDetailsOfMap = async () => {
@@ -345,6 +346,7 @@ const BookingDetailsMapUp = ({ route, navigation }) => {
                     USER_DROP_UP_LOCATION = response?.data?.matchingVehicle?.drop_locations;
                     USER_VEHICAL = response?.data?.matchingVehicle?.vehical;
                     USER_SERVICE_TYPE = response?.data?.matchingVehicle?.service_stype;
+
                     USER_RIDEDURATION = response?.data?.matchingVehicle?.time;
                     USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
 

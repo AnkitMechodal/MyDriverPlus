@@ -323,6 +323,8 @@ const ModalRiseHelpScreen = (props: Props) => {
         // Add more options as needed
 
     ];
+
+
     const onItemPress = (item) => {
         setSelected(item);
         setVisible(false);
