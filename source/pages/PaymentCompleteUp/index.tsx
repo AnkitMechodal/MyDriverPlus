@@ -980,7 +980,7 @@ const PaymentCompleteUp = ({ route, navigation }) => {
             const data = {
                 userId: JSON.parse(storedLinkedId),
                 amount: isAmount,
-                rideId: route.params.itemCompleteRideIDID // RIDE ID 
+                rideId: route.params.itemCompleteRideIDID // RIDE ID
             };
 
             console.log("PAYYYYY==>", JSON.stringify(data, null, 2));

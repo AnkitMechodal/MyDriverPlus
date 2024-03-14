@@ -3,7 +3,7 @@ import CheckBox from '@react-native-community/checkbox';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -32,6 +32,25 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [toggleRequestSent, setToggleRequestSent] = useState(true);
     const [toggleAccepted, setToggleAccepted] = useState(false);
     const [toggleOTP, setToggleOTP] = useState(false);
+
+
+    const [isURL1, setURL1] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL2, setURL2] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL3, setURL3] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL4, setURL4] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+
+    const [isDriverPlateNumber, setDriverPlateNumber] = useState("GJ 06 MA 2500");
+    const [isDriverPlateName, setDriverPlateName] = useState("Crash Test Dummy");
+    const [isDriverVehicleType, setDriverVehicleType] = useState("Car");
+
+    const [isDriverVehicleColor, setDriverVehicleColor] = useState("yellow");
+
+    const [isDriverVehicleDesc, setDriverVehicleDesc] = useState(ScreenText.Loreum);
+
+
+    // ProfileImage
+    const [isURL5, setURL5] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+
 
 
     const [defaultRating, setDefaultRating] = useState(4);
@@ -122,8 +141,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
     // STRIPE :
     const [isSTRIPEModal, setSTRIPEModal] = useState(false);
-    const [isModalDriver, setModalDriver] = useState(false);
-
+    const [isModalDriver, setModalDriver] = useState(false); // false
 
 
     const onPressCrossPoints = () => {
@@ -163,7 +181,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
         // Prepare data in JSON format
         const data = {
-            id: route.params.itemCompleteRideId,
+            // id: route.params.itemCompleteRideId,
+            id: route.params.itemRIDER_ID_SENT,
             PaymentStatus: "Complete"
         };
 
@@ -248,25 +267,21 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const axiosPostRateDriverRequestConfirm = async (defaultRatingSubmit: any) => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+        const storedLinkedId_ = await AsyncStorage.getItem('store_driver_id');
 
-        if (storedLinkedId !== null) {
+        if (storedLinkedId !== null && storedLinkedId_ !== null) {
 
             // const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
-            const url = `${API.BASE_URL}/ratting/rateDriver`;
+            const url = `${API.BASE_URL}/ratting/rateDriver`; //todo
 
             // Prepare data in JSON format
             const data = {
                 UserID: JSON.parse(storedLinkedId),
-                DriverID: route.params.itemCompleteDriverId,
+                DriverID: JSON.parse(storedLinkedId_),
                 rating: defaultRatingSubmit
             };
 
-            console.log("RateDriverData***********==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
-            console.log("RateDriverData**==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData**000000==>", JSON.stringify(data, null, 2));
 
             await axios.post(url, data, {
                 headers: {
@@ -296,9 +311,15 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                         // axiosPostRequestStripe();
 
-                        navigation.navigate('PaymentSuccessfulUp', {
-                            itemSuccessfulAmount: isAmount,
-                        });
+                        // TODO : PAY SUCESSFUL
+
+                        setModalPAYFUL(true);
+
+                        // navigation.navigate('PaymentSuccessfulUp', { // Paysucess ui
+                        //     itemSuccessfulAmount: isAmount,
+                        // });
+
+                        // TODO : PAY SUCESSFUL
 
                     } else {
                         Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
@@ -325,6 +346,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
             // axiosPostRequestStripe();
         }
     };
+
 
     const axiosPostRideDetailsRequest = async () => {
         // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
@@ -416,7 +438,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const axiosPostRequestStripe = async () => {
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');
 
-        if (storedLinkedId !== null) {
+        // USE RIDE ID AS STRIPE 
+        const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+
+        if (storedLinkedId !== null && USER_RIDEIDID !== null) {
             // const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
             const url = `${API.BASE_URL}/webStriperedirect/stripeWeb`;
 
@@ -424,7 +449,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
             const data = {
                 userId: JSON.parse(storedLinkedId),
                 amount: isAmount,
-                rideId: route.params.itemCompleteRideIDID // RIDE ID 
+                rideId: JSON.parse(USER_RIDEIDID), // RIDE ID USE
             };
 
             console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
@@ -485,7 +510,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
         // Prepare data in JSON format
         const data = {
-            id: route.params.itemCompleteRideId,
+            // id: route.params.itemCompleteRideId,
+            id: route.params.itemRIDER_ID_SENT,
             PaymentStatus: "Complete"
         };
 
@@ -763,6 +789,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isModalPAY1, setModalPAY1] = useState(false);
     const [isModalHELP, setModalHELP] = useState(false);
 
+
     const [isFocused, setIsFocused] = useState(true);
     const [isFocusedMobile, setIsFocusedMobile] = useState(false);
     const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -784,6 +811,11 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isModalPAY, setModalPAY] = useState(false);
     const [isModalOTHER, setModalOTHER] = useState(false);
 
+
+    const [isModalPAYFUL, setModalPAYFUL] = useState(false);
+
+    const [isModalDRIVER, setModalDRIVER] = useState(false);
+
     const [isModalPAYCOMPLETE, setModalPAYCOMPLETE] = useState(false);
 
 
@@ -802,6 +834,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [passRef, setPassRef] = useState('');
     const [isValidRefCode, setValidRefCode] = useState(true);
     const [isValidDescCode, setValidDescCode] = useState(true);
+
+    const [isModalBOOKINGCANCEL, setModalBOOKINGCANCEL] = useState(false);
 
 
     // MODLA - Support
@@ -1093,10 +1127,15 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
 
     const [isDRIVERNAME, setDRIVERNAME] = useState("");
+    const [isRated, setRated] = useState("0");
+
 
     const [isDRIVERIDECHARGE, setDRIVERRIDECHARGE] = useState("");
     const [isDRIVERCONCHARGE, setDRIVERCONCHARGE] = useState("");
     const [isDRIVERDISCOUNT, setDRIVERDISCOUNT] = useState("");
+    const [isSeats, setSeats] = useState("0");
+
+    const [isDriverVIN, setDriverVIN] = useState("583245");
 
     const [isDRIVERPROFILe, setDRIVERPROFILE] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo"); // USER_RIDE_CHARGE
 
@@ -1129,7 +1168,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     let USER_RIDE_ID_;
 
 
-
     let PER;
     let CAN;
 
@@ -1150,8 +1188,14 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isValidFeed, setValidFeed] = useState(true);
     const [currentTime, setCurrentTime] = useState(moment().format('HH:mm:ss'));
 
+
+    const [isPhoneNumber, setPhoneNumber] = useState("");
+
+
     let averageRating;
     let avg_username;
+    let no_rate;
+
 
     let statusCheack;
     let dateCheack;
@@ -1164,6 +1208,26 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     let DriverBookingName;
     let DriverProfileImage;
     let Driver_id;
+
+    let DriverVehicleColor;
+    let DriverUserVIN;
+    let DriverNumberOfSeat;
+
+
+    let DriverBookingImage1;
+    let DriverBookingImage2;
+    let DriverBookingImage3;
+    let DriverBookingImage4;
+
+
+    let DriverVehicleNumber;
+    let DriverVehicleType;
+    let DriverVehicleName;
+
+    let DriverVehicleDecription;
+    let DriverVehiclePhone;
+
+
 
 
     let OTPStatus;
@@ -1253,6 +1317,11 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     route.params.itemRIDER_RIDE_TOTALAMOUNT
     ]);
 
+
+    const onPressCallUser = () => {
+        const phoneNumberWithPrefix = `tel:${isPhoneNumber}`;
+        Linking.openURL(phoneNumberWithPrefix);
+    }
 
     const axiosPostProfilDataGetInfo = async () => {
         try {
@@ -1741,13 +1810,30 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
                     USER_CANCELLATION = response?.data?.matchingVehicle?.cancelationsAmount;
 
-                    PER = USER_TOTAL_AMOUNT * USER_CANCELLATION / 100;
-
+                    PER = (USER_TOTAL_AMOUNT * USER_CANCELLATION) / 100;
                     // cancelationsAmount
                     setGETPERCENTAGE(PER);
 
+                    console.log("PER", PER);
+                    console.log("PER", PER);
+                    console.log("PER", PER);
+                    console.log("PER", PER);
+
+
                     CAN = USER_TOTAL_AMOUNT - PER
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
+
                     setCHARGE(CAN)
+
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
+                    console.log("CAN", CAN);
 
                     // RideCharge
                     USER_RIDE_CHARGE = response?.data?.matchingVehicle?.RideCharge;
@@ -1789,7 +1875,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     StoreRideIDID(USER_RIDEID);
                     StorePayType(USER_PAYMEMT_TYPE);
 
-                    // USER_DISCOUNT - NO USE
+                    // // USER_DISCOUNT - NO USE
                     _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
                     setTOTAL_AMOUNT(_DISCOUNT); // ---- // 
 
@@ -1912,6 +1998,24 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         DriverBookingName = response?.data?.matchingUsers[0]?.username;
                         DriverProfileImage = response?.data?.matchingUsers[0]?.ProfileImage;
 
+                        // ADDED
+                        DriverBookingImage1 = response?.data?.matchingUsers[0]?.vehicle_pictures1_Url;
+                        DriverBookingImage2 = response?.data?.matchingUsers[0]?.vehicle_pictures2_Url;
+                        DriverBookingImage3 = response?.data?.matchingUsers[0]?.vehicle_pictures3_Url;
+                        DriverBookingImage4 = response?.data?.matchingUsers[0]?.vehicle_pictures4_Url;
+
+                        DriverVehicleNumber = response?.data?.matchingUsers[0]?.Plate_number;
+                        DriverVehicleType = response?.data?.matchingUsers[0]?.Vehicle_type;
+                        DriverVehicleName = response?.data?.matchingUsers[0]?.Company_name;
+
+                        DriverVehicleDecription = response?.data?.matchingUsers[0]?.Vehicle_Details;
+                        DriverVehiclePhone = response?.data?.matchingUsers[0]?.mobilenumber;
+                        DriverProfileImage = response?.data?.matchingUsers[0]?.ProfileImage;
+                        DriverVehicleColor = response?.data?.matchingUsers[0]?.Vehicle_Color;
+
+                        DriverUserVIN = response?.data?.matchingUsers[0]?.VINumber;
+                        DriverNumberOfSeat = response?.data?.matchingUsers[0]?.NumberOfSeat;
+
                         // _id99
                         Driver_id = response?.data?.matchingUsers[0]?._id;
                         // Store for star : todo
@@ -1922,6 +2026,23 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                         setDRIVERNAME(DriverBookingName);
                         setDRIVERPROFILE(DriverProfileImage);
+
+                        setDriverVIN(DriverUserVIN);
+
+                        setURL1(DriverBookingImage1);
+                        setURL2(DriverBookingImage2);
+                        setURL3(DriverBookingImage3);
+                        setURL4(DriverBookingImage4);
+                        setURL5(DriverProfileImage);
+
+                        setSeats(DriverNumberOfSeat);
+                        setDriverPlateNumber(DriverVehicleNumber);
+                        setDriverPlateName(DriverVehicleName);
+                        setDriverVehicleType(DriverVehicleType);
+                        setDriverVehicleDesc(DriverVehicleDecription);
+                        setPhoneNumber(DriverVehiclePhone);
+                        setDriverVehicleColor(DriverVehicleColor);
+
 
                         // Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);
 
@@ -2409,6 +2530,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             averageRating = response?.data?.ratings?.averageRating;
                             avg_username = response?.data?.ratings?.username;
 
+                            no_rate = response?.data?.ratings?.numberOfRatings;
+                            setRated(no_rate);
+
                             console.log("avg_username===>", avg_username);
 
                             setDefaultRating(averageRating);
@@ -2446,9 +2570,76 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     };
 
     const onPressCancelBooking = () => {
+
         // Cancel Booking 
         axiosCancelBookingPostRequest();
     }
+
+
+    const onPressAddPreferred = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostDataAddPreferredDriver();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosPostDataAddPreferredDriver = async () => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        const storedDriverLinkedId = await AsyncStorage.getItem('store_driver_id');
+
+        if (storedLinkedId !== null && storedDriverLinkedId != null) {
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/preferredDriverAdd/add';
+            const url = `${API.BASE_URL}/preferredDriverAdd/add`;
+
+            // Prepare data in JSON format
+            const data = {
+                UserID: JSON.parse(storedLinkedId),
+                DriverID: JSON.parse(storedDriverLinkedId),
+            };
+
+            console.log("AddPreferredData==>", data);
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 201
+                        &&
+                        response?.data?.message === 'Preferred driver added successfully') {
+                        // Handle API response here
+                        // Vehicles Are
+
+                        console.log("AddPreferredDataResponse==>",
+                            JSON.stringify(response?.data, null, 2));
+
+                        Toast.show('Preferred Driver Successfully Added!', Toast.SHORT);
+                        // navigation.goBack();
+                        setModalDRIVER(false);
+
+                    } else {
+                        Toast.show('Already Preferred Driver Added!', Toast.SHORT);
+                        //  Welcome! Signed in successfully.
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Already Preferred Driver Added!', Toast.SHORT);
+                });
+        } else {
+
+        }
+    };
+
 
     const axiosCancelBookingPostRequest = async () => {
         try {
@@ -2490,23 +2681,27 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
 
-                        navigation.navigate("CancelBookingDetailsMapUp", {
-                            itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-                            itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
-                            itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+                        // TODO :
+                        // setModalCancel(false) // Cancel-1
+                        setModalBOOKINGCANCEL(true);
 
-                            itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                            itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                        // navigation.navigate("CancelBookingDetailsMapUp", {
+                        //     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                        //     itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                        //     itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
 
-                            // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                            // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+                        //     itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                        //     itemMapDropStation: route.params.itemRIDER_DROPSTATION,
 
-                            itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                            itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                            itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                            itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                            itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-                        })
+                        //     // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+                        //     // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+                        //     itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                        //     itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                        //     itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                        //     itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                        //     itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                        // })
 
                     } else {
                         Toast.show('Unable to Cancelled!', Toast.SHORT);
@@ -2846,11 +3041,12 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                             // title={ScreenText.ViewDriver}
                                             title={isAccepted ? "" : ScreenText.ViewDriver} //99
                                             textDecorationLine={'underline'}
-                                            onPress={() =>
-                                                navigation.navigate('PreferredDriverUp', {
-                                                    itemRider_ID_: route.params.itemRIDER_ID_SENT,
-                                                })
-                                            }
+                                            onPress={() => setModalDRIVER(true)}
+                                            // onPress={() =>
+                                            //     navigation.navigate('PreferredDriverUp', {
+                                            //         itemRider_ID_: route.params.itemRIDER_ID_SENT,
+                                            //     })
+                                            // }**
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
                                             marginVertical={wp(0)}
@@ -3013,7 +3209,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <View style={{ flex: 1 }}>
                                         <TextComponent
                                             color={Colors.orange}
-                                            title={!isPaynow ? "" : ScreenText.PayNow}
+                                            title={isPaynow ? "" : ScreenText.PayNow}
                                             textDecorationLine={'underline'} // BookingDetailsMapUp
                                             onPress={() => setModalPAY1(true)}
                                             // onPress={() => {
@@ -3169,7 +3365,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             <Modal
                                 // isVisible={isModalCancel}
                                 isVisible={isModalCancel}
-
                                 onBackButtonPress={() => setModalCancel(false)}
                                 onBackdropPress={() => setModalCancel(false)}
                             >
@@ -5690,6 +5885,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     color={Colors.white}
                                     title={ScreenText.CompletePayment}
                                     onPress={onPressCompletePayment}
+                                    // onPress={() => setModalDriver(true)}
                                     marginHorizontal={wp(2)}
                                     fontWeight="600"
                                     fontSize={wp(4)}
@@ -5777,7 +5973,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                                                 onPress={() => setDefaultRatingsubmit(item)}>
 
                                                                 <Image
-                                                                    style={Styles.starImageStyle}
+                                                                    style={Styles.starImageStyle_}
                                                                     source={
                                                                         item <= defaultRatingSubmit
                                                                             ? starImageFilled1
@@ -5799,7 +5995,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         <ButtonComponent
                                             isVisibleMobile={false}
                                             isVisibleFaceBook={false}
-                                            marginVertical={hp(1)}
+                                            marginVertical={hp(2)}
                                             heightBtn={hp(6)}
                                             widthBtn={wp(50)}
                                             isRightArrow={false}
@@ -5826,6 +6022,869 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     </ScrollView>
                 </Modal>
 
+                <Modal
+                    isVisible={isModalPAYFUL}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalPAYFUL(false)}
+                    onBackButtonPress={() => setModalPAYFUL(false)}>
+
+                    <ScrollView style={CommonStyle.commonFlex}>
+                        <View style={Styles.container}>
+                            <View>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={wp(10)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    paddingOpacity={wp(2)}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    marginHorizontal={wp(5)}
+                                    height={wp(7)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={""}
+                                    fontSize={wp(4)}
+                                    onPress={() => setModalPAYFUL(false)}
+                                />
+                            </View>
+
+                            <View style={Styles.viewCenterContain}>
+
+                                <View>
+                                    <Image
+                                        style={Styles.viewPayImage}
+                                        resizeMode="contain"
+                                        source={Images.payIcon} />
+                                </View>
+
+                                <View>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Payment Successful"}
+                                        textDecorationLine={'none'}
+                                        marginTop={wp(10)}
+                                        fontWeight="400"
+                                        fontSize={wp(4)}
+                                        marginHorizontal={wp(2)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        textAlign='center'
+                                    />
+                                </View>
+
+
+                                <View>
+                                    <TextComponent
+                                        color={Colors.gray}
+                                        title={"Your payment has been successfully done."}
+                                        textDecorationLine={'none'}
+                                        marginVertical={wp(3)}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        marginHorizontal={wp(5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='center'
+                                    />
+
+
+                                </View>
+
+                                <View style={Styles.viewSeprateLine2}>
+                                </View>
+
+                                <View>
+
+                                    <TextComponent
+                                        color={Colors.gray}
+                                        title={"Total Payment"}
+                                        textDecorationLine={'none'}
+                                        marginTop={wp(3)}
+                                        fontWeight="400"
+                                        fontSize={wp(4)}
+                                        marginHorizontal={wp(2)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='center'
+                                    />
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"$ " + isAmount}
+                                        textDecorationLine={'none'}
+                                        marginTop={wp(5)}
+                                        fontWeight="400"
+                                        fontSize={wp(4)}
+                                        marginHorizontal={wp(2)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        textAlign='center'
+                                    />
+
+                                    <TextComponent
+                                        color={Colors.blue}
+                                        title={"Go To Home"}
+                                        textDecorationLine={'none'}
+                                        marginTop={wp(10)}
+                                        onPress={() => navigation.goBack()}
+                                        fontWeight="400"
+                                        fontSize={wp(4)}
+                                        marginHorizontal={wp(2)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='center'
+                                    />
+
+                                </View>
+
+                            </View>
+
+
+
+                        </View>
+                    </ScrollView>
+
+                </Modal>
+
+
+                <Modal
+                    isVisible={isModalDRIVER}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalDRIVER(false)}
+                    onBackButtonPress={() => setModalDRIVER(false)}>
+
+                    <ScrollView style={Styles.container}
+                        showsVerticalScrollIndicator={false}>
+                        <View style={Styles.container}>
+
+                            <View style={Styles.viewHeader}>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={wp(10)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    paddingOpacity={wp(2)}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    marginHorizontal={wp(5)}
+                                    height={wp(7)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={"Driver Details"} // Booking Flow
+                                    fontSize={wp(4)}
+                                    onPress={() => setModalDRIVER(false)}
+                                />
+                            </View>
+
+                            <View>
+                                <View
+                                    style={Styles.bottamClickContain}>
+
+                                    <View style={CommonStyle.justifyContent}>
+                                        <Image
+                                            style={Styles.imageDriver}
+                                            resizeMode="contain"
+                                            source={{ uri: isURL5 }}
+                                        />
+                                    </View>
+
+                                    <View style={{
+                                        flex: 1
+                                    }}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={isDRIVERNAME}
+                                            textDecorationLine={'none'}
+                                            fontWeight="500"
+                                            fontSize={wp(3.5)}
+                                            marginVertical={wp(3)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='left'
+                                        />
+
+                                        <View>
+
+                                            <View style={CommonStyle.justifyContent}>
+                                                <TextComponent
+                                                    color={Colors.gray}
+                                                    title={"Top Rated (" + isRated + "K)"}
+                                                    textDecorationLine={'none'}
+                                                    fontWeight="400"
+                                                    fontSize={wp(3.5)}
+                                                    fontFamily={Fonts.PoppinsRegular}
+                                                    textAlign='left'
+                                                />
+                                            </View>
+
+                                            <View>
+                                                <View style={Styles.customRatingBarStyle}>
+                                                    {maxRating.map((item, key) => {
+                                                        return (
+                                                            <View style={CommonStyle.commonRow}>
+                                                                <TouchableOpacity
+                                                                    activeOpacity={0.7}
+                                                                    disabled={true}
+                                                                    key={item}
+                                                                    onPress={() => setDefaultRating(item)}>
+                                                                    <Image
+                                                                        style={Styles.starImageStyle1}
+                                                                        source={
+                                                                            item <= defaultRating
+                                                                                ? starImageFilled
+                                                                                : starImageCorner
+                                                                        }
+                                                                    />
+                                                                </TouchableOpacity>
+                                                            </View>
+
+                                                        );
+                                                    })}
+
+                                                </View>
+                                            </View>
+
+                                        </View>
+
+                                    </View>
+
+                                    <View style={{
+                                        // flex: 1
+                                    }}>
+                                        <TouchableOpacity onPress={onPressCallUser}>
+                                            <Image
+                                                style={Styles.imageCall}
+                                                resizeMode="contain"
+                                                source={Images.callIcon} />
+                                        </TouchableOpacity>
+
+                                    </View>
+
+                                </View>
+                            </View>
+
+                            <View>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={ScreenText.VehiclePhotos}
+                                    textDecorationLine={'none'}
+                                    fontWeight="500"
+                                    fontSize={wp(3.5)}
+                                    marginHorizontal={wp(5)}
+                                    marginVertical={wp(3)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            {/* <View>
+                        <VehiclePhotosListDetails
+                            data={CarData} />
+                    </View> */}
+
+                            <View style={{ flexDirection: 'row' }}>
+                                <ScrollView horizontal
+                                    showsHorizontalScrollIndicator={false}>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL1 }} />
+                                    </View>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL2 }} />
+                                    </View>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL3 }} />
+                                    </View>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL4 }} />
+                                    </View>
+                                </ScrollView>
+
+                            </View>
+
+                            <View style={Styles.viewGrayLineHorizontal}>
+                            </View>
+
+                            <View>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={ScreenText.Details}
+                                    textDecorationLine={'none'}
+                                    fontWeight="500"
+                                    fontSize={wp(3.5)}
+                                    marginHorizontal={wp(5)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle Name"}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverPlateName}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle Color"}
+                                        textDecorationLine={'none'}
+                                        marginVertical={wp(1)}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverVehicleColor}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle Type"}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverVehicleType} // Car
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle No."}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverPlateNumber} // qqq
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Seats"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isSeats}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"VIN number"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverVIN}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                            </View>
+
+                            <View style={Styles.viewLoreumText}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={isDriverVehicleDesc}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View style={CommonStyle.commonJustifyContent}>
+                                <ButtonComponent
+                                    isVisibleMobile={false}
+                                    isVisibleFaceBook={false}
+                                    marginVertical={hp(1)}
+                                    heightBtn={hp(7)}
+                                    isVisibleAddHeart={true}
+                                    widthBtn={wp(90)}
+                                    isRightArrow={false}
+                                    color={Colors.white}
+                                    title={ScreenText.AddDriverList}
+                                    marginHorizontal={wp(2)}
+                                    fontWeight="600"
+                                    fontSize={wp(4)}
+                                    onPress={onPressAddPreferred}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    alignSelf='center'
+                                    textAlign='center'
+                                    borderRadius={wp(2)}
+                                    backgroundColor={Colors.blue}
+                                />
+
+                            </View>
+
+                        </View>
+                    </ScrollView>
+                </Modal>
+
+                <Modal
+                    isVisible={isModalBOOKINGCANCEL}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalBOOKINGCANCEL(false)}
+                    onBackButtonPress={() => setModalBOOKINGCANCEL(false)}>
+                    <ScrollView
+                        bounces={true}
+                        overScrollMode="always">
+                        <View style={CommonStyle.commonFlex}>
+                            <View style={Styles.viewHeaderComplete}>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={hp(8)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    paddingOpacity={wp(2.5)}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    height={wp(7)} // 7
+                                    marginHorizontal={wp(5)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={"Payment"}
+                                    isVisiblePayout={false}
+                                    fontSize={wp(4)}
+                                    onPress={() => navigation.goBack()}
+                                />
+
+
+                            </View>
+                            <View style={Styles.viewRowContent}>
+
+                                <View style={Styles.viewKMConatinerGray}>
+                                    <View style={Styles.rowSpace}>
+                                        <View style={CommonStyle.justifyContent}>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                // title={route?.params?.itemBokingDetailsMapDistance}
+                                                title={isDISTANCE}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3.5)}
+                                                marginHorizontal={wp(2)}
+                                                marginVertical={wp(1)}
+                                                fontFamily={Fonts.PoppinsSemiBold}
+                                                textAlign='center'
+                                            />
+                                            <TextComponent
+                                                color={Colors.gray}
+                                                title={"Distance"}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3.5)}
+                                                marginHorizontal={wp(2)}
+                                                marginVertical={wp(1)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                        <View style={Styles.viewSeprateLine}>
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                // title={route?.params?.itemBokingDetailsMapDuration}
+                                                title={isDURATION}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3.5)}
+                                                marginHorizontal={wp(2)}
+                                                marginVertical={wp(1)}
+                                                fontFamily={Fonts.PoppinsSemiBold}
+                                                textAlign='center'
+                                            />
+                                            <TextComponent
+                                                color={Colors.gray}
+                                                title={"Duration"}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3.5)}
+                                                marginHorizontal={wp(2)}
+                                                marginVertical={wp(1)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                    </View>
+                                </View>
+
+
+                                <View style={CommonStyle.commonRow}>
+                                    <View style={CommonStyle.commonContent}>
+
+                                        <Image
+                                            style={Styles.viewOrangeDot}
+                                            resizeMode="contain"
+                                            source={Images.blueDot} />
+
+                                        <View style={Styles.lineVerticalLine1} />
+                                        <View style={Styles.lineVerticalLine4} />
+                                        <View style={Styles.lineVerticalLine3} />
+
+                                        <Image
+                                            style={Styles.viewOrangeDot}
+                                            resizeMode="contain"
+                                            source={Images.orangeDot} />
+                                    </View>
+                                    <View>
+                                        <TextComponent
+                                            color={Colors.gray}
+                                            title={isPICK_UP_LOCATION}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                        />
+                                        <TextComponent
+                                            color={Colors.gray}
+                                            title={isDROP_UP_LOCATION}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginHorizontal={wp(2)}
+                                            marginVertical={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={Styles.viewSeprateLine2}>
+                                </View>
+
+                                <View>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Payment"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        marginHorizontal={wp(2)}
+                                        marginVertical={wp(1)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Ride Charge"}
+                                        marginVertical={wp(3)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={"$ " + isDRIVERIDECHARGE}
+                                        marginVertical={wp(3)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Bookings Fees & Convenience Charges"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={"$ " + isDRIVERCONCHARGE}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Waiting Charge"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        marginVertical={wp(3)}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={"$   " + isWATTING_CHARGES}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        marginVertical={wp(3)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.discount}
+                                        title={"Discount"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        marginVertical={wp(3)}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.discount}
+                                        title={"-$   " + isDRIVERDISCOUNT}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        marginVertical={wp(3)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine2}>
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Total Amount"}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"$   " + isTOTAL_AMOUNT}
+                                        marginVertical={wp(1)} // 3
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Inclusive of Taxes"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View>
+                                    <View style={Styles.viewSeprateLine3}>
+                                        <TextComponent
+                                            color={Colors.discount}
+                                            title={"cancellation "}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            marginVertical={wp(3)}
+                                            textAlign='left'
+                                        />
+                                        <TextComponent
+                                            color={Colors.discount}
+                                            title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            marginVertical={wp(3)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                        />
+                                    </View>
+                                    <View style={Styles.viewSeprateLine3}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={"cancellation charges"}
+                                            marginVertical={wp(1)}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='left'
+                                        />
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={USER_BOOKINGSTATUS = "Cancel" ? "$ " + isGETPERCENTAGE : "$ " + "5"}
+                                            marginVertical={wp(0)}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='left'
+                                        />
+                                    </View>
+                                    <View style={Styles.viewSeprateLine3}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={"*cancellation policy"}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            marginVertical={wp(0)}
+                                            textAlign='left'
+                                        />
+                                    </View>
+                                </View>
+
+
+                                <View>
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        marginVertical={hp(3)}
+                                        heightBtn={hp(7)}
+                                        widthBtn={wp(90)}
+                                        isRightArrow={false}
+                                        // onPress={() =>
+                                        //     navigation.navigate('PaymentSuccessfulUp', {
+                                        //         // itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
+                                        //         itemSuccessfulAmount: isGETPERCENTAGE,
+                                        //     })
+                                        // }
+                                        color={Colors.white}
+                                        title={ScreenText.PayNow}
+                                        marginHorizontal={wp(2)}
+                                        fontWeight="500"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.blue}
+                                    />
+                                </View>
+
+
+                            </View>
+                        </View>
+
+                    </ScrollView>
+                </Modal>
 
             </View>
         </SafeAreaView >

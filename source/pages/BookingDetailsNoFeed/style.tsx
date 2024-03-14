@@ -37,7 +37,7 @@ const Styles = StyleSheet.create({
         marginHorizontal: wp(2)
     },
     customRatingBarStyle: {
-        justifyContent: 'center',
+        // justifyContent: 'center',
         flexDirection: 'row',
         marginTop: wp(1)
     },
@@ -46,6 +46,14 @@ const Styles = StyleSheet.create({
         height: wp(4),
         resizeMode: 'cover',
     },
+
+    starImageStyle_: {
+        width: wp(12),
+        height: wp(12),
+        resizeMode: 'cover',
+        marginHorizontal: wp(1)
+    },
+
     // textTermsAndCondition: {
     //     width: wp(6),
     //     height: wp(6),
@@ -294,7 +302,58 @@ const Styles = StyleSheet.create({
         justifyContent: 'center'
     },
 
+    // VIEW
+
+    bottamClickContain: {
+        flexDirection: 'row',
+        padding: wp(2)
+    },
+    viewGrayLineHorizontal: {
+        height: wp(0.1),
+        backgroundColor: Colors.grayFull,
+        width: wp(95),
+        marginVertical: wp(5),
+        marginHorizontal: wp(3)
+    },
+    viewLoreumText: {
+        height: "auto",
+        backgroundColor: Colors.grayBox,
+        marginVertical: wp(3),
+        padding: wp(5)
+    },
+    carImageIcon: {
+        width: wp(25),
+        height: wp(20),
+        borderRadius: wp(3),
+        marginHorizontal: wp(2)
+    },
+
+    imageCall: {
+        width: wp(12),
+        height: wp(12),
+        borderRadius: wp(3),
+        marginHorizontal: wp(5),
+    },
+
     // MODAL
+    starImageStyle1: {
+        width: wp(5),
+        height: wp(5),
+        resizeMode: 'cover',
+        marginHorizontal: wp(0.5)
+    },
+
+    viewPayImage: {
+        width: wp(35),
+        height: wp(35),
+        alignSelf: "center"
+    },
+    viewCenterContain: {
+        flex: 1,
+        justifyContent: 'center',
+        alignSelf: "center",
+        marginVertical: wp(30)
+    },
     helpConatiner: {
         flexDirection: "row",
         justifyContent: 'space-between',
@@ -311,6 +370,13 @@ const Styles = StyleSheet.create({
         height: wp(6),
         borderRadius: wp(50),
         alignSelf: 'center',
+    },
+
+    imageDriver: {
+        width: wp(25),
+        height: wp(25),
+        borderRadius: wp(3),
+        marginHorizontal: wp(3),
     },
     viewRiseHeader: {
         marginBottom: wp(10)
