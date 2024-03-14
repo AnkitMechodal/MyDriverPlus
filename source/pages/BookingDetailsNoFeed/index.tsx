@@ -1,9 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
+import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Image, Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
@@ -48,6 +51,29 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isDriverVehicleDesc, setDriverVehicleDesc] = useState(ScreenText.Loreum);
 
 
+
+    let user_latitude;
+    let user_longitude;
+
+
+    // MAP
+    const mapViewRef = useRef<any>(null);
+    // SET AS PICK  & DROP 
+    const [markerCoordinates1, setMarkerCoordinates1] = useState<any>({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
+
+    const [markerCoordinates2, setMarkerCoordinates2] = useState<any>({
+        latitude: 37.80825, // Increased latitude for more distance
+        longitude: -122.4524, // Increased longitude for more distance
+    });
+
+
+    const [radius, setRadius] = useState(50); // Define the radius in meters
+
+
+
     // ProfileImage
     const [isURL5, setURL5] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
 
@@ -70,6 +96,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
     let USER_PAY_STATUS;
     let USER_PAY_CARD;
+
+    // MAP
+    const [isDriverName, setDriverName] = useState(ScreenText.UserName);
+
 
 
 
@@ -144,6 +174,15 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isModalDriver, setModalDriver] = useState(false); // false
 
 
+    const [deafultMsg, setDefaultMsgMsg] = useState(ScreenText.PleaseStartYourRide);
+    const [isModalSOS, setModalSOS] = useState(false);
+
+
+
+    const [timerValue, setTimerValue] = useState(5); // Initial timer value in seconds
+    const [isRunning, setIsRunning] = useState(false);
+
+
     const onPressCrossPoints = () => {
         setIsAmount(isAmount);
         setLoyalPointsDeafult("");
@@ -155,6 +194,15 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         setIsFocusedRedeem(true);
     }
 
+    const onPressRightEnd = () => {
+        setModalSOS(true),
+            setIsRunning(true);
+    }
+
+    const onPressSOS = () => {
+        setModalSOS(false),
+            setIsRunning(false);
+    }
 
     const onPressModalCheckPayment = () => {
 
@@ -396,6 +444,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         // Alert.alert("Yes");
 
                         setSTRIPEModal(false);
+
+                        setModalCANCELPAYSTRIPE(false);
+
                         setModalDriver(true);
 
                     } else {
@@ -420,19 +471,58 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
             });
     };
 
-    const onPressCompletePayment = () => {
-        // setModalDriver(true)
-        if (route.params.itemCompletePayType == "Cash Payment"
-            || route.params.itemCompletePayType == "Wallet") {
-            // Payment Status Addded !
-            axiosPostRideStatusAccepted1();
-        } else {
-            setSTRIPEModal(true);
-            axiosPostRequestStripe();
+    const onPressCompletePaymentCancel = async () => {
+        try {
+            // GET TYPE HERE :
+            const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
+
+            // Check if USER_PAY_TYPE is not null or undefined
+            if (USER_PAY_TYPE !== null && USER_PAY_TYPE !== undefined) {
+                const PAY_TYPE = JSON.parse(USER_PAY_TYPE);
+
+                if (PAY_TYPE === "Cash Payment" || PAY_TYPE === "Wallet") {
+                    axiosPostRideStatusAccepted1();
+                } else {
+                    setModalCANCELPAYSTRIPE(true);
+                    axiosPostRequestStripe();
+                }
+            } else {
+                // Handle case when USER_PAY_TYPE is null or undefined
+                console.error("USER_PAY_TYPE is null or undefined.");
+                // You might want to perform some fallback action here
+            }
+        } catch (error) {
+            console.error("Error fetching USER_PAY_TYPE:", error);
+            // Handle error
         }
-        // setSTRIPEModal(true);
-        // axiosPostRequestStripe();
     }
+
+    const onPressCompletePayment = async () => {
+        try {
+            // GET TYPE HERE :
+            const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type');
+
+            // Check if USER_PAY_TYPE is not null or undefined
+            if (USER_PAY_TYPE !== null && USER_PAY_TYPE !== undefined) {
+                const PAY_TYPE = JSON.parse(USER_PAY_TYPE);
+
+                if (PAY_TYPE === "Cash Payment" || PAY_TYPE === "Wallet") {
+                    axiosPostRideStatusAccepted1();
+                } else {
+                    setSTRIPEModal(true);
+                    axiosPostRequestStripe();
+                }
+            } else {
+                // Handle case when USER_PAY_TYPE is null or undefined
+                console.error("USER_PAY_TYPE is null or undefined.");
+                // You might want to perform some fallback action here
+            }
+        } catch (error) {
+            console.error("Error fetching USER_PAY_TYPE:", error);
+            // Handle error
+        }
+    }
+
 
 
     const axiosPostRequestStripe = async () => {
@@ -836,11 +926,14 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isValidDescCode, setValidDescCode] = useState(true);
 
     const [isModalBOOKINGCANCEL, setModalBOOKINGCANCEL] = useState(false);
+    const [isModalCANCELPAYSTRIPE, setModalCANCELPAYSTRIPE] = useState(false);
+
+
+    const [isModalMAP, setModalMAP] = useState(false);
 
 
     // MODLA - Support
     const refPassword = useRef<any>(null);
-
 
     const Images1 = {
         flagIcon: Images.flagIcon,
@@ -1189,6 +1282,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [currentTime, setCurrentTime] = useState(moment().format('HH:mm:ss'));
 
 
+    const [modalVisibleOTP, setModalVisibleOTP] = useState(false);
+
+
     const [isPhoneNumber, setPhoneNumber] = useState("");
 
 
@@ -1317,6 +1413,145 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     route.params.itemRIDER_RIDE_TOTALAMOUNT
     ]);
 
+
+
+    // Auto Zoom Added
+    useEffect(() => {
+        // Zoom to the marker using animateToRegion when markerCoordinate changes
+        if (mapViewRef.current) {
+            mapViewRef.current.animateToRegion({
+                latitude: markerCoordinates1.latitude,
+                longitude: markerCoordinates1.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            }, 1000); // Adjust duration as needed
+        }
+    }, [markerCoordinates1]);
+
+    // SET AS PICK  & DROP  - DEAFULT
+    const [markerCoordinates0, setMarkerCoordinates0] = useState<any>({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
+
+
+    // SET CURRENT LOCATION 
+    useEffect(() => {
+
+        const fetchData1 = () => {
+            // Get Current Lat And Long
+            Geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+
+                    user_latitude = position.coords.latitude;
+                    user_longitude = position.coords.longitude;
+
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+                    console.log("user_latitude2222222222222222", user_latitude);
+                    console.log("user_longitude44444444444444", user_longitude);
+
+                    let newCoordinate = { latitude: user_latitude, longitude: user_longitude };
+                    setMarkerCoordinates0(newCoordinate);
+                },
+                error => {
+                    console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+                    console.log(`Error getting location: ${error.message}`);
+
+                },
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
+            );
+        }
+
+        fetchData1();
+
+        // // Set interval to refresh every 10 seconds
+        // const intervalId = setInterval(fetchData, 5 * 1000);
+        // // Cleanup function
+        // return () => {
+        //     // Clear the interval when the component unmounts
+        //     clearInterval(intervalId);
+        // };
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            // Get Lat & Long:
+            const user_drop_lat = await AsyncStorage.getItem('user_drop_lat');
+            const user_drop_long = await AsyncStorage.getItem('user_drop_long');
+            const user_pick_lat = await AsyncStorage.getItem('user_pick_lat');
+            const user_pick_long = await AsyncStorage.getItem('user_pick_long');
+
+            // console.log("DROP----->1", user_drop_lat);
+            // console.log("DROP----->1", user_drop_long);
+            // console.log("PICK----->1", user_pick_lat);
+            // console.log("PICK----->1", user_pick_long);
+
+            // Check for null or undefined values
+            if (user_pick_lat !== null && user_pick_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates1({ latitude: parseFloat(user_pick_lat), longitude: parseFloat(user_pick_long) });
+            }
+
+            if (user_drop_lat !== null && user_drop_long !== null) {
+                // Set Lat Long As Marker
+                setMarkerCoordinates2({ latitude: parseFloat(user_drop_lat), longitude: parseFloat(user_drop_long) });
+            }
+        };
+
+        fetchData(); // Call fetchData function
+
+        // if (mapViewRef.current) {
+        //     const coordinates = [markerCoordinates1, markerCoordinates2];
+
+        //     mapViewRef.current?.fitToCoordinates(coordinates, {
+        //         edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        //         animated: false,
+        //     });
+        // }
+
+    }, [markerCoordinates1, markerCoordinates2]);
+
+
+
+    useEffect(() => {
+        let timerId;
+
+        if (isRunning && timerValue > 0) {
+            timerId = setTimeout(() => {
+                setTimerValue(timerValue - 1);
+            }, 1000); // 1000 milliseconds (1 second)
+        }
+
+        if (timerValue === 0) {
+            console.log('Timer reached zero!');
+            Linking.openURL(`tel:${+9100000000000}`);
+        }
+
+        return () => {
+            if (timerId) {
+                clearTimeout(timerId);
+            }
+        };
+    }, [timerValue, isRunning]);
+
+
+    const [markerCoordinates, setMarkerCoordinates] = useState({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
+
+
+    const handleMapPress = (event) => {
+        // Update the marker's coordinates when the map is pressed
+        setMarkerCoordinates(event.nativeEvent.coordinate);
+    };
 
     const onPressCallUser = () => {
         const phoneNumberWithPrefix = `tel:${isPhoneNumber}`;
@@ -3611,51 +3846,25 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                                     color={Colors.white}
                                                     title={isDRIVERSTATUS == "Ride Complete" ? "Pay Now" : "View On Map"}
                                                     textDecorationLine={'underline'}
-                                                    onPress={() =>
-
-                                                        isDRIVERSTATUS ==
-
-                                                            "Ride Complete"
-
-                                                            ? navigation.navigate("BookingDetailsMapUp", {
+                                                    onPress={() => {
+                                                        if (isDRIVERSTATUS === "Ride Complete") {
+                                                            navigation.navigate("BookingDetailsMapUp", {
                                                                 itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
                                                                 itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
                                                                 itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
-
                                                                 itemMapPickStation: route.params.itemRIDER_PICKSTATION,
                                                                 itemMapDropStation: route.params.itemRIDER_DROPSTATION,
-
-                                                                // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                                                                // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
-
                                                                 itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
                                                                 itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
                                                                 itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
                                                                 itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
                                                                 itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-                                                            }) :
+                                                            });
+                                                        } else {
+                                                            setModalMAP(true);
+                                                        }
+                                                    }}
 
-                                                            navigation.navigate('BookingRequestAcceptedUp', {
-
-                                                                itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-                                                                itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
-                                                                itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
-
-                                                                itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                                                itemMapDropStation: route.params.itemRIDER_DROPSTATION,
-
-                                                                // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
-                                                                // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
-
-                                                                itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                                                                itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                                                                itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                                                                itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                                                                itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-
-                                                            })
-
-                                                    }
                                                     fontWeight="400"
                                                     fontSize={wp(3.5)}
                                                     marginHorizontal={wp(2)}
@@ -5885,7 +6094,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     color={Colors.white}
                                     title={ScreenText.CompletePayment}
                                     onPress={onPressCompletePayment}
-                                    // onPress={() => setModalDriver(true)}
+                                    // onPress={() => setModalPAYFUL(true)}
                                     marginHorizontal={wp(2)}
                                     fontWeight="600"
                                     fontSize={wp(4)}
@@ -5899,7 +6108,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                             <View>
                                 <Modal isVisible={isSTRIPEModal}
-                                    onBackButtonPress={() => setSTRIPEModal(false)}>
+                                    onBackButtonPress={() => setSTRIPEModal(false)}
+                                    onBackdropPress={() => setSTRIPEModal(false)}>
                                     <View style={Styles.viewModalDriverStripe}>
 
                                         <WebView
@@ -6109,9 +6319,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         fontFamily={Fonts.PoppinsRegular}
                                         textAlign='center'
                                     />
+
                                     <TextComponent
                                         color={Colors.white}
-                                        title={"$ " + isAmount}
+                                        title={"$ " + (isModalBOOKINGCANCEL === true ? isGETPERCENTAGE : isAmount)}
                                         textDecorationLine={'none'}
                                         marginTop={wp(5)}
                                         fontWeight="400"
@@ -6860,6 +7071,11 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         heightBtn={hp(7)}
                                         widthBtn={wp(90)}
                                         isRightArrow={false}
+                                        // onPress={() => setModalPAYFUL(true);(true)}
+                                        // onPress={() => setModalPAYFUL(true)}
+                                        onPress={onPressCompletePaymentCancel}
+
+                                        // onPress={() => setModalCANCELPAYSUC(true)} // stri[]
                                         // onPress={() =>
                                         //     navigation.navigate('PaymentSuccessfulUp', {
                                         //         // itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
@@ -6884,6 +7100,478 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         </View>
 
                     </ScrollView>
+                </Modal>
+
+                <Modal
+                    isVisible={isModalCANCELPAYSTRIPE}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalCANCELPAYSTRIPE(false)}
+                    onBackButtonPress={() => setModalCANCELPAYSTRIPE(false)}>
+
+                    <ScrollView
+                        bounces={true}
+                        overScrollMode="always">
+                        <View style={Styles.viewModalDriverStripeCancel}>
+
+                            <WebView
+                                source={{ uri: isURLPAY }}
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                }}
+                                javaScriptEnabled={true}
+                                domStorageEnabled={true}
+                            />
+
+                            <ButtonComponent
+                                isVisibleMobile={false}
+                                isVisibleFaceBook={false}
+                                marginVertical={hp(1)}
+                                heightBtn={hp(6)}
+                                widthBtn={wp(50)}
+                                isRightArrow={false}
+                                onPress={onPressModalCheckPayment}
+                                color={Colors.white}
+                                title={ScreenText.Next}
+                                marginHorizontal={wp(20)}
+                                fontWeight="500"
+                                fontSize={wp(4)}
+                                fontFamily={Fonts.PoppinsSemiBold}
+                                alignSelf='center'
+                                textAlign='center'
+                                borderRadius={wp(2)}
+                                backgroundColor={Colors.blue}
+                            />
+
+                        </View>
+                    </ScrollView>
+
+                </Modal>
+
+                <Modal
+                    isVisible={isModalMAP}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalMAP(false)}
+                    onBackButtonPress={() => setModalMAP(false)}>
+
+                    <ScrollView
+                        bounces={true}
+                        overScrollMode="always">
+
+                        {/* <View style={Styles.container}> */}
+
+                        <MapView
+                            ref={mapViewRef}
+                            // style={Styles.viewMapview}
+                            style={{
+                                width: Dimensions.get("window").width,
+                                height: Dimensions.get("window").height,
+                                flex: 1,
+                            }}
+                            provider={PROVIDER_GOOGLE}
+                            showsUserLocation={true}
+                            showsMyLocationButton={false}
+                            onPress={handleMapPress}
+                            initialRegion={{
+                                latitude: 37.78825,
+                                longitude: -122.4324,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            }}
+                        >
+                            <Circle
+                                center={markerCoordinates1}
+                                radius={radius}
+                                fillColor="rgba(0, 0, 255, 0.2)" // Transparent blue fill color
+                                strokeWidth={0} // No border
+                            />
+
+                            {/* First Lat Long */}
+                            <Marker
+                                coordinate={markerCoordinates1}
+                                title="Draggable Marker"
+                                description="Drag me!"
+
+                                icon={Images.mapOrangeIcon}
+                            />
+
+                            {/* Second Lat Long */}
+                            <Marker
+                                coordinate={markerCoordinates2}
+                                title="Second Marker"
+                                description="Another location"
+                                icon={Images.mapBlueIcon}
+                            />
+
+                            <MapViewDirections
+                                origin={markerCoordinates1}
+                                destination={markerCoordinates2}
+                                strokeWidth={2} // Width of the direction line
+                                strokeColor="blue" // Color of the direction line
+                                // lineDashPattern={[30]} // Pattern for creating a dotted line
+                                apikey={'AIzaSyDMZwBszNuk7X4MTvW4K3D8_zyBqAy0slE'} // Replace 'Your-API-Key' with your actual Google Maps API key
+                                mode="DRIVING" // Mode of transportation (DRIVING, BICYCLING, TRANSIT, or WALKING)
+                                language="en" // Language for response
+                                optimizeWaypoints={true} // Optimize waypoints for the most efficient route
+                                resetOnChange={true} // Reset route when origin or destination changes
+                                onStart={(params) => { }} // Callback when directions fetching starts
+                                onReady={(result) => { }} // Callback when the route is ready
+                                onError={(errorMessage) => { }} // Callback when an error occurs
+                                region="us" // Country region for which direction results are biased
+                                timePrecision="now" // Time precision for time in directions
+                            />
+
+
+                            <Circle
+                                center={markerCoordinates2}
+                                radius={radius}
+                                fillColor="rgba(255, 165, 0, 0.2)"
+                                strokeWidth={0} // No border
+                            />
+
+                        </MapView>
+
+                        <View style={Styles.requestHeaderConatin}>
+                            <View>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={wp(10)}
+                                    paddingOpacity={wp(2)}
+                                    textAlign={"left"}
+                                    transform={[{ rotate: '180deg' }]}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    marginHorizontal={wp(2)}
+                                    height={wp(7)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    fontSizeRight={wp(3)}
+                                    textAlignRight={"center"}
+                                    marginTopRight={wp(3)}
+                                    colorRight={Colors.white}
+                                    titleWithRightContent={"SOS/Help ?"}
+                                    marginRight={wp(5)}
+                                    fontFamilyRight={Fonts.InterSemiBold}
+                                    title={"Booking Request Accepted"}
+                                    onPressRightEnd={onPressRightEnd}
+                                    fontSize={wp(4)}
+                                    onPress={() => setModalMAP(false)}
+                                />
+                            </View>
+
+                            <View style={CommonStyle.commonRow}>
+
+                                <View style={CommonStyle.justifyContent}>
+                                    <Image
+                                        style={Styles.blueDot}
+                                        resizeMode="contain"
+                                        source={Images.whiteDot} />
+
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={route.params.itemMapPickStation}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                        marginVertical={wp(-3)}
+                                        marginHorizontal={wp(15)}
+                                    />
+
+                                    <View style={Styles.lineVerticalLine1} />
+                                    <View style={Styles.lineVerticalLine1} />
+                                    <View style={Styles.lineVerticalLine1} />
+
+                                    <Image
+                                        style={Styles.blueDot}
+                                        resizeMode="contain"
+                                        source={Images.orangeDot} />
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={route.params.itemMapDropStation}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                        marginVertical={wp(-6)}
+                                        marginHorizontal={wp(15)}
+                                    />
+                                </View>
+
+                                <View style={{ flex: 1 }}>
+                                    <View style={Styles.textKMConatiner}>
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.blue}
+                                                title={route?.params?.itemBokingDetailsMapDuration}
+                                                textDecorationLine={'none'}
+                                                fontWeight="700"
+                                                fontSize={wp(3)} // 3
+                                                fontFamily={Fonts.PoppinsSemiBold}
+                                                textAlign='center'
+                                                numberOfLines={2}
+                                                marginVertical={wp(5)} // 4
+                                            // marginHorizontal={wp(2)}
+                                            />
+                                        </View>
+
+
+                                    </View>
+
+                                    <View style={Styles.marginRight}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={route?.params?.itemBokingDetailsMapDistance}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3)} // 3
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='left'
+                                            numberOfLines={2}
+                                            marginVertical={wp(1)}
+                                        />
+                                    </View>
+                                </View>
+
+                            </View>
+
+                            <View>
+                                <View style={Styles.marginRight}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={""}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='center'
+                                        marginVertical={wp(1)}
+                                    />
+                                </View>
+
+                            </View>
+
+                            <View style={Styles.marginVertical}>
+                                <View style={Styles.bottamUserConatin}>
+
+                                    <TouchableOpacity
+                                        onPress={() => navigation.navigate("PreferredDriver")}
+                                        style={Styles.bottamClickContain}
+                                    >
+                                        <View style={CommonStyle.justifyContent}>
+                                            <Image
+                                                style={Styles.imageStop}
+                                                resizeMode="contain"
+                                                source={{ uri: isDRIVERPROFILe }} />
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={isDriverName}
+                                                textDecorationLine={'none'}
+                                                fontWeight="500"
+                                                fontSize={wp(3.5)}
+                                                marginVertical={wp(3)}
+                                                fontFamily={Fonts.PoppinsSemiBold}
+                                                textAlign='left'
+                                            />
+
+                                            <View style={CommonStyle.commonRow}>
+
+                                                <View style={CommonStyle.justifyContent}>
+                                                    <TextComponent
+                                                        color={Colors.gray}
+                                                        title={ScreenText.Rating}
+                                                        textDecorationLine={'none'}
+                                                        fontWeight="400"
+                                                        fontSize={wp(3.5)}
+                                                        fontFamily={Fonts.PoppinsRegular}
+                                                        textAlign='left'
+                                                    />
+                                                </View>
+
+                                                <View>
+                                                    <View style={Styles.customRatingBarStyle}>
+                                                        {maxRating.map((item, key) => {
+                                                            return (
+                                                                <View style={CommonStyle.commonRow}>
+                                                                    <TouchableOpacity
+                                                                        activeOpacity={0.7}
+                                                                        disabled={true}
+                                                                        key={item}
+                                                                        onPress={() => setDefaultRating(item)}>
+                                                                        <Image
+                                                                            style={Styles.starImageStyle1}
+                                                                            source={
+                                                                                item <= defaultRating
+                                                                                    ? starImageFilled
+                                                                                    : starImageCorner
+                                                                            }
+                                                                        />
+                                                                    </TouchableOpacity>
+                                                                </View>
+
+                                                            );
+                                                        })}
+
+                                                    </View>
+                                                </View>
+
+
+
+                                            </View>
+
+
+                                        </View>
+
+                                        <View style={CommonStyle.justifyContent}>
+                                            <TouchableOpacity onPress={onPressCallUser}>
+                                                <Image
+                                                    style={Styles.imageStop}
+                                                    resizeMode="contain"
+                                                    source={Images.callIcon} />
+                                            </TouchableOpacity>
+
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={Styles.blueRide}>
+
+                                    <View style={Styles.riderConatin}>
+
+                                        <View style={Styles.viewImage}>
+                                            <Image
+                                                style={Styles.blueDot1}
+                                                resizeMode="contain"
+                                                source={Images.whiteDot} />
+                                        </View>
+
+                                        <View style={Styles.viewImage1}>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={deafultMsg}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                numberOfLines={2}
+                                                fontSize={wp(3.5)}
+                                                marginHorizontal={wp(2)}
+                                                marginVertical={wp(2)}
+                                                fontFamily={Fonts.PoppinsSemiBold}
+                                                textAlign='left' />
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.gray}
+                                                marginVertical={wp(2)}
+                                                title={"Pay Now"} //99
+                                                onPress={() =>
+                                                    navigation.navigate('BookingRequestDriver', {
+                                                        itemCompleteMapId: route?.params?.itemBokingDetailsMapId,
+                                                        itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                                        itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
+                                                        itemCompletePickStation: route?.params?.itemMapPickStation,
+                                                        itemCompleteDropStation: route?.params?.itemMapDropStation,
+                                                        itemCompleteRideCharge: route?.params?.itemMapRideCharge,
+                                                        itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
+                                                        itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
+                                                        itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
+                                                        itemCompleteTotalAmount: route?.params?.itemMapRideTotalAmount
+                                                    })
+                                                }
+                                                textDecorationLine={'underline'}
+                                                fontWeight="400"
+                                                fontSize={wp(3)}
+                                                marginLeft={wp(10)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                textAlign='right'
+                                            />
+                                        </View>
+
+                                    </View>
+
+
+                                </View>
+                            </View>
+
+                        </View>
+
+                        <View>
+                            <Modal isVisible={isModalSOS}
+                                onBackButtonPress={() => setModalSOS(false)}
+                                onBackdropPress={() => setModalSOS(false)}>
+                                <View style={Styles.modalIOS}>
+
+                                    <View style={Styles.timerValueContain}>
+                                        <TextComponent
+                                            color={Colors.blue}
+                                            title={timerValue}
+                                            textDecorationLine={'none'}
+                                            fontWeight="700"
+                                            fontSize={wp(5)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='center'
+                                            marginVertical={wp(3)}
+                                            marginHorizontal={wp(2)}
+                                        />
+                                    </View>
+
+
+                                    <View>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={ScreenText.AreyouwanttoSendSOSEmergency}
+                                            textDecorationLine={'none'}
+                                            fontWeight="500"
+                                            fontSize={wp(3.5)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='center'
+                                            marginVertical={wp(5)}
+                                            marginHorizontal={wp(2)}
+                                        />
+                                    </View>
+
+
+                                    <View>
+                                        <ButtonComponent
+                                            isVisibleMobile={false}
+                                            isVisibleFaceBook={false}
+                                            marginVertical={hp(1)}
+                                            heightBtn={hp(7)}
+                                            widthBtn={wp(60)}
+                                            isRightArrow={false}
+                                            onPress={onPressSOS}
+                                            color={Colors.white}
+                                            title={ScreenText.Cancel}
+                                            marginHorizontal={wp(10)}
+                                            fontWeight="500"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            alignSelf='center'
+                                            textAlign='center'
+                                            borderRadius={wp(2)}
+                                            backgroundColor={Colors.blue}
+                                        />
+                                    </View>
+
+                                </View>
+                            </Modal>
+
+                        </View>
+
+                        {/* </View> */}
+
+                    </ScrollView>
+
                 </Modal>
 
             </View>

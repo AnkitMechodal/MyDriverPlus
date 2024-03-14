@@ -429,6 +429,16 @@ const Styles = StyleSheet.create({
         borderRadius: wp(5),
         padding: wp(3),
         justifyContent: 'center',
+        marginTop: wp(25)
+    },
+    viewModalDriverStripeCancel: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+        marginTop: wp(25)
     },
     viewModalDriver: {
         height: wp(70),
@@ -438,12 +448,108 @@ const Styles = StyleSheet.create({
         padding: wp(3),
         justifyContent: 'center',
     },
+    viewMapview: {
+        flex: 1,
+        width: "100%",
+        height: '100%'
+    },
     viewHeaderComplete: {
         height: wp(20), // wp(30)
         backgroundColor: Colors.black,
         borderBottomLeftRadius: wp(5),
         borderBottomRightRadius: wp(5),
         justifyContent: 'center',
+    },
+    requestHeaderConatin: {
+        height: wp(45),
+        backgroundColor: Colors.blue,
+        borderBottomLeftRadius: wp(8),
+        borderBottomRightRadius: wp(8),
+        width: "100%",
+        position: 'absolute'
+    },
+    modalConatiner: {
+        height: "auto",
+        borderRadius: wp(5),
+        margin: wp(4),
+        padding: wp(5),
+        backgroundColor: Colors.grayBox,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    blueDot: {
+        width: wp(3),
+        height: wp(3),
+        justifyContent: 'center',
+        marginLeft: wp(5),
+        // marginTop: wp(5)
+    },
+    textKMConatiner: {
+        backgroundColor: "white",
+        width: wp(15),
+        height: wp(15),
+        borderRadius: wp(50),
+        marginHorizontal: wp(9), // 3 //10
+        justifyContent: 'center',
+        alignSelf: "flex-end",
+    },
+    marginVertical: {
+        marginVertical: wp(115),
+    },
+    timerValueContain: {
+        backgroundColor: "white",
+        width: wp(15),
+        height: wp(15),
+        borderRadius: wp(50),
+        alignSelf: "center"
+    },
+    modalIOS: {
+        backgroundColor: Colors.grayBox,
+        borderRadius: wp(3),
+        padding: wp(3),
+        height: "auto",
+        alignSelf: "center"
+    },
+    viewImage: {
+        width: wp(10)
+    },
+    viewImage1: {
+        width: wp(50),
+    },
+    blueDot1: {
+        width: wp(3),
+        height: wp(3),
+        justifyContent: 'center',
+        marginLeft: wp(5),
+        marginTop: wp(4),
+    },
+    riderConatin: {
+        flexDirection: "row",
+    },
+    blueRide: {
+        height: wp(22),
+        padding: wp(2),
+        backgroundColor: Colors.blue,
+        borderTopRightRadius: wp(10),
+        borderTopLeftRadius: wp(10),
+        marginVertical: wp(1),
+        flexDirection: "row",
+    },
+    bottamUserConatin: {
+        height: wp(22),
+        backgroundColor: Colors.grayBox,
+        borderRadius: wp(3),
+        // marginVertical: wp(1),
+        marginHorizontal: wp(3),
+        justifyContent: 'space-between',
+        flexDirection: "row",
+    },
+    marginRight: {
+        // alignSelf: "flex-end",
+        // marginHorizontal: wp(10), // 3 //10 todooooo1
+        marginRight: wp(10),
+        justifyContent: 'center',
+        alignSelf: "flex-end",
     },
 
 });
