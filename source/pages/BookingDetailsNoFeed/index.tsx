@@ -101,9 +101,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const [isDriverName, setDriverName] = useState(ScreenText.UserName);
 
 
-
-
-
     const [isPICKSHARE, setPICKSHARE] = useState(true);
     const [isFocusedPasswordDesc, setIsFocusedPasswordDesc] = useState(false);
     const refSubject = useRef<any>(null);
@@ -176,7 +173,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
     const [deafultMsg, setDefaultMsgMsg] = useState(ScreenText.PleaseStartYourRide);
     const [isModalSOS, setModalSOS] = useState(false);
-
 
 
     const [timerValue, setTimerValue] = useState(5); // Initial timer value in seconds
@@ -538,7 +534,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
             // Prepare data in JSON format
             const data = {
                 userId: JSON.parse(storedLinkedId),
-                amount: isAmount,
+                amount: isModalBOOKINGCANCEL === true ? isGETPERCENTAGE : isAmount,
                 rideId: JSON.parse(USER_RIDEIDID), // RIDE ID USE
             };
 
@@ -888,7 +884,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     const refEmail = useRef<any>(null);
 
     const [name, setName] = useState('')
+
     const [isFocusedName, setIsFocusedName] = useState(false);
+
     const [isValidName, setValidName] = useState(true);
     const [selectedImage, setSelectedImage] = useState(undefined);
 
@@ -1413,6 +1411,11 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     route.params.itemRIDER_RIDE_TOTALAMOUNT
     ]);
 
+    // SET AS PICK  & DROP  - DEAFULT
+    const [markerCoordinates0, setMarkerCoordinates0] = useState<any>({
+        latitude: 37.78825,
+        longitude: -122.4324,
+    });
 
 
     // Auto Zoom Added
@@ -1428,11 +1431,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         }
     }, [markerCoordinates1]);
 
-    // SET AS PICK  & DROP  - DEAFULT
-    const [markerCoordinates0, setMarkerCoordinates0] = useState<any>({
-        latitude: 37.78825,
-        longitude: -122.4324,
-    });
 
 
     // SET CURRENT LOCATION 
@@ -1517,7 +1515,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         // }
 
     }, [markerCoordinates1, markerCoordinates2]);
-
 
 
     useEffect(() => {
@@ -2046,6 +2043,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     USER_CANCELLATION = response?.data?.matchingVehicle?.cancelationsAmount;
 
                     PER = (USER_TOTAL_AMOUNT * USER_CANCELLATION) / 100;
+
                     // cancelationsAmount
                     setGETPERCENTAGE(PER);
 
@@ -2114,12 +2112,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
                     setTOTAL_AMOUNT(_DISCOUNT); // ---- // 
 
-
                     // Complete UI 
                     setIsAmount(_DISCOUNT);
 
-
-                    setFARE(USER_FARE_VALUE); // ADDED 
+                    setFARE(USER_FARE_VALUE); // ADDED
                     // Discount  // ADDED
                     // Ride Charge
                     // Booking Fees
@@ -3793,10 +3789,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                 justifyContent: 'flex-end',
                                 marginTop: wp(30)
                             }}>
-
                                 <View>
                                     <TouchableOpacity
-                                        onPress={() => navigation.navigate("ModalHelp")}
+                                        onPress={() => setModalHELP(true)}
                                         style={Styles.viewItemFour}>
                                         <Image
                                             style={Styles.imageHelpIcon}
@@ -3848,18 +3843,21 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                                     textDecorationLine={'underline'}
                                                     onPress={() => {
                                                         if (isDRIVERSTATUS === "Ride Complete") {
-                                                            navigation.navigate("BookingDetailsMapUp", {
-                                                                itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
-                                                                itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
-                                                                itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
-                                                                itemMapPickStation: route.params.itemRIDER_PICKSTATION,
-                                                                itemMapDropStation: route.params.itemRIDER_DROPSTATION,
-                                                                itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
-                                                                itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
-                                                                itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
-                                                                itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
-                                                                itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
-                                                            });
+
+                                                            setModalPAY1(true);
+
+                                                            // navigation.navigate("BookingDetailsMapUp", {
+                                                            //     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+                                                            //     itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+                                                            //     itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+                                                            //     itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+                                                            //     itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+                                                            //     itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+                                                            //     itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+                                                            //     itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+                                                            //     itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+                                                            //     itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+                                                            // });
                                                         } else {
                                                             setModalMAP(true);
                                                         }
@@ -7172,7 +7170,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             }}
                             provider={PROVIDER_GOOGLE}
                             showsUserLocation={true}
-                            showsMyLocationButton={false}
+                            showsMyLocationButton={true}
                             onPress={handleMapPress}
                             initialRegion={{
                                 latitude: 37.78825,
@@ -7222,7 +7220,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                 region="us" // Country region for which direction results are biased
                                 timePrecision="now" // Time precision for time in directions
                             />
-
 
                             <Circle
                                 center={markerCoordinates2}
@@ -7274,7 +7271,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                                     <TextComponent
                                         color={Colors.white}
-                                        title={route.params.itemMapPickStation}
+                                        // title={route.params.itemMapPickStation}
+                                        title={isPICK_UP_LOCATION}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -7284,17 +7282,19 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         marginHorizontal={wp(15)}
                                     />
 
-                                    <View style={Styles.lineVerticalLine1} />
-                                    <View style={Styles.lineVerticalLine1} />
-                                    <View style={Styles.lineVerticalLine1} />
+                                    <View style={Styles.lineVerticalLine11} />
+                                    <View style={Styles.lineVerticalLine11} />
+                                    <View style={Styles.lineVerticalLine11} />
 
                                     <Image
                                         style={Styles.blueDot}
                                         resizeMode="contain"
                                         source={Images.orangeDot} />
+
                                     <TextComponent
                                         color={Colors.white}
-                                        title={route.params.itemMapDropStation}
+                                        // title={route.params.itemMapDropStation}
+                                        title={isDROP_UP_LOCATION}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -7310,7 +7310,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         <View>
                                             <TextComponent
                                                 color={Colors.blue}
-                                                title={route?.params?.itemBokingDetailsMapDuration}
+                                                // title={route?.params?.itemBokingDetailsMapDuration}
+                                                title={isDISTANCE}
                                                 textDecorationLine={'none'}
                                                 fontWeight="700"
                                                 fontSize={wp(3)} // 3
@@ -7328,7 +7329,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                     <View style={Styles.marginRight}>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={route?.params?.itemBokingDetailsMapDistance}
+                                            // title={route?.params?.itemBokingDetailsMapDistance}
+                                            title={isDURATION}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3)} // 3
@@ -7362,12 +7364,15 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                 <View style={Styles.bottamUserConatin}>
 
                                     <TouchableOpacity
-                                        onPress={() => navigation.navigate("PreferredDriver")}
+                                        onPress={() =>
+                                            // navigation.navigate("PreferredDriver") // todo
+                                            setModalDRIVER(true)
+                                        }
                                         style={Styles.bottamClickContain}
                                     >
                                         <View style={CommonStyle.justifyContent}>
                                             <Image
-                                                style={Styles.imageStop}
+                                                style={Styles.imageStop_}
                                                 resizeMode="contain"
                                                 source={{ uri: isDRIVERPROFILe }} />
                                         </View>
@@ -7379,7 +7384,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                                 textDecorationLine={'none'}
                                                 fontWeight="500"
                                                 fontSize={wp(3.5)}
-                                                marginVertical={wp(3)}
+                                                marginVertical={wp(2)}
                                                 fontFamily={Fonts.PoppinsSemiBold}
                                                 textAlign='left'
                                             />
@@ -7399,7 +7404,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                                 </View>
 
                                                 <View>
-                                                    <View style={Styles.customRatingBarStyle}>
+                                                    <View style={Styles.customRatingBarStyle_}>
                                                         {maxRating.map((item, key) => {
                                                             return (
                                                                 <View style={CommonStyle.commonRow}>
@@ -7435,7 +7440,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         <View style={CommonStyle.justifyContent}>
                                             <TouchableOpacity onPress={onPressCallUser}>
                                                 <Image
-                                                    style={Styles.imageStop}
+                                                    style={Styles.imageStop_}
                                                     resizeMode="contain"
                                                     source={Images.callIcon} />
                                             </TouchableOpacity>
@@ -7474,20 +7479,21 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                                 color={Colors.gray}
                                                 marginVertical={wp(2)}
                                                 title={"Pay Now"} //99
-                                                onPress={() =>
-                                                    navigation.navigate('BookingRequestDriver', {
-                                                        itemCompleteMapId: route?.params?.itemBokingDetailsMapId,
-                                                        itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
-                                                        itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
-                                                        itemCompletePickStation: route?.params?.itemMapPickStation,
-                                                        itemCompleteDropStation: route?.params?.itemMapDropStation,
-                                                        itemCompleteRideCharge: route?.params?.itemMapRideCharge,
-                                                        itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
-                                                        itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
-                                                        itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
-                                                        itemCompleteTotalAmount: route?.params?.itemMapRideTotalAmount
-                                                    })
-                                                }
+                                                onPress={() => setModalPAY1(true)} /**/
+                                                // onPress={() =>
+                                                //     navigation.navigate('BookingRequestDriver', {
+                                                //         itemCompleteMapId: route?.params?.itemBokingDetailsMapId,
+                                                //         itemCompleteDistance: route?.params?.itemBokingDetailsMapDistance,
+                                                //         itemCompleteDuration: route?.params?.itemBokingDetailsMapDuration,
+                                                //         itemCompletePickStation: route?.params?.itemMapPickStation,
+                                                //         itemCompleteDropStation: route?.params?.itemMapDropStation,
+                                                //         itemCompleteRideCharge: route?.params?.itemMapRideCharge,
+                                                //         itemCompleteRideFeesCon: route?.params?.itemMapRideFeesCon,
+                                                //         itemCompleteRideWattingCharges: route?.params?.itemMapRideWattingCharges,
+                                                //         itemCompleteRideDiscount: route?.params?.itemMapRideDiscount,
+                                                //         itemCompleteTotalAmount: route?.params?.itemMapRideTotalAmount
+                                                //     })
+                                                // }
                                                 textDecorationLine={'underline'}
                                                 fontWeight="400"
                                                 fontSize={wp(3)}
@@ -7573,6 +7579,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     </ScrollView>
 
                 </Modal>
+
 
             </View>
         </SafeAreaView >

@@ -336,12 +336,18 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
                     USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
                     USER_CANCELLATION = response?.data?.matchingVehicle?.cancelationsAmount;
 
-                    PER = USER_TOTAL_AMOUNT * USER_CANCELLATION / 100;
+                    PER = (USER_TOTAL_AMOUNT * USER_CANCELLATION) / 100;
 
                     // cancelationsAmount
                     setGETPERCENTAGE(PER);
 
                     CAN = USER_TOTAL_AMOUNT - PER
+
+                    console.log("CAN---", CAN);
+                    console.log("CAN---", CAN);
+                    console.log("CAN---", CAN);
+                    console.log("CAN---", CAN);
+                    console.log("CAN---", CAN);
 
                     setCHARGE(CAN)
 
@@ -716,8 +722,8 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.discount}
-                                            // title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
-                                            title={USER_BOOKINGSTATUS === "Cancel" ? "-$" + isCHARGE : "-$ 20"}
+                                            title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
+                                            // title={USER_BOOKINGSTATUS = "Cancel" ? "-$" + isCHARGE : "$20"}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}

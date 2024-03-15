@@ -15,6 +15,36 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         width: "100%"
     },
+
+    // TODO :
+    helpConatiner: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        margin: wp(4)
+    },
+    textCreateANewAccount: {
+        margin: wp(3)
+    },
+    imageStop: {
+        width: wp(6),
+        height: wp(6),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+    },
+    viewRiseHeader: {
+        marginBottom: wp(10)
+    },
+    viewFirstConatiner: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    ItemSeparatorComponent: {
+        width: '90%',
+        height: wp(0.1),
+        backgroundColor: Colors.grayDrawerBg,
+        marginHorizontal: wp(5)
+    },
+    // TODO :
     imageUser: {
         width: wp(20),
         height: wp(20),
@@ -34,7 +64,7 @@ const Styles = StyleSheet.create({
         height: wp(8),
         borderRadius: wp(50),
         alignSelf: 'center',
-        marginHorizontal: wp(2)
+        // marginHorizontal: wp(2)
     },
     customRatingBarStyle: {
         justifyContent: 'center',

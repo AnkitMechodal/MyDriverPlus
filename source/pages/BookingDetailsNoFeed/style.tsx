@@ -496,6 +496,12 @@ const Styles = StyleSheet.create({
     marginVertical: {
         marginVertical: wp(115),
     },
+    imageStop_: {
+        width: wp(14),
+        height: wp(14),
+        borderRadius: wp(50),
+        marginHorizontal: wp(4),
+    },
     timerValueContain: {
         backgroundColor: "white",
         width: wp(15),
@@ -550,6 +556,21 @@ const Styles = StyleSheet.create({
         marginRight: wp(10),
         justifyContent: 'center',
         alignSelf: "flex-end",
+    },
+    lineVerticalLine11: {
+        width: wp(0.5),
+        backgroundColor: 'white',
+        // alignSelf: 'center',
+        marginLeft: wp(6), // 6
+        height: wp(1),
+        marginVertical: wp(1)
+    },
+    customRatingBarStyle_: {
+        justifyContent: 'center',
+        flexDirection: 'row',
+        marginTop: wp(1),
+        marginVertical: wp(3),
+        marginHorizontal: wp(2)
     },
 
 });

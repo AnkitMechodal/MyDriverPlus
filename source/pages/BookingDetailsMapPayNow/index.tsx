@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -9,9 +9,9 @@ import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
 import { Colors, Fonts, Images } from '../../themes/index';
-import { API } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
 import NetworkUtils from "../../utils/commonfunction";
+import { API, ScreenText } from '../../utils/index';
 import Styles from './style';
 
 
@@ -25,9 +25,24 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
 
+    const [isFocused, setIsFocused] = useState(true);
+    const [isValidName, setValidName] = useState(true);
+    const [name, setName] = useState('');
+
+    const [isFocusedName, setIsFocusedName] = useState(false);
+
+
+    const refName = useRef<any>(null);
+    const refMobile = useRef<any>(null);
+    const refEmail = useRef<any>(null);
+
 
     const [isGETPERCENTAGE, setGETPERCENTAGE] = useState("0");
     const [isCHARGE, setCHARGE] = useState("20");
+
+
+    const [selectedImage, setSelectedImage] = useState(undefined);
+
 
     const starImageFilled =
         Images.fillStarIcon;
@@ -103,6 +118,14 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
     const [isModalVisible, setModalVisible] = useState(true);
 
 
+    const [isModalHELP, setModalHELP] = useState(false);
+
+    const [isModalRISE, setModalRISE] = useState(false);
+    const [isModalPAY, setModalPAY] = useState(false);
+    const [isModalOTHER, setModalOTHER] = useState(false);
+
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -158,6 +181,22 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
         route?.params?.itemMapRideDiscount,
         route?.params?.itemMapRideTotalAmount
     ]);
+
+
+    const handleFocus = () => {
+        setIsFocused(true)
+    }
+
+    const handleAccountName = (userpass: any) => {
+        setName(userpass);
+        if (userpass.length < 3) {
+            setIsFocusedName(true);
+            setValidName(false)
+        } else {
+            setValidName(true);
+            setIsFocusedName(false)
+        }
+    }
 
 
     const axiosPostDriverInfoRequest = async () => {
@@ -917,7 +956,10 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                                <TouchableOpacity onPress={() => navigation.navigate("ModalHelp")}>
+                                <TouchableOpacity onPress={() =>
+                                    // navigation.navigate("ModalHelp")
+                                    setModalHELP(true)
+                                }>
 
                                     <View style={Styles.viewHelpAndSupport}>
                                         <View style={CommonStyle.justifyContent}>
@@ -1018,6 +1060,1144 @@ const BookingDetailsMapPayNow = ({ route, navigation }) => {
                     </ScrollView>
 
                 </Modal>
+
+                <Modal
+                    isVisible={isModalHELP}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalHELP(false)}
+                    onBackButtonPress={() => setModalHELP(false)}>
+
+                    <View style={Styles.container}
+                    >
+                        <ScrollView
+                            bounces={true}
+                            overScrollMode="always">
+                            <View style={Styles.container}>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={wp(10)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    paddingOpacity={wp(2)}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    marginHorizontal={wp(5)}
+                                    height={wp(7)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={"Help & Support"}
+                                    fontSize={wp(4)}
+                                    onPress={() => setModalHELP(false)}
+                                />
+
+                                <View>
+                                    <TouchableOpacity
+                                        activeOpacity={0.2}
+                                        style={Styles.helpConatiner}
+                                        onPress={() => setModalRISE(true)}>
+
+                                        <View>
+                                            <Image
+                                                style={Styles.imageStop}
+                                                resizeMode="contain"
+                                                source={Images.stopIcon} />
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={ScreenText.RaiseDispute}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                marginHorizontal={wp(5)}
+                                                textAlign='left'
+                                            />
+                                            <TextComponent
+                                                color={Colors.gray}
+                                                title={ScreenText.Help1}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                marginHorizontal={wp(5)}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                        <View style={CommonStyle.commonContent}>
+                                            <Image
+                                                style={Styles.imageArrow}
+                                                resizeMode="contain"
+                                                source={Images.rightArrowIcon} />
+                                        </View>
+
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={Styles.ItemSeparatorComponent}>
+                                </View>
+
+                                <View>
+                                    <TouchableOpacity
+                                        activeOpacity={0.2}
+                                        style={Styles.helpConatiner}
+                                        onPress={() => setModalPAY(true)}>
+                                        <View>
+                                            <Image
+                                                style={Styles.imageStop}
+                                                resizeMode="contain"
+                                                source={Images.headPhoneIcon} />
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={ScreenText.PaymentSupport}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                marginHorizontal={wp(5)}
+                                                textAlign='left'
+                                            />
+
+                                            <TextComponent
+                                                color={Colors.gray}
+                                                title={ScreenText.Help2}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                marginHorizontal={wp(5)}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                        <View style={CommonStyle.commonContent}>
+                                            <Image
+                                                style={Styles.imageArrow}
+                                                resizeMode="contain"
+                                                source={Images.rightArrowIcon} />
+                                        </View>
+
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={Styles.ItemSeparatorComponent}>
+                                </View>
+
+                                <View>
+                                    <TouchableOpacity
+                                        activeOpacity={0.2}
+                                        style={Styles.helpConatiner}
+                                        onPress={() => setModalOTHER(true)}>
+                                        <View>
+                                            <Image
+                                                style={Styles.imageStop}
+                                                resizeMode="contain"
+                                                source={Images.questionIcon} />
+                                        </View>
+
+                                        <View>
+                                            <TextComponent
+                                                color={Colors.white}
+                                                title={ScreenText.OtherSupport}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                marginHorizontal={wp(5)}
+                                                textAlign='left'
+                                            />
+                                            <TextComponent
+                                                color={Colors.gray}
+                                                title={ScreenText.Help3}
+                                                textDecorationLine={'none'}
+                                                fontWeight="400"
+                                                fontSize={wp(3)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                                marginHorizontal={wp(5)}
+                                                textAlign='left'
+                                            />
+                                        </View>
+
+                                        <View style={CommonStyle.commonContent}>
+                                            <Image
+                                                style={Styles.imageArrow}
+                                                resizeMode="contain"
+                                                source={Images.rightArrowIcon} />
+                                        </View>
+
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+
+                        </ScrollView>
+
+                    </View>
+
+                </Modal>
+
+                {/* <Modal
+                    isVisible={isModalRISE}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalRISE(false)}
+                    onBackButtonPress={() => setModalRISE(false)}>
+                    <View style={Styles.container}>
+
+                        <ScrollView style={Styles.container}
+                            bounces={true}
+                            overScrollMode="always"
+                        >
+                            <View style={Styles.container}>
+                                <View style={Styles.viewRiseHeader}>
+                                    <HeaderComponent
+                                        margin={wp(3)}
+                                        backgroundColorOpacity={Colors.circleGray}
+                                        borderRadiusOpacity={wp(10)}
+                                        transform={[{ rotate: '180deg' }]}
+                                        paddingOpacity={wp(2)}
+                                        textAlign={"left"}
+                                        source={Images.arrowRight}
+                                        marginTop={wp(2)}
+                                        width={wp(7)}
+                                        marginHorizontal={wp(5)}
+                                        height={wp(7)}
+                                        color={Colors.white}
+                                        fontFamily={Fonts.InterSemiBold}
+                                        fontWeight="500"
+                                        title={"Raise Dispute"}
+                                        fontSize={wp(4)}
+                                        onPress={() => setModalRISE(false)}
+                                    />
+                                </View>
+                                <View style={Styles.viewFirstConatiner}>
+                                    <View style={Styles.textCreateANewAccount}>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            isVisibleMail={false}
+                                            isVisibleMailGray={false}
+                                            isVisibleLockWhite={false}
+                                            marginVertical={hp(0)}
+                                            marginTop={wp(5)}
+                                            isVisibleUser={true}
+                                            width={wp(90)}
+                                            borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocused ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refName}
+                                            placeholder={ScreenText.EnterUserName}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocus}
+                                            onChangeText={handleAccountName}
+                                            onSubmitEditing={() => {
+                                                refMobile?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+
+                                        {!isValidName ?
+                                            <TextComponent
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidUserName}
+                                                fontWeight="400"
+                                                marginTop={wp(1)}
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={true}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            selectedImage={selectedImage || Images1.downArrow}
+                                            selected={(!!selected && selected.label) || 'Select'}
+                                            toggleDropdown={toggleDropdown}
+                                            renderDropdown={renderDropdown}
+                                            isArrow={false}
+                                            isArrowLeft={true}
+                                            marginVertical={hp(0)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedMobile ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedMobile ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refMobile}
+                                            placeholder={ScreenText.EnterMobile}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='numeric'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            maxLength={10}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusMobile}
+                                            onChangeText={handleAccountNumber}
+                                            onSubmitEditing={() => {
+                                                refEmail?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidNumber ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidMobileNumber}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                marginTop={wp(1)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            isVisibleMail={false}
+                                            isVisibleMailGray={true}
+                                            isVisibleLockWhite={false}
+                                            marginVertical={hp(0)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedEmail ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedEmail ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            marginTop={hp(2)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refEmail}
+                                            placeholder={ScreenText.EnterEmail}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusEmail}
+                                            onChangeText={handleAccountEmail}
+                                            onSubmitEditing={() => {
+                                                refDispute?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidEmail ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidEmail}
+                                                fontWeight="400"
+                                                marginTop={wp(1)}
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleLock={false}
+                                            isVisibleRef={false}
+                                            marginVertical={hp(1)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedPasswordRef ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedPasswordRef ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            marginTop={hp(2)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refDispute}
+                                            placeholder={ScreenText.ReasonofDispute}
+                                            editable={true}
+                                            multiline={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusPassRefCode}
+                                            onChangeText={handleAccountRefCode}
+                                            onSubmitEditing={() => {
+                                                refDesc?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidRefCode ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidRef}
+                                                fontWeight="400"
+                                                marginTop={wp(1)}
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleLock={false}
+                                            isVisibleRef={false}
+                                            marginVertical={hp(1)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedPasswordDesc ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedPasswordDesc ? Colors.white : Colors.blue}
+                                            height={hp(15)}
+                                            marginTop={hp(2)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refDesc}
+                                            textAlignVertical="top"
+                                            placeholder={ScreenText.WritedescriptionHear}
+                                            editable={true}
+                                            multiline={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusPassDesc}
+                                            onChangeText={handleAccountDesc}
+                                            onSubmitEditing={() => {
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidDescCode ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                marginTop={wp(1)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidDesc}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+                                    </View>
+
+                                </View>
+
+                                <View style={Styles.viewSecondConatiner}>
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        heightBtn={hp(7)}
+                                        widthBtn={wp(90)}
+                                        isRightArrow={false}
+                                        color={Colors.white}
+                                        title={ScreenText.Submit}
+                                        marginVertical={wp(10)}
+                                        onPress={onPressRaiseDispute}
+                                        // onPress={() => {
+                                        //     if (name === "") {
+                                        //         // Do something if condition is true
+                                        //         Alert.alert("tests" + name);
+                                        //     } else {
+                                        //         // Do something else if condition is false
+                                        //         Alert.alert("tests-error");
+                                        //     }
+                                        // }}
+                                        marginHorizontal={wp(4)}
+                                        fontWeight="600"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.blue}
+                                    />
+                                </View>
+
+                                <View>
+
+                                </View>
+                            </View>
+                        </ScrollView>
+
+                    </View>
+                </Modal>
+
+                <Modal
+                    isVisible={isModalPAY}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalPAY(false)}
+                    onBackButtonPress={() => setModalPAY(false)}>
+                    <View style={Styles.container}>
+                        <ScrollView style={Styles.container}
+                            bounces={true}
+                            overScrollMode="always">
+                            <View style={Styles.container}>
+
+                                <View style={Styles.viewRiseHeader}>
+                                    <HeaderComponent
+                                        margin={wp(3)}
+                                        backgroundColorOpacity={Colors.circleGray}
+                                        borderRadiusOpacity={wp(10)}
+                                        transform={[{ rotate: '180deg' }]}
+                                        paddingOpacity={wp(2)}
+                                        textAlign={"left"}
+                                        source={Images.arrowRight}
+                                        marginTop={wp(2)}
+                                        width={wp(7)}
+                                        marginHorizontal={wp(5)}
+                                        height={wp(7)}
+                                        color={Colors.white}
+                                        fontFamily={Fonts.InterSemiBold}
+                                        fontWeight="500"
+                                        title={"Payment Support"}
+                                        fontSize={wp(4)}
+                                        onPress={() => setModalPAY(false)}
+                                    />
+                                </View>
+
+                                <View style={Styles.viewFirstConatiner}>
+                                    <View style={Styles.textCreateANewAccount}>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            isVisibleMail={false}
+                                            isVisibleMailGray={false}
+                                            isVisibleLockWhite={false}
+                                            marginVertical={hp(0)}
+                                            marginTop={wp(5)}
+                                            isVisibleUser={true}
+                                            width={wp(90)}
+                                            borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocused ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refPassword}
+                                            placeholder={ScreenText.EnterUserName}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocus}
+                                            onChangeText={handleAccountName1}
+                                            onSubmitEditing={() => {
+                                                refMobile?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidName ?
+                                            <TextComponent
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidUserName}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={true}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            selectedImage={selectedImage || Images1.downArrow}
+                                            selected={(!!selected && selected.label) || 'Select'}
+                                            toggleDropdown={toggleDropdown}
+                                            renderDropdown={renderDropdown}
+                                            isArrow={false}
+                                            isArrowLeft={true}
+                                            marginVertical={hp(0)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedMobile ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedMobile ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refMobile}
+                                            placeholder={ScreenText.EnterMobile}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='numeric'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            maxLength={10}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusMobile}
+                                            onChangeText={handleAccountNumber}
+                                            onSubmitEditing={() => {
+                                                refEmail?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidNumber ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidMobileNumber}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleEye={false}
+                                            isVisibleEye_={false}
+                                            isVisibleMail={false}
+                                            isVisibleMailGray={true}
+                                            isVisibleLockWhite={false}
+                                            marginVertical={hp(0)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedEmail ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedEmail ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            marginTop={hp(2)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refEmail}
+                                            placeholder={ScreenText.EnterEmail}
+                                            editable={true}
+                                            multiline={false}
+                                            secureTextEntry={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusEmail}
+                                            onChangeText={handleAccountEmail}
+                                            onSubmitEditing={() => {
+                                                refDesc?.current?.focus();
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidEmail ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidEmail}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+
+                                    </View>
+
+                                    <View style={{
+                                        marginHorizontal: wp(2)
+                                        , marginVertical: wp(2)
+                                    }}>
+                                        <CustomSelectOrder
+                                            options={dataSeat}
+                                            selectedLabel={selectedOption ? selectedOption.labelSeat : "Select Order type"}
+                                            modalVisibleProp={modalVisible}
+                                            handleOptionSelectProp={handleOptionSelect}
+                                            onRequestCloseProp={onRequestClose}
+                                        />
+                                    </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            isVisibleLock={false}
+                                            isVisibleRef={false}
+                                            marginVertical={hp(1)}
+                                            marginHorizontal={wp(4)}
+                                            width={wp(90)}
+                                            borderWidth={isFocusedPasswordDesc ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isFocusedPasswordDesc ? Colors.white : Colors.blue}
+                                            height={hp(15)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refDesc}
+                                            textAlignVertical="top"
+                                            placeholder={ScreenText.WritedescriptionHear}
+                                            editable={true}
+                                            multiline={false}
+                                            isPadding={true}
+                                            keyboardType='default'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            onFocus={handleFocusPassDesc}
+                                            onChangeText={handleAccountDesc}
+                                            onSubmitEditing={() => {
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidDescCode ?
+                                            <TextComponent
+                                                marginLeft={wp(4)}
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidDesc}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+                                    </View>
+
+                                </View>
+
+                                <View style={Styles.viewSecondConatiner}>
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        heightBtn={hp(7)}
+                                        widthBtn={wp(90)}
+                                        isRightArrow={false}
+                                        color={Colors.white}
+                                        title={ScreenText.Submit}
+                                        onPress={onPressPaymentSupport}
+                                        marginVertical={wp(10)}
+                                        marginHorizontal={wp(4)}
+                                        fontWeight="600"
+                                        fontSize={wp(4)}
+                                        fontFamily={Fonts.PoppinsSemiBold}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.blue}
+                                    />
+                                </View>
+
+                                <View>
+
+                                </View>
+                            </View>
+                        </ScrollView>
+
+                    </View>
+                </Modal>
+
+                <Modal
+                    isVisible={isModalOTHER}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalOTHER(false)}
+                    onBackButtonPress={() => setModalOTHER(false)}>
+                    <ScrollView
+                        bounces={true}
+                        overScrollMode="always"
+                    >
+                        <View style={Styles.container}>
+                            <View style={Styles.viewRiseHeader}>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={wp(10)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    paddingOpacity={wp(2)}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    marginHorizontal={wp(5)}
+                                    height={wp(7)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={"Contact Us"}
+                                    fontSize={wp(4)}
+                                    onPress={() => setModalOTHER(false)}
+                                />
+                            </View>
+                            <View style={Styles.viewFirstConatiner}>
+                                <View style={Styles.textCreateANewAccount}>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleEye={false}
+                                        isVisibleEye_={false}
+                                        isVisibleMail={false}
+                                        isVisibleMailGray={false}
+                                        isVisibleLockWhite={false}
+                                        marginVertical={hp(0)}
+                                        marginTop={wp(5)}
+                                        isVisibleUser={true}
+                                        width={wp(90)}
+                                        borderWidth={isFocused ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocused ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refPassword}
+                                        placeholder={ScreenText.EnterUserName}
+                                        editable={true}
+                                        multiline={false}
+                                        secureTextEntry={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocus}
+                                        onChangeText={handleAccountName}
+                                        onSubmitEditing={() => {
+                                            refMobile?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidName ?
+                                        <TextComponent
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidUserName}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            marginTop={wp(1)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={true}
+                                        isVisibleEye={false}
+                                        isVisibleEye_={false}
+                                        selectedImage={selectedImage || Images1.downArrow}
+                                        selected={(!!selected && selected.label) || 'Select'}
+                                        toggleDropdown={toggleDropdown}
+                                        renderDropdown={renderDropdown}
+                                        isArrow={false}
+                                        isArrowLeft={true}
+                                        marginVertical={hp(0)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedMobile ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedMobile ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refMobile}
+                                        placeholder={ScreenText.EnterMobile}
+                                        editable={true}
+                                        multiline={false}
+                                        secureTextEntry={false}
+                                        isPadding={true}
+                                        keyboardType='numeric'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        maxLength={10}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusMobile}
+                                        onChangeText={handleAccountNumber}
+                                        onSubmitEditing={() => {
+                                            refEmail?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidNumber ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            marginTop={wp(1)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidMobileNumber}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleEye={false}
+                                        isVisibleEye_={false}
+                                        isVisibleMail={false}
+                                        isVisibleMailGray={true}
+                                        isVisibleLockWhite={false}
+                                        marginVertical={hp(0)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedEmail ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedEmail ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        marginTop={hp(2)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refEmail}
+                                        placeholder={ScreenText.EnterEmail}
+                                        editable={true}
+                                        multiline={false}
+                                        secureTextEntry={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusEmail}
+                                        onChangeText={handleAccountEmail}
+                                        onSubmitEditing={() => {
+                                            refSubject?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidEmail ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidEmail}
+                                            fontWeight="400"
+                                            marginTop={wp(1)}
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleLock={false}
+                                        isVisibleRef={false}
+                                        marginVertical={hp(1)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedPasswordRef ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedPasswordRef ? Colors.white : Colors.blue}
+                                        height={hp(7)}
+                                        marginTop={hp(2)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refSubject}
+                                        placeholder={ScreenText.Subject}
+                                        editable={true}
+                                        multiline={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusPassRefCode}
+                                        onChangeText={handleAccountRefCode}
+                                        onSubmitEditing={() => {
+                                            refDesc?.current?.focus();
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidRefCode ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidSubject}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+                                </View>
+
+                                <View>
+                                    <TextInputComponent
+                                        selectionColor={Colors.white}
+                                        isVisibleDropDown={false}
+                                        isVisibleLock={false}
+                                        isVisibleRef={false}
+                                        marginVertical={hp(1)}
+                                        marginHorizontal={wp(4)}
+                                        width={wp(90)}
+                                        borderWidth={isFocusedPasswordDesc ? ConstValue.value1 : ConstValue.value0}
+                                        borderColor={isFocusedPasswordDesc ? Colors.white : Colors.blue}
+                                        height={hp(15)}
+                                        marginTop={hp(2)}
+                                        isUserHide={false}
+                                        textfontSize={ConstValue.value15}
+                                        textfontFamily={Fonts.PoppinsRegular}
+                                        textlineHeight={ConstValue.value0}
+                                        ref={refDesc}
+                                        textAlignVertical="top"
+                                        placeholder={ScreenText.WritedescriptionHear}
+                                        editable={true}
+                                        multiline={false}
+                                        isPadding={true}
+                                        keyboardType='default'
+                                        textAlign='left'
+                                        numberOfLines={null}
+                                        color={Colors.white}
+                                        backgroundColor={Colors.grayDark}
+                                        borderRadius={wp(2)}
+                                        onFocus={handleFocusPassDesc}
+                                        onChangeText={handleAccountDesc}
+                                        onSubmitEditing={() => {
+                                        }}
+                                        placeholderTextColor={Colors.gray}
+                                    />
+                                    {!isValidDescCode ?
+                                        <TextComponent
+                                            marginLeft={wp(4)}
+                                            textDecorationLine={'none'}
+                                            color={Colors.red}
+                                            title={ScreenText.ValidDesc}
+                                            fontWeight="400"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                        />
+                                        : null}
+                                </View>
+
+                            </View>
+
+                            <View style={Styles.viewSecondConatiner}>
+                                <ButtonComponent
+                                    isVisibleMobile={false}
+                                    isVisibleFaceBook={false}
+                                    heightBtn={hp(7)}
+                                    widthBtn={wp(90)}
+                                    isRightArrow={false}
+                                    marginVertical={wp(10)}
+                                    color={Colors.white}
+                                    title={ScreenText.Submit}
+                                    onPress={onPressContactUs}
+                                    marginHorizontal={wp(4)}
+                                    fontWeight="600"
+                                    fontSize={wp(4)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    alignSelf='center'
+                                    textAlign='center'
+                                    borderRadius={wp(2)}
+                                    backgroundColor={Colors.blue}
+                                />
+                            </View>
+
+                            <View>
+
+                            </View>
+                        </View>
+                    </ScrollView>
+
+                </Modal> */}
+
             </View>
         </SafeAreaView>
     )
