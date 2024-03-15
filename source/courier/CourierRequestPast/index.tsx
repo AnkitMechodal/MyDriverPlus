@@ -31,8 +31,13 @@ const CourierRequestPast = ({ route, navigation }) => {
     const [isModalVisibleREQ] = useState(true);
     // const [isInnerModalVisible, setInnerModalVisible] = useState(false);
 
-    // TODO :
     const [toggleONE, setToggleONE] = useState(false);
+
+
+    // TODO : MODAL UI
+    const [isModalDRIVER, setModalDRIVER] = useState(false);
+
+    // TODO : MODAL UI
 
 
     // Drop
@@ -1162,11 +1167,12 @@ const CourierRequestPast = ({ route, navigation }) => {
                                     title={isAccepted ? "" : ScreenText.ViewCourierboy} //99
                                     // title={ScreenText.ViewCourierboy} // View courier boy
                                     textDecorationLine={'underline'}
-                                    onPress={() =>
-                                        navigation.navigate("CourierPreferredDriverPast", {
-                                            itemRider_ID_: route.params.itemRIDER_ID_SENT
-                                        })
-                                    }
+                                    onPress={() => setModalDRIVER(true)}
+                                    // onPress={() =>
+                                    //     navigation.navigate("CourierPreferredDriverPast", {
+                                    //         itemRider_ID_: route.params.itemRIDER_ID_SENT
+                                    //     })
+                                    // }
                                     //onPress={() => setInnerModalVisible(true)}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
@@ -1938,6 +1944,15 @@ const CourierRequestPast = ({ route, navigation }) => {
 
             </Modal>
 
+            <Modal
+                isVisible={isModalDRIVER}
+                animationIn="slideInLeft"  // Specify the animation for entering the screen
+                style={Styles.viewModalMargin}
+                onBackdropPress={() => setModalDRIVER(false)}
+                onBackButtonPress={() => setModalDRIVER(false)}>
+                <>
+                </>
+            </Modal>
 
         </SafeAreaView>
 

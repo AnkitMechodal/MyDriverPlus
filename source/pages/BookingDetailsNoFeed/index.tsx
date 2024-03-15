@@ -119,7 +119,6 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     let GetNewAmoount;
     //
 
-
     const dataSeat = [
         { labelSeat: 'Type1', value: '1' },
         { labelSeat: 'Type2', value: '2' },
@@ -128,6 +127,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
         { labelSeat: 'Type5', value: '5' },
         // Add more options as needed
     ];
+
     const [selectedOption, setSelectedOption] = useState<any>('Select Order type');
     const [modalVisible, setModalVisible] = useState(false);
 

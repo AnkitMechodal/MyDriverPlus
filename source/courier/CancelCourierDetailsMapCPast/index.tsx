@@ -252,6 +252,12 @@ const CancelCourierDetailsMapCPast = ({ route, navigation }) => {
 
                     CAN = USER_TOTAL_AMOUNT - PER
 
+                    console.log("CAN1111==>", CAN);
+                    console.log("CAN1111==>", CAN);
+                    console.log("CAN1111==>", CAN);
+                    console.log("CAN1111==>", CAN);
+
+
                     setCHARGE(CAN)
 
                     // RideCharge

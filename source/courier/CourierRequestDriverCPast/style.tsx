@@ -15,6 +15,72 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         width: "100%"
     },
+
+    // TODO :
+    onItemPress: {
+        flexDirection: 'row',
+        marginLeft: wp(4)
+    },
+    imageDefaultDownArrow: {
+        width: wp(5),
+        height: wp(5),
+        marginRight: wp(2),
+    },
+    imageStop: {
+        width: wp(6),
+        height: wp(6),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+    },
+    helpConatiner: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        margin: wp(4)
+    },
+    ItemSeparatorComponent: {
+        width: '90%',
+        height: wp(0.1),
+        backgroundColor: Colors.grayDrawerBg,
+        marginHorizontal: wp(5)
+    },
+    imageArrow: {
+        width: wp(8),
+        height: wp(8),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+        // marginHorizontal: wp(2)
+    },
+    viewSecondConatiner: {
+        flex: 1,
+        justifyContent: 'flex-end'
+    },
+    textLabel: {
+        color: Colors.gray
+    },
+    item: {
+        paddingVertical: wp(2),
+        borderBottomWidth: 1,
+        borderColor: Colors.white,
+    },
+    modalStyle: {
+        marginTop: wp(15)
+    },
+    dropdown: {
+        backgroundColor: Colors.grayDark,
+        width: wp(22),
+        marginLeft: wp(5),
+    },
+    viewRiseHeader: {
+        marginBottom: wp(10)
+    },
+    textCreateANewAccount: {
+        margin: wp(3)
+    },
+    viewFirstConatiner: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    // TODO :
     imageUser: {
         width: wp(20),
         height: wp(20),

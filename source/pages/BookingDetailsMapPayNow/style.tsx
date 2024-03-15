@@ -45,6 +45,32 @@ const Styles = StyleSheet.create({
         marginHorizontal: wp(5)
     },
     // TODO :
+    item: {
+        paddingVertical: wp(2),
+        borderBottomWidth: 1,
+        borderColor: Colors.white,
+    },
+    onItemPress: {
+        flexDirection: 'row',
+        marginLeft: wp(4)
+    },
+    viewSecondConatiner: {
+        flex: 1,
+        justifyContent: 'flex-end'
+    },
+    textLabel: {
+        color: Colors.gray
+    },
+    imageDefaultDownArrow: {
+        width: wp(5),
+        height: wp(5),
+        marginRight: wp(2),
+    },
+    dropdown: {
+        backgroundColor: Colors.grayDark,
+        width: wp(22),
+        marginLeft: wp(5),
+    },
     imageUser: {
         width: wp(20),
         height: wp(20),
@@ -65,6 +91,9 @@ const Styles = StyleSheet.create({
         borderRadius: wp(50),
         alignSelf: 'center',
         // marginHorizontal: wp(2)
+    },
+    modalStyle: {
+        marginTop: wp(15)
     },
     customRatingBarStyle: {
         justifyContent: 'center',

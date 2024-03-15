@@ -95,8 +95,8 @@ const Tab3ScreenStack = () => {
             />
 
             <Stack.Screen
-                name="BookingDetailsNoFeed" // PreferredDriver
-                component={BookingDetailsNoFeed}///////1203
+                name="BookingDetailsNoFeed"
+                component={BookingDetailsNoFeed}//todo...1
             />
 
             {/* // other */}

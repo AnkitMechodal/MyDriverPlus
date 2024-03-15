@@ -425,11 +425,12 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
             <Modal
                 isVisible={isModalVisible}
                 swipeDirection={[]} // Disables swiping
+                onBackButtonPress={() => navigation.goBack()}
+                onBackdropPress={() => navigation.goBack()}
                 style={Styles.viewModalMargin}>
 
 
                 <View style={Styles.container}>
-
 
                     <ScrollView
                         bounces={true}
@@ -722,7 +723,8 @@ const CancelBookingDetailsMapTab1 = ({ route, navigation }) => {
                                         />
                                         <TextComponent
                                             color={Colors.discount}
-                                            title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
+                                            title={USER_BOOKINGSTATUS === "Cancel" ? "-$" + isCHARGE : "-$ 20"}
+                                            // title={USER_BOOKINGSTATUS = "Cancel" ? "-$ " + isCHARGE : "$ " + "20"}
                                             // title={USER_BOOKINGSTATUS = "Cancel" ? "-$" + isCHARGE : "$20"}
                                             textDecorationLine={'none'}
                                             fontWeight="400"

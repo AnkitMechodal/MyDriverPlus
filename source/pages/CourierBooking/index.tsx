@@ -126,7 +126,7 @@ const Tab00ScreenStack = () => {
             {/* // other */}
 
             <Stack.Screen
-                name="CourierPreferredDriverPast" // CourierPreferredDriverPast // // quickto
+                name="CourierPreferredDriverPast" // CourierPreferredDriverPast // todo....1503
                 component={CourierPreferredDriverPast} />
 
 
@@ -197,7 +197,7 @@ const Tab01ScreenStack = () => {
 
             <Stack.Screen
                 name="CourierDetails"
-                component={CourierUpDetails}
+                component={CourierUpDetails}//todo...2
             />
 
             {/* // other */}
