@@ -1413,9 +1413,11 @@ const HomeOneScreen = (props: Props) => {
                     PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                     PermissionsAndroid.PERMISSIONS.SEND_SMS,
-                    // PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-                    // PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
-                    // PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+
+                    // v13 
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+                    PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
                     // PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED,
                     // PermissionsAndroid.PERMISSIONS.MANAGE_EXTERNAL_STORAGE,
                 ];
@@ -1437,13 +1439,15 @@ const HomeOneScreen = (props: Props) => {
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] ===
                     PermissionsAndroid.RESULTS.GRANTED &&
                     grantedPermissions[PermissionsAndroid.PERMISSIONS.SEND_SMS] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+
+                    // v13
+                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] ===
+                    PermissionsAndroid.RESULTS.GRANTED &&
+                    grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
                     PermissionsAndroid.RESULTS.GRANTED
-                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
-                    // PermissionsAndroid.RESULTS.GRANTED &&
-                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] ===
-                    // PermissionsAndroid.RESULTS.GRANTED &&
-                    // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
-                    // PermissionsAndroid.RESULTS.GRANTED &&
                     // grantedPermissions[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VISUAL_USER_SELECTED] ===
                     // PermissionsAndroid.RESULTS.GRANTED &&
                     // grantedPermissions[PermissionsAndroid.PERMISSIONS.MANAGE_EXTERNAL_STORAGE] ===

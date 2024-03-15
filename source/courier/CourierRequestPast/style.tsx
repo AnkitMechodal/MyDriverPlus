@@ -16,6 +16,68 @@ const Styles = StyleSheet.create({
         marginHorizontal: wp(4),
         marginVertical: wp(5)
     },
+    // TODO :
+    viewLoreumText: {
+        height: "auto",
+        backgroundColor: Colors.grayBox,
+        marginVertical: wp(3),
+        padding: wp(5)
+    },
+    viewSeprateLine3: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginHorizontal: wp(5)
+    },
+    customRatingBarStyle: {
+        // justifyContent: 'center',
+        flexDirection: 'row',
+        marginTop: wp(1),
+        marginVertical: wp(3),
+    },
+    viewGrayLineHorizontal: {
+        height: wp(0.1),
+        backgroundColor: Colors.grayFull,
+        width: wp(95),
+        marginVertical: wp(5),
+        marginHorizontal: wp(3)
+    },
+    carImageIcon: {
+        width: wp(25),
+        height: wp(20),
+        borderRadius: wp(3),
+        marginHorizontal: wp(2)
+    },
+    starImageStyle1: {
+        width: wp(5),
+        height: wp(5),
+        resizeMode: 'cover',
+        marginHorizontal: wp(0.5)
+    },
+    imageCall: {
+        width: wp(12),
+        height: wp(12),
+        borderRadius: wp(3),
+        marginHorizontal: wp(5),
+    },
+    // TODO
+    imageStop: {
+        width: wp(25),
+        height: wp(25),
+        borderRadius: wp(3),
+        marginHorizontal: wp(3),
+    },
+    bottamClickContain: {
+        flexDirection: 'row',
+        padding: wp(2)
+    },
+    viewHeader: {
+        height: wp(30),
+        backgroundColor: Colors.header,
+        borderBottomLeftRadius: wp(5),
+        borderBottomRightRadius: wp(5),
+        justifyContent: 'center',
+        width: "100%"
+    },
     viewModalMargin: {
         margin: 0,
         backgroundColor: 'black'
