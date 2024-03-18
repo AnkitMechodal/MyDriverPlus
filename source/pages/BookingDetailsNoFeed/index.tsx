@@ -58,6 +58,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
     // MAP
     const mapViewRef = useRef<any>(null);
+
+
     // SET AS PICK  & DROP 
     const [markerCoordinates1, setMarkerCoordinates1] = useState<any>({
         latitude: 37.78825,
@@ -6419,7 +6421,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                             <View style={CommonStyle.justifyContent}>
                                                 <TextComponent
                                                     color={Colors.gray}
-                                                    title={"Top Rated (" + isRated + "K)"}
+                                                    title={"Top Rated " + "(" + isRated + "K" + ")"}
                                                     textDecorationLine={'none'}
                                                     fontWeight="400"
                                                     fontSize={wp(3.5)}

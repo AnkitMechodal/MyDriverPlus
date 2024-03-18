@@ -83,10 +83,240 @@ const Styles = StyleSheet.create({
         marginVertical: wp(3),
     },
     customRatingBarStyle: {
-        justifyContent: 'center',
+        // justifyContent: 'center',
         flexDirection: 'row',
         marginTop: wp(1),
         // marginVertical: wp(3),
+    },
+    timerValueContain: {
+        backgroundColor: "white",
+        width: wp(15),
+        height: wp(15),
+        borderRadius: wp(50),
+        alignSelf: "center"
+    },
+    modalIOS: {
+        backgroundColor: Colors.grayBox,
+        borderRadius: wp(3),
+        padding: wp(3),
+        height: "auto",
+        alignSelf: "center"
+    },
+
+    viewImage1: {
+        width: wp(50),
+    },
+    blueDot1: {
+        width: wp(3),
+        height: wp(3),
+        justifyContent: 'center',
+        marginLeft: wp(5),
+        marginTop: wp(4),
+    },
+    viewImage: {
+        width: wp(10)
+    },
+    riderConatin: {
+        flexDirection: "row",
+    },
+    blueRide: {
+        height: wp(22),
+        padding: wp(2),
+        backgroundColor: Colors.blue,
+        borderTopRightRadius: wp(10),
+        borderTopLeftRadius: wp(10),
+        marginVertical: wp(1),
+        flexDirection: "row",
+    },
+    customRatingBarStyle_: {
+        justifyContent: 'center',
+        flexDirection: 'row',
+        marginTop: wp(1),
+        marginVertical: wp(3),
+        marginHorizontal: wp(2)
+    },
+    bottamUserConatin: {
+        height: wp(22),
+        backgroundColor: Colors.grayBox,
+        borderRadius: wp(3),
+        // marginVertical: wp(1),
+        marginHorizontal: wp(3),
+        justifyContent: 'space-between',
+        flexDirection: "row",
+    },
+    marginVertical: {
+        marginVertical: wp(115),
+    },
+    marginRight: {
+        // alignSelf: "flex-end",
+        // marginHorizontal: wp(10), // 3 //10 todooooo1
+        marginRight: wp(10),
+        justifyContent: 'center',
+        alignSelf: "flex-end",
+    },
+    textKMConatiner: {
+        backgroundColor: "white",
+        width: wp(15),
+        height: wp(15),
+        borderRadius: wp(50),
+        marginHorizontal: wp(9), // 3 //10
+        justifyContent: 'center',
+        alignSelf: "flex-end",
+    },
+    lineVerticalLine11: {
+        width: wp(0.5),
+        backgroundColor: 'white',
+        // alignSelf: 'center',
+        marginLeft: wp(6), // 6
+        height: wp(1),
+        marginVertical: wp(1)
+    },
+    blueDot: {
+        width: wp(3),
+        height: wp(3),
+        justifyContent: 'center',
+        marginLeft: wp(5),
+        // marginTop: wp(5)
+    },
+    requestHeaderConatin: {
+        height: wp(45),
+        backgroundColor: Colors.blue,
+        borderBottomLeftRadius: wp(8),
+        borderBottomRightRadius: wp(8),
+        width: "100%",
+        position: 'absolute'
+    },
+    viewRightArrow: {
+        justifyContent: 'center',
+        flex: 1,
+        marginLeft: wp(25)
+    },
+    viewHelpAndSupport: {
+        height: wp(15),
+        backgroundColor: '#282931',
+        borderRadius: wp(3),
+        flexDirection: "row",
+        marginVertical: wp(10),
+        borderColor: Colors.grayFull,
+        borderWidth: wp(0.2),
+    },
+    imageHelp: {
+        width: wp(7),
+        height: wp(7),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+        marginHorizontal: wp(2)
+    },
+    textFareConatiner: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginVertical: wp(3)
+    },
+    starImageStyle: {
+        width: wp(4),
+        height: wp(4),
+        resizeMode: 'cover',
+    },
+
+    viewRatting: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    imageUser: {
+        width: wp(20),
+        height: wp(20),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+        marginHorizontal: wp(2)
+    },
+    viewRowConatiner: {
+        height: "auto",
+        backgroundColor: Colors.desc,
+        borderRadius: wp(3),
+        padding: wp(3),
+        flexDirection: "row"
+    },
+    viewLineHorizontal: {
+        height: wp(0.1),
+        marginVertical: wp(5),
+        backgroundColor: 'gray'
+    },
+    textConatiner3: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginVertical: wp(3)
+    },
+    textConatiner2: {
+        flexDirection: "row",
+        justifyContent: 'space-between'
+    },
+    textConatiner1: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginVertical: wp(3)
+    },
+    viewSecondConatiner: {
+        flex: 1,
+        justifyContent: 'flex-end'
+    },
+    textLabel: {
+        color: Colors.gray
+    },
+    imageDefaultDownArrow: {
+        width: wp(5),
+        height: wp(5),
+        marginRight: wp(2),
+    },
+    onItemPress: {
+        flexDirection: 'row',
+        marginLeft: wp(4)
+    },
+    item: {
+        paddingVertical: wp(2),
+        borderBottomWidth: 1,
+        borderColor: Colors.white,
+    },
+    dropdown: {
+        backgroundColor: Colors.grayDark,
+        width: wp(22),
+        marginLeft: wp(5),
+    },
+    modalStyle: {
+        marginTop: wp(15)
+    },
+    textCreateANewAccount: {
+        margin: wp(3)
+    },
+    viewFirstConatiner: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    viewRiseHeader: {
+        marginBottom: wp(10)
+    },
+    imageStop_: {
+        width: wp(6),
+        height: wp(6),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+    },
+    ItemSeparatorComponent: {
+        width: '90%',
+        height: wp(0.1),
+        backgroundColor: Colors.grayDrawerBg,
+        marginHorizontal: wp(5)
+    },
+    imageArrow: {
+        width: wp(8),
+        height: wp(8),
+        borderRadius: wp(50),
+        alignSelf: 'center',
+        // marginHorizontal: wp(2)
+    },
+    helpConatiner: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        margin: wp(4)
     },
     starImageStyle_: {
         width: wp(12),
