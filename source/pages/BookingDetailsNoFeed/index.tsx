@@ -398,7 +398,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
         // Prepare data in JSON format
         const data = {
-            id: route.params.itemCompleteRideId //quick
+            id: route.params.itemRIDER_ID_SENT //quick
         };
 
         console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
@@ -633,7 +633,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
         // Prepare data in JSON format
         const data = {
-            id: route.params.itemCompleteRideId //quick
+            id: route.params.itemRIDER_ID_SENT //quick
         };
 
         console.log("ERRROROROOR===>===>", JSON.stringify(data, null, 2));
@@ -2693,8 +2693,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                     CouponDiscount = response?.data?.matchingCodes?.Discount;
 
-                    // CouponDiscount As Total 
-                    GetAsDiscount = route.params.itemCompleteTotalAmount * CouponDiscount / 100;
+                    // CouponDiscount As Total  - route.params.itemCompleteTotalAmount
+                    GetAsDiscount = isAmount * CouponDiscount / 100;
 
                     console.log("GetAsDiscount", GetAsDiscount);
                     console.log("GetAsDiscount", GetAsDiscount);
@@ -2702,7 +2702,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     setDefault(GetAsDiscount);
 
                     // SET AFTER AMOUNT
-                    GetNewAmoount = route.params.itemCompleteTotalAmount - GetAsDiscount
+                    GetNewAmoount = isAmount - GetAsDiscount
                     setIsAmount(GetNewAmoount)
 
                     // Handle API response here

@@ -285,7 +285,7 @@ const CancelCourierDetailsMapPast = ({ route, navigation }) => {
                     setDROP_UP_LOCATION(USER_DROP_UP_LOCATION);
                     setWATTING_CHARGES(USER_WATTING_CHARGES);
                     // setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
-                    setFARE(USER_FARE_VALUE); // ADDED 
+                    setFARE(USER_FARE_VALUE); // ADDED
                     // Discount  // ADDED
                     // Ride Charge
                     // Booking Fees

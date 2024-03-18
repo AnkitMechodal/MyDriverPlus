@@ -28,11 +28,71 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginHorizontal: wp(5)
     },
+    viewSeprateLine3_: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginHorizontal: wp(2)
+    },
+
+    viewSeprateLine2: {
+        height: wp(0.1),
+        marginVertical: wp(5),
+        backgroundColor: 'gray'
+    },
+    lineVerticalLine3: {
+        width: wp(0.2),
+        backgroundColor: 'white',
+        height: wp(2),
+        marginLeft: wp(2),
+    },
+    lineVerticalLine4: {
+        width: wp(0.2),
+        backgroundColor: 'white',
+        height: wp(2),
+        marginLeft: wp(2),
+        marginVertical: wp(1)
+    },
+    lineVerticalLine1: {
+        width: wp(0.2),
+        backgroundColor: 'white',
+        height: wp(2),
+        marginLeft: wp(2),
+    },
+    viewOrangeDot: {
+        width: wp(3.8),
+        height: wp(3.8),
+        justifyContent: 'center',
+    },
+    viewSeprateLine: {
+        height: wp(15),
+        width: wp(0.2),
+        backgroundColor: Colors.grayDark,
+    },
+    rowSpace: {
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
+    viewRowContent: {
+        margin: wp(3)
+    },
+    viewKMConatiner: {
+        height: "auto",
+        backgroundColor: Colors.grayBox,
+        borderRadius: wp(3),
+        padding: wp(3),
+        marginVertical: wp(3),
+    },
     customRatingBarStyle: {
-        // justifyContent: 'center',
+        justifyContent: 'center',
         flexDirection: 'row',
         marginTop: wp(1),
-        marginVertical: wp(3),
+        // marginVertical: wp(3),
+    },
+    starImageStyle_: {
+        width: wp(12),
+        height: wp(12),
+        resizeMode: 'cover',
+        marginHorizontal: wp(1)
     },
     viewGrayLineHorizontal: {
         height: wp(0.1),
@@ -77,6 +137,69 @@ const Styles = StyleSheet.create({
         borderBottomRightRadius: wp(5),
         justifyContent: 'center',
         width: "100%"
+    },
+    viewModalDriverStripe: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+        marginTop: wp(25)
+    },
+    viewStationConatiner: {
+        justifyContent: 'center',
+        margin: wp(3)
+    },
+    viewModalDriver: {
+        height: wp(70),
+        backgroundColor: Colors.grayBox,
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+    },
+    viewKMConatinerGray: {
+        height: "auto",
+        backgroundColor: Colors.grayBox,
+        borderRadius: wp(3),
+        padding: wp(3),
+        margin: wp(3),
+        marginVertical: wp(3),
+    },
+    viewHeaderComplete: {
+        height: wp(20), // wp(30)
+        backgroundColor: Colors.black,
+        borderBottomLeftRadius: wp(5),
+        borderBottomRightRadius: wp(5),
+        justifyContent: 'center',
+    },
+    viewModalDriverStripeCancel: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+        marginTop: wp(25)
+    },
+    viewPayImage: {
+        width: wp(35),
+        height: wp(35),
+        alignSelf: "center"
+    },
+    viewCenterContain: {
+        flex: 1,
+        justifyContent: 'center',
+        alignSelf: "center",
+        marginVertical: wp(30)
+    },
+    viewHeader_: {
+        height: wp(20), // wp(30)
+        backgroundColor: Colors.black,
+        borderBottomLeftRadius: wp(5),
+        borderBottomRightRadius: wp(5),
+        justifyContent: 'center',
     },
     viewModalMargin: {
         margin: 0,

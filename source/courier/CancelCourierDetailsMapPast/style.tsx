@@ -14,6 +14,7 @@ const Styles = StyleSheet.create({
         borderBottomRightRadius: wp(5),
         justifyContent: 'center',
     },
+  
     imageUser: {
         width: wp(20),
         height: wp(20),
