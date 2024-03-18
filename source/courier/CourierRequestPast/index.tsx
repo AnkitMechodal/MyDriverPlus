@@ -4184,7 +4184,8 @@ const CourierRequestPast = ({ route, navigation }) => {
                                     widthBtn={wp(90)}
                                     isRightArrow={false} // setModalPAYFUL(true)
                                     // onPress={() => setModalPAYCOMPLETE(true)}
-                                    onPress={onPressCompletePaymentCancel}
+                                    onPress={() => setModalPAYCOMPLETE(true)}
+                                    // onPress={onPressCompletePaymentCancel}
                                     // onPress={() =>
                                     //     navigation.navigate('PaymentSuccessful', {
                                     //         // itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
