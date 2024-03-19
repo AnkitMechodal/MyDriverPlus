@@ -10,6 +10,7 @@ import ModalHelpScreen from '../../modal/ModalHelpScreen';
 import ModalPaymentScreen from '../../modal/ModalPaymentScreen';
 import ModalRiseHelpScreen from '../../modal/ModalRiseHelpScreen';
 import { Colors, Fonts } from '../../themes';
+import BookingBidDetailsNoFeed from '../BookingBidDetailsNoFeed';
 import BookingDetailsMapPayNow from '../BookingDetailsMapPayNow';
 import BookingDetailsMapUp from '../BookingDetailsMapUp';
 import BookingDetailsNoFeed from '../BookingDetailsNoFeed';
@@ -96,7 +97,12 @@ const Tab3ScreenStack = () => {
 
             <Stack.Screen
                 name="BookingDetailsNoFeed"
-                component={BookingDetailsNoFeed}//todo...1
+                component={BookingDetailsNoFeed}//todo...1 - BookingDetailsNoFeed
+            />
+
+            <Stack.Screen
+                name="BookingBidDetailsNoFeed"
+                component={BookingBidDetailsNoFeed}//todo...1 - BookingBidDetailsNoFeed
             />
 
             {/* // other */}
@@ -161,6 +167,7 @@ const Tab4ScreenStack = () => {
                 name="Tab4Screen"
                 component={Tab4Screen}
             />
+
             <Stack.Screen
                 name="CourierDetails"
                 component={CourierUpDetails}

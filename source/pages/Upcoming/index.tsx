@@ -49,8 +49,8 @@ const Tab3Screen = (props: Props) => {
                         requestData
                     );
 
-                    console.log('UPComing_DATA16==>',
-                        JSON.stringify(response.data?.matchingVehicles, null, 2));
+                    // console.log('UPComing_DATA16==>',
+                    //     JSON.stringify(response.data?.matchingVehicles, null, 2));
 
                     // Set the response data to the state
                     setRIDUPDATA(response.data?.matchingVehicles);
@@ -66,7 +66,14 @@ const Tab3Screen = (props: Props) => {
         };
 
         fetchData();
-    }, []);  // Add an empty dependency array to run the effect only once
+
+        // Refresh data every 5 seconds
+        const interval = setInterval(fetchData, 5000);
+
+        // Cleanup interval to avoid memory leaks
+        return () => clearInterval(interval);
+
+    });  // Add an empty dependency array to run the effect only once
 
 
     return (
@@ -82,20 +89,39 @@ const Tab3Screen = (props: Props) => {
                             <View style={{ flex: 1, backgroundColor: 'black' }}>
 
                                 <TouchableOpacity
-                                    onPress={() =>
-                                        props.navigation.navigate("BookingDetailsNoFeed", {
-                                            itemRIDER_ID_SENT: item._id, // _id
-                                            itemRIDEID_SENT: item.RideId, // RIDE_ID
-                                            itemRIDER_DISTANCE_SENT: item.distance,
-                                            itemRIDER_DURATUION_SENT: item.time,
-                                            itemRIDER_PICKSTATION: item.pickup_locations,
-                                            itemRIDER_DROPSTATION: item.drop_locations,
-                                            itemRIDER_RIDE_CHARGE: item.RideCharge,
-                                            itemRIDER_RIDE_FEES_CON: item.BookingFeesConvenience,
-                                            itemRIDER_RIDE_WAITING_CHARGES: item.Waiting_Charge,
-                                            itemRIDER_RIDE_DICOUNT: item.Discount,
-                                            itemRIDER_RIDE_TOTALAMOUNT: item.TotalAmount,
-                                        })}>
+                                    onPress={() => {
+                                        if (item.service_stype === "Bidding Ride") {
+                                            // Handle case when item.service_stype is empty
+                                            props.navigation.navigate("BookingBidDetailsNoFeed", {
+                                                itemRIDER_ID_SENT: item._id, // _id
+                                                itemRIDEID_SENT: item.RideId, // RIDE_ID
+                                                itemRIDER_DISTANCE_SENT: item.distance,
+                                                itemRIDER_DURATUION_SENT: item.time,
+                                                itemRIDER_PICKSTATION: item.pickup_locations,
+                                                itemRIDER_DROPSTATION: item.drop_locations,
+                                                itemRIDER_RIDE_CHARGE: item.RideCharge,
+                                                itemRIDER_RIDE_FEES_CON: item.BookingFeesConvenience,
+                                                itemRIDER_RIDE_WAITING_CHARGES: item.Waiting_Charge,
+                                                itemRIDER_RIDE_DICOUNT: item.Discount,
+                                                itemRIDER_RIDE_TOTALAMOUNT: item.TotalAmount,
+                                            })
+                                        } else {
+                                            // Handle case when item.service_stype is not empty
+                                            props.navigation.navigate("BookingDetailsNoFeed", {
+                                                itemRIDER_ID_SENT: item._id, // _id
+                                                itemRIDEID_SENT: item.RideId, // RIDE_ID
+                                                itemRIDER_DISTANCE_SENT: item.distance,
+                                                itemRIDER_DURATUION_SENT: item.time,
+                                                itemRIDER_PICKSTATION: item.pickup_locations,
+                                                itemRIDER_DROPSTATION: item.drop_locations,
+                                                itemRIDER_RIDE_CHARGE: item.RideCharge,
+                                                itemRIDER_RIDE_FEES_CON: item.BookingFeesConvenience,
+                                                itemRIDER_RIDE_WAITING_CHARGES: item.Waiting_Charge,
+                                                itemRIDER_RIDE_DICOUNT: item.Discount,
+                                                itemRIDER_RIDE_TOTALAMOUNT: item.TotalAmount,
+                                            })
+                                        }
+                                    }}>
                                     <View style={{
                                         height: "auto",
                                         backgroundColor: '#282931',
