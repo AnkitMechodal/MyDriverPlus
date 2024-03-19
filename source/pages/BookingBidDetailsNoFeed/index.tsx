@@ -4,7 +4,7 @@ import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Dimensions, FlatList, Image, Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Image, Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Modal from "react-native-modal";
@@ -55,6 +55,10 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
     //QUICK
     const [viewRequest, setViewRequest] = useState(ScreenText.ViewRequest);
+    const refAdjust = useRef<any>(null);
+    const [adjust, setAdjust] = useState('');
+
+    const [isValidAdjut, setValidAdjust] = useState(true);
 
 
     let user_latitude;
@@ -105,7 +109,6 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
     let USER_PAY_CARD;
 
     // MAP
-    const [isDriverName, setDriverName] = useState(ScreenText.UserName);
 
 
     const [isPICKSHARE, setPICKSHARE] = useState(true);
@@ -146,6 +149,8 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
     const [isFocusedApplyNow, setIsFocusedApplyNow] = useState(false);
     const [isFocusedRedeem, setIsFocusedRedeem] = useState(false);
 
+    const [isModalFocuedBidAdjust, setModalFcouedBidAdjust] = useState(false);
+
 
     const refRedeem = useRef<any>(null);
 
@@ -172,6 +177,12 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
     // PAY COMPLETE
     const refApplyNow = useRef<any>(null);
 
+
+    // TODO :
+    const [isModalBIDDRIVER, setModalBIDDRIVER] = useState(false);
+
+
+    // TODO :
 
     // STRIPE :
     const [isSTRIPEModal, setSTRIPEModal] = useState(false);
@@ -224,6 +235,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
         // itemSuccessfulAmount: isAmount,
         // });
     }
+
 
     const axiosPostRideStatusAccepted = async () => {
 
@@ -287,6 +299,25 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
     }
 
+    const axiosDriverSelectedData = (item) => {
+
+        // setModalBIDDRIVER(true)
+
+        // console.log("itemHours-1", item?.hourse);
+        // console.log("itemHours-2", item?.Amount);
+        // console.log("itemHours-3", item?.driverId);
+
+        console.log("itemHours-4", item?.driverId);
+        console.log("itemHours-4", item?.driverId);
+        console.log("itemHours-4", item?.driverId);
+        console.log("itemHours-4", item?.driverId);
+        console.log("itemHours-4", item?.driverId);
+
+
+        // console.log("itemHours-5", item?.BinddStatus);
+        // console.log("itemHours-6", item?._id);
+
+    }
 
     const onPressSubmit = () => {
         axiosPostRateDriverRequest(defaultRatingSubmit);
@@ -722,6 +753,92 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
         }
     }
 
+    const handleFocusAdjust = () => {
+        setModalFcouedBidAdjust(true)
+    }
+
+
+    const onPressSubmitAmount = () => {
+        // Cancel Bidding 
+        // axiosCancelBiddingPostRequest();
+
+        if (adjust === '') {
+            // If 'adjust' is null, execute this logic
+            Toast.show('Please Adjust Bidding Amount!', Toast.SHORT);
+            // setModalCancel(false);
+        } else {
+            // If 'adjust' is not null, execute the following logic
+            // Cancel Bidding 
+            axiosCancelBiddingPostRequest();
+        }
+    }
+
+    const axiosCancelBiddingPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosCancelBiddingSurePostRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosCancelBiddingSurePostRequest = async () => {
+        try {
+
+            // const url = `https://rideshareandcourier.graphiglow.in/api/AdjustBidAmount/AdjustAmount`
+            const url = `${API.BASE_URL}/AdjustBidAmount/AdjustAmount`;
+
+            console.log("axiosCancelBiddingSurePostRequest===>", url);
+
+            // Prepare data in JSON format
+            const data = {
+                RideId: route?.params?.itemRIDEID_SENT,
+                AdjustBidAmount: adjust // get by box
+            };
+
+            console.log("CancelBiddingData==>", JSON.stringify(data, null, 2));
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Adjust Bid Amount and Price Successfully') {
+
+                        Toast.show('Your Bidding Amount Submitted!', Toast.SHORT);
+                        setModalCancel(false);
+
+                    } else {
+                        Toast.show('Unable to Bidding Amount Submitted!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    Toast.show('Unable to Bidding Amount Submitted!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    };
+
+
+    const handleAccountAdjust = (userad: any) => {
+        setAdjust(userad);
+        if (userad.length < 3) {
+            setModalFcouedBidAdjust(true);
+            setValidAdjust(false)
+        } else {
+            setValidAdjust(true);
+            setModalFcouedBidAdjust(false)
+        }
+    }
 
     const handleFocusRedeem = () => {
         setIsFocusedRedeem(true)
@@ -945,6 +1062,10 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
     const [isModalBOOKINGCANCEL, setModalBOOKINGCANCEL] = useState(false);
     const [isModalCANCELPAYSTRIPE, setModalCANCELPAYSTRIPE] = useState(false);
+
+
+
+    // const [isModalCancel, setModalCancel] = useState(false);
 
 
     const [isModalMAP, setModalMAP] = useState(false);
@@ -1571,6 +1692,190 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
     });
 
 
+    const onPressDeclineed = async () => {
+        if (route?.params?.itemBinddStatus == "Pendding") {
+            try {
+                const isConnected = await NetworkUtils.isNetworkAvailable()
+                if (isConnected) {
+                    axiosPostGetRequestDeclinedStatus_();
+                } else {
+                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+                }
+            } catch (error) {
+                Toast.show("axios error", Toast.SHORT);
+            }
+        } else {
+
+        }
+    }
+
+    const axiosPostGetRequestDeclinedStatus_ = async () => {
+        try {
+            // const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            // if (storedLinkedId !== null) {
+            // const userId = JSON.parse(storedLinkedId);
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            const url = `${API.BASE_URL}/BinddingStatus/status`;
+
+            // Prepare data in JSON format // J64PQ4F3QQKK
+            const data = {
+
+                id: route?.params?.item_ID,
+                BinddStatus: "Declined" // Accepted
+
+                // id: "65b87ce0ff5893ae763e4b91",
+                // BinddStatus: "Accepted" // test!
+            };
+
+            console.log("MatchingList==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'Bidding ride BinddStatus updated successfully') {
+
+                        Toast.show('Success! Bidding Request Declined!', Toast.SHORT);
+
+                        // itemRIDEID_SENT
+                        navigation.navigate("BookingBiddingRequest", {
+                            itemRIDEID_SENT: route?.params?.itemRideId,
+                            itemRIDER_ID_SENT: route?.params?.item_ID
+                        });
+
+                        // Get Status & Set To button:
+
+                        // let BinddStatus = response?.data?.data?.BinddStatus;
+                        // setPendingUI(BinddStatus);
+
+
+                        // // Check BidndStatus :
+                        // if (BinddStatus === "Pending") {
+                        //     setPendingUI(BinddStatus);
+                        // } else if (BinddStatus === "Accepted") {
+                        //     setAcceptUI(BinddStatus);
+                        // } else {
+                        //     setDeclineUI(BinddStatus);
+                        // }
+
+                        // console.log("BinddStatus====>", BinddStatus);
+                        // console.log("BinddStatus====>", BinddStatus);
+
+                        // Toast.show('Success! Bidding Request Pending!', Toast.SHORT);
+
+                        // navigation.goBack();
+                        // setAcceptUI("Accepted");
+
+                    } else {
+                        // Toast.show('Unable To Retrieved!-2', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Toast.show('Unable To Retrieved!-1', Toast.SHORT);
+                });
+            // } else {
+            //     // Handle the case where storedLinkedId is null
+            // }
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    }
+
+    const onPressAccepted = async () => {
+        if (route?.params?.itemBinddStatus == "Pendding") {
+            try {
+                const isConnected = await NetworkUtils.isNetworkAvailable()
+                if (isConnected) {
+                    axiosPostGetRequestPendingStatus_();
+                } else {
+                    Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+                }
+            } catch (error) {
+                Toast.show("axios error", Toast.SHORT);
+            }
+        } else {
+
+        }
+    }
+
+    const axiosPostGetRequestPendingStatus_ = async () => {
+        try {
+            // const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+            // if (storedLinkedId !== null) {
+            // const userId = JSON.parse(storedLinkedId);
+            // const url = `https://rideshareandcourier.graphiglow.in/api/BinddingStatus/status`;
+            const url = `${API.BASE_URL}/BinddingStatus/status`;
+
+            // Prepare data in JSON format // J64PQ4F3QQKK
+            const data = {
+
+                id: route?.params?.item_ID,
+                BinddStatus: "Accepted" // Accepted
+
+                // id: "65b87ce0ff5893ae763e4b91",
+                // BinddStatus: "Accepted" // test!
+            };
+
+            console.log("MatchingList==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.status === 200 &&
+                        response?.data?.message === 'Bidding ride BinddStatus updated successfully') {
+
+                        Toast.show('Success! Bidding Request Accepted!', Toast.SHORT);
+                        // itemRIDEID_SENT
+                        navigation.navigate("BookingBiddingRequest", {
+                            itemRIDEID_SENT: route?.params?.itemRideId,
+                            itemRIDER_ID_SENT: route?.params?.item_ID
+                        });
+
+                        // Get Status & Set To button:
+
+                        // let BinddStatus = response?.data?.data?.BinddStatus;
+                        // setPendingUI(BinddStatus);
+
+
+                        // // Check BidndStatus :
+                        // if (BinddStatus === "Pending") {
+                        //     setPendingUI(BinddStatus);
+                        // } else if (BinddStatus === "Accepted") {
+                        //     setAcceptUI(BinddStatus);
+                        // } else {
+                        //     setDeclineUI(BinddStatus);
+                        // }
+
+                        // console.log("BinddStatus====>", BinddStatus);
+                        // console.log("BinddStatus====>", BinddStatus);
+
+                        // Toast.show('Success! Bidding Request Pending!', Toast.SHORT);
+
+                        // navigation.goBack();
+                        // setAcceptUI("Accepted");
+
+                    } else {
+                        // Toast.show('Unable To Retrieved!-2', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Toast.show('Unable To Retrieved!-1', Toast.SHORT);
+                });
+            // } else {
+            //     // Handle the case where storedLinkedId is null
+            // }
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    }
 
     const axiosPostGetRequestDriverList = async () => {
         try {
@@ -1604,6 +1909,13 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                         console.log("Matching----==>",
                             JSON.stringify(response?.data?.data, null, 2));
+
+
+                        // ALL DATA GET :
+
+
+                        // ALL DATA GET :
+
 
                         // username_ == response?.data?.data?.username;
                         // console.log("username_====>" + username_);
@@ -2469,6 +2781,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
             Toast.show("axios error", Toast.SHORT);
         }
     }
+
 
     const axiosUserPostDriverInfoRequest = async () => {
 
@@ -3420,7 +3733,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     textAlign={"left"}
                                     source={Images.arrowRight}
                                     titleWithRightContent={"Adjust Bidding Amount ?"}
-                                    onPressRightEnd={() => Alert.alert("test-1")} // toggleModalCancel
+                                    onPressRightEnd={toggleModalCancel} // Bidding Ride // toggleModalCancel
                                     marginTop={wp(2)}
                                     textAlignRight={"right"}
                                     colorRight={Colors.blue}
@@ -3868,83 +4181,89 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                             >
                                 <View
                                     style={Styles.modalCancelConatiner}>
+
                                     <View>
                                         <TextComponent
-                                            color={Colors.orange}
-                                            title={ScreenText.AreYouSure}
+                                            color={Colors.white}
+                                            title={ScreenText.AdjustBiddingAmount}
                                             textDecorationLine={'none'}
                                             fontWeight="700"
                                             fontSize={wp(4)}
                                             fontFamily={Fonts.PoppinsRegular}
-                                            textAlign='center'
+                                            textAlign='left'
                                             marginVertical={wp(5)}
                                             marginHorizontal={wp(2)}
                                         />
-                                        <TextComponent
-                                            color={Colors.white}
-                                            title={ScreenText.FeedbackRequest}
-                                            textDecorationLine={'none'}
-                                            fontWeight="500"
-                                            fontSize={wp(3.5)}
-                                            fontFamily={Fonts.PoppinsRegular}
-                                            textAlign='center'
-                                            marginHorizontal={wp(2)}
-                                        />
-                                        <TextComponent
-                                            color={Colors.gray}
-                                            title={ScreenText.IfYesAnotherdriver}
-                                            textDecorationLine={'none'}
-                                            fontWeight="500"
-                                            fontSize={wp(2.5)}
-                                            fontFamily={Fonts.PoppinsRegular}
-                                            textAlign='center'
-                                            marginVertical={wp(2)}
-                                            marginHorizontal={wp(2)}
-                                        />
+
                                     </View>
+
+                                    <View>
+                                        <TextInputComponent
+                                            selectionColor={Colors.white}
+                                            isVisibleDropDown={false}
+                                            marginVertical={hp(1)}
+                                            width={wp(80)}
+                                            borderWidth={isModalFocuedBidAdjust ? ConstValue.value1 : ConstValue.value0}
+                                            borderColor={isModalFocuedBidAdjust ? Colors.white : Colors.blue}
+                                            height={hp(7)}
+                                            isUserHide={false}
+                                            textfontSize={ConstValue.value15}
+                                            textfontFamily={Fonts.PoppinsRegular}
+                                            textlineHeight={ConstValue.value0}
+                                            ref={refAdjust}
+                                            placeholder={ScreenText.EnterAdjustBiddingAmount}
+                                            editable={true}
+                                            multiline={false}
+                                            isPadding={true}
+                                            isVisiblePayBookNow={true}
+                                            keyboardType='numeric'
+                                            textAlign='left'
+                                            numberOfLines={null}
+                                            color={Colors.white}
+                                            backgroundColor={Colors.grayDark}
+                                            borderRadius={wp(2)}
+                                            value={adjust}
+                                            onFocus={handleFocusAdjust}
+                                            onChangeText={handleAccountAdjust}
+                                            onSubmitEditing={() => {
+                                            }}
+                                            placeholderTextColor={Colors.gray}
+                                        />
+                                        {!isValidAdjut ?
+                                            <TextComponent
+                                                textDecorationLine={'none'}
+                                                color={Colors.red}
+                                                title={ScreenText.ValidBidding}
+                                                fontWeight="400"
+                                                fontSize={wp(4)}
+                                                fontFamily={Fonts.PoppinsRegular}
+                                            />
+                                            : null}
+                                    </View>
+
                                     <View style={Styles.ButtonYesNoConatiner}>
                                         <ButtonComponent
                                             isVisibleMobile={false}
                                             isVisibleFaceBook={false}
                                             marginVertical={hp(1)}
                                             heightBtn={hp(6)}
-                                            widthBtn={wp(30)}
-                                            isRightArrow={false} // 99
-                                            onPress={onPressCancelBooking}
+                                            widthBtn={wp(50)}
+                                            isRightArrow={false}
+                                            onPress={onPressSubmitAmount} // onPressSubmitAmount
                                             color={Colors.white}
-                                            title={ScreenText.Yes}
+                                            title={ScreenText.Submit}
                                             marginHorizontal={wp(6)}
-                                            fontWeight="600"
+                                            fontWeight="500"
                                             fontSize={wp(4)}
-                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            fontFamily={Fonts.PoppinsRegular}
                                             alignSelf='center'
                                             textAlign='center'
                                             borderRadius={wp(2)}
                                             backgroundColor={Colors.blue}
                                         />
-                                        <ButtonComponent
-                                            isVisibleMobile={false}
-                                            isVisibleFaceBook={false}
-                                            marginVertical={hp(1)}
-                                            heightBtn={hp(6)}
-                                            widthBtn={wp(30)}
-                                            isRightArrow={false}
-                                            onPress={() => setModalCancel(false)}
-                                            color={Colors.black}
-                                            title={ScreenText.No}
-                                            marginHorizontal={wp(6)}
-                                            fontWeight="600"
-                                            fontSize={wp(4)}
-                                            fontFamily={Fonts.PoppinsSemiBold}
-                                            alignSelf='center'
-                                            textAlign='center'
-                                            borderRadius={wp(2)}
-                                            backgroundColor={Colors.grayDark}
-                                        />
                                     </View>
 
                                 </View>
-
                             </Modal>
 
                             <Modal
@@ -7647,7 +7966,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         <View>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={isDriverName}
+                                                title={isDRIVERNAME}
                                                 textDecorationLine={'none'}
                                                 fontWeight="500"
                                                 fontSize={wp(3.5)}
@@ -7847,7 +8166,6 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                 </Modal>
 
-
                 <Modal
                     isVisible={isModalREQUEST}
                     animationIn="slideInLeft"  // Specify the animation for entering the screen
@@ -7890,17 +8208,20 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         return (
 
                                             <View>
-                                                <TouchableOpacity onPress={() =>
-                                                    Alert.alert("testing!")
-                                                    // navigation.navigate("ViewRequestDetails", {
-                                                    //     itemHours: item?.hourse,
-                                                    //     itemAmount: item?.Amount,
-                                                    //     itemDriverID: item?.driverId,
-                                                    //     itemRideId: item?.rideId,
-                                                    //     itemBinddStatus: item?.BinddStatus,
-                                                    //     item_ID: item?._id
-                                                    // })
-                                                }>
+                                                <TouchableOpacity
+                                                    activeOpacity={0.1}
+                                                    onPress={() => axiosDriverSelectedData(item)
+
+                                                        // Alert.alert("tets--->", item?.rideId)
+                                                        // navigation.navigate("ViewRequestDetails", {
+                                                        //     itemHours: item?.hourse,
+                                                        //     itemAmount: item?.Amount,
+                                                        //     itemDriverID: item?.driverId,
+                                                        //     itemRideId: item?.rideId,
+                                                        //     itemBinddStatus: item?.BinddStatus,
+                                                        //     item_ID: item?._id
+                                                        // })
+                                                    }>
                                                     <View style={Styles.requestConatiner}>
                                                         <View style={CommonStyle.commonRow}>
 
@@ -7928,7 +8249,8 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                                                         <TextComponent
                                                                             color={Colors.gray}
                                                                             title={"You Rated"}
-                                                                            marginHorizontal={wp(5)}
+                                                                            marginLeft={wp(5)}
+                                                                            marginRight={wp(1)}
                                                                             textDecorationLine={'none'}
                                                                             marginVertical={wp(2)}
                                                                             fontWeight="400"
@@ -7940,7 +8262,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                                                                     <View>
 
-                                                                        <View style={Styles.customRatingBarStyle}>
+                                                                        <View style={Styles.customRatingBarStyleRate}>
                                                                             {maxRating.map((rating, key) => {
                                                                                 return (
                                                                                     <View style={CommonStyle.commonRow}>
@@ -8185,6 +8507,456 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                         </View>
                     </ScrollView>
+                </Modal>
+
+                <Modal
+                    isVisible={isModalBIDDRIVER}
+                    animationIn="slideInLeft"  // Specify the animation for entering the screen
+                    style={Styles.viewModalMargin}
+                    onBackdropPress={() => setModalBIDDRIVER(false)}
+                    onBackButtonPress={() => setModalBIDDRIVER(false)}>
+
+                    <ScrollView style={Styles.container}
+                        showsVerticalScrollIndicator={false}>
+                        <View style={Styles.container}>
+
+                            <View style={Styles.viewHeader}>
+                                <HeaderComponent
+                                    margin={wp(3)}
+                                    backgroundColorOpacity={Colors.circleGray}
+                                    borderRadiusOpacity={wp(10)}
+                                    transform={[{ rotate: '180deg' }]}
+                                    paddingOpacity={wp(2)}
+                                    textAlign={"left"}
+                                    source={Images.arrowRight}
+                                    marginTop={wp(2)}
+                                    width={wp(7)}
+                                    marginHorizontal={wp(5)}
+                                    height={wp(7)}
+                                    color={Colors.white}
+                                    fontFamily={Fonts.InterSemiBold}
+                                    fontWeight="500"
+                                    title={"Driver Details"}
+                                    fontSize={wp(4)}
+                                    onPress={() => navigation.goBack()}
+                                />
+                            </View>
+
+                            <View>
+                                <View
+                                    style={Styles.bottamClickContain}>
+
+                                    <View style={CommonStyle.justifyContent}>
+                                        <Image
+                                            style={Styles.imageDriver}
+                                            resizeMode="contain"
+                                            source={{ uri: isURL5 }} />
+                                    </View>
+
+                                    <View style={{
+                                        flex: 1
+                                    }}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={isDRIVERNAME}
+                                            textDecorationLine={'none'}
+                                            fontWeight="500"
+                                            fontSize={wp(3.5)}
+                                            marginVertical={wp(3)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='left'
+                                        />
+
+                                        <View>
+
+                                            <View style={CommonStyle.justifyContent}>
+                                                <TextComponent
+                                                    color={Colors.gray}
+                                                    title={"Top Rated " + "(" + isRated + "K" + ")"}
+                                                    textDecorationLine={'none'}
+                                                    fontWeight="400"
+                                                    fontSize={wp(3.5)}
+                                                    fontFamily={Fonts.PoppinsRegular}
+                                                    textAlign='left'
+                                                />
+                                            </View>
+
+                                            <View>
+                                                <View style={Styles.customRatingBarStyle}>
+                                                    {maxRating.map((item, key) => {
+                                                        return (
+                                                            <View style={CommonStyle.commonRow}>
+                                                                <TouchableOpacity
+                                                                    activeOpacity={0.7}
+                                                                    disabled={true}
+                                                                    key={item}
+                                                                    onPress={() => setDefaultRating(item)}>
+                                                                    <Image
+                                                                        style={Styles.starImageStyle1}
+                                                                        source={
+                                                                            item <= defaultRating
+                                                                                ? starImageFilled
+                                                                                : starImageCorner
+                                                                        }
+                                                                    />
+                                                                </TouchableOpacity>
+                                                            </View>
+
+                                                        );
+                                                    })}
+
+                                                </View>
+                                            </View>
+
+                                        </View>
+
+                                    </View>
+
+                                    <View style={{
+                                        // flex: 1
+                                    }}>
+                                        <TouchableOpacity onPress={onPressCallUser}>
+                                            <Image
+                                                style={Styles.imageCall}
+                                                resizeMode="contain"
+                                                source={Images.callIcon} />
+                                        </TouchableOpacity>
+                                    </View>
+
+                                </View>
+                            </View>
+
+                            <View>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={ScreenText.VehiclePhotos}
+                                    textDecorationLine={'none'}
+                                    fontWeight="500"
+                                    fontSize={wp(3.5)}
+                                    marginHorizontal={wp(5)}
+                                    marginVertical={wp(3)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            {/* <View>
+                        <VehiclePhotosListDetails
+                            data={CarData} />
+                    </View> */}
+
+                            <View style={{ flexDirection: 'row' }}>
+                                <ScrollView horizontal
+                                    showsHorizontalScrollIndicator={false}>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL1 }} />
+                                    </View>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL2 }} />
+                                    </View>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL3 }} />
+                                    </View>
+                                    <View>
+                                        <Image
+                                            style={Styles.carImageIcon}
+                                            resizeMode="cover"
+                                            source={{ uri: isURL4 }} />
+                                    </View>
+                                </ScrollView>
+
+                            </View>
+
+
+                            <View style={Styles.viewGrayLineHorizontal}>
+                            </View>
+
+                            <View>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={ScreenText.Details}
+                                    textDecorationLine={'none'}
+                                    fontWeight="500"
+                                    fontSize={wp(3.5)}
+                                    marginHorizontal={wp(5)}
+                                    fontFamily={Fonts.PoppinsSemiBold}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle Name"}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverPlateName}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle Color"}
+                                        textDecorationLine={'none'}
+                                        marginVertical={wp(1)}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverVehicleColor}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle Type"}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={"Car"}
+                                        marginVertical={wp(1)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Vehicle No."}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isDriverPlateNumber} // qqq
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Seats"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={isSeats}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                            </View>
+
+                            <View style={Styles.viewLoreumText}>
+                                <TextComponent
+                                    color={Colors.white}
+                                    title={isDriverVehicleDesc}
+                                    textDecorationLine={'none'}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='left'
+                                />
+                            </View>
+
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-evenly'
+                            }}>
+
+                                <View style={CommonStyle.commonRow}>
+                                    <TextComponent
+                                        color={Colors.gray}
+                                        title={ScreenText.Amount}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+
+                                    <TextComponent
+                                        color={Colors.discount}
+                                        title={route?.params?.itemAmount}
+                                        textDecorationLine={'none'}
+                                        marginLeft={wp(2)}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={CommonStyle.commonRow}>
+                                    <TextComponent
+                                        color={Colors.gray}
+                                        title={ScreenText.HoursDot}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+
+                                    <TextComponent
+                                        color={Colors.discount}
+                                        title={route?.params?.itemHours}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        marginLeft={wp(2)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                            </View>
+
+
+
+                            {route?.params?.itemBinddStatus == "Declined" ?
+                                <TextComponent
+                                    color={Colors.orange}
+                                    title={"Declined"}
+                                    textDecorationLine={'none'}
+                                    marginHorizontal={wp(2)}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    marginVertical={wp(2)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='center'
+                                />
+
+                                : <></>}
+
+                            {route?.params?.itemBinddStatus == "Accepted" ?
+                                <TextComponent
+                                    color={Colors.blue}
+                                    title={"Accepted"}
+                                    textDecorationLine={'none'}
+                                    marginHorizontal={wp(2)}
+                                    fontWeight="400"
+                                    fontSize={wp(3.5)}
+                                    marginVertical={wp(2)}
+                                    fontFamily={Fonts.PoppinsRegular}
+                                    textAlign='center'
+                                />
+
+                                : <></>}
+
+                            {route?.params?.itemBinddStatus == "Pendding" ?
+                                <View style={CommonStyle.commonJustifyContent}>
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        marginVertical={hp(2)}
+                                        heightBtn={hp(6)}
+                                        widthBtn={wp(40)}
+                                        isRightArrow={false}
+                                        color={Colors.white}
+                                        title={route?.params?.itemBinddStatus == "Accept" ? AcceptUI :
+                                            route?.params?.itemBinddStatus == "Pendding" ? PendingUI :
+                                                route?.params?.itemBinddStatus == "Decline" ? DeclineUI : "Accept"}
+                                        marginHorizontal={wp(2)}
+                                        fontWeight="500"
+                                        fontSize={wp(4)}
+                                        onPress={onPressAccepted}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.blue}
+                                    />
+
+                                    <ButtonComponent
+                                        isVisibleMobile={false}
+                                        isVisibleFaceBook={false}
+                                        marginVertical={hp(2)}
+                                        heightBtn={hp(6)}
+                                        widthBtn={wp(40)}
+                                        isRightArrow={false}
+                                        color={Colors.white}
+                                        title={ScreenText.Decline}
+                                        marginHorizontal={wp(2)}
+                                        fontWeight="500"
+                                        fontSize={wp(4)}
+                                        // onPress={() => Alert.alert("Decline")}
+                                        onPress={onPressDeclineed}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        alignSelf='center'
+                                        textAlign='center'
+                                        borderRadius={wp(2)}
+                                        backgroundColor={Colors.orange}
+                                    />
+                                </View>
+                                : <></>
+                            }
+
+                        </View>
+
+                    </ScrollView>
+
                 </Modal>
 
             </View>

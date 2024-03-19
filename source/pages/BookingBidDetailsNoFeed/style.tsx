@@ -60,10 +60,16 @@ const Styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: wp(1)
     },
+    customRatingBarStyleRate: {
+        justifyContent: 'center',
+        flexDirection: 'row',
+        marginTop: wp(2)
+    },
     starImageStyle: {
-        width: wp(4),
-        height: wp(4),
+        width: wp(5),
+        height: wp(5),
         resizeMode: 'cover',
+        marginHorizontal: wp(0.5)
     },
 
     starImageStyle_: {
