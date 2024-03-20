@@ -250,7 +250,12 @@ const Styles = StyleSheet.create({
     viewSeprateLine3: {
         flexDirection: "row",
         justifyContent: 'space-between',
-        marginHorizontal: wp(2)
+        marginHorizontal: wp(2) // 2
+    },
+    viewSeprateLine3_: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginHorizontal: wp(5) // 2
     },
     viewHelpAndSupport: {
         height: wp(15),

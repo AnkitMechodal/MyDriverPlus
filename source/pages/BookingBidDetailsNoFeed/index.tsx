@@ -89,6 +89,31 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
     const [isURL5, setURL5] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
 
 
+    // TODO :
+    const [isURL5_REQ, setURL5_REQ] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isDRIVERNAME_REQ, setDRIVERNAME_REQ] = useState("");
+
+    const [isURL1_REQ, setURL1_REQ] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL2_REQ, setURL2_REQ] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL3_REQ, setURL3_REQ] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+    const [isURL4_REQ, setURL4_REQ] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo");
+
+    const [isDriverPlateName_REQ, setDriverPlateName_REQ] = useState("Crash Test Dummy");
+    const [isDriverVehicleColor_REQ, setDriverVehicleColor_REQ] = useState("yellow");
+    const [isDriverPlateNumber_REQ, setDriverPlateNumber_REQ] = useState("GJ 06 MA 2500");
+    const [isDriverVehicleType_REQ, setDriverVehicleType_REQ] = useState("Car");
+    const [isSeats_REQ, setSeats_REQ] = useState("0");
+    const [isDriverVehicleDesc_REQ, setDriverVehicleDesc_REQ] = useState(ScreenText.Loreum);
+    const [isPhoneNumber_REQ, setPhoneNumber_REQ] = useState("");
+
+
+    const [defaultRating_REQ, setDefaultRating_REQ] = useState(0);
+    const [isSelectedID, setSelectedID] = useState("");
+
+
+
+    // TODO :
+
 
     const [defaultRating, setDefaultRating] = useState(4);
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
@@ -172,6 +197,18 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
 
     const [isApplyNowText, setisApplyNowText] = useState(false);
+
+
+    // TODO : REQ
+    const [isAcceptedVisible, setAcceptedVisible] = useState("");
+    const [isDeclinedVisible, setDeclinedVisible] = useState("");
+    const [isPenddingVisible, setPenddingVisible] = useState("");
+
+
+    const [isUserAmount, setUserAmount] = useState("");
+    const [isUserHours, setUserHours] = useState("");
+
+    // TODO : REQ
 
 
     // PAY COMPLETE
@@ -301,22 +338,216 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
     const axiosDriverSelectedData = (item) => {
 
-        // setModalBIDDRIVER(true)
-
-        // console.log("itemHours-1", item?.hourse);
-        // console.log("itemHours-2", item?.Amount);
-        // console.log("itemHours-3", item?.driverId);
-
-        console.log("itemHours-4", item?.driverId);
-        console.log("itemHours-4", item?.driverId);
-        console.log("itemHours-4", item?.driverId);
-        console.log("itemHours-4", item?.driverId);
-        console.log("itemHours-4", item?.driverId);
+        if (item?.BinddStatus === "Accepted") {
 
 
-        // console.log("itemHours-5", item?.BinddStatus);
-        // console.log("itemHours-6", item?._id);
+            setAcceptedVisible("Accepted");
+            setDeclinedVisible("");
+            setPenddingVisible("");
 
+            setUserAmount(item?.Amount);
+            setUserHours(item?.hourse);
+
+            // SET DRIVER DATA :
+            axiosDRIVERINFOAPI(item?.driverId);
+
+            // SET RATTING DATA :
+            axiosDRIVERRATTINGAPI(item?.driverId);
+
+
+            setModalBIDDRIVER(true)
+
+        } else if (item?.BinddStatus === "Declined") {
+            console.log("22222222222" + item?.Amount);
+            console.log("22222222222" + item?.Amount);
+            console.log("22222222222" + item?.Amount);
+
+            setDeclinedVisible("Declined");
+            setAcceptedVisible("");
+            setPenddingVisible("");
+
+            setUserAmount(item?.Amount);
+            setUserHours(item?.hourse);
+
+            // SET DRIVER DATA :
+            axiosDRIVERINFOAPI(item?.driverId);
+
+            // SET RATTING DATA :
+            axiosDRIVERRATTINGAPI(item?.driverId);
+
+            setModalBIDDRIVER(true)
+        } else {
+
+            console.log("33333333333" + item?._id);
+            console.log("33333333333" + item?._id);
+            console.log("33333333333" + item?._id);
+
+
+            setSelectedID(item?._id);
+            setPenddingVisible("Pendding");
+            setAcceptedVisible("");
+            setDeclinedVisible("");
+
+            setUserAmount(item?.Amount);
+            setUserHours(item?.hourse);
+
+            // SET DRIVER DATA :
+            axiosDRIVERINFOAPI(item?.driverId);
+
+            // SET RATTING DATA :
+            axiosDRIVERRATTINGAPI(item?.driverId);
+
+            setModalBIDDRIVER(true)
+        }
+
+    }
+
+    const axiosDRIVERRATTINGAPI = async (driverId: any) => {
+
+        try {
+            const url = `${API.BASE_URL}/rattingCalculateDriver/calculateRating/${driverId}`;
+
+            await axios.get(url, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Ratings calculated successfully') {
+
+                        averageRating = response?.data?.ratings?.averageRating;
+                        no_rate = response?.data?.ratings?.numberOfRatings;
+
+                        // setRated(no_rate);
+                        // setDefaultRating(averageRating);
+
+                        setRated_REQ(no_rate);
+                        setDefaultRating_REQ(averageRating);
+
+
+                    } else {
+                        Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Get Ratings!', Toast.SHORT);
+                });
+
+
+        } catch (error) {
+
+        }
+
+    }
+
+    const axiosDRIVERINFOAPI = async (driverId: any) => {
+
+        try {
+            const url = `${API.BASE_URL}/driverInfo/driverInfo`;
+
+            const data = {
+                id: driverId
+            };
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'User Information') {
+                        // Handle API response here
+
+                        console.log("RESPONSE_11-01==>",
+                            JSON.stringify(response?.data, null, 2));
+
+                        DriverBookingName = response?.data?.matchingUsers[0]?.username;
+                        DriverProfileImage = response?.data?.matchingUsers[0]?.ProfileImage;
+
+                        // ADDED
+                        DriverBookingImage1 = response?.data?.matchingUsers[0]?.vehicle_pictures1_Url;
+                        DriverBookingImage2 = response?.data?.matchingUsers[0]?.vehicle_pictures2_Url;
+                        DriverBookingImage3 = response?.data?.matchingUsers[0]?.vehicle_pictures3_Url;
+                        DriverBookingImage4 = response?.data?.matchingUsers[0]?.vehicle_pictures4_Url;
+
+                        DriverVehicleNumber = response?.data?.matchingUsers[0]?.Plate_number;
+                        DriverVehicleType = response?.data?.matchingUsers[0]?.Vehicle_type;
+                        DriverVehicleName = response?.data?.matchingUsers[0]?.Company_name;
+
+                        DriverVehicleDecription = response?.data?.matchingUsers[0]?.Vehicle_Details;
+                        DriverVehiclePhone = response?.data?.matchingUsers[0]?.mobilenumber;
+                        DriverProfileImage = response?.data?.matchingUsers[0]?.ProfileImage;
+                        DriverVehicleColor = response?.data?.matchingUsers[0]?.Vehicle_Color;
+
+                        DriverUserVIN = response?.data?.matchingUsers[0]?.VINumber;
+                        DriverNumberOfSeat = response?.data?.matchingUsers[0]?.NumberOfSeat;
+
+                        // _id99
+                        Driver_id = response?.data?.matchingUsers[0]?._id;
+
+
+                        setURL5_REQ(DriverProfileImage);
+                        setDRIVERNAME_REQ(DriverBookingName);
+
+                        setURL1_REQ(DriverBookingImage1);
+                        setURL2_REQ(DriverBookingImage2);
+                        setURL3_REQ(DriverBookingImage3);
+                        setURL4_REQ(DriverBookingImage4);
+
+                        setDriverPlateName_REQ(DriverVehicleName);
+                        setDriverVehicleColor_REQ(DriverVehicleColor);
+                        setDriverPlateNumber_REQ(DriverVehicleNumber);
+                        setDriverVehicleType_REQ(DriverVehicleType);
+                        setSeats_REQ(DriverNumberOfSeat);
+                        setDriverVehicleDesc_REQ(DriverVehicleDecription);
+
+                        setPhoneNumber_REQ(DriverVehiclePhone);
+
+                        // Store for star : todo
+                        // StoredDriverID(Driver_id);
+
+                        // console.log("Driver_id==>",
+                        //     JSON.stringify(Driver_id, null, 2));
+
+                        // setDRIVERNAME(DriverBookingName);
+                        // setDRIVERPROFILE(DriverProfileImage);
+
+                        // setDriverVIN(DriverUserVIN);
+
+                        // setURL1(DriverBookingImage1);
+                        // setURL2(DriverBookingImage2);
+                        // setURL3(DriverBookingImage3);
+                        // setURL4(DriverBookingImage4);
+                        // setURL5(DriverProfileImage);
+
+                        // setSeats(DriverNumberOfSeat);
+                        // setDriverPlateNumber(DriverVehicleNumber);
+                        // setDriverPlateName(DriverVehicleName);
+                        // setDriverVehicleType(DriverVehicleType);
+                        // setDriverVehicleDesc(DriverVehicleDecription);
+                        // setPhoneNumber(DriverVehiclePhone);
+                        // setDriverVehicleColor(DriverVehicleColor);
+
+
+                        // Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);
+
+                    } else {
+                        // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+                        //  Welcome! Signed in successfully.
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    // Toast.show('Enabel To Retrieved Details!', Toast.SHORT);
+                });
+
+        } catch (error) {
+
+        }
     }
 
     const onPressSubmit = () => {
@@ -1359,7 +1590,12 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
 
     const [isDRIVERNAME, setDRIVERNAME] = useState("");
+
+
     const [isRated, setRated] = useState("0");
+
+    const [isRated_REQ, setRated_REQ] = useState("0");
+
 
 
     const [isDRIVERIDECHARGE, setDRIVERRIDECHARGE] = useState("");
@@ -1693,7 +1929,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
 
     const onPressDeclineed = async () => {
-        if (route?.params?.itemBinddStatus == "Pendding") {
+        if (isPenddingVisible == "Pendding") {
             try {
                 const isConnected = await NetworkUtils.isNetworkAvailable()
                 if (isConnected) {
@@ -1721,7 +1957,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
 
-                id: route?.params?.item_ID,
+                id: isSelectedID,
                 BinddStatus: "Declined" // Accepted
 
                 // id: "65b87ce0ff5893ae763e4b91",
@@ -1741,11 +1977,13 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                         Toast.show('Success! Bidding Request Declined!', Toast.SHORT);
 
-                        // itemRIDEID_SENT
-                        navigation.navigate("BookingBiddingRequest", {
-                            itemRIDEID_SENT: route?.params?.itemRideId,
-                            itemRIDER_ID_SENT: route?.params?.item_ID
-                        });
+                        setModalBIDDRIVER(false);
+
+                        // // itemRIDEID_SENT
+                        // navigation.navigate("BookingBiddingRequest", {
+                        //     itemRIDEID_SENT: route?.params?.itemRideId,
+                        //     itemRIDER_ID_SENT: route?.params?.item_ID
+                        // });
 
                         // Get Status & Set To button:
 
@@ -1786,7 +2024,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
     }
 
     const onPressAccepted = async () => {
-        if (route?.params?.itemBinddStatus == "Pendding") {
+        if (isPenddingVisible == "Pendding") {
             try {
                 const isConnected = await NetworkUtils.isNetworkAvailable()
                 if (isConnected) {
@@ -1814,14 +2052,20 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
             // Prepare data in JSON format // J64PQ4F3QQKK
             const data = {
 
-                id: route?.params?.item_ID,
+                // id: route?.params?.item_ID,
+                id: isSelectedID,
                 BinddStatus: "Accepted" // Accepted
 
                 // id: "65b87ce0ff5893ae763e4b91",
                 // BinddStatus: "Accepted" // test!
             };
 
-            console.log("MatchingList==>", JSON.stringify(data, null, 2));
+            console.log("MatchingList**************==>", JSON.stringify(data, null, 2));
+            console.log("MatchingList**************==>", JSON.stringify(data, null, 2));
+            console.log("MatchingList**************==>", JSON.stringify(data, null, 2));
+            console.log("MatchingList**************==>", JSON.stringify(data, null, 2));
+
+
 
             await axios.post(url, data, {
                 headers: {
@@ -1833,11 +2077,13 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                         response?.data?.message === 'Bidding ride BinddStatus updated successfully') {
 
                         Toast.show('Success! Bidding Request Accepted!', Toast.SHORT);
-                        // itemRIDEID_SENT
-                        navigation.navigate("BookingBiddingRequest", {
-                            itemRIDEID_SENT: route?.params?.itemRideId,
-                            itemRIDER_ID_SENT: route?.params?.item_ID
-                        });
+                        setModalBIDDRIVER(false);
+
+                        // // itemRIDEID_SENT
+                        // navigation.navigate("BookingBiddingRequest", {
+                        //     itemRIDEID_SENT: route?.params?.itemRideId,
+                        //     itemRIDER_ID_SENT: route?.params?.item_ID
+                        // });
 
                         // Get Status & Set To button:
 
@@ -1954,6 +2200,8 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
         const phoneNumberWithPrefix = `tel:${isPhoneNumber}`;
         Linking.openURL(phoneNumberWithPrefix);
     }
+
+
 
     const axiosPostProfilDataGetInfo = async () => {
         try {
@@ -2086,6 +2334,10 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
     }
 
+    const onPressCallUser_REQ = () => {
+        const phoneNumberWithPrefix_ = `tel:${isPhoneNumber_REQ}`;
+        Linking.openURL(phoneNumberWithPrefix_);
+    }
 
     const axiosPostGetRequestDeclineStatus = async (item) => {
         try {
@@ -2163,7 +2415,6 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
     const onPressAccept = async (item) => {
 
         console.log("AcceptStatus====>===>", item?._id);
-
 
         if (item?.BinddStatus == "Pendding") {
             // Call AcceptStatus 
@@ -8315,7 +8566,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                                                     />
                                                                     <TextComponent
                                                                         color={Colors.discount}
-                                                                        title={item?.Amount}
+                                                                        title={"$ " + item?.Amount}
                                                                         textDecorationLine={'none'}
                                                                         fontWeight="400"
                                                                         fontSize={wp(3.5)}
@@ -8538,7 +8789,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     fontWeight="500"
                                     title={"Driver Details"}
                                     fontSize={wp(4)}
-                                    onPress={() => navigation.goBack()}
+                                    onPress={() => setModalBIDDRIVER(false)}
                                 />
                             </View>
 
@@ -8550,7 +8801,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         <Image
                                             style={Styles.imageDriver}
                                             resizeMode="contain"
-                                            source={{ uri: isURL5 }} />
+                                            source={{ uri: isURL5_REQ }} />
                                     </View>
 
                                     <View style={{
@@ -8558,7 +8809,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     }}>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={isDRIVERNAME}
+                                            title={isDRIVERNAME_REQ}
                                             textDecorationLine={'none'}
                                             fontWeight="500"
                                             fontSize={wp(3.5)}
@@ -8572,7 +8823,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                             <View style={CommonStyle.justifyContent}>
                                                 <TextComponent
                                                     color={Colors.gray}
-                                                    title={"Top Rated " + "(" + isRated + "K" + ")"}
+                                                    title={"Top Rated " + "(" + isRated_REQ + "K" + ")"}
                                                     textDecorationLine={'none'}
                                                     fontWeight="400"
                                                     fontSize={wp(3.5)}
@@ -8590,11 +8841,11 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                                                     activeOpacity={0.7}
                                                                     disabled={true}
                                                                     key={item}
-                                                                    onPress={() => setDefaultRating(item)}>
+                                                                    onPress={() => setDefaultRating_REQ(item)}>
                                                                     <Image
                                                                         style={Styles.starImageStyle1}
                                                                         source={
-                                                                            item <= defaultRating
+                                                                            item <= defaultRating_REQ
                                                                                 ? starImageFilled
                                                                                 : starImageCorner
                                                                         }
@@ -8613,9 +8864,9 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     </View>
 
                                     <View style={{
-                                        // flex: 1
+                                        // flex: 1 ------>
                                     }}>
-                                        <TouchableOpacity onPress={onPressCallUser}>
+                                        <TouchableOpacity onPress={onPressCallUser_REQ}>
                                             <Image
                                                 style={Styles.imageCall}
                                                 resizeMode="contain"
@@ -8652,25 +8903,25 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         <Image
                                             style={Styles.carImageIcon}
                                             resizeMode="cover"
-                                            source={{ uri: isURL1 }} />
+                                            source={{ uri: isURL1_REQ }} />
                                     </View>
                                     <View>
                                         <Image
                                             style={Styles.carImageIcon}
                                             resizeMode="cover"
-                                            source={{ uri: isURL2 }} />
+                                            source={{ uri: isURL2_REQ }} />
                                     </View>
                                     <View>
                                         <Image
                                             style={Styles.carImageIcon}
                                             resizeMode="cover"
-                                            source={{ uri: isURL3 }} />
+                                            source={{ uri: isURL3_REQ }} />
                                     </View>
                                     <View>
                                         <Image
                                             style={Styles.carImageIcon}
                                             resizeMode="cover"
-                                            source={{ uri: isURL4 }} />
+                                            source={{ uri: isURL4_REQ }} />
                                     </View>
                                 </ScrollView>
 
@@ -8695,7 +8946,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                             <View>
 
-                                <View style={Styles.viewSeprateLine3}>
+                                <View style={Styles.viewSeprateLine3_}>
                                     <TextComponent
                                         color={Colors.white}
                                         title={"Vehicle Name"}
@@ -8708,7 +8959,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={isDriverPlateName}
+                                        title={isDriverPlateName_REQ}
                                         marginVertical={wp(1)}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
@@ -8718,7 +8969,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                                <View style={Styles.viewSeprateLine3}>
+                                <View style={Styles.viewSeprateLine3_}>
                                     <TextComponent
                                         color={Colors.white}
                                         title={"Vehicle Color"}
@@ -8731,7 +8982,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={isDriverVehicleColor}
+                                        title={isDriverVehicleColor_REQ}
                                         marginVertical={wp(1)}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
@@ -8741,7 +8992,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                                <View style={Styles.viewSeprateLine3}>
+                                <View style={Styles.viewSeprateLine3_}>
                                     <TextComponent
                                         color={Colors.white}
                                         title={"Vehicle Type"}
@@ -8752,9 +9003,10 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         fontFamily={Fonts.PoppinsRegular}
                                         textAlign='left'
                                     />
+
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={"Car"}
+                                        title={isDriverVehicleType_REQ}
                                         marginVertical={wp(1)}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
@@ -8764,7 +9016,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                                <View style={Styles.viewSeprateLine3}>
+                                <View style={Styles.viewSeprateLine3_}>
                                     <TextComponent
                                         color={Colors.white}
                                         title={"Vehicle No."}
@@ -8776,7 +9028,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={isDriverPlateNumber} // qqq
+                                        title={isDriverPlateNumber_REQ} // qqq
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -8785,7 +9037,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                 </View>
 
-                                <View style={Styles.viewSeprateLine3}>
+                                <View style={Styles.viewSeprateLine3_}>
                                     <TextComponent
                                         color={Colors.white}
                                         title={"Seats"}
@@ -8797,7 +9049,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     />
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={isSeats}
+                                        title={isSeats_REQ}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -8811,7 +9063,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                             <View style={Styles.viewLoreumText}>
                                 <TextComponent
                                     color={Colors.white}
-                                    title={isDriverVehicleDesc}
+                                    title={isDriverVehicleDesc_REQ}
                                     textDecorationLine={'none'}
                                     fontWeight="400"
                                     fontSize={wp(3.5)}
@@ -8838,7 +9090,8 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                                     <TextComponent
                                         color={Colors.discount}
-                                        title={route?.params?.itemAmount}
+                                        // title={route?.params?.itemAmount}
+                                        title={"$ " + isUserAmount}
                                         textDecorationLine={'none'}
                                         marginLeft={wp(2)}
                                         fontWeight="400"
@@ -8861,7 +9114,8 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                                     <TextComponent
                                         color={Colors.discount}
-                                        title={route?.params?.itemHours}
+                                        // title={route?.params?.itemHours}
+                                        title={isUserHours + " min"}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -8875,7 +9129,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
 
 
-                            {route?.params?.itemBinddStatus == "Declined" ?
+                            {isDeclinedVisible == "Declined" ?
                                 <TextComponent
                                     color={Colors.orange}
                                     title={"Declined"}
@@ -8890,7 +9144,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                                 : <></>}
 
-                            {route?.params?.itemBinddStatus == "Accepted" ?
+                            {isAcceptedVisible == "Accepted" ?
                                 <TextComponent
                                     color={Colors.blue}
                                     title={"Accepted"}
@@ -8905,7 +9159,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
 
                                 : <></>}
 
-                            {route?.params?.itemBinddStatus == "Pendding" ?
+                            {isPenddingVisible == "Pendding" ?
                                 <View style={CommonStyle.commonJustifyContent}>
                                     <ButtonComponent
                                         isVisibleMobile={false}
@@ -8915,13 +9169,13 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         widthBtn={wp(40)}
                                         isRightArrow={false}
                                         color={Colors.white}
-                                        title={route?.params?.itemBinddStatus == "Accept" ? AcceptUI :
-                                            route?.params?.itemBinddStatus == "Pendding" ? PendingUI :
-                                                route?.params?.itemBinddStatus == "Decline" ? DeclineUI : "Accept"}
+                                        title={isAcceptedVisible == "Accept" ? AcceptUI :
+                                            isPenddingVisible == "Pendding" ? PendingUI :
+                                                isDeclinedVisible == "Decline" ? DeclineUI : "Accept"}
                                         marginHorizontal={wp(2)}
                                         fontWeight="500"
                                         fontSize={wp(4)}
-                                        onPress={onPressAccepted}
+                                        onPress={onPressAccepted} // todo....
                                         fontFamily={Fonts.PoppinsRegular}
                                         alignSelf='center'
                                         textAlign='center'
@@ -8937,7 +9191,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         widthBtn={wp(40)}
                                         isRightArrow={false}
                                         color={Colors.white}
-                                        title={ScreenText.Decline}
+                                        title={ScreenText.Decline} // todo....
                                         marginHorizontal={wp(2)}
                                         fontWeight="500"
                                         fontSize={wp(4)}
