@@ -850,7 +850,8 @@ const BiddingRequestScreenUser = ({ route, navigation }) => {
                         <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.orange}
-                                title={viewRequest} //QUICK
+                                // title={viewRequest} //QUICK
+                                title={toggleAccepted == true ? "" : viewRequest}
                                 textDecorationLine={'underline'}
                                 onPress={() =>
                                     navigation.navigate("ViewRequest", {

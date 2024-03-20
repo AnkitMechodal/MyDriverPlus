@@ -417,7 +417,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => {
+            .then(async response => {
                 if (response.status === 200
                     && response?.data?.message === "Ride Details") {
 
@@ -441,11 +441,35 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     if (USER_PAY_STATUS == "Complete" && USER_PAY_CARD == "Card") {
                         // Alert.alert("Yes");
 
-                        setSTRIPEModal(false);
+                        if (isModalBOOKINGCANCEL === true) {
 
-                        setModalCANCELPAYSTRIPE(false);
+                            await axiosCancelBookingPostRequest();
 
-                        setModalDriver(true);
+                            setSTRIPEModal(false);
+
+                            setModalCANCELPAYSTRIPE(false);
+
+                            setModalDriver(true);
+
+                        } else {
+
+                            setSTRIPEModal(false);
+
+                            setModalCANCELPAYSTRIPE(false);
+
+                            setModalDriver(true);
+
+                        }
+
+
+                        // setSTRIPEModal(false);
+
+                        // setModalCANCELPAYSTRIPE(false);
+
+                        // setModalDriver(true);
+
+
+
 
                     } else {
 
@@ -569,6 +593,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         // setSTRIPEModal(true);
                         setISURLPAY(apiUrlPAY);
 
+
+
                         // Check Payment Complete OR Not ! - API CALL
                         // setModalDriver(true);
 
@@ -652,7 +678,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => {
+            .then(async response => {
                 if (response.status === 200
                     && response?.data?.message === "Ride Details") {
 
@@ -676,7 +702,18 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                     // && USER_PAY_CARD == "Card"
 
                     if (USER_PAY_STATUS == "Complete") {
-                        setModalDriver(true);
+                        if (response?.data?.matchingVehicle?.BookingCurrentStatus == "pending") {
+
+                            // CALL CANCEL API :
+                            await axiosCancelBookingPostRequest();
+
+
+                            setModalDriver(true);
+                        } else {
+
+                            setModalDriver(true);
+                        }
+                        // setModalDriver(true);
 
                         // Alert.alert("Yes");
                         // setSTRIPEModal(false);
@@ -716,6 +753,8 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
             setIsFocusedRedeem(false)
         }
     }
+
+
 
 
     const handleFocusRedeem = () => {
@@ -2803,9 +2842,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
     };
 
     const onPressCancelBooking = () => {
+        setModalBOOKINGCANCEL(true);
 
         // Cancel Booking 
-        axiosCancelBookingPostRequest();
+        // axiosCancelBookingPostRequest();
     }
 
 
@@ -2893,11 +2933,13 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
             // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
             const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
 
+            const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+
             console.log("axiosCancelBookingSurePostRequest===>", url);
 
             // Prepare data in JSON format
             const data = {
-                RideId: route?.params?.itemRIDEID_SENT
+                RideId: USER_RIDEIDID !== null ? JSON.parse(USER_RIDEIDID) : ""
             };
 
             console.log("CancelBookingData==>", JSON.stringify(data, null, 2));
@@ -2916,7 +2958,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                         // TODO :
                         // setModalCancel(false) // Cancel-1
-                        setModalBOOKINGCANCEL(true);
+                        // setModalBOOKINGCANCEL(true);
 
                         // navigation.navigate("CancelBookingDetailsMapUp", {
                         //     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,

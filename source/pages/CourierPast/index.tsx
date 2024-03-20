@@ -72,6 +72,14 @@ const Tab3CourierScreen = (props: Props) => {
         };
 
         fetchData();
+
+        // Refresh data every 5 seconds
+        const interval = setInterval(fetchData, 5000);
+
+        // Cleanup interval to avoid memory leaks
+        return () => clearInterval(interval);
+
+
     }, []);  // Add an empty dependency array to run the effect only once
 
     return (

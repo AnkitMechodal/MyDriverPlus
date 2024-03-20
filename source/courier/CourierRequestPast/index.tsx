@@ -1769,11 +1769,26 @@ const CourierRequestPast = ({ route, navigation }) => {
                     if (USER_PAY_STATUS == "Complete" && USER_PAY_CARD == "Card") {
                         // Alert.alert("Yes");
 
-                        setSTRIPEModal(false);
+                        if (isModalCOUIERCANCEL === true) {
 
-                        setModalCANCELPAYSTRIPE(false);
+                            // Cancel Courier  
+                            axiosCancelCourierPostRequest();
 
-                        setModalDriver(true);
+                            setSTRIPEModal(false);
+
+                            setModalCANCELPAYSTRIPE(false);
+
+                            setModalDriver(true);
+
+                        } else {
+
+                            setSTRIPEModal(false);
+
+                            setModalCANCELPAYSTRIPE(false);
+
+                            setModalDriver(true);
+                        }
+
 
                     } else {
 
@@ -2024,7 +2039,18 @@ const CourierRequestPast = ({ route, navigation }) => {
                     // && USER_PAY_CARD == "Card"
 
                     if (USER_PAY_STATUS == "Complete") {
-                        setModalDriver(true);
+
+                        if (response?.data?.matchingVehicle?.BookingCurrentStatus == "pending") {
+
+                            // CALL CANCEL API :
+                            axiosCancelBookingPostRequest();
+
+                            setModalDriver(true);
+                        } else {
+                            setModalDriver(true);
+                        }
+
+                        // setModalDriver(true);
 
                         // Alert.alert("Yes");
                         // setSTRIPEModal(false);
@@ -2051,6 +2077,51 @@ const CourierRequestPast = ({ route, navigation }) => {
                 // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
             });
     };
+
+
+
+    const axiosCancelBookingPostRequest = async () => {
+        try {
+
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
+
+            const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+
+            console.log("axiosCancelBookingSurePostRequest===>", url);
+
+            // Prepare data in JSON format
+            const data = {
+                RideId: USER_RIDEIDID !== null ? JSON.parse(USER_RIDEIDID) : ""
+            };
+
+            console.log("CancelBookingData==>", JSON.stringify(data, null, 2));
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Booking Successfully Cancelled') {
+
+                        Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                    } else {
+                        Toast.show('Unable to Cancelled!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    Toast.show('Unable to Cancelled!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    }
+
 
     const axiosUserPostDriverInfoRequest = async () => {
 
@@ -2483,8 +2554,11 @@ const CourierRequestPast = ({ route, navigation }) => {
 
 
     const onPressCancelCourier = () => {
+
+        setModalCOUIERCANCEL(true);
+
         // Cancel Courier 
-        axiosCancelCourierPostRequest();
+        // axiosCancelCourierPostRequest();
     }
 
     const axiosCancelCourierPostRequest = async () => {
@@ -2508,9 +2582,11 @@ const CourierRequestPast = ({ route, navigation }) => {
 
             console.log("axiosCancelCourierSurePostRequest===>", url);
 
+            const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID');
+
             // Prepare data in JSON format
             const data = {
-                RideId: route?.params?.itemRIDEID_SENT
+                RideId: USER_RIDEIDID !== null ? JSON.parse(USER_RIDEIDID) : ""
             };
 
             console.log("CancelCourierData=>=>", JSON.stringify(data, null, 2));
@@ -2528,7 +2604,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                         Toast.show('Your Courier has been Successfully Cancelled!', Toast.SHORT);
 
                         // TODO : As Modal  - CancelCourierDetailsMapPast
-                        setModalCOUIERCANCEL(true);
+                        // setModalCOUIERCANCEL(true);
                         // TODO :
 
 

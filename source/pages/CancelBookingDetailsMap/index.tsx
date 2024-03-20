@@ -69,7 +69,7 @@ const CancelBookingDetailsMap = ({ route, navigation }) => {
 
     const [isModalDriver, setModalDriver] = useState(false);
 
-    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
     const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
 
 

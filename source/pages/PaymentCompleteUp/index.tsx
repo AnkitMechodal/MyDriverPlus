@@ -378,7 +378,18 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                     // && USER_PAY_CARD == "Card"
 
                     if (USER_PAY_STATUS == "Complete") {
-                        setModalDriver(true);
+
+                        if (response?.data?.matchingVehicle?.BookingCurrentStatus == "pending") {
+
+                            // CALL CANCEL API :
+                            axiosCancelBookingPostRequest();
+
+                            setModalDriver(true);
+                        } else {
+                            setModalDriver(true);
+                        }
+
+                        // setModalDriver(true); -- working ----
 
                         // Alert.alert("Yes");
                         // setSTRIPEModal(false);
@@ -405,6 +416,46 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                 // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
             });
     };
+
+    const axiosCancelBookingPostRequest = async () => {
+        try {
+
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
+
+            console.log("axiosCancelBookingSurePostRequest===>", url);
+
+            // Prepare data in JSON format
+            const data = {
+                RideId: route.params.itemCompleteRideIDID
+            };
+
+            console.log("CancelBookingData==>", JSON.stringify(data, null, 2));
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Booking Successfully Cancelled') {
+
+                        Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                    } else {
+                        Toast.show('Unable to Cancelled!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    Toast.show('Unable to Cancelled!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    }
 
 
     const axiosPostRideDetailsRequest = async () => {
@@ -455,8 +506,20 @@ const PaymentCompleteUp = ({ route, navigation }) => {
                     if (USER_PAY_STATUS == "Complete" && USER_PAY_CARD == "Card") {
                         // Alert.alert("Yes");
 
-                        setSTRIPEModal(false);
-                        setModalDriver(true);
+                        if (response?.data?.matchingVehicle?.BookingCurrentStatus == "pending") {
+
+                            // CALL CANCEL API :
+                            axiosCancelBookingPostRequest();
+
+                            setSTRIPEModal(false);
+                            setModalDriver(true);
+                        } else {
+                            setSTRIPEModal(false);
+                            setModalDriver(true);
+                        }
+
+                        // setSTRIPEModal(false);
+                        // setModalDriver(true);
 
                     } else {
 

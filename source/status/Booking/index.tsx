@@ -699,8 +699,45 @@ const BookingRequestScreenUser = ({ route, navigation }) => {
     // };
 
     const onPressCancelBooking = () => {
+
+        // TODO :
+        navigation.navigate("CancelBookingDetailsMap", {
+
+            itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
+            itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,
+            itemBokingDetailsMapDuration: route.params.itemRIDER_DURATUION_SENT,
+
+            itemMapPickStation: route.params.itemRIDER_PICKSTATION,
+            itemMapDropStation: route.params.itemRIDER_DROPSTATION,
+
+            // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+            // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+            itemMapRideCharge: route.params.itemRIDER_RIDE_CHARGE,
+            itemMapRideFeesCon: route.params.itemRIDER_RIDE_FEES_CON,
+            itemMapRideWattingCharges: route.params.itemRIDER_RIDE_WAITING_CHARGES,
+            itemMapRideDiscount: route.params.itemRIDER_RIDE_DICOUNT,
+            itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
+
+            // itemBokingDetailsMapId: JSON.parse(route.params.itemRIDER_ID_SENT),
+            // itemBokingDetailsMapDistance: JSON.parse(route.params.itemRIDER_DISTANCE_SENT),
+            // itemBokingDetailsMapDuration: JSON.parse(route.params.itemRIDER_DURATUION_SENT),
+
+            // itemMapPickStation: JSON.parse(route.params.itemRIDER_PICKSTATION),
+            // itemMapDropStation: JSON.parse(route.params.itemRIDER_DROPSTATION),
+
+            // // itemMapKmStation: route?.params?.itemRIDER_DISTANCE_SENT,
+            // // itemMapMinStation: route?.params?.itemRIDER_DURATUION_SENT,
+
+            // itemMapRideCharge: JSON.parse(route.params.itemRIDER_RIDE_CHARGE),
+            // itemMapRideFeesCon: JSON.parse(route.params.itemRIDER_RIDE_FEES_CON),
+            // itemMapRideWattingCharges: JSON.parse(route.params.itemRIDER_RIDE_WAITING_CHARGES),
+            // itemMapRideDiscount: JSON.parse(route.params.itemRIDER_RIDE_DICOUNT),
+            // itemMapRideTotalAmount: JSON.parse(route.params.itemRIDER_RIDE_TOTALAMOUNT),
+        })
+
         // Cancel Booking 
-        axiosCancelBookingPostRequest();
+        // axiosCancelBookingPostRequest();
     }
 
     const axiosCancelBookingPostRequest = async () => {

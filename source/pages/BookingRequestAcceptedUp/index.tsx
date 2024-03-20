@@ -33,7 +33,7 @@ const BookingRequestAcceptedUp = ({ route, navigation }) => {
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
     const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
-    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5, 6]);
+    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
 
     const starImageFilled1 =
         Images.fillstarIcon; // fillStarIcon
