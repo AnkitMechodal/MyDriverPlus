@@ -89,7 +89,7 @@ const BookingRequestScreen = ({ route, navigation }) => {
     let OTPGenerated;
 
     const toggleModalCancel = () => {
-        setModalCancel(!isModalCancel);
+        setModalCancel(true);
     };
 
     const toggleModalFeedback = () => {

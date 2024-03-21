@@ -230,7 +230,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
 
 
     const toggleModalCancel = () => {
-        setModalCancel(!isModalCancel);
+        setModalCancel(true);
     };
 
     const toggleModalFeedback = () => {
@@ -1128,7 +1128,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         marginTopRight={wp(3)}
                         onPressRightEnd={toggleModalCancel}
                         titleWithRightContent={"Cancel Courier?"}
-                        title={"Courier Status"}
+                        title={"Courier Status-1"}
                         fontSize={wp(4)}
                         onPress={() => navigation.goBack()}
                     />

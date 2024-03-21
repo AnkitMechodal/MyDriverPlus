@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Image, SafeAreaView, View } from 'react-native';
-import Modal from "react-native-modal";
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
@@ -20,7 +19,7 @@ const PaymentSuccessfulScreen = ({ route, navigation }) => {
     // const [isModalDriver, setModalDriver] = useState(false);
 
 
-    const [isModalVisible, setModalVisible] = useState(true);
+    // const [isModalVisible, setModalVisible] = useState(true);
 
 
     // SUBMIT BOX !
@@ -38,127 +37,127 @@ const PaymentSuccessfulScreen = ({ route, navigation }) => {
             <StatusBarComponent
                 backgroundColor={Colors.black} />
 
-            <Modal
+            {/* <Modal
                 isVisible={isModalVisible}
                 swipeDirection={[]} // Disables swiping
-                style={Styles.viewModalMargin}>
+                style={Styles.viewModalMargin}> */}
 
-                <View style={Styles.container}>
+            <View style={Styles.container}>
+
+                <View>
+                    <HeaderComponent
+                        margin={wp(3)}
+                        backgroundColorOpacity={Colors.circleGray}
+                        borderRadiusOpacity={wp(10)}
+                        transform={[{ rotate: '180deg' }]}
+                        paddingOpacity={wp(2)}
+                        textAlign={"left"}
+                        source={Images.arrowRight}
+                        marginTop={wp(2)}
+                        width={wp(7)}
+                        marginHorizontal={wp(5)}
+                        height={wp(7)}
+                        color={Colors.white}
+                        fontFamily={Fonts.InterSemiBold}
+                        fontWeight="500"
+                        title={""}
+                        fontSize={wp(4)}
+                        onPress={() => navigation.goBack()}
+                    />
+                </View>
+
+                <View style={Styles.viewCenterContain}>
+
 
                     <View>
-                        <HeaderComponent
-                            margin={wp(3)}
-                            backgroundColorOpacity={Colors.circleGray}
-                            borderRadiusOpacity={wp(10)}
-                            transform={[{ rotate: '180deg' }]}
-                            paddingOpacity={wp(2)}
-                            textAlign={"left"}
-                            source={Images.arrowRight}
-                            marginTop={wp(2)}
-                            width={wp(7)}
-                            marginHorizontal={wp(5)}
-                            height={wp(7)}
+                        <Image
+                            style={Styles.viewPayImage}
+                            resizeMode="contain"
+                            source={Images.payIcon} />
+                    </View>
+
+                    <View>
+                        <TextComponent
                             color={Colors.white}
-                            fontFamily={Fonts.InterSemiBold}
-                            fontWeight="500"
-                            title={""}
+                            title={"Payment Successful"}
+                            textDecorationLine={'none'}
+                            marginTop={wp(10)}
+                            fontWeight="400"
                             fontSize={wp(4)}
-                            onPress={() => navigation.goBack()}
+                            marginHorizontal={wp(2)}
+                            fontFamily={Fonts.PoppinsSemiBold}
+                            textAlign='center'
                         />
                     </View>
 
-                    <View style={Styles.viewCenterContain}>
 
+                    <View>
+                        <TextComponent
+                            color={Colors.gray}
+                            title={"Your payment has been successfully done."}
+                            textDecorationLine={'none'}
+                            marginVertical={wp(3)}
+                            fontWeight="400"
+                            fontSize={wp(3.5)}
+                            marginHorizontal={wp(5)}
+                            fontFamily={Fonts.PoppinsRegular}
+                            textAlign='center'
+                        />
 
-                        <View>
-                            <Image
-                                style={Styles.viewPayImage}
-                                resizeMode="contain"
-                                source={Images.payIcon} />
-                        </View>
-
-                        <View>
-                            <TextComponent
-                                color={Colors.white}
-                                title={"Payment Successful"}
-                                textDecorationLine={'none'}
-                                marginTop={wp(10)}
-                                fontWeight="400"
-                                fontSize={wp(4)}
-                                marginHorizontal={wp(2)}
-                                fontFamily={Fonts.PoppinsSemiBold}
-                                textAlign='center'
-                            />
-                        </View>
-
-
-                        <View>
-                            <TextComponent
-                                color={Colors.gray}
-                                title={"Your payment has been successfully done."}
-                                textDecorationLine={'none'}
-                                marginVertical={wp(3)}
-                                fontWeight="400"
-                                fontSize={wp(3.5)}
-                                marginHorizontal={wp(5)}
-                                fontFamily={Fonts.PoppinsRegular}
-                                textAlign='center'
-                            />
-
-
-                        </View>
-
-                        <View style={Styles.viewSeprateLine2}>
-                        </View>
-
-                        <View>
-
-                            <TextComponent
-                                color={Colors.gray}
-                                title={"Total Payment"}
-                                textDecorationLine={'none'}
-                                marginTop={wp(3)}
-                                fontWeight="400"
-                                fontSize={wp(4)}
-                                marginHorizontal={wp(2)}
-                                fontFamily={Fonts.PoppinsRegular}
-                                textAlign='center'
-                            />
-                            <TextComponent
-                                color={Colors.white}
-                                title={"$ " + route?.params?.itemSuccessfulAmount}
-                                textDecorationLine={'none'}
-                                marginTop={wp(5)}
-                                fontWeight="400"
-                                fontSize={wp(4)}
-                                marginHorizontal={wp(2)}
-                                fontFamily={Fonts.PoppinsSemiBold}
-                                textAlign='center'
-                            />
-
-                            <TextComponent
-                                color={Colors.blue}
-                                title={"Go To Home"}
-                                textDecorationLine={'none'}
-                                marginTop={wp(10)}
-                                onPress={() => navigation.navigate('BookingScreen', {
-                                    itemType: 'Taxi Booking'
-                                })}
-                                fontWeight="400"
-                                fontSize={wp(4)}
-                                marginHorizontal={wp(2)}
-                                fontFamily={Fonts.PoppinsRegular}
-                                textAlign='center'
-                            />
-
-                        </View>
 
                     </View>
 
+                    <View style={Styles.viewSeprateLine2}>
+                    </View>
 
+                    <View>
+
+                        <TextComponent
+                            color={Colors.gray}
+                            title={"Total Payment"}
+                            textDecorationLine={'none'}
+                            marginTop={wp(3)}
+                            fontWeight="400"
+                            fontSize={wp(4)}
+                            marginHorizontal={wp(2)}
+                            fontFamily={Fonts.PoppinsRegular}
+                            textAlign='center'
+                        />
+                        <TextComponent
+                            color={Colors.white}
+                            title={"$ " + route?.params?.itemSuccessfulAmount}
+                            textDecorationLine={'none'}
+                            marginTop={wp(5)}
+                            fontWeight="400"
+                            fontSize={wp(4)}
+                            marginHorizontal={wp(2)}
+                            fontFamily={Fonts.PoppinsSemiBold}
+                            textAlign='center'
+                        />
+
+                        <TextComponent
+                            color={Colors.blue}
+                            title={"Go To Home"}
+                            textDecorationLine={'none'}
+                            marginTop={wp(10)}
+                            onPress={() => navigation.navigate('BookingScreen', {
+                                itemType: 'Taxi Booking'
+                            })}
+                            fontWeight="400"
+                            fontSize={wp(4)}
+                            marginHorizontal={wp(2)}
+                            fontFamily={Fonts.PoppinsRegular}
+                            textAlign='center'
+                        />
+
+                    </View>
 
                 </View>
-            </Modal>
+
+
+
+            </View>
+            {/* </Modal> */}
 
         </SafeAreaView>
     )

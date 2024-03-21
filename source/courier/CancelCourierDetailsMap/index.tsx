@@ -50,6 +50,9 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
 
     let USER_TOTAL;
 
+    let _DISCOUNT;
+
+
 
     let averageRating;
     let avg_username;
@@ -274,7 +277,11 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                     console.log("USER_TOTAL==>", USER_TOTAL);
 
                     // USER_DISCOUNT - NO USE
-                    setTOTAL_AMOUNT(USER_TOTAL);
+                    // setTOTAL_AMOUNT(USER_TOTAL);
+
+                    // // USER_DISCOUNT - NO USE
+                    _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
+                    setTOTAL_AMOUNT(_DISCOUNT); // ---- // 
 
 
                     setRIDEID(USER_RIDEID);
@@ -340,7 +347,7 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                 color={Colors.white}
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"
-                                title={"Payment"}
+                                title={"Payment-1"}
                                 isVisiblePayout={false}
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
@@ -355,7 +362,7 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                     <View style={CommonStyle.justifyContent}>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={route?.params?.itemBokingDetailsMapDuration + " KM"}
+                                            title={route?.params?.itemBokingDetailsMapDuration}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
@@ -665,12 +672,12 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                     heightBtn={hp(7)}
                                     widthBtn={wp(90)}
                                     isRightArrow={false}
-                                    onPress={() =>
-                                        navigation.navigate('PaymentSuccessful', {
-                                            // itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
-                                            itemSuccessfulAmount: isGETPERCENTAGE,
-                                        })
-                                    }
+                                    // onPress={() =>
+                                    //     navigation.navigate('PaymentSuccessful', {
+                                    //         // itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
+                                    //         itemSuccessfulAmount: isGETPERCENTAGE,
+                                    //     })
+                                    // }
                                     color={Colors.white}
                                     title={ScreenText.PayNow}
                                     marginHorizontal={wp(2)}
