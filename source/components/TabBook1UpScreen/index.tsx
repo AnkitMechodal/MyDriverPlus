@@ -26,13 +26,16 @@ const TabBook1UpScreen = ({ route, navigation }) => {
 
                     const requestData = {
                         UserID: JSON.parse(storedLinkedId),
+                        // UserID: "65c5c88eb6969d72b94237b9",
                         type: "Taxi Booking",
 
                         // UserID: "65214aec906807c5544fb29b", // test 
                         // type: "Taxi Booking"
                     };
 
-                    console.log("requestData===>", JSON.stringify(requestData, null, 2));
+                    console.log("requestData***===>", JSON.stringify(requestData, null, 2));
+                    console.log("requestData***===>", JSON.stringify(requestData, null, 2));
+                    console.log("requestData***===>", JSON.stringify(requestData, null, 2));
 
                     const url = `${API.BASE_URL}/CourierDriverHistory/courierdriverhistory`;
 
@@ -41,8 +44,8 @@ const TabBook1UpScreen = ({ route, navigation }) => {
                         requestData
                     );
 
-                    console.log('Response11111===>',
-                        JSON.stringify(response.data?.matchingVehicles, null, 2));
+                    // console.log('Response11111===>',
+                    //     JSON.stringify(response.data?.matchingVehicles, null, 2));
 
                     // Set the response data to the state
                     setRIDEDATA(response.data?.matchingVehicles);
@@ -59,8 +62,8 @@ const TabBook1UpScreen = ({ route, navigation }) => {
 
         fetchData(); //99
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 5 seconds
+        const intervalId = setInterval(fetchData, 5 * 1000);
 
         // Cleanup function
         return () => {
@@ -191,7 +194,7 @@ const TabBook1UpScreen = ({ route, navigation }) => {
                                 source={Images.orangeDot} />
                         </View>
 
-                        <View>
+                        <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.white}
                                 title={item.pickup_locations}
@@ -199,6 +202,8 @@ const TabBook1UpScreen = ({ route, navigation }) => {
                                 fontWeight="500"
                                 fontSize={wp(3.5)}
                                 marginVertical={wp(1)}
+                                ellipsizeMode={"tail"}
+                                numberOfLines={1}
                                 marginHorizontal={wp(3)}
                                 fontFamily={Fonts.PoppinsRegular}
                                 textAlign='left'
@@ -207,6 +212,8 @@ const TabBook1UpScreen = ({ route, navigation }) => {
                                 color={Colors.white}
                                 title={item.drop_locations}
                                 textDecorationLine={'none'}
+                                ellipsizeMode={"tail"}
+                                numberOfLines={1}
                                 fontWeight="500"
                                 fontSize={wp(3.5)}
                                 marginHorizontal={wp(3)}

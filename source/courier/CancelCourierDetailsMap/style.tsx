@@ -14,6 +14,14 @@ const Styles = StyleSheet.create({
         borderBottomRightRadius: wp(5),
         justifyContent: 'center',
     },
+    viewModalDriver: {
+        height: wp(70),
+        backgroundColor: Colors.grayBox,
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+    },
     imageUser: {
         width: wp(20),
         height: wp(20),
@@ -44,6 +52,21 @@ const Styles = StyleSheet.create({
         width: wp(4),
         height: wp(4),
         resizeMode: 'cover',
+    },
+    starImageStyle_: {
+        width: wp(12),
+        height: wp(12), // 4
+        resizeMode: 'cover',
+        marginHorizontal: wp(1)
+    },
+    viewModalDriverStripe: {
+        height: wp(145),
+        backgroundColor: Colors.white, // grayBox
+        width: "100%",
+        borderRadius: wp(5),
+        padding: wp(3),
+        justifyContent: 'center',
+        marginTop: wp(25)
     },
     textTermsAndCondition: {
         width: wp(6),

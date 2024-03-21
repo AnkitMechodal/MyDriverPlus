@@ -351,6 +351,8 @@ const CourierRequestScreen = ({ route, navigation }) => {
             itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
         })
 
+        setModalCancel(false); /// TODO :
+
         // TODO :
 
         // Cancel Courier 
@@ -1128,7 +1130,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         marginTopRight={wp(3)}
                         onPressRightEnd={toggleModalCancel}
                         titleWithRightContent={"Cancel Courier?"}
-                        title={"Courier Status-1"}
+                        title={"Courier Status"}
                         fontSize={wp(4)}
                         onPress={() => navigation.goBack()}
                     />

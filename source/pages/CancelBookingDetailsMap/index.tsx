@@ -765,6 +765,7 @@ const CancelBookingDetailsMap = ({ route, navigation }) => {
                     if (response.status === 200
                         && response?.data?.message === 'Booking Successfully Cancelled') {
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+                        setSTRIPEModal(false);
                         setModalDriver(true);
 
                     } else {

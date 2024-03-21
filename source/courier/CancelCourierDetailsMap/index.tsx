@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React, { useEffect, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
+import WebView from 'react-native-webview';
 import ButtonComponent from '../../components/Button';
 import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
@@ -63,10 +65,30 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
     let USER_BOOKINGSTATUS;
     let USER_CANCELLATION;   // cancellation 
 
+
+    let USER_PAY_TYPE;   // cancellation 
+    let USER_PAY_STATUS;
+
+
     const [isDRIVERIDECHARGE, setDRIVERRIDECHARGE] = useState("");
     const [isDRIVERCONCHARGE, setDRIVERCONCHARGE] = useState("");
     const [isDRIVERDISCOUNT, setDRIVERDISCOUNT] = useState("");
 
+
+    // TODO :
+    const [isModalDriver, setModalDriver] = useState(false);
+
+
+    const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
+    const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
+
+
+    const starImageFilled1 =
+        Images.fillstarIcon; // fillStarIcon
+    const starImageCorner1 =
+        Images.unfillstarIcon; // unfillStarIcon
+
+    // TODO :
 
     // const [isModalVisible, setModalVisible] = useState(true);
 
@@ -84,10 +106,15 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
 
     const [isDRIVERNAME, setDRIVERNAME] = useState("");
 
+    const [isSTRIPEModal, setSTRIPEModal] = useState(false);
 
+
+    let apiUrlPAY;
 
     const [isGETPERCENTAGE, setGETPERCENTAGE] = useState("0");
     const [isCHARGE, setCHARGE] = useState("20");
+
+    const [isURLPAY, setISURLPAY] = useState<any>("https://rideshareandcourier.graphiglow.in/app/StripeWeb.php?userId=65b9e2f0eb9e0db05a70bb0b&amount=105");
 
 
 
@@ -205,6 +232,409 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
         }
     }
 
+    const onPressSubmitRatting = () => {
+        // Alert.alert("Ratting99==>" + defaultRatingSubmit);
+
+        axiosPostRateDriverRequest(defaultRatingSubmit);
+    }
+
+
+    const axiosPostRateDriverRequest = async (defaultRatingSubmit: any) => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosPostRateDriverRequestConfirm(defaultRatingSubmit);
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosPostRateDriverRequestConfirm = async (defaultRatingSubmit: any) => {
+
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        // const storedDriverLinkedId = await AsyncStorage.getItem('store_ride_id');
+
+        if (storedLinkedId !== null) { // && storedDriverLinkedId !== null
+
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/ratting/rateDriver';
+            const url = `${API.BASE_URL}/ratting/rateDriver`;
+
+            // Prepare data in JSON format
+            const data = {
+                UserID: JSON.parse(storedLinkedId),
+                // DriverID: JSON.parse(storedDriverLinkedId),
+                DriverID: "65fa73686bd523584baaa786", // DEAFULT
+                rating: defaultRatingSubmit
+            };
+
+            console.log("RateDriverData***==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData****==>", JSON.stringify(data, null, 2));
+            console.log("RateDriverData***==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 201
+                        &&
+                        response?.data?.message === 'Rating recorded successfully') {
+                        // Handle API response here
+
+                        setModalDriver(false);
+                        Toast.show('Rating Submitted Successfully!', Toast.SHORT);
+
+                        navigation.navigate('PaymentSuccessful', {
+                            itemSuccessfulAmount: isGETPERCENTAGE,
+                        })
+
+                        // Toast.show('Successfully Retrieved The Vehicles Booking List!', Toast.SHORT);
+
+                    } else {
+                        Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                        //  Welcome! Signed in successfully.
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                });
+        } else {
+
+        }
+    };
+
+
+    const onPressCancelPayment = async () => {
+        // setModalDriver(true)
+
+        // CHECK PAYMNET TYPE
+        try {
+            // GET TYPE HERE :
+            const USER_PAY_TYPE = await AsyncStorage.getItem('store_pay_type_cancel_');
+
+            // Check if USER_PAY_TYPE is not null or undefined
+            if (USER_PAY_TYPE !== null && USER_PAY_TYPE !== undefined) {
+                const PAY_TYPE = JSON.parse(USER_PAY_TYPE);
+
+                if (PAY_TYPE === "Cash Payment" || PAY_TYPE === "Wallet") {
+
+                    // Booking Complete :
+                    axiosPostRideStatusAccepted1();
+
+                } else {
+                    axiosPostRequestStripeCancel();
+                    setSTRIPEModal(true)
+                }
+            } else {
+                // Handle case when USER_PAY_TYPE is null or undefined
+                console.error("USER_PAY_TYPE is null or undefined.");
+                // You might want to perform some fallback action here
+            }
+        } catch (error) {
+            console.error("Error fetching USER_PAY_TYPE:", error);
+            // Handle error
+        }
+    }
+
+    const onPressModalCheckPayment = () => {
+        // Payment Status Addded !
+        axiosPostRideStatusAccepted();
+    }
+
+    const axiosPostRideStatusAccepted = async () => {
+
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        const url = `${API.BASE_URL}/bookingPaymentStatus/bookingPayment`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route?.params?.itemBokingDetailsMapId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+                    // Handle API response here
+
+                    // Check Status As API :
+                    axiosPostRideDetailsRequestCancelCheck();
+
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                // setModalDriver(false);
+                // setSTRIPEModal(true);
+            });
+
+    }
+
+
+    const axiosPostRideDetailsRequestCancelCheck = async () => {
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemBokingDetailsMapId // route.params.itemBokingDetailsMapId
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    && response?.data?.message === 'Ride Details') {
+                    // Handle API response here
+
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
+                    USER_PAY_TYPE = response?.data?.matchingVehicle?.payment_type;
+
+                    if (USER_PAY_STATUS == "Complete" && USER_PAY_TYPE == "Card") {
+
+                        if (USER_BOOKINGSTATUS == "pending") {
+                            axiosCancelBookingPostRequest();
+                            // setModalDriver(true);
+                        } else {
+                            Toast.show('Cancel Payment Failed!', Toast.SHORT);
+                        }
+                    } else {
+
+                    }
+
+                } else {
+                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+            });
+
+    }
+
+    const axiosPostRequestStripeCancel = async () => {
+        const storedLinkedId = await AsyncStorage.getItem('user_register_id');
+
+        // USE RIDE ID AS STRIPE 
+        const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID_cancel_');
+
+        if (storedLinkedId !== null && USER_RIDEIDID !== null) {
+            // const url = 'https://rideshareandcourier.graphiglow.in/api/webStriperedirect/stripeWeb';
+            const url = `${API.BASE_URL}/webStriperedirect/stripeWeb`;
+
+            // Prepare data in JSON format
+            const data = {
+                userId: JSON.parse(storedLinkedId),
+                amount: isGETPERCENTAGE,
+                rideId: JSON.parse(USER_RIDEIDID), // RIDE ID USE
+            };
+
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+            console.log("PAYYYYY==>", JSON.stringify(data, null, 2));
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        &&
+                        response?.data?.message === 'URL constructed successfully') {
+
+                        console.log("ALLL---CANCEL===>",
+                            JSON.stringify(response?.data?.data?.apiUrl, null, 2));
+
+                        // Get Payment URL :
+                        apiUrlPAY = response?.data?.data?.apiUrl;
+                        setISURLPAY(apiUrlPAY);
+
+
+                    } else {
+                        // Handle errors
+                        Toast.show('Payment Failed!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    Toast.show('Payment Failed!', Toast.SHORT);
+                });
+
+        } else {
+            Toast.show('Payment Failed!', Toast.SHORT);
+        }
+    }
+
+    const axiosPostRideStatusAccepted1 = async () => {
+
+        // const url = 'https://rideshareandcourier.graphiglow.in/api/bookingPaymentStatus/bookingPayment';
+        const url = `${API.BASE_URL}/bookingPaymentStatus/bookingPayment`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route?.params?.itemBokingDetailsMapId,
+            PaymentStatus: "Complete"
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    &&
+                    response?.data?.message === 'Payment Status changed successfully') {
+                    // Handle API response here
+
+                    // Check Status As API :
+                    axiosPostRideStatusAcceptedCancel();
+
+
+                } else {
+                    Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                    // setModalDriver(false);
+                    // setSTRIPEModal(true);
+                    //  Welcome! Signed in successfully.
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                Toast.show('Enabel To Submit Ratting!', Toast.SHORT);
+                // setModalDriver(false);
+                // setSTRIPEModal(true);
+            });
+
+    }
+
+
+    const axiosPostRideStatusAcceptedCancel = async () => {
+        const url = `${API.BASE_URL}/rideDetail/rideDetail`;
+
+        // Prepare data in JSON format
+        const data = {
+            id: route.params.itemBokingDetailsMapId // route.params.itemBokingDetailsMapId
+        };
+
+        await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 200
+                    && response?.data?.message === 'Ride Details') {
+                    // Handle API response here
+
+                    USER_PAY_STATUS = response?.data?.matchingVehicle?.PaymentStatus;
+                    USER_BOOKINGSTATUS = response?.data?.matchingVehicle?.BookingCurrentStatus;
+                    USER_PAY_TYPE = response?.data?.matchingVehicle?.payment_type;
+
+                    if (USER_PAY_STATUS == "Complete") {
+                        if (USER_BOOKINGSTATUS == "pending") {
+                            axiosCancelBookingPostRequest(); // Cancel api !
+                            // setModalDriver(true) // ratting !
+                        } else {
+                            Toast.show('Cancel Payment Failed!', Toast.SHORT);
+                        }
+                    } else {
+
+                    }
+
+                } else {
+                    // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
+            });
+
+    }
+
+    const axiosCancelBookingPostRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosCancelBookingSurePostRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+    const axiosCancelBookingSurePostRequest = async () => {
+        try {
+
+            // const url = `https://rideshareandcourier.graphiglow.in/api/Cancelbooking/CancelBooking`
+            const url = `${API.BASE_URL}/Cancelbooking/CancelBooking`;
+
+            console.log("axiosCancelBookingSurePostRequest===>", url);
+
+            const USER_RIDEIDID = await AsyncStorage.getItem('store_RIDEID_cancel_');
+
+            // Prepare data in JSON format
+            const data = {
+                RideId: USER_RIDEIDID !== null ? JSON.parse(USER_RIDEIDID) : ""
+            };
+
+            console.log("CancelBookingData==>", JSON.stringify(data, null, 2));
+
+
+            await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Booking Successfully Cancelled') {
+                        Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+                        setSTRIPEModal(false);
+                        setModalDriver(true);
+
+                    } else {
+                        Toast.show('Unable to Cancelled!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    Toast.show('Unable to Cancelled!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    };
+
 
     const axiosPostRideDetailsOfMap = async () => {
         // const url = 'https://rideshareandcourier.graphiglow.in/api/rideDetail/rideDetail';
@@ -283,6 +713,10 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                     _DISCOUNT = USER_TOTAL_AMOUNT - USER_DISCOUNT;
                     setTOTAL_AMOUNT(_DISCOUNT); // ---- // 
 
+                    // STORE PAYMNET TYPE 
+                    StorePayType(USER_PAYMEMT_TYPE);
+                    StoreRideIDID(USER_RIDEID);
+
 
                     setRIDEID(USER_RIDEID);
                     setVEHICAL(USER_VEHICAL); // ADDED
@@ -316,6 +750,26 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
             });
     };
 
+    const StorePayType = async (USER_PAYMEMT_TYPE: any) => {
+        try {
+            await AsyncStorage.setItem('store_pay_type_cancel_', JSON.stringify(USER_PAYMEMT_TYPE));
+            console.log('store_pay_type_cancel_===>', JSON.parse(USER_PAYMEMT_TYPE));
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_pay_type_cancel_ :', error);
+        }
+    }
+
+    const StoreRideIDID = async (USER_RIDEID: any) => {
+        try {
+            await AsyncStorage.setItem('store_RIDEID_cancel_', JSON.stringify(USER_RIDEID));
+            console.log('store_RIDEID_cancel_===>', JSON.parse(USER_RIDEID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_RIDEID_cancel_ :', error);
+        }
+    }
 
 
     return (
@@ -347,7 +801,7 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                 color={Colors.white}
                                 fontFamily={Fonts.InterSemiBold}
                                 fontWeight="500"
-                                title={"Payment-1"}
+                                title={"Payment"}
                                 isVisiblePayout={false}
                                 fontSize={wp(4)}
                                 onPress={() => navigation.goBack()}
@@ -672,12 +1126,7 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                     heightBtn={hp(7)}
                                     widthBtn={wp(90)}
                                     isRightArrow={false}
-                                    // onPress={() =>
-                                    //     navigation.navigate('PaymentSuccessful', {
-                                    //         // itemSuccessfulAmount: route?.params?.itemCompleteTotalAmount,
-                                    //         itemSuccessfulAmount: isGETPERCENTAGE,
-                                    //     })
-                                    // }
+                                    onPress={onPressCancelPayment}
                                     color={Colors.white}
                                     title={ScreenText.PayNow}
                                     marginHorizontal={wp(2)}
@@ -691,32 +1140,126 @@ const CancelCourierDetailsMap = ({ route, navigation }) => {
                                 />
                             </View>
 
-                            {/* <View style={Styles.viewWhiteConatiner}>
-                                    <View style={Styles.viewRatting}>
-                                        <View style={CommonStyle.justifyContent}>
-                                            <Image
-                                                style={Styles.viewWhiteDot}
-                                                resizeMode="contain"
-                                                source={Images.orangeDot} />
-                                        </View>
+                            <View>
+                                <Modal isVisible={isModalDriver}
+                                    onBackButtonPress={() => setModalDriver(false)}
+                                    onBackdropPress={() => setModalDriver(false)}>
+                                    <View style={Styles.viewModalDriver}>
+                                        <TextComponent
+                                            color={Colors.white}
+                                            title={ScreenText.CustomerRating}
+                                            textDecorationLine={'none'}
+                                            fontWeight="700"
+                                            fontSize={wp(5)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            textAlign='center'
+                                            marginVertical={wp(3)}
+                                            marginTop={wp(5)}
+                                        />
+                                        <TextComponent
+                                            color={Colors.modalGray}
+                                            title={ScreenText.Howtoknow}
+                                            textDecorationLine={'none'}
+                                            fontWeight="400"
+                                            fontSize={wp(3.5)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            textAlign='center'
+                                            marginVertical={wp(3)}
+                                        />
 
                                         <View>
-                                            <TextComponent
-                                                color={Colors.white}
-                                                title={"Courier delivery Complete"}
-                                                marginVertical={wp(1)} // 3
-                                                textDecorationLine={'none'}
-                                                fontWeight="400"
-                                                marginHorizontal={wp(5)}
-                                                fontSize={wp(4)}
-                                                fontFamily={Fonts.PoppinsSemiBold}
-                                                textAlign='left'
-                                            />
+                                            <View style={Styles.customRatingBarStyle}>
+                                                {maxRatingSubmit.map((item, key) => {
+                                                    return (
+                                                        <View style={CommonStyle.commonRow}>
+                                                            <TouchableOpacity
+                                                                activeOpacity={0.7}
+                                                                key={item}
+                                                                onPress={() => setDefaultRatingsubmit(item)}>
+
+                                                                <Image
+                                                                    style={Styles.starImageStyle_}
+                                                                    source={
+                                                                        item <= defaultRatingSubmit
+                                                                            ? starImageFilled1
+                                                                            : starImageCorner1
+                                                                    }
+                                                                />
+
+                                                            </TouchableOpacity>
+                                                        </View>
+
+                                                    );
+                                                })}
+
+                                            </View>
+
                                         </View>
 
+                                        <ButtonComponent
+                                            isVisibleMobile={false}
+                                            isVisibleFaceBook={false}
+                                            marginVertical={hp(1)}
+                                            heightBtn={hp(6)}
+                                            marginTop={wp(5)}
+                                            widthBtn={wp(50)}
+                                            isRightArrow={false}
+                                            onPress={onPressSubmitRatting}
+                                            color={Colors.white}
+                                            title={ScreenText.Submit}
+                                            marginHorizontal={wp(15)}
+                                            fontWeight="500"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsRegular}
+                                            alignSelf='center'
+                                            textAlign='center'
+                                            borderRadius={wp(2)}
+                                            backgroundColor={Colors.blue}
+                                        />
                                     </View>
+                                </Modal>
+                            </View>
 
-                                </View> */}
+                            <View>
+                                <Modal isVisible={isSTRIPEModal}
+                                    onBackButtonPress={() => setSTRIPEModal(false)}
+                                    onBackdropPress={() => setSTRIPEModal(false)}>
+                                    <View style={Styles.viewModalDriverStripe}>
+
+                                        <WebView
+                                            source={{ uri: isURLPAY }}
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: 'center',
+                                            }}
+                                            javaScriptEnabled={true}
+                                            domStorageEnabled={true}
+                                        />
+
+                                        <ButtonComponent
+                                            isVisibleMobile={false}
+                                            isVisibleFaceBook={false}
+                                            marginVertical={hp(1)}
+                                            heightBtn={hp(6)}
+                                            widthBtn={wp(50)}
+                                            isRightArrow={false}
+                                            onPress={onPressModalCheckPayment}
+                                            color={Colors.white}
+                                            title={ScreenText.Next}
+                                            marginHorizontal={wp(15)}
+                                            fontWeight="500"
+                                            fontSize={wp(4)}
+                                            fontFamily={Fonts.PoppinsSemiBold}
+                                            alignSelf='center'
+                                            textAlign='center'
+                                            borderRadius={wp(2)}
+                                            backgroundColor={Colors.blue}
+                                        />
+
+                                    </View>
+                                </Modal>
+                            </View>
+
 
                         </View>
                     </View>

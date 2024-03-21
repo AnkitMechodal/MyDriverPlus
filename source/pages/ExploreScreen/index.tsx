@@ -35,6 +35,7 @@ const TabBook1UpStack = () => {
         name="TabBook1UpScreen"
         component={TabBook1UpScreen}
       />
+
       <Stack.Screen
         name="BookingDetailsDrawerUpcoming"
         component={BookingUpDetails}

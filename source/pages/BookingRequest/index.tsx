@@ -720,6 +720,8 @@ const BookingRequestScreen = ({ route, navigation }) => {
             itemMapRideTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
         })
 
+        setModalCancel(false); /// TODO :
+
         // TODO :
 
         // Cancel Booking 

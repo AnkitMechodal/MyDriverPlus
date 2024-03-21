@@ -58,8 +58,8 @@ const TabBook2UpScreen = ({ route, navigation }) => {
 
         fetchData();
 
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 5 seconds
+        const intervalId = setInterval(fetchData, 5 * 1000);
 
         // Cleanup function
         return () => {
@@ -188,11 +188,13 @@ const TabBook2UpScreen = ({ route, navigation }) => {
                                 source={Images.orangeDot} />
                         </View>
 
-                        <View>
+                        <View style={{ flex: 1 }}>
                             <TextComponent
                                 color={Colors.white}
                                 title={item.pickup_locations}
                                 textDecorationLine={'none'}
+                                numberOfLines={1}
+                                ellipsizeMode={"tail"}
                                 fontWeight="500"
                                 fontSize={wp(3.5)}
                                 marginVertical={wp(1)}
@@ -203,6 +205,8 @@ const TabBook2UpScreen = ({ route, navigation }) => {
                             <TextComponent
                                 color={Colors.white}
                                 title={item.drop_locations}
+                                numberOfLines={1}
+                                ellipsizeMode={"tail"}
                                 textDecorationLine={'none'}
                                 fontWeight="500"
                                 fontSize={wp(3.5)}
