@@ -524,7 +524,7 @@ const Styles = StyleSheet.create({
         alignSelf: "flex-end",
     },
     marginVertical: {
-        marginVertical: wp(115),
+        marginVertical: wp(110),
     },
     imageStop_: {
         width: wp(14),

@@ -107,7 +107,7 @@ const Styles = StyleSheet.create({
         alignSelf: "flex-end",
     },
     marginVertical: {
-        marginVertical: wp(115),
+        marginVertical: wp(110),
     },
     bottamUserConatin: {
         height: wp(22),

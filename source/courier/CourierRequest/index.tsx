@@ -666,7 +666,7 @@ const CourierRequestScreen = ({ route, navigation }) => {
                         if (RideStatusArrived === "Complete") {
                             setToggleDelivered(true);
                             setFeedback(false);
-                            setDRIVERSTATUS("Ride Complete");
+                            setDRIVERSTATUS("Courier Delivery Complete");
                         } else {
                             setToggleDelivered(false);
                         }
@@ -1920,13 +1920,13 @@ const CourierRequestScreen = ({ route, navigation }) => {
                                 <View style={CommonStyle.commonFlex}>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={isDRIVERSTATUS == "Courier Delivered" ? "Pay Now" : "View On Map"}
+                                        title={isDRIVERSTATUS == "Courier Delivery Complete" ? "Pay Now" : "View On Map"}
                                         textDecorationLine={'underline'}
                                         onPress={() =>
 
                                             isDRIVERSTATUS ==
 
-                                                "Courier Delivered" ?
+                                                "Courier Delivery Complete" ?
                                                 navigation.navigate('CourierRequestDriver', {
                                                     itemCompleteMapId: route.params.itemRIDER_ID_SENT,
 
@@ -1943,6 +1943,10 @@ const CourierRequestScreen = ({ route, navigation }) => {
                                                     itemCompleteTotalAmount: route.params.itemRIDER_RIDE_TOTALAMOUNT,
                                                 })
                                                 : navigation.navigate('CourierRequestAccepted', {
+
+                                                    // PASSING RIDER ID:
+                                                    itemRIDEMAPID: route.params.itemRIDEID_SENT,
+                                                    // PASSING RIDER ID:
 
                                                     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
                                                     // itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,

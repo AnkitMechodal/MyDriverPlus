@@ -7527,7 +7527,9 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                             <TextComponent
                                                 color={Colors.gray}
                                                 marginVertical={wp(2)}
-                                                title={"Pay Now"} //99
+                                                // title={"Pay Now"} //99
+                                                title={isDRIVERSTATUS ==
+                                                    "Ride Complete" ? "Pay Now" : ""} //99
                                                 onPress={() => setModalPAY1(true)} /**/
                                                 // onPress={() =>
                                                 //     navigation.navigate('BookingRequestDriver', {

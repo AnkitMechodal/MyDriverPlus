@@ -1554,7 +1554,7 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                         color={Colors.white}
                                         // title={deafultMsg}
                                         title={isDRIVERSTATUS}
-                                        textDecorationLine={'none'}
+                                        textDecorationLine={'none'}//////////1
                                         fontWeight="400"
                                         numberOfLines={5}
                                         ellipsizeMode={"tail"}
@@ -1569,7 +1569,8 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                     <TextComponent
                                         color={Colors.gray}
                                         marginVertical={wp(2)}
-                                        title={"Pay Now"} //99
+                                        title={isDRIVERSTATUS ==
+                                            "Ride Complete" ? "Pay Now" : ""} //99
                                         onPress={() =>
                                             navigation.navigate('BookingRequestDriver', {
                                                 itemCompleteMapId: route?.params?.itemBokingDetailsMapId,

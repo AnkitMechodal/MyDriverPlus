@@ -2881,7 +2881,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                         if (RideStatusArrived === "Complete") {
                             setToggleDelivered(true);
                             setFeedback(false);
-                            setDRIVERSTATUS("Ride Complete");
+                            setDRIVERSTATUS("Courier Delivery Complete");
                         } else {
                             setToggleDelivered(false);
                         }
@@ -4361,7 +4361,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                                     <View style={CommonStyle.commonFlex}>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={isDRIVERSTATUS == "Courier Delivered" ? "Pay Now" : "View On Map"}
+                                            title={isDRIVERSTATUS == "Courier Delivery Complete" ? "Pay Now" : "View On Map"}
                                             textDecorationLine={'underline'}
                                             onPress={() => {
                                                 if (isDRIVERSTATUS === "Ride Complete") {
@@ -8051,7 +8051,9 @@ const CourierRequestPast = ({ route, navigation }) => {
                                         <TextComponent
                                             color={Colors.gray}
                                             marginVertical={wp(2)}
-                                            title={"Pay Now"} //99
+                                            // title={"Pay Now"} //99
+                                            title={isDRIVERSTATUS ==
+                                                "Ride Complete" ? "Pay Now" : ""} //99
                                             onPress={() => setModalPAY1(true)} /**/
                                             // onPress={() =>
                                             //     navigation.navigate('BookingRequestDriver', {

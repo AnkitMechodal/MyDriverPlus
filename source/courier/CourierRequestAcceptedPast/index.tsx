@@ -45,6 +45,10 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
     const starImageCorner =
         Images.unfillStarIcon;
 
+    // TODO :
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
+    // TODO :
+
     const [isModalDriver, setModalDriver] = useState(false);
 
     const [modalVisibleOTP, setModalVisibleOTP] = useState(false);
@@ -1312,7 +1316,8 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                                     <View style={Styles.viewImage1}>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={"Courier Delivery Complete"}
+                                            // title={"Courier Delivery Complete"}
+                                            title={isDRIVERSTATUS}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
                                             fontSize={wp(3.5)}
@@ -1326,7 +1331,9 @@ const CourierRequestAcceptedPast = ({ route, navigation }) => {
                                         <TextComponent
                                             color={Colors.gray}
                                             marginVertical={wp(2)}
-                                            title={"Pay Now"}
+                                            // title={"Pay Now"}
+                                            title={isDRIVERSTATUS ==
+                                                "Courier Delivery Complete" ? "Pay Now" : ""} //99
                                             onPress={() =>
                                                 navigation.navigate('CourierRequestDriverPast', {
                                                     itemCompleteMapId: route?.params?.itemBokingDetailsMapId,

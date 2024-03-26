@@ -662,7 +662,7 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                         if (RideStatusArrived === "Complete") {
                             setToggleDelivered(true);
                             setFeedback(false);
-                            setDRIVERSTATUS("Ride Complete");
+                            setDRIVERSTATUS("Courier Delivery Complete");
                         } else {
                             setToggleDelivered(false);
                         }
@@ -1869,14 +1869,14 @@ const CourierRequestScreenUser = ({ route, navigation }) => {
                                 <View style={CommonStyle.commonFlex}>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={isDRIVERSTATUS == "Courier Delivered" ? "Pay Now" : "View On Map"}
+                                        title={isDRIVERSTATUS == "Courier Delivery Complete" ? "Pay Now" : "View On Map"}
                                         textDecorationLine={'underline'}
                                         onPress={() =>
 
                                             isDRIVERSTATUS ==
 
 
-                                                "Courier Delivered" ?
+                                                "isDRIVERSTATUS" ?
                                                 navigation.navigate('CourierRequestDriver', {
                                                     itemCompleteMapId: route.params.itemRIDER_ID_SENT,
 

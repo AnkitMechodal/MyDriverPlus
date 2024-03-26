@@ -145,7 +145,7 @@ const Styles = StyleSheet.create({
         flexDirection: "row",
     },
     marginVertical: {
-        marginVertical: wp(115),
+        marginVertical: wp(110),
     },
     marginRight: {
         // alignSelf: "flex-end",

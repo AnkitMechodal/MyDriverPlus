@@ -310,6 +310,12 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
 
+
+                // RIDERID :
+                console.log("itemMapId==>", route.params.itemRIDEMAPID);
+                // RIDERID :
+
+
                 console.log("itemMapId==>", route.params.itemBokingDetailsMapId);
                 //itemMapDropStation
                 console.log("itemMapPickStation***1111****==>", route.params.itemMapPickStation);
@@ -357,6 +363,7 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
             clearInterval(intervalId);
         };
     }, [
+        route.params.itemRIDEMAPID,
         route.params.itemMapPickStation,
         route.params.itemMapDropStation,
         route?.params?.itemMapKmStation,
@@ -604,7 +611,7 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                         }
 
                         if (RideStatusArrived === "Complete") {
-                            setDRIVERSTATUS("Ride Complete");
+                            setDRIVERSTATUS("Courier Delivery Complete");
                         } else {
                         }
 
@@ -1578,7 +1585,16 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={Styles.blueRide}>
+                        <View style={{
+                            height: wp(22),
+                            padding: wp(2),
+                            backgroundColor: isDRIVERSTATUS ==
+                                "Driver Started Waiting Timer" ? Colors.orange : Colors.blue,
+                            borderTopRightRadius: wp(10),
+                            borderTopLeftRadius: wp(10),
+                            marginVertical: wp(1),
+                            flexDirection: "row",
+                        }}>
 
                             <View style={Styles.riderConatin}>
 
@@ -1593,7 +1609,7 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                                     <TextComponent
                                         color={Colors.white}
                                         // title={"Courier Delivery Complete"}
-                                        title={isDRIVERSTATUS}
+                                        title={isDRIVERSTATUS}//////////2
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -1603,11 +1619,13 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                                         textAlign='left' />
                                 </View>
 
-                                <View>
+                                <View style={{ justifyContent: 'center' }}>
                                     <TextComponent
                                         color={Colors.gray}
                                         marginVertical={wp(2)}
-                                        title={"Pay Now"}
+                                        // title={"Pay Now"}
+                                        title={isDRIVERSTATUS ==
+                                            "Courier Delivery Complete" ? "Pay Now" : ""} //99
                                         onPress={() =>
                                             navigation.navigate('CourierRequestDriver', {
                                                 itemCompleteMapId: route?.params?.itemBokingDetailsMapId,
