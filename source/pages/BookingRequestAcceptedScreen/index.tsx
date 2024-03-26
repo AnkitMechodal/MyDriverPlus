@@ -35,6 +35,34 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
     const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
     const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
 
+
+    // TODO :
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
+    // TODO :
+
+
+
+    let statusCheack;
+    let dateCheack;
+
+    let paymentStatus;
+    let rideStatus;
+    let OTPVerify;
+
+
+    let OTPGenerateTimeArrived;
+    let OTPVerifyTimeArrived;
+    let PaymentStatusArrived;
+    let RideStatusArrived;
+    let BookingRequestTimeArrived;
+    let PaymentStatusTimeArrived;
+
+
+    // TODO :
+    let OTPStatus;
+
+
+
     const starImageFilled1 =
         Images.fillstarIcon; // fillStarIcon
     const starImageCorner1 =
@@ -169,6 +197,9 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
 
                 console.log("itemMapId==>", route.params.itemBokingDetailsMapId);
 
+                // itemRIDEMAPID
+                console.log("itemRIDEMAPID==>", route.params.itemRIDEMAPID);
+                // itemRIDEMAPID
 
                 console.log("itemMapPickStation==>", route.params.itemMapPickStation);
                 console.log("itemMapDropStation==>", route.params.itemMapDropStation);
@@ -190,13 +221,15 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                 console.log("PayDiscount==>", route?.params?.itemMapRideDiscount);
                 console.log("PayTotalAmount==>", route?.params?.itemMapRideTotalAmount);
 
-
                 // axios
                 await axiosPostRideDetailsRequest();
 
+                // axios Map Status API:
+                await axiosGetRideStatusRequest();
 
                 // Get User In User Info
                 await axiosPostDriverInfoRequest();
+
                 await axiosGetRideRattingRequest();
 
             } catch (error) {
@@ -414,6 +447,140 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
             Toast.show("axios error", Toast.SHORT);
         }
     }
+
+    const axiosGetRideStatusRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosCheckGetRideStatusRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+
+    const axiosCheckGetRideStatusRequest = async () => {
+        try {
+            const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEMAPID}`;
+
+            console.log("axiosCheckGetRideStatusRequest===>", url);
+
+            await axios.get(url, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Ride Status Derived Successful') {
+                        // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+
+                        statusCheack = response?.data?.matchingUsers?.Status;
+                        dateCheack = response?.data?.matchingUsers?.date;
+
+                        paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
+                        rideStatus = response?.data?.matchingUsers?.RideStatus;
+
+
+                        // TODO :
+                        OTPGenerateTimeArrived = response?.data?.matchingUsers?.OTPGenerateTime;
+
+                        // TODO :
+                        OTPVerifyTimeArrived = response?.data?.matchingUsers?.OTPVerifyTime;
+
+
+                        // BookingRequestTime //2502
+                        BookingRequestTimeArrived = response?.data?.matchingUsers?.BookingRequestTime;
+
+                        PaymentStatusTimeArrived = response?.data?.matchingUsers?.PaymentStatusTime;
+
+                        // TODO :
+                        OTPVerify = response?.data?.matchingUsers?.ArrivedOTPStatus;
+                        console.log("OTPVerify===>", OTPVerify);
+
+                        OTPStatus = response?.data?.matchingUsers?.OTP;
+
+                        PaymentStatusArrived = response?.data?.matchingUsers?.PaymentStatus;
+
+                        RideStatusArrived = response?.data?.matchingUsers?.RideStatus;
+
+                        if (OTPStatus == '') {
+                        } else {
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+                        }
+
+                        if (OTPVerify === "Pending") {
+
+                        } else if (OTPVerify === "Verify") {
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                            } else {
+                            }
+
+                            if (OTPVerifyTimeArrived !== null) {
+                            } else {
+                            }
+
+                        } else {
+                            setDRIVERSTATUS("Driver Started Waiting Timer");
+                        }
+
+                        if (PaymentStatusArrived === "Pending") {
+                        } else {
+                        }
+
+                        if (RideStatusArrived === "Complete") {
+                            setDRIVERSTATUS("Ride Complete");
+                        } else {
+                        }
+
+                        // TODO :
+
+                        // 1
+                        if (statusCheack === "Accept") {
+                            console.log("GetStatus===>", statusCheack);
+
+                            // Booking Request Accepted
+                            setDRIVERSTATUS("Booking Request Accepted");
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            setDRIVERSTATUS("Driver is On the Way");
+
+                            // Ride Started , Enjoy your ride
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+
+
+                        } else if (statusCheack === "Arrived") { //////01101todo
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                            } else {
+                            }
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+
+                        } else if (statusCheack === "RideStart") {
+
+                        } else if (statusCheack === "Complete") {  // Complete - RideStart
+
+                        } else {
+                        }
+
+
+                    } else {
+                        // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    };
 
 
     const axiosUserPostDriverInfoRequest = async () => {
@@ -1359,7 +1526,19 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={Styles.blueRide}>
+                        <View style={{
+                            height: wp(22),
+                            width: "100%",
+                            // height: "auto",
+                            padding: wp(2),
+                            // backgroundColor: Colors.blue,
+                            borderTopRightRadius: wp(10),
+                            borderTopLeftRadius: wp(10),
+                            marginVertical: wp(1),
+                            backgroundColor: isDRIVERSTATUS ==
+                                "Driver Started Waiting Timer" ? Colors.orange : Colors.blue,
+                            flexDirection: "row",
+                        }}>
 
                             <View style={Styles.riderConatin}>
 
@@ -1373,10 +1552,12 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                 <View style={Styles.viewImage1}>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={deafultMsg}
+                                        // title={deafultMsg}
+                                        title={isDRIVERSTATUS}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
-                                        numberOfLines={2}
+                                        numberOfLines={5}
+                                        ellipsizeMode={"tail"}
                                         fontSize={wp(3.5)}
                                         marginHorizontal={wp(2)}
                                         marginVertical={wp(2)}
@@ -1384,7 +1565,7 @@ const BookingRequestAcceptedScreen = ({ route, navigation }) => {
                                         textAlign='left' />
                                 </View>
 
-                                <View>
+                                <View style={{ justifyContent: "center" }}>
                                     <TextComponent
                                         color={Colors.gray}
                                         marginVertical={wp(2)}

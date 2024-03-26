@@ -19,7 +19,7 @@ const Styles = StyleSheet.create({
         height: wp(3),
         justifyContent: 'center',
         marginLeft: wp(5),
-        marginTop: wp(4),
+        // marginTop: wp(4),
     },
     lineVerticalLine1: {
         width: wp(0.5),
@@ -88,7 +88,7 @@ const Styles = StyleSheet.create({
         alignSelf: "flex-end",
     },
     marginVertical: {
-        marginVertical: wp(115),
+        marginVertical: wp(110), // 2603
     },
     bottamUserConatin: {
         height: wp(22),
@@ -154,9 +154,11 @@ const Styles = StyleSheet.create({
         marginVertical: wp(5)
     },
     viewImage: {
-        width: wp(10)
+        width: wp(10),
+        justifyContent:"center",
     },
     viewImage1: {
+        justifyContent:"center",
         width: wp(50),
     }
 });

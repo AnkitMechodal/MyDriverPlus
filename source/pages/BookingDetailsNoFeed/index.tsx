@@ -358,8 +358,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         // axiosPostRequestStripe();
 
                         // TODO : PAY SUCESSFUL
-
-                        setModalPAYFUL(true);
+                        setModalPAYFUL(true); // as modal
 
                         // navigation.navigate('PaymentSuccessfulUp', { // Paysucess ui
                         //     itemSuccessfulAmount: isAmount,
@@ -449,7 +448,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
 
                             setModalCANCELPAYSTRIPE(false);
 
-                            setModalDriver(true);
+                            // setModalDriver(true);
 
                         } else {
 
@@ -707,8 +706,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                             // CALL CANCEL API :
                             await axiosCancelBookingPostRequest();
 
-
-                            setModalDriver(true);
+                            // setModalDriver(true);
                         } else {
 
                             setModalDriver(true);
@@ -2955,6 +2953,10 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                         && response?.data?.message === 'Booking Successfully Cancelled') {
 
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                        // Move To Complete PAY UI :
+                        setModalPAYFUL(true);
+
 
                         // TODO :
                         // setModalCancel(false) // Cancel-1
@@ -7507,10 +7509,13 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                         <View style={Styles.viewImage1}>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={deafultMsg}
+                                                // title={deafultMsg}
+                                                title={isDRIVERSTATUS}
                                                 textDecorationLine={'none'}
+                                                numberOfLines={5}
+                                                ellipsizeMode={"tail"}
                                                 fontWeight="400"
-                                                numberOfLines={2}
+                                                // numberOfLines={2}
                                                 fontSize={wp(3.5)}
                                                 marginHorizontal={wp(2)}
                                                 marginVertical={wp(2)}
@@ -7518,7 +7523,7 @@ const BookingDetailsNoFeed = ({ route, navigation }) => {
                                                 textAlign='left' />
                                         </View>
 
-                                        <View>
+                                        <View style={{ justifyContent: 'center' }}>
                                             <TextComponent
                                                 color={Colors.gray}
                                                 marginVertical={wp(2)}

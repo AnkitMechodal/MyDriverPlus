@@ -1,3 +1,3 @@
 export const API = {
-    BASE_URL: "https://rideshareandcourier.graphiglow.in/api"
+    BASE_URL: "https://mydriverplus-api.4born.in/api"
 };

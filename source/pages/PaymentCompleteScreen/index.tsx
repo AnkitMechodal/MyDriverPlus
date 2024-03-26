@@ -389,7 +389,7 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                             // CALL CANCEL API :
                             axiosCancelBookingPostRequest();
 
-                            setModalDriver(true);
+                            // setModalDriver(true);
                         } else {
                             setModalDriver(true);
                         }
@@ -448,6 +448,10 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
                         && response?.data?.message === 'Booking Successfully Cancelled') {
 
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                        navigation.navigate('PaymentSuccessful', {
+                            itemSuccessfulAmount: isAmount,
+                        });
 
                     } else {
                         Toast.show('Unable to Cancelled!', Toast.SHORT);
@@ -514,9 +518,9 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
 
                             // CALL CANCEL API :
                             axiosCancelBookingPostRequest();
-
                             setSTRIPEModal(false);
-                            setModalDriver(true);
+
+                            // setModalDriver(true);
 
                         } else {
 
@@ -959,7 +963,6 @@ const PaymentCompleteScreen = ({ route, navigation }) => {
     }
 
     // working !
-
     const axiosPostRateDriverRequestConfirm = async (defaultRatingSubmit: any) => {
 
         const storedLinkedId = await AsyncStorage.getItem('user_register_id');

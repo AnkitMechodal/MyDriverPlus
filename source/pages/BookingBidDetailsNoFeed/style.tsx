@@ -547,10 +547,12 @@ const Styles = StyleSheet.create({
         alignSelf: "center"
     },
     viewImage: {
-        width: wp(10)
+        width: wp(10),
+        justifyContent: 'center',
     },
     viewImage1: {
         width: wp(50),
+        justifyContent: 'center',
     },
     blueDot1: {
         width: wp(3),

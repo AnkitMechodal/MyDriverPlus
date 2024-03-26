@@ -715,10 +715,9 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                             axiosCancelBookingPostRequest();
 
                             setSTRIPEModal(false);
-
                             setModalCANCELPAYSTRIPE(false);
 
-                            setModalDriver(true);
+                            // setModalDriver(true);
                         } else {
                             setSTRIPEModal(false);
 
@@ -968,7 +967,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                             // CALL CANCEL API :
                             await axiosCancelBookingPostRequest();
 
-                            setModalDriver(true);
+                            // setModalDriver(true);
                         } else {
                             setModalDriver(true);
                         }
@@ -3786,6 +3785,8 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                         && response?.data?.message === 'Booking Successfully Cancelled') {
 
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                        setModalPAYFUL(true);
 
                         // TODO :
                         // setModalCancel(false) // Cancel-1
@@ -8325,7 +8326,19 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                     </TouchableOpacity>
                                 </View>
 
-                                <View style={Styles.blueRide}>
+                                <View style={{
+                                    height: wp(22),
+                                    width: "100%",
+                                    // height: "auto",
+                                    padding: wp(2),
+                                    // backgroundColor: Colors.blue,
+                                    borderTopRightRadius: wp(10),
+                                    borderTopLeftRadius: wp(10),
+                                    marginVertical: wp(1),
+                                    backgroundColor: isDRIVERSTATUS ==
+                                        "Driver Started Waiting Timer" ? Colors.orange : Colors.blue,
+                                    flexDirection: "row",
+                                }}>
 
                                     <View style={Styles.riderConatin}>
 
@@ -8339,10 +8352,13 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                         <View style={Styles.viewImage1}>
                                             <TextComponent
                                                 color={Colors.white}
-                                                title={deafultMsg}
+                                                // title={deafultMsg}
+                                                numberOfLines={5}
+                                                ellipsizeMode={"tail"}
+                                                title={isDRIVERSTATUS}
                                                 textDecorationLine={'none'}
                                                 fontWeight="400"
-                                                numberOfLines={2}
+                                                // numberOfLines={2}
                                                 fontSize={wp(3.5)}
                                                 marginHorizontal={wp(2)}
                                                 marginVertical={wp(2)}
@@ -8350,7 +8366,7 @@ const BookingBidDetailsNoFeed = ({ route, navigation }) => {
                                                 textAlign='left' />
                                         </View>
 
-                                        <View>
+                                        <View style={{ justifyContent: 'center' }}>
                                             <TextComponent
                                                 color={Colors.gray}
                                                 marginVertical={wp(2)}

@@ -72,6 +72,7 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
 
     const [isModalDriver, setModalDriver] = useState(false);
 
+
     const [maxRatingSubmit, setMaxRatingsubmit] = useState([1, 2, 3, 4, 5]);
     const [defaultRatingSubmit, setDefaultRatingsubmit] = useState(0);
 
@@ -813,7 +814,7 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                             axiosCancelBookingPostRequest();
 
                             setSTRIPEModal(false);
-                            setModalDriver(true);
+                            // setModalDriver(true);
 
                         } else {
                             setSTRIPEModal(false);
@@ -1002,7 +1003,7 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                             // CALL CANCEL API :
                             axiosCancelBookingPostRequest();
 
-                            setModalDriver(true);
+                            // setModalDriver(true);
                         } else {
                             setModalDriver(true);
                         }
@@ -1062,6 +1063,10 @@ const CourierPaymentCompletePast = ({ route, navigation }) => {
                         && response?.data?.message === 'Booking Successfully Cancelled') {
 
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                        navigation.navigate('CourierPaymentSuccessful', {
+                            itemSuccessfulAmount: isAmount,
+                        });
 
                     } else {
                         Toast.show('Unable to Cancelled!', Toast.SHORT);

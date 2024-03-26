@@ -614,6 +614,8 @@ const CourierRequestPast = ({ route, navigation }) => {
     const [isPICKOTP, setPICKOTP] = useState('');
     const [isDROPOTP, setDROPOTP] = useState('');
 
+
+    // TODO : 2603
     const [isDRIVERSTATUS, setDRIVERSTATUS] = useState('Courier Boy is On the Way');
 
 
@@ -1126,7 +1128,7 @@ const CourierRequestPast = ({ route, navigation }) => {
 
                         // TODO : PAY SUCESSFUL
 
-                        setModalPAYFUL(true);
+                        setModalPAYFUL(true); // next ui
 
                         // navigation.navigate('PaymentSuccessfulUp', { // Paysucess ui
                         //     itemSuccessfulAmount: isAmount,
@@ -1778,7 +1780,7 @@ const CourierRequestPast = ({ route, navigation }) => {
 
                             setModalCANCELPAYSTRIPE(false);
 
-                            setModalDriver(true);
+                            // setModalDriver(true);
 
                         } else {
 
@@ -2045,7 +2047,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                             // CALL CANCEL API :
                             axiosCancelBookingPostRequest();
 
-                            setModalDriver(true);
+                            // setModalDriver(true);
                         } else {
                             setModalDriver(true);
                         }
@@ -2108,6 +2110,9 @@ const CourierRequestPast = ({ route, navigation }) => {
                         && response?.data?.message === 'Booking Successfully Cancelled') {
 
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
+
+                        // Move To Complete Screen !
+                        setModalPAYFUL(true);
 
                     } else {
                         Toast.show('Unable to Cancelled!', Toast.SHORT);
@@ -2602,6 +2607,8 @@ const CourierRequestPast = ({ route, navigation }) => {
                         && response?.data?.message === 'Booking Successfully Cancelled') {
 
                         Toast.show('Your Courier has been Successfully Cancelled!', Toast.SHORT);
+
+                        setModalPAYFUL(true);
 
                         // TODO : As Modal  - CancelCourierDetailsMapPast
                         // setModalCOUIERCANCEL(true);
@@ -7806,7 +7813,7 @@ const CourierRequestPast = ({ route, navigation }) => {
                                 titleWithRightContent={"SOS/Help ?"}
                                 marginRight={wp(5)}
                                 fontFamilyRight={Fonts.InterSemiBold}
-                                title={"Booking Request Accepted"}
+                                title={"Courier Request Accepted"}
                                 onPressRightEnd={onPressRightEnd}
                                 fontSize={wp(4)}
                                 onPress={() => setModalMAP(false)}
@@ -8001,7 +8008,19 @@ const CourierRequestPast = ({ route, navigation }) => {
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={Styles.blueRide}>
+                            <View style={{
+                                height: wp(22),
+                                width: "100%",
+                                // height: "auto",
+                                padding: wp(2),
+                                // backgroundColor: Colors.blue,
+                                borderTopRightRadius: wp(10),
+                                borderTopLeftRadius: wp(10),
+                                marginVertical: wp(1),
+                                backgroundColor: isDRIVERSTATUS ==
+                                    "Driver Started Waiting Timer" ? Colors.orange : Colors.blue,
+                                flexDirection: "row",
+                            }}>
 
                                 <View style={Styles.riderConatin}>
 
@@ -8015,10 +8034,12 @@ const CourierRequestPast = ({ route, navigation }) => {
                                     <View style={Styles.viewImage1}>
                                         <TextComponent
                                             color={Colors.white}
-                                            title={deafultMsg}
+                                            // title={deafultMsg}
+                                            numberOfLines={5}
+                                            ellipsizeMode={"tail"}
+                                            title={isDRIVERSTATUS}
                                             textDecorationLine={'none'}
                                             fontWeight="400"
-                                            numberOfLines={2}
                                             fontSize={wp(3.5)}
                                             marginHorizontal={wp(2)}
                                             marginVertical={wp(2)}

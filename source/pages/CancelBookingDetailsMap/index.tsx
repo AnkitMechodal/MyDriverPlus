@@ -615,8 +615,6 @@ const CancelBookingDetailsMap = ({ route, navigation }) => {
                         setISURLPAY(apiUrlPAY);
 
 
-
-
                     } else {
                         // Handle errors
                         Toast.show('Payment Failed!', Toast.SHORT);
@@ -766,7 +764,13 @@ const CancelBookingDetailsMap = ({ route, navigation }) => {
                         && response?.data?.message === 'Booking Successfully Cancelled') {
                         Toast.show('Your Booking has been Successfully Cancelled!', Toast.SHORT);
                         setSTRIPEModal(false);
-                        setModalDriver(true);
+                        // setModalDriver(true);
+
+                        // PaymentSuccessful To Complete
+                        navigation.navigate('PaymentSuccessful', {
+                            itemSuccessfulAmount: isGETPERCENTAGE,
+                        })
+                        // PaymentSuccessful To Complete
 
                     } else {
                         Toast.show('Unable to Cancelled!', Toast.SHORT);

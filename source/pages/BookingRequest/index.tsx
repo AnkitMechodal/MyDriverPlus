@@ -207,7 +207,13 @@ const BookingRequestScreen = ({ route, navigation }) => {
                 console.log("SENT==DATE====>", route.params.itemDateBookingSent);
 
 
-                console.log("RIDE_ID_REQUEST===>", route.params.itemRIDEID_SENT);
+                // ----->
+                console.log("RIDE_ID_REQUEST--1-->===>", route.params.itemRIDEID_SENT);
+                console.log("RIDE_ID_REQUEST---->===>", route.params.itemRIDEID_SENT);
+                console.log("RIDE_ID_REQUEST---->===>", route.params.itemRIDEID_SENT);
+                console.log("RIDE_ID_REQUEST--1-->===>", route.params.itemRIDEID_SENT);
+                // ----->
+
 
                 // itemRIDER_ID_SENT - route?.params?.itemRIDER_ID_SENT
                 console.log("RIDER_USER_ID_REQUEST===>", route.params.itemRIDER_ID_SENT);
@@ -1532,6 +1538,10 @@ const BookingRequestScreen = ({ route, navigation }) => {
                                                 }) :
 
                                                 navigation.navigate('BookingRequestAccepted', {
+
+                                                    // PASSING RIDER ID:
+                                                    itemRIDEMAPID: route.params.itemRIDEID_SENT,
+                                                    // PASSING RIDER ID:
 
                                                     itemBokingDetailsMapId: route.params.itemRIDER_ID_SENT,
                                                     itemBokingDetailsMapDistance: route.params.itemRIDER_DISTANCE_SENT,

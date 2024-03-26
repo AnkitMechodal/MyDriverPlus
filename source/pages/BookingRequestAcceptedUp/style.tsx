@@ -173,10 +173,12 @@ const Styles = StyleSheet.create({
         marginVertical: wp(5)
     },
     viewImage: {
-        width: wp(10)
+        width: wp(10),
+        justifyContent: 'center',
     },
     viewImage1: {
         width: wp(50),
+        justifyContent: 'center',
     }
 });
 

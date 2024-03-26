@@ -57,6 +57,11 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
     const [deafultTimer, setDefaultTimer] = useState("");
 
 
+    // TODO :
+    const [isDRIVERSTATUS, setDRIVERSTATUS] = useState("Booking Request Sent");
+    // TODO :
+
+
     const [isStart, setIsStart] = useState(false);
     const [isArrived, setIsArrived] = useState(false);
     const [isOTP, setIsOTP] = useState(false);
@@ -274,6 +279,27 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
     const [isDriverName, setDriverName] = useState(ScreenText.UserName);
     const [isPhoneNumber, setPhoneNumber] = useState("");
 
+
+    let statusCheack;
+    let dateCheack;
+
+    let paymentStatus;
+    let rideStatus;
+    let OTPVerify;
+
+
+    let OTPGenerateTimeArrived;
+    let OTPVerifyTimeArrived;
+    let PaymentStatusArrived;
+    let RideStatusArrived;
+    let BookingRequestTimeArrived;
+    let PaymentStatusTimeArrived;
+
+
+    // TODO :
+    let OTPStatus;
+
+
     let USER_RIDEID;
 
     const [isDRIVERPROFILe, setDRIVERPROFILE] = useState("https://fastly.picsum.photos/id/944/536/354.jpg?hmac=ydpVTMyvaJudI2SZOegqdZoCBv0MzjMiFqR1Bc6ZXIo"); // USER_RIDE_CHARGE
@@ -304,6 +330,9 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                 console.log("PayWaitingCharge**", route?.params?.itemMapRideWattingCharges);
                 console.log("PayDiscount**", route?.params?.itemMapRideDiscount);
                 console.log("PayTotalAmount**", route?.params?.itemMapRideTotalAmount);
+
+                // axios Map Status API:
+                await axiosGetRideStatusRequest();
 
                 // axios
                 await axiosPostRideDetailsRequest();
@@ -488,6 +517,140 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                 // Toast.show('Enable To Get Ride Details!', Toast.SHORT);
             });
     };
+
+
+    const axiosGetRideStatusRequest = async () => {
+        try {
+            const isConnected = await NetworkUtils.isNetworkAvailable()
+            if (isConnected) {
+                axiosCheckGetRideStatusRequest();
+            } else {
+                Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
+            }
+        } catch (error) {
+            Toast.show("axios error", Toast.SHORT);
+        }
+    }
+
+
+    const axiosCheckGetRideStatusRequest = async () => {
+        try {
+            const url = `${API.BASE_URL}/rideStatus/checkRide/${route.params.itemRIDEMAPID}`;
+
+            console.log("axiosCheckGetRideStatusRequest===>", url);
+
+            await axios.get(url, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.status === 200
+                        && response?.data?.message === 'Ride Status Derived Successful') {
+                        // Toast.show('Ride Status Get Successfully!', Toast.SHORT);
+
+                        statusCheack = response?.data?.matchingUsers?.Status;
+                        dateCheack = response?.data?.matchingUsers?.date;
+
+                        paymentStatus = response?.data?.matchingUsers?.PaymentStatus;
+                        rideStatus = response?.data?.matchingUsers?.RideStatus;
+
+                        // TODO :
+                        OTPGenerateTimeArrived = response?.data?.matchingUsers?.OTPGenerateTime;
+
+                        // TODO :
+                        OTPVerifyTimeArrived = response?.data?.matchingUsers?.OTPVerifyTime;
+
+
+                        // BookingRequestTime //2502
+                        BookingRequestTimeArrived = response?.data?.matchingUsers?.BookingRequestTime;
+
+                        PaymentStatusTimeArrived = response?.data?.matchingUsers?.PaymentStatusTime;
+
+                        // TODO :
+                        OTPVerify = response?.data?.matchingUsers?.ArrivedOTPStatus;
+                        console.log("OTPVerify===>", OTPVerify);
+
+                        OTPStatus = response?.data?.matchingUsers?.OTP;
+
+                        PaymentStatusArrived = response?.data?.matchingUsers?.PaymentStatus;
+
+                        RideStatusArrived = response?.data?.matchingUsers?.RideStatus;
+
+                        if (OTPStatus == '') {
+                        } else {
+                            // Driver arrived your location
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+                        }
+
+                        if (OTPVerify === "Pending") {
+
+                        } else if (OTPVerify === "Verify") {
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                            } else {
+                            }
+
+                            if (OTPVerifyTimeArrived !== null) {
+                            } else {
+                            }
+
+                        } else {
+                            setDRIVERSTATUS("Driver Started Waiting Timer");
+                        }
+
+                        if (PaymentStatusArrived === "Pending") {
+                        } else {
+                        }
+
+                        if (RideStatusArrived === "Complete") {
+                            setDRIVERSTATUS("Ride Complete");
+                        } else {
+                        }
+
+                        // TODO :
+
+                        // 1
+                        if (statusCheack === "Accept") {
+                            console.log("GetStatus===>", statusCheack);
+
+                            // Booking Request Accepted
+                            setDRIVERSTATUS("Booking Request Accepted");
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+                            setDRIVERSTATUS("Driver is On the Way");
+
+                            // Ride Started , Enjoy your ride
+                            setDRIVERSTATUS("Ride Started , Enjoy your ride");
+
+
+                        } else if (statusCheack === "Arrived") { //////01101todo
+                            // SET OTPGenerateTimeArrived
+                            if (OTPGenerateTimeArrived !== null) {
+                            } else {
+                            }
+                            setDRIVERSTATUS("Driver Arrived Your Location");
+
+                        } else if (statusCheack === "RideStart") {
+
+                        } else if (statusCheack === "Complete") {  // Complete - RideStart
+
+                        } else {
+                        }
+
+
+                    } else {
+                        // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                    }
+                })
+                .catch(error => {
+                    // Toast.show('Unable to Get Ride Status!', Toast.SHORT);
+                });
+
+        } catch (error) {
+            // Handle any errors that occur during AsyncStorage operations
+        }
+    };
+
 
     const StoredRideID = async (USER_RIDEID: any) => {
         try {
@@ -1429,7 +1592,8 @@ const CourierRequestAcceptedScreen = ({ route, navigation }) => {
                                 <View style={Styles.viewImage1}>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={"Courier Delivery Complete"}
+                                        // title={"Courier Delivery Complete"}
+                                        title={isDRIVERSTATUS}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
