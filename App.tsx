@@ -11,7 +11,7 @@ const App = () => {
       <ThemeProvider>
         <Routes />
       </ThemeProvider>
-    </> 
+    </>
   )
 }
 export default App;

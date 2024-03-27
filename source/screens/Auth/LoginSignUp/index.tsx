@@ -420,11 +420,11 @@ const LoginSignUpScreen = (props: Props) => {
 
                     } else {
                         // props.navigation.navigate('Home1');
-                        Toast.show("Hello-1", Toast.SHORT);
+                        // Toast.show("Hello-1", Toast.SHORT);
 
                     }
                 } else {
-                    Toast.show("axios error-444", Toast.SHORT);
+                    // Toast.show("axios error-444", Toast.SHORT);
                     Toast.show("Oops, something went wrong. Please check your internet connection and try again.", Toast.SHORT);
                 }
             } catch (error) {

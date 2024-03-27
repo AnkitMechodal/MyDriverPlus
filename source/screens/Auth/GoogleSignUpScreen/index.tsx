@@ -926,7 +926,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             placeholder={ScreenText.EnterYourPassword}
                             editable={true}
                             multiline={false}
-                            secureTextEntry={!isSecureFirst}
+                            secureTextEntry={isSecureFirst}
                             isPadding={true}
                             keyboardType='default'
                             textAlign='left'
@@ -983,7 +983,7 @@ const GoogleSignUpScreen = ({ route, navigation }) => {
                             placeholder={ScreenText.EnterConfirmPassword}
                             editable={true}
                             multiline={false}
-                            secureTextEntry={!isSecureConfirm}
+                            secureTextEntry={isSecureConfirm}
                             isPadding={true}
                             keyboardType='default'
                             textAlign='left'
