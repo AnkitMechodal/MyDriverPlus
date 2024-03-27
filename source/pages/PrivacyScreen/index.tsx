@@ -75,7 +75,7 @@ const PrivacyScreen = (props: Props) => {
                         }}>Unable To Load Content</Text>
                     ) : (
                         <WebView
-                            source={{ uri: 'https://rideshareandcourier.graphiglow.in/public/Policy' }}
+                            source={{ uri: 'https://mydriverplus-api.4born.in/public/Policy' }}
                             style={{ flex: 1 }}
                             javaScriptEnabled={true}
                             domStorageEnabled={true}

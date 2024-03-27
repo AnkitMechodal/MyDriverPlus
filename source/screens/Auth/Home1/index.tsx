@@ -1697,7 +1697,7 @@ const HomeOneScreen = (props: Props) => {
                             <Image
                                 style={Styles.imageAboutIcon}
                                 resizeMode="contain"
-                                source={Images.aboutIcon} />
+                                source={Images.AboutDrawerIcon} />
                         ),
                     }}
                     component={EditAboutStack}

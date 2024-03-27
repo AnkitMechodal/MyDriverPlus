@@ -10,12 +10,14 @@ const Styles = StyleSheet.create({
     customRatingBarStyle: {
         justifyContent: 'center',
         flexDirection: 'row',
-        marginTop: wp(1)
+        marginTop: wp(1),
+        // marginHorizontal: wp(1)
     },
     starImageStyle: {
         width: wp(4),
         height: wp(4),
         resizeMode: 'cover',
+        marginHorizontal: wp(0.5)
     },
     textTermsAndCondition: {
         width: wp(6),
@@ -24,8 +26,8 @@ const Styles = StyleSheet.create({
         marginLeft: wp(3),
     },
     imageHelpIcon: {
-        width: wp(7),
-        height: wp(7),
+        width: wp(6),
+        height: wp(6),
         tintColor: Colors.grayFull,
         marginLeft: wp(3)
     },

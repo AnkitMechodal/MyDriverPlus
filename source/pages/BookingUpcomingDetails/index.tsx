@@ -5,10 +5,12 @@ import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
+import ButtonComponent from '../../components/Button';
 import CustomSelectOrder from '../../components/CustomSelectOrder';
 import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
 import TextComponent from '../../components/Text/index';
+import TextInputComponent from '../../components/TextInput';
 import { Colors, Fonts, Images } from '../../themes/index';
 import { API, ConstValue, ScreenText } from '../../utils';
 import CommonStyle from '../../utils/commonStyle';
@@ -321,6 +323,8 @@ const BookingUpDetails = ({ route, navigation }) => {
     let USER_RIDEDURATION;
     let USER_RIDEDISTANCE;
 
+    let USER_RIDEID_;
+
 
     let USER_RIDE_CHARGE;
     let USER_CON_CHARGE;
@@ -396,8 +400,8 @@ const BookingUpDetails = ({ route, navigation }) => {
         };
 
         fetchData();
-        // Set interval to refresh every 10 seconds
-        const intervalId = setInterval(fetchData, 10 * 1000);
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Clean up the interval when the component is unmounted
 
@@ -991,10 +995,10 @@ const BookingUpDetails = ({ route, navigation }) => {
                     USER_RIDEDISTANCE = response?.data?.matchingVehicle?.distance;
 
 
-                    // USER_RIDEID = response?.data?.matchingVehicle?.DriverID;
+                    USER_RIDEID_ = response?.data?.matchingVehicle?.DriverID;
 
                     // stored id : todo
-                    StoredRideID(USER_RIDEID);
+                    StoredRideID(USER_RIDEID_);
 
 
                     setRIDEDUR(USER_RIDEDURATION);
@@ -1100,7 +1104,7 @@ const BookingUpDetails = ({ route, navigation }) => {
                                     color={Colors.white}
                                     fontFamily={Fonts.InterSemiBold}
                                     fontWeight="500"
-                                    title={"Ride Booking Details-1"}
+                                    title={"Ride Booking Details"}
                                     fontSize={wp(4)}
                                     onPress={() => navigation.goBack()}
                                 />

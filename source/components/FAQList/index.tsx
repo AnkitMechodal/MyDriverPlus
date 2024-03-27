@@ -59,11 +59,11 @@ const FAQListComponent = (props: FAQListProps) => {
                                         onPress={() => changeLayout(index)}
                                     >
                                         {item?.selected ? <Image
-                                            source={Images.downArrow}
+                                            source={Images.FAQIcon}
                                             resizeMode="contain"
                                             style={Styles.viewItemImage1}
                                         /> : <Image
-                                            source={Images.downArrow}
+                                            source={Images.FAQIcon}
                                             resizeMode="contain"
                                             style={Styles.viewItemImage1}
                                         />}

@@ -13,7 +13,8 @@ const Styles = StyleSheet.create({
     viewItemImage1: {
         width: wp(5),
         flex: 1,
-        color: Colors.white,
+        // color: Colors.white,
+        // tintColor: Colors.white,
     },
     viewItemImage2: {
         width: wp(5),

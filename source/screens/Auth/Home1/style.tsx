@@ -163,9 +163,9 @@ const Styles = StyleSheet.create({
         tintColor: Colors.grayDark,
     },
     imagePrivacy: {
-        width: wp(7),
-        height: wp(7),
-        tintColor: Colors.gray,
+        width: wp(6),
+        height: wp(6),
+        tintColor: Colors.grayDark,
     },
     textTermsAndCondition: {
         width: wp(6),
@@ -187,9 +187,9 @@ const Styles = StyleSheet.create({
         marginLeft: wp(24) // 24
     },
     imageAboutIcon: {
-        width: wp(7),
-        height: wp(7),
-        tintColor: Colors.gray,
+        width: wp(6),
+        height: wp(6),
+        tintColor: Colors.grayFull,
         // marginLeft: wp(2) // 24
     },
     imageArrowRightFaq: {

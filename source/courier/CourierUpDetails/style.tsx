@@ -91,7 +91,7 @@ const Styles = StyleSheet.create({
         height: wp(8),
         borderRadius: wp(50),
         alignSelf: 'center',
-        marginHorizontal: wp(2)
+        // marginHorizontal: wp(2)
     },
     customRatingBarStyle: {
         justifyContent: 'center',

@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   BackHandler,
   Image, SafeAreaView, ScrollView,
   TouchableOpacity, View
@@ -362,7 +361,14 @@ const SettingScreen = (props: Props) => {
               fontSize={wp(4)}
               colorRight={"white"}
               fontWeightRight="500"
-              onPressEdit={() => Alert.alert('test')}
+              onPressEdit={() =>
+                props.navigation.navigate('ProfileUpdateScreen', {
+                  itemProfileName: isProfileName,
+                  itemProfileEmail: isProfileEmail,
+                  itemProfileNumber: isProfileNumber,
+                  itemProfileImage: isProfileImage,
+                })
+              }
               isVisibleEditProfile={true}
               titleWithRightContent={"Edit Profile"}
               textAlignRight={"right"}
@@ -549,7 +555,6 @@ const SettingScreen = (props: Props) => {
               <TextComponent
                 color={Colors.white}
                 title={ScreenText.PrivacyPolicy}
-
                 textDecorationLine={'none'}
                 fontWeight="400"
                 fontSize={wp(4)}
@@ -575,7 +580,6 @@ const SettingScreen = (props: Props) => {
               <TextComponent
                 color={Colors.white}
                 title={ScreenText.TermsAndCondition}
-
                 textDecorationLine={'none'}
                 fontWeight="400"
                 fontSize={wp(4)}

@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Toast from "react-native-simple-toast";
+import ButtonComponent from '../../components/Button';
 import CustomSelectOrder from '../../components/CustomSelectOrder';
 import HeaderComponent from '../../components/Header/index';
 import StatusBarComponent from '../../components/StatusBar';
@@ -24,7 +25,7 @@ type Props = {
 
 const CourierUpDetails = ({ route, navigation }) => {
 
-    const [defaultRating, setDefaultRating] = useState(4);
+    const [defaultRating, setDefaultRating] = useState(0);
     const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
     const starImageFilled =
@@ -341,6 +342,7 @@ const CourierUpDetails = ({ route, navigation }) => {
     let USER_TOTAL;
 
     let USER_DISCOUNT_;
+    let USER_RIDEID_;
 
     let USER_CANCEL_TRIP;
     let USER_LOYAL_POINT;
@@ -411,8 +413,8 @@ const CourierUpDetails = ({ route, navigation }) => {
         };
 
         fetchData();
-        // Set interval to refresh every 5 seconds
-        const intervalId = setInterval(fetchData, 5 * 1000);
+        // Set interval to refresh every 1 seconds
+        const intervalId = setInterval(fetchData, 1 * 1000);
 
         // Clean up the interval when the component is unmounted
 
@@ -459,6 +461,8 @@ const CourierUpDetails = ({ route, navigation }) => {
                     USER_CANCEL_TRIP = response?.data?.matchingVehicle?.Cancelled_Trip_Payment;
                     USER_LOYAL_POINT = response?.data?.matchingVehicle?.loyalty_points;
                     USER_PLATFROM_CHARGE = response?.data?.matchingVehicle?.Platform_charges;
+
+
 
 
                     setDIS(USER_RIDEDISTANCE);
@@ -508,6 +512,11 @@ const CourierUpDetails = ({ route, navigation }) => {
                     // setTOTAL_AMOUNT(USER_TOTAL_AMOUNT);
                     setFARE(USER_FARE_VALUE); // ADDED 
 
+
+                    USER_RIDEID_ = response?.data?.matchingVehicle?.DriverID;
+                    // stored id : todo
+                    StoredRideID(USER_RIDEID_);
+
                     // Discount  // ADDED
                     // Ride Charge
                     // Booking Fees
@@ -543,6 +552,17 @@ const CourierUpDetails = ({ route, navigation }) => {
         }
     }
 
+    const StoredRideID = async (USER_RIDEID: any) => {
+        try {
+            await AsyncStorage.setItem('store_ride_id', JSON.stringify(USER_RIDEID));
+            console.log('store_ride_id===>', JSON.parse(USER_RIDEID));
+
+        } catch (error) {
+            // Handle any errors that might occur during the storage operation
+            console.log('Error store_ride_id :', error);
+        }
+    }
+
     const axiosUserPostDriverInfoRequest = async () => {
 
         const storedLinkedId = await AsyncStorage.getItem('store_ride_id');
@@ -556,7 +576,13 @@ const CourierUpDetails = ({ route, navigation }) => {
                 // id: "659ba278e911a1c7a1f64f83"
             };
 
-            console.log("INFO_DATA==>", JSON.stringify(data, null, 2));
+            console.log("INFO_DATA==>****", JSON.stringify(data, null, 2));
+            console.log("INFO_DATA==>****", JSON.stringify(data, null, 2));
+
+            console.log("INFO_DATA==>****", JSON.stringify(data, null, 2));
+
+            console.log("INFO_DATA==>****", JSON.stringify(data, null, 2));
+
 
             await axios.post(url, data, {
                 headers: {
@@ -575,16 +601,25 @@ const CourierUpDetails = ({ route, navigation }) => {
                         DriverBookingName = response?.data?.matchingUsers[0]?.username;
                         DriverProfileImage = response?.data?.matchingUsers[0]?.ProfileImage;
 
+
                         // _id99
                         Driver_id = response?.data?.matchingUsers[0]?._id;
                         // Store for star : todo
                         StoredDriverID(Driver_id);
 
-                        console.log("Driver_id==>",
+                        console.log("Driver_id*****==>",
+                            JSON.stringify(Driver_id, null, 2));
+                        console.log("Driver_id****==>",
+                            JSON.stringify(Driver_id, null, 2));
+                        console.log("Driver_id*****==>",
+                            JSON.stringify(Driver_id, null, 2));
+                        console.log("Driver_id****==>",
                             JSON.stringify(Driver_id, null, 2));
 
                         setDRIVERNAME(DriverBookingName);
                         setDRIVERPROFILE(DriverProfileImage);
+
+
 
                         // Toast.show('Driver Details Retrieved Successfully!', Toast.SHORT);
 
@@ -654,6 +689,8 @@ const CourierUpDetails = ({ route, navigation }) => {
                             console.log("avg_username===>", avg_username);
 
                             setDefaultRating(averageRating);
+                            setDRIVERNAME(avg_username);
+
                             // setDRIVERNAME(avg_username);
                             //  PHOTO // ADDED 
 
@@ -1113,7 +1150,7 @@ const CourierUpDetails = ({ route, navigation }) => {
                                     color={Colors.white}
                                     fontFamily={Fonts.InterSemiBold}
                                     fontWeight="500"
-                                    title={"Past Booking Details"}
+                                    title={"Courier Booking Details"}
                                     fontSize={wp(4)}
                                     onPress={() => navigation.goBack()}
                                 />
@@ -1441,7 +1478,7 @@ const CourierUpDetails = ({ route, navigation }) => {
                                 <View style={Styles.viewSeprateLine3}>
                                     <TextComponent
                                         color={Colors.white}
-                                        title={"Completed Trip Payment"}
+                                        title={"Courier Booking Charge"}
                                         marginVertical={wp(3)}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
@@ -1451,8 +1488,29 @@ const CourierUpDetails = ({ route, navigation }) => {
                                     />
                                     <TextComponent
                                         color={Colors.grayFull}
-                                        title={"$ " + isTRIP}
+                                        title={"$ " + isDRIVERIDECHARGE}
                                         marginVertical={wp(3)}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                </View>
+
+                                <View style={Styles.viewSeprateLine3}>
+                                    <TextComponent
+                                        color={Colors.white}
+                                        title={"Bookings Fees & Convenience Charges"}
+                                        textDecorationLine={'none'}
+                                        fontWeight="400"
+                                        fontSize={wp(3.5)}
+                                        fontFamily={Fonts.PoppinsRegular}
+                                        textAlign='left'
+                                    />
+                                    <TextComponent
+                                        color={Colors.grayFull}
+                                        title={"$ " + isDRIVERCONCHARGE}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -1469,6 +1527,7 @@ const CourierUpDetails = ({ route, navigation }) => {
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
                                         fontFamily={Fonts.PoppinsRegular}
+                                        marginVertical={wp(3)}
                                         textAlign='left'
                                     />
                                     <TextComponent
@@ -1477,6 +1536,7 @@ const CourierUpDetails = ({ route, navigation }) => {
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
+                                        marginVertical={wp(3)}
                                         fontFamily={Fonts.PoppinsRegular}
                                         textAlign='left'
                                     />
@@ -1484,54 +1544,8 @@ const CourierUpDetails = ({ route, navigation }) => {
 
                                 <View style={Styles.viewSeprateLine3}>
                                     <TextComponent
-                                        color={Colors.white}
-                                        title={"Loyalty Point"}
-                                        marginVertical={wp(2)}
-                                        textDecorationLine={'none'}
-                                        fontWeight="400"
-                                        fontSize={wp(3.5)}
-                                        fontFamily={Fonts.PoppinsRegular}
-                                        textAlign='left'
-                                    />
-                                    <TextComponent
-                                        color={Colors.grayFull}
-                                        title={isLP}
-                                        marginVertical={wp(2)}
-                                        textDecorationLine={'none'}
-                                        fontWeight="400"
-                                        fontSize={wp(3.5)}
-                                        fontFamily={Fonts.PoppinsRegular}
-                                        textAlign='left'
-                                    />
-                                </View>
-
-                                <View style={Styles.viewSeprateLine3}>
-                                    <TextComponent
-                                        color={Colors.white}
-                                        title={"Cancelled Trip Payment"}
-                                        textDecorationLine={'none'}
-                                        fontWeight="400"
-                                        fontSize={wp(3.5)}
-                                        fontFamily={Fonts.PoppinsRegular}
-                                        // marginVertical={wp(3)}
-                                        textAlign='left'
-                                    />
-                                    <TextComponent
-                                        color={Colors.grayFull}
-                                        title={"$ " + isTRIP}
-                                        textDecorationLine={'none'}
-                                        fontWeight="400"
-                                        fontSize={wp(3.5)}
-                                        // marginVertical={wp(3)}
-                                        fontFamily={Fonts.PoppinsRegular}
-                                        textAlign='left'
-                                    />
-                                </View>
-
-                                <View style={Styles.viewSeprateLine3}>
-                                    <TextComponent
-                                        color={Colors.orange}
-                                        title={"Platform charges"}
+                                        color={Colors.discount}
+                                        title={"Discount"}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}
@@ -1539,10 +1553,9 @@ const CourierUpDetails = ({ route, navigation }) => {
                                         marginVertical={wp(3)}
                                         textAlign='left'
                                     />
-
                                     <TextComponent
-                                        color={Colors.orange}
-                                        title={"$ " + isPC}
+                                        color={Colors.greenDark}
+                                        title={"-$ " + isDRIVERDISCOUNT}
                                         textDecorationLine={'none'}
                                         fontWeight="400"
                                         fontSize={wp(3.5)}

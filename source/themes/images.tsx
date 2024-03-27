@@ -121,6 +121,12 @@ export const Images = {
    manIcon: require("../images/ic_man.png"),
    whiteLocationIcon: require("../images/ic_whIcon.png"),
 
+   // c:\Users\THE COMPUTER SHOP\Downloads\ic_faq.png
+   // c:\Users\THE COMPUTER SHOP\Downloads\ic_about_us.png
+
+   FAQIcon: require("../images/ic_wh_faq.png"),
+   AboutDrawerIcon: require("../images/ic_about_us.png"),
+
    // FLAG 
    flag1: require("../images/ic_1.jpg"),
    flag2: require("../images/ic_20.jpg"),

@@ -75,7 +75,7 @@ const Aboutcreen = (props: Props) => {
                         }}>Unable To Load Content</Text>
                     ) : (
                         <WebView
-                            source={{ uri: 'https://rideshareandcourier.graphiglow.in/public/AboutUs' }}
+                            source={{ uri: 'https://mydriverplus-api.4born.in/public/AboutUs' }}
                             style={CommonStyle.commonFlex}
                             javaScriptEnabled={true}
                             domStorageEnabled={true}

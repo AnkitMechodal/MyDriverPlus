@@ -75,7 +75,7 @@ const TermsAndConditionScreen = (props: Props) => {
                         }}>Unable To Load Content</Text>
                     ) : (
                         <WebView
-                            source={{ uri: 'https://rideshareandcourier.graphiglow.in/public/Terms' }}
+                            source={{ uri: 'https://mydriverplus-api.4born.in/public/Terms' }}
                             style={CommonStyle.commonFlex}
                             javaScriptEnabled={true}
                             domStorageEnabled={true}
